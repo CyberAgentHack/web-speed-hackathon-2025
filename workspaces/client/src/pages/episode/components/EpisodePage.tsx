@@ -14,6 +14,7 @@ import { PlayerType } from '@wsh-2025/client/src/features/player/constants/playe
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
+import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
@@ -35,6 +36,9 @@ export const EpisodePage = () => {
 
   const episode = useEpisodeById({ episodeId });
   invariant(episode);
+
+  const series = useSeriesById({ seriesId: episode.series.id });
+  invariant(series);
 
   const modules = useRecommended({ referenceId: episodeId });
 
@@ -136,7 +140,7 @@ export const EpisodePage = () => {
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
-          <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />
+          <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={episode.id} />
         </div>
       </div>
     </>

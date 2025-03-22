@@ -3,17 +3,8 @@ declare module 'webpack-bundle-analyzer' {
 
   export interface BundleAnalyzerPluginOptions {
     analyzerMode?: 'server' | 'static' | 'json' | 'disabled';
-    analyzerHost?: string;
-    analyzerPort?: number;
-    reportFilename?: string;
-    reportTitle?: string;
-    defaultSizes?: 'stat' | 'parsed' | 'gzip';
     openAnalyzer?: boolean;
-    generateStatsFile?: boolean;
-    statsFilename?: string;
-    statsOptions?: any;
-    excludeAssets?: RegExp | RegExp[] | ((asset: string) => boolean);
-    logLevel?: 'info' | 'warn' | 'error' | 'silent';
+    reportFilename?: string;
   }
 
   export class BundleAnalyzerPlugin {

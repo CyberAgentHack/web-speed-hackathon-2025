@@ -13,6 +13,7 @@ import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useP
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
+import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
@@ -39,6 +40,9 @@ export const ProgramPage = () => {
 
   const program = useProgramById({ programId });
   invariant(program);
+
+  const series = useSeriesById({ seriesId: program.episode.series.id });
+  invariant(series);
 
   const timetable = useTimetable();
   const nextProgram = timetable[program.channel.id]?.find((p) => {
@@ -164,7 +168,7 @@ export const ProgramPage = () => {
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">関連するエピソード</h2>
-          <SeriesEpisodeList episodes={program.episode.series.episodes} selectedEpisodeId={program.episode.id} />
+          <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={program.episode.id} />
         </div>
       </div>
     </>
