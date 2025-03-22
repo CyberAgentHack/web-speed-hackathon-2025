@@ -3,25 +3,23 @@
   "private": true,
   "scripts": {
     "build": "wireit",
-    "format": "wireit",
-
     "dev": "webpack serve --config ./webpack.config.mjs --mode development --hot --port 3000"
   },
   "dependencies": {
-    "@babel/runtime": "7.26.10",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "video.js": "8.21.0"
   },
   "devDependencies": {
-    "webpack": "5.96.1",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.1.0",
-    "babel-loader": "9.2.1",
     "@babel/core": "7.26.0",
     "@babel/preset-env": "7.26.0",
     "@babel/preset-react": "7.25.9",
     "@babel/preset-typescript": "7.26.0",
- 
+    "babel-loader": "9.2.1",
+    "typescript": "5.7.2",
+    "webpack": "5.96.1",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "5.1.0"
   },
   "wireit": {
     "build": {
@@ -35,7 +33,6 @@
       "output": [
         "./dist/**/*"
       ]
-    },
-  
+    }
   }
 }
