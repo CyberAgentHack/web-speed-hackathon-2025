@@ -366,9 +366,6 @@ importers:
       fastify-zod-openapi:
         specifier: 4.0.0
         version: 4.0.0(@fastify/swagger-ui@5.1.0)(@fastify/swagger@9.4.0)(fastify@5.1.0)(zod-openapi@4.2.0(zod@3.24.1))(zod@3.24.1)
-      htmlescape:
-        specifier: 1.1.1
-        version: 1.1.1
       luxon:
         specifier: 3.5.0
         version: 3.5.0
@@ -403,9 +400,6 @@ importers:
       '@types/bcrypt':
         specifier: 5.0.2
         version: 5.0.2
-      '@types/htmlescape':
-        specifier: 1.1.3
-        version: 1.1.3
       '@types/jsesc':
         specifier: 3.0.3
         version: 3.0.3
@@ -1964,9 +1958,6 @@ packages:
   '@types/express@4.17.21':
     resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
 
-  '@types/htmlescape@1.1.3':
-    resolution: {integrity: sha512-tuC81YJXGUe0q8WRtBNW+uyx79rkkzWK651ALIXXYq5/u/IxjX4iHneGF2uUqzsNp+F+9J2mFZOv9jiLTtIq0w==}
-
   '@types/http-errors@2.0.4':
     resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
 
@@ -3426,10 +3417,6 @@ packages:
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
-
-  htmlescape@1.1.1:
-    resolution: {integrity: sha512-eVcrzgbR4tim7c7soKQKtxa/kQM4TzjnlU83rcZ9bHU6t31ehfV7SktN6McWgwPWg+JYMA/O3qpGxBvFq1z2Jg==}
-    engines: {node: '>=0.10'}
 
   http-deceiver@1.2.7:
     resolution: {integrity: sha512-LmpOGxTfbpgtGVxJrj5k7asXHCgNZp5nLfp+hWc8QQRqtb7fUy6kRY3BO1h9ddF6yIPYUARgxGOwB42DnxIaNw==}
@@ -6788,8 +6775,6 @@ snapshots:
       '@types/qs': 6.9.17
       '@types/serve-static': 1.15.7
 
-  '@types/htmlescape@1.1.3': {}
-
   '@types/http-errors@2.0.4': {}
 
   '@types/http-proxy@1.17.15':
@@ -8475,8 +8460,6 @@ snapshots:
   html-entities@2.5.2: {}
 
   html-escaper@2.0.2: {}
-
-  htmlescape@1.1.1: {}
 
   http-deceiver@1.2.7: {}
 
