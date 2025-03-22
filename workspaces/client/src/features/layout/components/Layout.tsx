@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -31,29 +31,53 @@ export const Layout = ({ children }: Props) => {
   const authDialogType = useAuthDialogType();
   const user = useAuthUser();
 
-  const [scrollTopOffset, setScrollTopOffset] = useState(0);
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
+  const headerObserverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollTopOffset(window.scrollY);
+    // スクロール位置を監視するオプション設定
+    const observerOptions = {
+      // rootMarginをマイナスに設定：ビューポートの上端から80px下にスクロールしたら効果を発動
+      rootMargin: '-80px 0px 0px 0px',
+      threshold: 0,
     };
 
-    window.addEventListener('scroll', handleScroll);
+    const headerObserver = new IntersectionObserver((entries) => {
+      // マーカー要素が見えなくなったらヘッダーを透明に（undefined対策）
+      if (entries.length > 0) {
+        setShouldHeaderBeTransparent(!entries[0]?.isIntersecting);
+      }
+    }, observerOptions);
+
+    if (headerObserverRef.current) {
+      headerObserver.observe(headerObserverRef.current);
+    }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      if (headerObserverRef.current) {
+        headerObserver.unobserve(headerObserverRef.current);
+      }
     };
   }, []);
-
-  useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
-  }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
 
   return (
     <>
+      {/* IntersectionObserver用のマーカー要素 - ページ先頭に配置 */}
+      <div
+        ref={headerObserverRef}
+        style={{
+          height: '1px',
+          left: 0,
+          opacity: 0,
+          pointerEvents: 'none',
+          position: 'absolute',
+          top: 0,
+          width: '100%',
+          zIndex: -1,
+        }}
+      />
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
         <header
           className={classNames(
@@ -64,7 +88,7 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
+            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
           </Link>
         </header>
 
