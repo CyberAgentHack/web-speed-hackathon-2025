@@ -19,18 +19,14 @@ export function registerSsr(app: FastifyInstance): void {
 
   app.get('/*', async (req, reply) => {
     console.log(req.ip);
-    reply.type('text/html').send(/* html */ `
-<!DOCTYPE html>
+    reply.type('text/html').send(/* html */ `<!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charSet="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <script type="module" src="/public/main.js" defer></script>
   </head>
-  <body className="size-full bg-[#000000] text-[#ffffff]">
-    <div id="root"></div>
-  </body>
-</html>
-    `);
+  <body className="size-full bg-[#000000] text-[#ffffff]"></body>
+</html>`);
   });
 }

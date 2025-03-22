@@ -11,11 +11,20 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 
 export const Document = () => {
   return (
-    <Suspense>
-      <Layout>
-        <Outlet />
-      </Layout>
-      <ScrollRestoration />
-    </Suspense>
+    <html className="size-full" lang="ja">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <script type="module" src="/public/main.js" defer></script>
+      </head>
+      <body className="size-full bg-[#000000] text-[#ffffff]">
+        <Suspense>
+          <Layout>
+            <Outlet />
+          </Layout>
+        </Suspense>
+        <ScrollRestoration />
+      </body>
+    </html>
   );
 };
