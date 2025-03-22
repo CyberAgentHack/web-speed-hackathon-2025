@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import path from 'node:path';
 import os from 'node:os'; // Added import for 'os'
 
 import webpack from 'webpack';
 import webpackBundleAnalyzer from 'webpack-bundle-analyzer';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -48,13 +46,6 @@ const config = {
         ],
       },
       {
-        test: /\.(webp)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'assets/images/[name][ext]', // 出力先を指定
-        },
-      },
-      {
         test: /\.png$/,
         type: 'asset/inline',
       },
@@ -82,14 +73,6 @@ const config = {
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     // new webpackBundleAnalyzer.BundleAnalyzerPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(import.meta.dirname, './assets/images'), // コピー元
-          to: 'assets/images', // コピー先（dist/assets/images）
-        },
-      ],
-    }),
   ],
   resolve: {
     alias: {
