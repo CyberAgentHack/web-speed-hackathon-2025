@@ -22,7 +22,7 @@ export const ChannelTitle = ({ channelId }: Props) => {
           className="object-contains size-full"
           draggable={false}
           loading="lazy"
-          src={channel.logoUrl}
+          src={channel.logoUrl.replace('svg', 'png')}
         />
       </div>
 

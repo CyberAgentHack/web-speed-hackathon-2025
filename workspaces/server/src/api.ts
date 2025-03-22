@@ -484,10 +484,20 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             with: {
               episode: {
                 with: {
-                  series: true,
+                  series: {
+                    columns: {
+                      title: true,
+                    },
+                  },
                 },
               },
-              series: true,
+              series: {
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                },
+              },
             },
           },
         },
