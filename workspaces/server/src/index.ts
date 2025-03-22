@@ -2,6 +2,9 @@ import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import fastifyCompress from '@fastify/compress';
 import path from 'path';
+import userRoutes from './routes/users';
+
+await app.register(userRoutes);
 
 const app = Fastify({ logger: true });
 app.register(fastifyCompress);
