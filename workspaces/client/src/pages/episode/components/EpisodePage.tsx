@@ -52,7 +52,8 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" loading="lazy" src={episode.thumbnailUrl} />
+                {/* TODO:apply width */}
+                <img alt={episode.title} className="h-auto w-full" loading="lazy" src={episode.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -73,7 +74,8 @@ export const EpisodePage = () => {
                   <AspectRatio ratioHeight={9} ratioWidth={16}>
                     <div className="grid size-full">
                       <img
-                        alt=""
+                        // TODO:apply width
+                        alt={episode.title}
                         className="size-full place-self-stretch [grid-area:1/-1]"
                         src={episode.thumbnailUrl}
                       />

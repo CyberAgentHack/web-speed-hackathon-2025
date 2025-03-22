@@ -29,7 +29,7 @@ export const NewTimetableFeatureDialog = ({ isOpen }: Props) => {
         </p>
 
         <img
-          alt=""
+          alt={'AREMAの新機能の説明画像'}
           className="mb-[24px] w-full"
           height={288}
           loading="lazy"
