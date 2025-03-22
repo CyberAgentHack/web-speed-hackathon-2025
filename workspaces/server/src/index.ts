@@ -1,7 +1,7 @@
 import '@wsh-2025/server/src/setups/luxon';
-
 import cors from '@fastify/cors';
 import fastify from 'fastify';
+import fastifyCompress from '@fastify/compress';
 
 import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
@@ -13,9 +13,13 @@ async function main() {
 
   const app = fastify();
 
+  // 圧縮プラグインを登録
+  // app.register(fastifyCompress);
+
   app.addHook('onSend', async (_req, reply) => {
     reply.header('cache-control', 'no-store');
   });
+
   app.register(cors, {
     origin: true,
   });
