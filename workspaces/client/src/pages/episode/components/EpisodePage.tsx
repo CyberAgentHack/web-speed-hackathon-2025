@@ -86,7 +86,9 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+
+                      <img className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" src="/public/svg/loading.svg" />
+                      {/* <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" /> */}
                     </div>
                   </div>
                 }
