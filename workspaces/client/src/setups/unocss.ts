@@ -1,4 +1,5 @@
 import presetWind3 from '@unocss/preset-wind3';
+import tailwindCompatCSS from '@unocss/reset/tailwind-compat.css?raw';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
 async function init() {
@@ -12,7 +13,7 @@ async function init() {
       },
       preflights: [
         {
-          getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
+          getCSS: () => Promise.resolve(tailwindCompatCSS),
           layer: 'reset',
         },
         {
