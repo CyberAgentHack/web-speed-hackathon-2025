@@ -1,109 +1,91 @@
-import lazy from 'p-min-delay';
+import pMinDelay from 'p-min-delay';
 import { RouteObject } from 'react-router';
 
-import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
-import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Document, prefetch as prefetchDocument } from './Document';
+import { createStore } from './createStore';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
     {
+      path: '/',
+      Component: Document,
+      async loader() {
+        return await prefetchDocument(store);
+      },
       children: [
         {
           index: true,
           async lazy() {
-            const { HomePage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/home/components/HomePage'),
-              1000,
-            );
+            const mod = await pMinDelay(import('../pages/home/components/HomePage'), 300); 
             return {
-              Component: HomePage,
+              Component: mod.HomePage,
               async loader() {
-                return await prefetch(store);
+                return await mod.prefetch(store);
               },
             };
           },
         },
         {
-          async lazy() {
-            const { EpisodePage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
-              1000,
-            );
-            return {
-              Component: EpisodePage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
-            };
-          },
           path: '/episodes/:episodeId',
-        },
-        {
           async lazy() {
-            const { prefetch, ProgramPage } = await lazy(
-              import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
-              1000,
-            );
+            const mod = await pMinDelay(import('../pages/episode/components/EpisodePage'), 300);
             return {
-              Component: ProgramPage,
+              Component: mod.EpisodePage,
               async loader({ params }) {
-                return await prefetch(store, params);
+                return await mod.prefetch(store, params);
               },
             };
           },
+        },
+        {
           path: '/programs/:programId',
-        },
-        {
           async lazy() {
-            const { prefetch, SeriesPage } = await lazy(
-              import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
-              1000,
-            );
+            const mod = await pMinDelay(import('../pages/program/components/ProgramPage'), 300);
             return {
-              Component: SeriesPage,
+              Component: mod.ProgramPage,
               async loader({ params }) {
-                return await prefetch(store, params);
+                return await mod.prefetch(store, params);
               },
             };
           },
+        },
+        {
           path: '/series/:seriesId',
-        },
-        {
           async lazy() {
-            const { prefetch, TimetablePage } = await lazy(
-              import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
-              1000,
-            );
+            const mod = await pMinDelay(import('../pages/series/components/SeriesPage'), 300);
             return {
-              Component: TimetablePage,
-              async loader() {
-                return await prefetch(store);
+              Component: mod.SeriesPage,
+              async loader({ params }) {
+                return await mod.prefetch(store, params);
               },
             };
           },
+        },
+        {
           path: '/timetable',
-        },
-        {
           async lazy() {
-            const { NotFoundPage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
-              1000,
-            );
+            const mod = await pMinDelay(import('../pages/timetable/components/TimetablePage'), 300);
             return {
-              Component: NotFoundPage,
+              Component: mod.TimetablePage,
               async loader() {
-                return await prefetch(store);
+                return await mod.prefetch(store);
               },
             };
           },
+        },
+        {
           path: '*',
+          async lazy() {
+            const mod = await pMinDelay(import('../pages/not_found/components/NotFoundPage'), 300);
+            return {
+              Component: mod.NotFoundPage,
+              async loader() {
+                return await mod.prefetch(store);
+              },
+            };
+          },
         },
       ],
-      Component: Document,
-      async loader() {
-        return await prefetch(store);
-      },
-      path: '/',
     },
   ];
 }
