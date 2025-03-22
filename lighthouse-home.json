@@ -1,0 +1,2727 @@
+{
+  "lighthouseVersion": "12.4.0",
+  "requestedUrl": "http://localhost:8000/",
+  "mainDocumentUrl": "http://localhost:8000/",
+  "finalDisplayedUrl": "http://localhost:8000/",
+  "finalUrl": "http://localhost:8000/",
+  "fetchTime": "2025-03-22T13:29:34.438Z",
+  "gatherMode": "navigation",
+  "runtimeError": {
+    "code": "NO_FCP",
+    "message": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)"
+  },
+  "runWarnings": [
+    "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)"
+  ],
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.0.0 Safari/537.36",
+  "environment": {
+    "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.0.0 Safari/537.36",
+    "benchmarkIndex": 689,
+    "credits": {}
+  },
+  "audits": {
+    "viewport": {
+      "id": "viewport",
+      "title": "Has a `<meta name=\"viewport\">` tag with `width` or `initial-scale`",
+      "description": "A `<meta name=\"viewport\">` not only optimizes your app for mobile screen sizes, but also prevents [a 300 millisecond delay to user input](https://developer.chrome.com/blog/300ms-tap-delay-gone-away/). [Learn more about using the viewport meta tag](https://developer.chrome.com/docs/lighthouse/pwa/viewport/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "first-contentful-paint": {
+      "id": "first-contentful-paint",
+      "title": "First Contentful Paint",
+      "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more about the First Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-contentful-paint/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "largest-contentful-paint": {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "first-meaningful-paint": {
+      "id": "first-meaningful-paint",
+      "title": "First Meaningful Paint",
+      "description": "First Meaningful Paint measures when the primary content of a page is visible. [Learn more about the First Meaningful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-meaningful-paint/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "speed-index": {
+      "id": "speed-index",
+      "title": "Speed Index",
+      "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more about the Speed Index metric](https://developer.chrome.com/docs/lighthouse/performance/speed-index/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "screenshot-thumbnails": {
+      "id": "screenshot-thumbnails",
+      "title": "Screenshot Thumbnails",
+      "description": "This is what the load of your site looked like.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "final-screenshot": {
+      "id": "final-screenshot",
+      "title": "Final Screenshot",
+      "description": "The last screenshot captured of the pageload.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "total-blocking-time": {
+      "id": "total-blocking-time",
+      "title": "Total Blocking Time",
+      "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more about the Total Blocking Time metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "max-potential-fid": {
+      "id": "max-potential-fid",
+      "title": "Max Potential First Input Delay",
+      "description": "The maximum potential First Input Delay that your users could experience is the duration of the longest task. [Learn more about the Maximum Potential First Input Delay metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-max-potential-fid/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "cumulative-layout-shift": {
+      "id": "cumulative-layout-shift",
+      "title": "Cumulative Layout Shift",
+      "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "server-response-time": {
+      "id": "server-response-time",
+      "title": "Initial server response time was short",
+      "description": "Keep the server response time for the main document short because all other requests depend on it. [Learn more about the Time to First Byte metric](https://developer.chrome.com/docs/lighthouse/performance/time-to-first-byte/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "interactive": {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "description": "Time to Interactive is the amount of time it takes for the page to become fully interactive. [Learn more about the Time to Interactive metric](https://developer.chrome.com/docs/lighthouse/performance/interactive/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "user-timings": {
+      "id": "user-timings",
+      "title": "User Timing marks and measures",
+      "description": "Consider instrumenting your app with the User Timing API to measure your app's real-world performance during key user experiences. [Learn more about User Timing marks](https://developer.chrome.com/docs/lighthouse/performance/user-timings/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "critical-request-chains": {
+      "id": "critical-request-chains",
+      "title": "Avoid chaining critical requests",
+      "description": "The Critical Request Chains below show you what resources are loaded with a high priority. Consider reducing the length of chains, reducing the download size of resources, or deferring the download of unnecessary resources to improve page load. [Learn how to avoid chaining critical requests](https://developer.chrome.com/docs/lighthouse/performance/critical-request-chains/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "redirects": {
+      "id": "redirects",
+      "title": "Avoid multiple page redirects",
+      "description": "Redirects introduce additional delays before the page can be loaded. [Learn how to avoid page redirects](https://developer.chrome.com/docs/lighthouse/performance/redirects/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "mainthread-work-breakdown": {
+      "id": "mainthread-work-breakdown",
+      "title": "Minimizes main-thread work",
+      "description": "Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to minimize main-thread work](https://developer.chrome.com/docs/lighthouse/performance/mainthread-work-breakdown/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "bootup-time": {
+      "id": "bootup-time",
+      "title": "JavaScript execution time",
+      "description": "Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps with this. [Learn how to reduce Javascript execution time](https://developer.chrome.com/docs/lighthouse/performance/bootup-time/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "uses-rel-preconnect": {
+      "id": "uses-rel-preconnect",
+      "title": "Preconnect to required origins",
+      "description": "Consider adding `preconnect` or `dns-prefetch` resource hints to establish early connections to important third-party origins. [Learn how to preconnect to required origins](https://developer.chrome.com/docs/lighthouse/performance/uses-rel-preconnect/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "font-display": {
+      "id": "font-display",
+      "title": "All text remains visible during webfont loads",
+      "description": "Leverage the `font-display` CSS feature to ensure text is user-visible while webfonts are loading. [Learn more about `font-display`](https://developer.chrome.com/docs/lighthouse/performance/font-display/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "diagnostics": {
+      "id": "diagnostics",
+      "title": "Diagnostics",
+      "description": "Collection of useful page vitals.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "network-requests": {
+      "id": "network-requests",
+      "title": "Network Requests",
+      "description": "Lists the network requests that were made during page load.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "network-rtt": {
+      "id": "network-rtt",
+      "title": "Network Round Trip Times",
+      "description": "Network round trip times (RTT) have a large impact on performance. If the RTT to an origin is high, it's an indication that servers closer to the user could improve performance. [Learn more about the Round Trip Time](https://hpbn.co/primer-on-latency-and-bandwidth/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "network-server-latency": {
+      "id": "network-server-latency",
+      "title": "Server Backend Latencies",
+      "description": "Server latencies can impact web performance. If the server latency of an origin is high, it's an indication the server is overloaded or has poor backend performance. [Learn more about server response time](https://hpbn.co/primer-on-web-performance/#analyzing-the-resource-waterfall).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "main-thread-tasks": {
+      "id": "main-thread-tasks",
+      "title": "Tasks",
+      "description": "Lists the toplevel main thread tasks that executed during page load.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "metrics": {
+      "id": "metrics",
+      "title": "Metrics",
+      "description": "Collects all available metrics.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "resource-summary": {
+      "id": "resource-summary",
+      "title": "Resources Summary",
+      "description": "Aggregates all network requests and groups them by type",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "third-party-summary": {
+      "id": "third-party-summary",
+      "title": "Minimize third-party usage",
+      "description": "Third-party code can significantly impact load performance. Limit the number of redundant third-party providers and try to load third-party code after your page has primarily finished loading. [Learn how to minimize third-party impact](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/loading-third-party-javascript/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "third-party-facades": {
+      "id": "third-party-facades",
+      "title": "Lazy load third-party resources with facades",
+      "description": "Some third-party embeds can be lazy loaded. Consider replacing them with a facade until they are required. [Learn how to defer third-parties with a facade](https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "largest-contentful-paint-element": {
+      "id": "largest-contentful-paint-element",
+      "title": "Largest Contentful Paint element",
+      "description": "This is the largest contentful element painted within the viewport. [Learn more about the Largest Contentful Paint element](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "lcp-lazy-loaded": {
+      "id": "lcp-lazy-loaded",
+      "title": "Largest Contentful Paint image was not lazily loaded",
+      "description": "Above-the-fold images that are lazily loaded render later in the page lifecycle, which can delay the largest contentful paint. [Learn more about optimal lazy loading](https://web.dev/articles/lcp-lazy-loading).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "layout-shifts": {
+      "id": "layout-shifts",
+      "title": "Avoid large layout shifts",
+      "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that led to the layout shift. Some of these layout shifts may not be included in the CLS metric value due to [windowing](https://web.dev/articles/cls#what_is_cls). [Learn how to improve CLS](https://web.dev/articles/optimize-cls)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "long-tasks": {
+      "id": "long-tasks",
+      "title": "Avoid long main-thread tasks",
+      "description": "Lists the longest tasks on the main thread, useful for identifying worst contributors to input delay. [Learn how to avoid long main-thread tasks](https://web.dev/articles/optimize-long-tasks)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "non-composited-animations": {
+      "id": "non-composited-animations",
+      "title": "Avoid non-composited animations",
+      "description": "Animations which are not composited can be janky and increase CLS. [Learn how to avoid non-composited animations](https://developer.chrome.com/docs/lighthouse/performance/non-composited-animations/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "unsized-images": {
+      "id": "unsized-images",
+      "title": "Image elements have explicit `width` and `height`",
+      "description": "Set an explicit width and height on image elements to reduce layout shifts and improve CLS. [Learn how to set image dimensions](https://web.dev/articles/optimize-cls#images_without_dimensions)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 4
+    },
+    "prioritize-lcp-image": {
+      "id": "prioritize-lcp-image",
+      "title": "Preload Largest Contentful Paint image",
+      "description": "If the LCP element is dynamically added to the page, you should preload the image in order to improve LCP. [Learn more about preloading LCP elements](https://web.dev/articles/optimize-lcp#optimize_when_the_resource_is_discovered).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 4
+    },
+    "script-treemap-data": {
+      "id": "script-treemap-data",
+      "title": "Script Treemap Data",
+      "description": "Used for treemap app",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"
+    },
+    "uses-long-cache-ttl": {
+      "id": "uses-long-cache-ttl",
+      "title": "Uses efficient cache policy on static assets",
+      "description": "A long cache lifetime can speed up repeat visits to your page. [Learn more about efficient cache policies](https://developer.chrome.com/docs/lighthouse/performance/uses-long-cache-ttl/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "total-byte-weight": {
+      "id": "total-byte-weight",
+      "title": "Avoids enormous network payloads",
+      "description": "Large network payloads cost users real money and are highly correlated with long load times. [Learn how to reduce payload sizes](https://developer.chrome.com/docs/lighthouse/performance/total-byte-weight/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "offscreen-images": {
+      "id": "offscreen-images",
+      "title": "Defer offscreen images",
+      "description": "Consider lazy-loading offscreen and hidden images after all critical resources have finished loading to lower time to interactive. [Learn how to defer offscreen images](https://developer.chrome.com/docs/lighthouse/performance/offscreen-images/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "render-blocking-resources": {
+      "id": "render-blocking-resources",
+      "title": "Eliminate render-blocking resources",
+      "description": "Resources are blocking the first paint of your page. Consider delivering critical JS/CSS inline and deferring all non-critical JS/styles. [Learn how to eliminate render-blocking resources](https://developer.chrome.com/docs/lighthouse/performance/render-blocking-resources/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "unminified-css": {
+      "id": "unminified-css",
+      "title": "Minify CSS",
+      "description": "Minifying CSS files can reduce network payload sizes. [Learn how to minify CSS](https://developer.chrome.com/docs/lighthouse/performance/unminified-css/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "unminified-javascript": {
+      "id": "unminified-javascript",
+      "title": "Minify JavaScript",
+      "description": "Minifying JavaScript files can reduce payload sizes and script parse time. [Learn how to minify JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unminified-javascript/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "unused-css-rules": {
+      "id": "unused-css-rules",
+      "title": "Reduce unused CSS",
+      "description": "Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity. [Learn how to reduce unused CSS](https://developer.chrome.com/docs/lighthouse/performance/unused-css-rules/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "unused-javascript": {
+      "id": "unused-javascript",
+      "title": "Reduce unused JavaScript",
+      "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "modern-image-formats": {
+      "id": "modern-image-formats",
+      "title": "Serve images in next-gen formats",
+      "description": "Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption. [Learn more about modern image formats](https://developer.chrome.com/docs/lighthouse/performance/uses-webp-images/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "uses-optimized-images": {
+      "id": "uses-optimized-images",
+      "title": "Efficiently encode images",
+      "description": "Optimized images load faster and consume less cellular data. [Learn how to efficiently encode images](https://developer.chrome.com/docs/lighthouse/performance/uses-optimized-images/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "uses-text-compression": {
+      "id": "uses-text-compression",
+      "title": "Enable text compression",
+      "description": "Text-based resources should be served with compression (gzip, deflate or brotli) to minimize total network bytes. [Learn more about text compression](https://developer.chrome.com/docs/lighthouse/performance/uses-text-compression/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "uses-responsive-images": {
+      "id": "uses-responsive-images",
+      "title": "Properly size images",
+      "description": "Serve images that are appropriately-sized to save cellular data and improve load time. [Learn how to size images](https://developer.chrome.com/docs/lighthouse/performance/uses-responsive-images/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "efficient-animated-content": {
+      "id": "efficient-animated-content",
+      "title": "Use video formats for animated content",
+      "description": "Large GIFs are inefficient for delivering animated content. Consider using MPEG4/WebM videos for animations and PNG/WebP for static images instead of GIF to save network bytes. [Learn more about efficient video formats](https://developer.chrome.com/docs/lighthouse/performance/efficient-animated-content/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "duplicated-javascript": {
+      "id": "duplicated-javascript",
+      "title": "Remove duplicate modules in JavaScript bundles",
+      "description": "Remove large, duplicate JavaScript modules from bundles to reduce unnecessary bytes consumed by network activity. ",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "legacy-javascript": {
+      "id": "legacy-javascript",
+      "title": "Avoid serving legacy JavaScript to modern browsers",
+      "description": "Polyfills and transforms enable legacy browsers to use new JavaScript features. However, many aren't necessary for modern browsers. For your bundled JavaScript, adopt a modern script deployment strategy using [module/nomodule feature detection](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/) to reduce the amount of code shipped to modern browsers, while retaining support for legacy browsers. [Learn how to serve modern JavaScript](https://web.dev/articles/codelab-serve-modern-code)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "dom-size": {
+      "id": "dom-size",
+      "title": "Avoids an excessive DOM size",
+      "description": "A large DOM will increase memory usage, cause longer [style calculations](https://developers.google.com/web/fundamentals/performance/rendering/reduce-the-scope-and-complexity-of-style-calculations), and produce costly [layout reflows](https://developers.google.com/speed/articles/reflow). [Learn how to avoid an excessive DOM size](https://developer.chrome.com/docs/lighthouse/performance/dom-size/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 1
+    },
+    "no-document-write": {
+      "id": "no-document-write",
+      "title": "Avoids `document.write()`",
+      "description": "For users on slow connections, external scripts dynamically injected via `document.write()` can delay page load by tens of seconds. [Learn how to avoid document.write()](https://developer.chrome.com/docs/lighthouse/best-practices/no-document-write/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 2
+    },
+    "uses-http2": {
+      "id": "uses-http2",
+      "title": "Use HTTP/2",
+      "description": "HTTP/2 offers many benefits over HTTP/1.1, including binary headers and multiplexing. [Learn more about HTTP/2](https://developer.chrome.com/docs/lighthouse/best-practices/uses-http2/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "uses-passive-event-listeners": {
+      "id": "uses-passive-event-listeners",
+      "title": "Uses passive listeners to improve scrolling performance",
+      "description": "Consider marking your touch and wheel event listeners as `passive` to improve your page's scroll performance. [Learn more about adopting passive event listeners](https://developer.chrome.com/docs/lighthouse/best-practices/uses-passive-event-listeners/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "bf-cache": {
+      "id": "bf-cache",
+      "title": "Page didn't prevent back/forward cache restoration",
+      "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://developer.chrome.com/docs/lighthouse/performance/bf-cache/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 4
+    },
+    "cls-culprits-insight": {
+      "id": "cls-culprits-insight",
+      "title": "Layout shift culprits",
+      "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://web.dev/articles/optimize-cls), such as elements being added, removed, or their fonts changing as the page loads.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "layout-shifts",
+        "non-composited-animations",
+        "unsized-images"
+      ]
+    },
+    "document-latency-insight": {
+      "id": "document-latency-insight",
+      "title": "Document request latency",
+      "description": "Your first network request is the most important.  Reduce its latency by avoiding redirects, ensuring a fast server response, and enabling text compression.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "redirects",
+        "server-response-time",
+        "uses-text-compression"
+      ]
+    },
+    "dom-size-insight": {
+      "id": "dom-size-insight",
+      "title": "Optimize DOM size",
+      "description": "A large DOM can increase the duration of style calculations and layout reflows, impacting page responsiveness. A large DOM will also increase memory usage. [Learn how to avoid an excessive DOM size](https://developer.chrome.com/docs/lighthouse/performance/dom-size/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "dom-size"
+      ]
+    },
+    "font-display-insight": {
+      "id": "font-display-insight",
+      "title": "Font display",
+      "description": "Consider setting [font-display](https://developer.chrome.com/blog/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitigate layout shifts with [font metric overrides](https://developer.chrome.com/blog/font-fallbacks).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "font-display"
+      ]
+    },
+    "forced-reflow-insight": {
+      "id": "forced-reflow-insight",
+      "title": "Forced reflow",
+      "description": "Many APIs, typically reading layout geometry, force the rendering engine to pause script execution in order to calculate the style and layout. Learn more about [forced reflow](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing#avoid-forced-synchronous-layouts) and its mitigations.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "image-delivery-insight": {
+      "id": "image-delivery-insight",
+      "title": "Improve image delivery",
+      "description": "Reducing the download time of images can improve the perceived load time of the page and LCP. [Learn more about optimizing image size](https://developer.chrome.com/docs/lighthouse/performance/uses-optimized-images/)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "modern-image-formats",
+        "uses-optimized-images",
+        "efficient-animated-content",
+        "uses-responsive-images"
+      ]
+    },
+    "interaction-to-next-paint-insight": {
+      "id": "interaction-to-next-paint-insight",
+      "title": "INP by phase",
+      "description": "Start investigating with the longest phase. [Delays can be minimized](https://web.dev/articles/optimize-inp#optimize_interactions). To reduce processing duration, [optimize the main-thread costs](https://web.dev/articles/optimize-long-tasks), often JS.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "work-during-interaction"
+      ]
+    },
+    "lcp-discovery-insight": {
+      "id": "lcp-discovery-insight",
+      "title": "LCP request discovery",
+      "description": "Optimize LCP by making the LCP image [discoverable](https://web.dev/articles/optimize-lcp#1_eliminate_resource_load_delay) from the HTML immediately, and [avoiding lazy-loading](https://web.dev/articles/lcp-lazy-loading)",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "prioritize-lcp-image",
+        "lcp-lazy-loaded"
+      ]
+    },
+    "lcp-phases-insight": {
+      "id": "lcp-phases-insight",
+      "title": "LCP by phase",
+      "description": "Each [phase has specific improvement strategies](https://web.dev/articles/optimize-lcp#lcp-breakdown). Ideally, most of the LCP time should be spent on loading the resources, not within delays.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "largest-contentful-paint-element"
+      ]
+    },
+    "long-critical-network-tree-insight": {
+      "id": "long-critical-network-tree-insight",
+      "title": "Long critical network tree",
+      "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/lighthouse/performance/critical-request-chains) by reducing the length of chains, reducing the download size of resources, or deferring the download of unnecessary resources to improve page load.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "critical-request-chains"
+      ]
+    },
+    "render-blocking-insight": {
+      "id": "render-blocking-insight",
+      "title": "Render blocking requests",
+      "description": "Requests are blocking the page's initial render, which may delay LCP. [Deferring or inlining](https://web.dev/learn/performance/understanding-the-critical-path#render-blocking_resources/) can move these network requests out of the critical path.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "render-blocking-resources"
+      ]
+    },
+    "slow-css-selector-insight": {
+      "id": "slow-css-selector-insight",
+      "title": "CSS Selector costs",
+      "description": "If Recalculate Style costs remain high, selector optimization can reduce them. [Optimize the selectors](https://developer.chrome.com/docs/devtools/performance/selector-stats) with both high elapsed time and high slow-path %. Simpler selectors, fewer selectors, a smaller DOM, and a shallower DOM will all reduce matching costs.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3
+    },
+    "third-parties-insight": {
+      "id": "third-parties-insight",
+      "title": "Third parties",
+      "description": "Third party code can significantly impact load performance. [Reduce and defer loading of third party code](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/loading-third-party-javascript/) to prioritize your page's content.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "third-party-summary"
+      ]
+    },
+    "viewport-insight": {
+      "id": "viewport-insight",
+      "title": "Optimize viewport for mobile",
+      "description": "Tap interactions may be [delayed by up to 300 ms](https://developer.chrome.com/blog/300ms-tap-delay-gone-away/) if the viewport is not optimized for mobile.",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "The page did not paint any content. Please ensure you keep the browser window in the foreground during the load and try again. (NO_FCP)",
+      "errorStack": "LighthouseError: NO_FCP\n    at Timeout.<anonymous> (file:///C:/Users/81809/AppData/Roaming/npm/node_modules/lighthouse/core/gather/driver/wait-for-condition.js:85:14)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+      "guidanceLevel": 3,
+      "replacesAudits": [
+        "viewport"
+      ]
+    }
+  },
+  "configSettings": {
+    "output": [
+      "json"
+    ],
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 5250,
+    "pauseAfterLoadMs": 5250,
+    "networkQuietThresholdMs": 5250,
+    "cpuQuietThresholdMs": 5250,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "provided",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "cli",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": null,
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance"
+    ],
+    "skipAudits": null
+  },
+  "categories": {
+    "performance": {
+      "title": "Performance",
+      "supportedModes": [
+        "navigation",
+        "timespan",
+        "snapshot"
+      ],
+      "auditRefs": [
+        {
+          "id": "first-contentful-paint",
+          "weight": 10,
+          "group": "metrics",
+          "acronym": "FCP"
+        },
+        {
+          "id": "largest-contentful-paint",
+          "weight": 25,
+          "group": "metrics",
+          "acronym": "LCP"
+        },
+        {
+          "id": "total-blocking-time",
+          "weight": 30,
+          "group": "metrics",
+          "acronym": "TBT"
+        },
+        {
+          "id": "cumulative-layout-shift",
+          "weight": 25,
+          "group": "metrics",
+          "acronym": "CLS"
+        },
+        {
+          "id": "speed-index",
+          "weight": 10,
+          "group": "metrics",
+          "acronym": "SI"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "document-latency-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "dom-size-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "font-display-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "forced-reflow-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "image-delivery-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "interaction-to-next-paint-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "lcp-phases-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "long-critical-network-tree-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "render-blocking-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "slow-css-selector-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "third-parties-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "viewport-insight",
+          "weight": 0,
+          "group": "insights"
+        },
+        {
+          "id": "interactive",
+          "weight": 0,
+          "group": "hidden",
+          "acronym": "TTI"
+        },
+        {
+          "id": "max-potential-fid",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "first-meaningful-paint",
+          "weight": 0,
+          "acronym": "FMP",
+          "group": "hidden"
+        },
+        {
+          "id": "render-blocking-resources",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-responsive-images",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "offscreen-images",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unminified-css",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unminified-javascript",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unused-css-rules",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unused-javascript",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-optimized-images",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "modern-image-formats",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-text-compression",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-rel-preconnect",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "server-response-time",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "redirects",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-http2",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "efficient-animated-content",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "duplicated-javascript",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "legacy-javascript",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "prioritize-lcp-image",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "total-byte-weight",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-long-cache-ttl",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "dom-size",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "critical-request-chains",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "user-timings",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "bootup-time",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "font-display",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "third-party-summary",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "third-party-facades",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "largest-contentful-paint-element",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "lcp-lazy-loaded",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "layout-shifts",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "uses-passive-event-listeners",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "no-document-write",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "long-tasks",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "non-composited-animations",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "unsized-images",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "viewport",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "bf-cache",
+          "weight": 0,
+          "group": "diagnostics"
+        },
+        {
+          "id": "network-requests",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "network-rtt",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "network-server-latency",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "main-thread-tasks",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "diagnostics",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "metrics",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "screenshot-thumbnails",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "final-screenshot",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "script-treemap-data",
+          "weight": 0,
+          "group": "hidden"
+        },
+        {
+          "id": "resource-summary",
+          "weight": 0,
+          "group": "hidden"
+        }
+      ],
+      "id": "performance",
+      "score": null
+    }
+  },
+  "categoryGroups": {
+    "metrics": {
+      "title": "Metrics"
+    },
+    "insights": {
+      "title": "Insights"
+    },
+    "diagnostics": {
+      "title": "Diagnostics",
+      "description": "More information about the performance of your application. These numbers don't [directly affect](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) the Performance score."
+    },
+    "a11y-best-practices": {
+      "title": "Best practices",
+      "description": "These items highlight common accessibility best practices."
+    },
+    "a11y-color-contrast": {
+      "title": "Contrast",
+      "description": "These are opportunities to improve the legibility of your content."
+    },
+    "a11y-names-labels": {
+      "title": "Names and labels",
+      "description": "These are opportunities to improve the semantics of the controls in your application. This may enhance the experience for users of assistive technology, like a screen reader."
+    },
+    "a11y-navigation": {
+      "title": "Navigation",
+      "description": "These are opportunities to improve keyboard navigation in your application."
+    },
+    "a11y-aria": {
+      "title": "ARIA",
+      "description": "These are opportunities to improve the usage of ARIA in your application which may enhance the experience for users of assistive technology, like a screen reader."
+    },
+    "a11y-language": {
+      "title": "Internationalization and localization",
+      "description": "These are opportunities to improve the interpretation of your content by users in different locales."
+    },
+    "a11y-audio-video": {
+      "title": "Audio and video",
+      "description": "These are opportunities to provide alternative content for audio and video. This may improve the experience for users with hearing or vision impairments."
+    },
+    "a11y-tables-lists": {
+      "title": "Tables and lists",
+      "description": "These are opportunities to improve the experience of reading tabular or list data using assistive technology, like a screen reader."
+    },
+    "seo-mobile": {
+      "title": "Mobile Friendly",
+      "description": "Make sure your pages are mobile friendly so users don’t have to pinch or zoom in order to read the content pages. [Learn how to make pages mobile-friendly](https://developers.google.com/search/mobile-sites/)."
+    },
+    "seo-content": {
+      "title": "Content Best Practices",
+      "description": "Format your HTML in a way that enables crawlers to better understand your app’s content."
+    },
+    "seo-crawl": {
+      "title": "Crawling and Indexing",
+      "description": "To appear in search results, crawlers need access to your app."
+    },
+    "best-practices-trust-safety": {
+      "title": "Trust and Safety"
+    },
+    "best-practices-ux": {
+      "title": "User Experience"
+    },
+    "best-practices-browser-compat": {
+      "title": "Browser Compatibility"
+    },
+    "best-practices-general": {
+      "title": "General"
+    },
+    "hidden": {
+      "title": ""
+    }
+  },
+  "stackPacks": [],
+  "timing": {
+    "entries": [
+      {
+        "startTime": 7850.03,
+        "name": "lh:config",
+        "duration": 4731.84,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 7874.35,
+        "name": "lh:config:resolveArtifactsToDefns",
+        "duration": 577.37,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 12582.34,
+        "name": "lh:runner:gather",
+        "duration": 84515.88,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 13029.63,
+        "name": "lh:driver:connect",
+        "duration": 54.97,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 13085.63,
+        "name": "lh:driver:navigate",
+        "duration": 160.37,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 13247.12,
+        "name": "lh:gather:getBenchmarkIndex",
+        "duration": 1020.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 14267.69,
+        "name": "lh:gather:getVersion",
+        "duration": 3.34,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 14276.39,
+        "name": "lh:prepare:navigationMode",
+        "duration": 316.96,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 14370.93,
+        "name": "lh:storage:clearDataForOrigin",
+        "duration": 91.35,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 14462.7,
+        "name": "lh:storage:clearBrowserCaches",
+        "duration": 120.38,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 14585.89,
+        "name": "lh:gather:prepareThrottlingAndNetwork",
+        "duration": 7.11,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 96977.39,
+        "name": "lh:computed:NetworkRecords",
+        "duration": 6.78,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97099.29,
+        "name": "lh:runner:audit",
+        "duration": 496.95,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97099.62,
+        "name": "lh:runner:auditing",
+        "duration": 494.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97105.12,
+        "name": "lh:audit:viewport",
+        "duration": 9.29,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97115.46,
+        "name": "lh:audit:first-contentful-paint",
+        "duration": 5.79,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97122.18,
+        "name": "lh:audit:largest-contentful-paint",
+        "duration": 3.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97126.11,
+        "name": "lh:audit:first-meaningful-paint",
+        "duration": 4.65,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97131.6,
+        "name": "lh:audit:speed-index",
+        "duration": 7.78,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97139.49,
+        "name": "lh:audit:screenshot-thumbnails",
+        "duration": 2.16,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97141.74,
+        "name": "lh:audit:final-screenshot",
+        "duration": 0.98,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97144.17,
+        "name": "lh:audit:total-blocking-time",
+        "duration": 3.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97148.01,
+        "name": "lh:audit:max-potential-fid",
+        "duration": 10.53,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97160.05,
+        "name": "lh:audit:cumulative-layout-shift",
+        "duration": 3.57,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97164.49,
+        "name": "lh:audit:server-response-time",
+        "duration": 12.15,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97178.29,
+        "name": "lh:audit:interactive",
+        "duration": 4.52,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97196.56,
+        "name": "lh:audit:user-timings",
+        "duration": 11.28,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97210.51,
+        "name": "lh:audit:critical-request-chains",
+        "duration": 12.98,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97226.36,
+        "name": "lh:audit:redirects",
+        "duration": 11.91,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97242.14,
+        "name": "lh:audit:mainthread-work-breakdown",
+        "duration": 5.24,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97248.15,
+        "name": "lh:audit:bootup-time",
+        "duration": 10.01,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97258.96,
+        "name": "lh:audit:uses-rel-preconnect",
+        "duration": 5.05,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97264.94,
+        "name": "lh:audit:font-display",
+        "duration": 7.75,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97273.39,
+        "name": "lh:audit:diagnostics",
+        "duration": 2.78,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97276.3,
+        "name": "lh:audit:network-requests",
+        "duration": 1.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97278.87,
+        "name": "lh:audit:network-rtt",
+        "duration": 2.58,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97282.08,
+        "name": "lh:audit:network-server-latency",
+        "duration": 9.93,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97292.09,
+        "name": "lh:audit:main-thread-tasks",
+        "duration": 3.85,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97296.03,
+        "name": "lh:audit:metrics",
+        "duration": 0.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97296.92,
+        "name": "lh:audit:resource-summary",
+        "duration": 0.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97298.69,
+        "name": "lh:audit:third-party-summary",
+        "duration": 6.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97305.51,
+        "name": "lh:audit:third-party-facades",
+        "duration": 4.17,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97310.85,
+        "name": "lh:audit:largest-contentful-paint-element",
+        "duration": 2.86,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97314.62,
+        "name": "lh:audit:lcp-lazy-loaded",
+        "duration": 7.18,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97324.85,
+        "name": "lh:audit:layout-shifts",
+        "duration": 15.22,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97341.42,
+        "name": "lh:audit:long-tasks",
+        "duration": 4.72,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97346.96,
+        "name": "lh:audit:non-composited-animations",
+        "duration": 14.81,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97362.57,
+        "name": "lh:audit:unsized-images",
+        "duration": 3.88,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97371.16,
+        "name": "lh:audit:prioritize-lcp-image",
+        "duration": 3.35,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97374.58,
+        "name": "lh:audit:script-treemap-data",
+        "duration": 1.57,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97377.27,
+        "name": "lh:audit:uses-long-cache-ttl",
+        "duration": 17.04,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97395.73,
+        "name": "lh:audit:total-byte-weight",
+        "duration": 3.8,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97400.49,
+        "name": "lh:audit:offscreen-images",
+        "duration": 9.47,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97410.83,
+        "name": "lh:audit:render-blocking-resources",
+        "duration": 2.96,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97414.36,
+        "name": "lh:audit:unminified-css",
+        "duration": 6.24,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97421.6,
+        "name": "lh:audit:unminified-javascript",
+        "duration": 3.47,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97425.79,
+        "name": "lh:audit:unused-css-rules",
+        "duration": 5.46,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97431.92,
+        "name": "lh:audit:unused-javascript",
+        "duration": 9.59,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97442.32,
+        "name": "lh:audit:modern-image-formats",
+        "duration": 4.12,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97447.31,
+        "name": "lh:audit:uses-optimized-images",
+        "duration": 3.98,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97452.78,
+        "name": "lh:audit:uses-text-compression",
+        "duration": 5.07,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97458.59,
+        "name": "lh:audit:uses-responsive-images",
+        "duration": 2.99,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97462.23,
+        "name": "lh:audit:efficient-animated-content",
+        "duration": 8.79,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97472.51,
+        "name": "lh:audit:duplicated-javascript",
+        "duration": 3.75,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97477.02,
+        "name": "lh:audit:legacy-javascript",
+        "duration": 3.02,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97481.93,
+        "name": "lh:audit:dom-size",
+        "duration": 4.67,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97487.48,
+        "name": "lh:audit:no-document-write",
+        "duration": 3.99,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97492.11,
+        "name": "lh:audit:uses-http2",
+        "duration": 3.14,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97496.66,
+        "name": "lh:audit:uses-passive-event-listeners",
+        "duration": 5,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97503.88,
+        "name": "lh:audit:bf-cache",
+        "duration": 4.51,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97509.11,
+        "name": "lh:audit:cls-culprits-insight",
+        "duration": 4.62,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97514.51,
+        "name": "lh:audit:document-latency-insight",
+        "duration": 7.39,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97522.76,
+        "name": "lh:audit:dom-size-insight",
+        "duration": 3.71,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97527.93,
+        "name": "lh:audit:font-display-insight",
+        "duration": 3.65,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97532.43,
+        "name": "lh:audit:forced-reflow-insight",
+        "duration": 7.2,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97540.48,
+        "name": "lh:audit:image-delivery-insight",
+        "duration": 3.69,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97544.93,
+        "name": "lh:audit:interaction-to-next-paint-insight",
+        "duration": 3.95,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97549.69,
+        "name": "lh:audit:lcp-discovery-insight",
+        "duration": 9.77,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97560.26,
+        "name": "lh:audit:lcp-phases-insight",
+        "duration": 3.06,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97564.2,
+        "name": "lh:audit:long-critical-network-tree-insight",
+        "duration": 6.9,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97572.65,
+        "name": "lh:audit:render-blocking-insight",
+        "duration": 4.96,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97578.46,
+        "name": "lh:audit:slow-css-selector-insight",
+        "duration": 4.09,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97583.43,
+        "name": "lh:audit:third-parties-insight",
+        "duration": 4.73,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97589.59,
+        "name": "lh:audit:viewport-insight",
+        "duration": 4.73,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 97594.42,
+        "name": "lh:runner:generate",
+        "duration": 1.76,
+        "entryType": "measure"
+      }
+    ],
+    "total": 85012.83
+  },
+  "i18n": {
+    "rendererFormattedStrings": {
+      "calculatorLink": "See calculator.",
+      "collapseView": "Collapse view",
+      "crcInitialNavigation": "Initial Navigation",
+      "crcLongestDurationLabel": "Maximum critical path latency:",
+      "dropdownCopyJSON": "Copy JSON",
+      "dropdownDarkTheme": "Toggle Dark Theme",
+      "dropdownInsightsToggle": "Toggle experimental insights",
+      "dropdownPrintExpanded": "Print Expanded",
+      "dropdownPrintSummary": "Print Summary",
+      "dropdownSaveGist": "Save as Gist",
+      "dropdownSaveHTML": "Save as HTML",
+      "dropdownSaveJSON": "Save as JSON",
+      "dropdownViewUnthrottledTrace": "View Unthrottled Trace",
+      "dropdownViewer": "Open in Viewer",
+      "errorLabel": "Error!",
+      "errorMissingAuditInfo": "Report error: no audit information",
+      "expandView": "Expand view",
+      "firstPartyChipLabel": "1st party",
+      "footerIssue": "File an issue",
+      "hide": "Hide",
+      "labDataTitle": "Lab Data",
+      "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
+      "manualAuditsGroupTitle": "Additional items to manually check",
+      "notApplicableAuditsGroupTitle": "Not applicable",
+      "openInANewTabTooltip": "Open in a new tab",
+      "opportunityResourceColumnLabel": "Opportunity",
+      "opportunitySavingsColumnLabel": "Estimated Savings",
+      "passedAuditsGroupTitle": "Passed audits",
+      "runtimeAnalysisWindow": "Initial page load",
+      "runtimeAnalysisWindowSnapshot": "Point-in-time snapshot",
+      "runtimeAnalysisWindowTimespan": "User interactions timespan",
+      "runtimeCustom": "Custom throttling",
+      "runtimeDesktopEmulation": "Emulated Desktop",
+      "runtimeMobileEmulation": "Emulated Moto G Power",
+      "runtimeNoEmulation": "No emulation",
+      "runtimeSettingsAxeVersion": "Axe version",
+      "runtimeSettingsBenchmark": "Unthrottled CPU/Memory Power",
+      "runtimeSettingsCPUThrottling": "CPU throttling",
+      "runtimeSettingsDevice": "Device",
+      "runtimeSettingsNetworkThrottling": "Network throttling",
+      "runtimeSettingsScreenEmulation": "Screen emulation",
+      "runtimeSettingsUANetwork": "User agent (network)",
+      "runtimeSingleLoad": "Single page session",
+      "runtimeSingleLoadTooltip": "This data is taken from a single page session, as opposed to field data summarizing many sessions.",
+      "runtimeSlow4g": "Slow 4G throttling",
+      "runtimeUnknown": "Unknown",
+      "show": "Show",
+      "showRelevantAudits": "Show audits relevant to:",
+      "snippetCollapseButtonLabel": "Collapse snippet",
+      "snippetExpandButtonLabel": "Expand snippet",
+      "thirdPartyResourcesLabel": "Show 3rd-party resources",
+      "throttlingProvided": "Provided by environment",
+      "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
+      "unattributable": "Unattributable",
+      "varianceDisclaimer": "Values are estimated and may vary. The [performance score is calculated](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) directly from these metrics.",
+      "viewTraceLabel": "View Trace",
+      "viewTreemapLabel": "View Treemap",
+      "warningAuditsGroupTitle": "Passed audits but with warnings",
+      "warningHeader": "Warnings: "
+    },
+    "icuMessagePaths": {
+      "core/lib/lh-error.js | noFcp": [
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "runtimeError.message"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "runWarnings[0]"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits.viewport.errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[first-contentful-paint].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[largest-contentful-paint].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[first-meaningful-paint].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[speed-index].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[screenshot-thumbnails].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[final-screenshot].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[total-blocking-time].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[max-potential-fid].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[cumulative-layout-shift].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[server-response-time].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits.interactive.errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[user-timings].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[critical-request-chains].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits.redirects.errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[mainthread-work-breakdown].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[bootup-time].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-rel-preconnect].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[font-display].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits.diagnostics.errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[network-requests].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[network-rtt].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[network-server-latency].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[main-thread-tasks].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits.metrics.errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[resource-summary].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[third-party-summary].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[third-party-facades].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[largest-contentful-paint-element].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[lcp-lazy-loaded].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[layout-shifts].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[long-tasks].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[non-composited-animations].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[unsized-images].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[prioritize-lcp-image].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[script-treemap-data].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-long-cache-ttl].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[total-byte-weight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[offscreen-images].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[render-blocking-resources].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[unminified-css].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[unminified-javascript].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[unused-css-rules].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[unused-javascript].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[modern-image-formats].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-optimized-images].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-text-compression].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-responsive-images].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[efficient-animated-content].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[duplicated-javascript].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[legacy-javascript].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[dom-size].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[no-document-write].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-http2].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[uses-passive-event-listeners].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[bf-cache].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[cls-culprits-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[document-latency-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[dom-size-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[font-display-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[forced-reflow-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[image-delivery-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[interaction-to-next-paint-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[lcp-discovery-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[lcp-phases-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[long-critical-network-tree-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[render-blocking-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[slow-css-selector-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[third-parties-insight].errorMessage"
+        },
+        {
+          "values": {
+            "errorCode": "NO_FCP"
+          },
+          "path": "audits[viewport-insight].errorMessage"
+        }
+      ],
+      "core/audits/viewport.js | title": [
+        "audits.viewport.title"
+      ],
+      "core/audits/viewport.js | description": [
+        "audits.viewport.description"
+      ],
+      "core/lib/i18n/i18n.js | firstContentfulPaintMetric": [
+        "audits[first-contentful-paint].title"
+      ],
+      "core/audits/metrics/first-contentful-paint.js | description": [
+        "audits[first-contentful-paint].description"
+      ],
+      "core/lib/i18n/i18n.js | largestContentfulPaintMetric": [
+        "audits[largest-contentful-paint].title"
+      ],
+      "core/audits/metrics/largest-contentful-paint.js | description": [
+        "audits[largest-contentful-paint].description"
+      ],
+      "core/lib/i18n/i18n.js | firstMeaningfulPaintMetric": [
+        "audits[first-meaningful-paint].title"
+      ],
+      "core/audits/metrics/first-meaningful-paint.js | description": [
+        "audits[first-meaningful-paint].description"
+      ],
+      "core/lib/i18n/i18n.js | speedIndexMetric": [
+        "audits[speed-index].title"
+      ],
+      "core/audits/metrics/speed-index.js | description": [
+        "audits[speed-index].description"
+      ],
+      "core/lib/i18n/i18n.js | totalBlockingTimeMetric": [
+        "audits[total-blocking-time].title"
+      ],
+      "core/audits/metrics/total-blocking-time.js | description": [
+        "audits[total-blocking-time].description"
+      ],
+      "core/lib/i18n/i18n.js | maxPotentialFIDMetric": [
+        "audits[max-potential-fid].title"
+      ],
+      "core/audits/metrics/max-potential-fid.js | description": [
+        "audits[max-potential-fid].description"
+      ],
+      "core/lib/i18n/i18n.js | cumulativeLayoutShiftMetric": [
+        "audits[cumulative-layout-shift].title"
+      ],
+      "core/audits/metrics/cumulative-layout-shift.js | description": [
+        "audits[cumulative-layout-shift].description"
+      ],
+      "core/audits/server-response-time.js | title": [
+        "audits[server-response-time].title"
+      ],
+      "core/audits/server-response-time.js | description": [
+        "audits[server-response-time].description"
+      ],
+      "core/lib/i18n/i18n.js | interactiveMetric": [
+        "audits.interactive.title"
+      ],
+      "core/audits/metrics/interactive.js | description": [
+        "audits.interactive.description"
+      ],
+      "core/audits/user-timings.js | title": [
+        "audits[user-timings].title"
+      ],
+      "core/audits/user-timings.js | description": [
+        "audits[user-timings].description"
+      ],
+      "core/audits/critical-request-chains.js | title": [
+        "audits[critical-request-chains].title"
+      ],
+      "core/audits/critical-request-chains.js | description": [
+        "audits[critical-request-chains].description"
+      ],
+      "core/audits/redirects.js | title": [
+        "audits.redirects.title"
+      ],
+      "core/audits/redirects.js | description": [
+        "audits.redirects.description"
+      ],
+      "core/audits/mainthread-work-breakdown.js | title": [
+        "audits[mainthread-work-breakdown].title"
+      ],
+      "core/audits/mainthread-work-breakdown.js | description": [
+        "audits[mainthread-work-breakdown].description"
+      ],
+      "core/audits/bootup-time.js | title": [
+        "audits[bootup-time].title"
+      ],
+      "core/audits/bootup-time.js | description": [
+        "audits[bootup-time].description"
+      ],
+      "core/audits/uses-rel-preconnect.js | title": [
+        "audits[uses-rel-preconnect].title"
+      ],
+      "core/audits/uses-rel-preconnect.js | description": [
+        "audits[uses-rel-preconnect].description"
+      ],
+      "core/audits/font-display.js | title": [
+        "audits[font-display].title"
+      ],
+      "core/audits/font-display.js | description": [
+        "audits[font-display].description"
+      ],
+      "core/audits/network-rtt.js | title": [
+        "audits[network-rtt].title"
+      ],
+      "core/audits/network-rtt.js | description": [
+        "audits[network-rtt].description"
+      ],
+      "core/audits/network-server-latency.js | title": [
+        "audits[network-server-latency].title"
+      ],
+      "core/audits/network-server-latency.js | description": [
+        "audits[network-server-latency].description"
+      ],
+      "core/audits/third-party-summary.js | title": [
+        "audits[third-party-summary].title"
+      ],
+      "core/audits/third-party-summary.js | description": [
+        "audits[third-party-summary].description"
+      ],
+      "core/audits/third-party-facades.js | title": [
+        "audits[third-party-facades].title"
+      ],
+      "core/audits/third-party-facades.js | description": [
+        "audits[third-party-facades].description"
+      ],
+      "core/audits/largest-contentful-paint-element.js | title": [
+        "audits[largest-contentful-paint-element].title"
+      ],
+      "core/audits/largest-contentful-paint-element.js | description": [
+        "audits[largest-contentful-paint-element].description"
+      ],
+      "core/audits/lcp-lazy-loaded.js | title": [
+        "audits[lcp-lazy-loaded].title"
+      ],
+      "core/audits/lcp-lazy-loaded.js | description": [
+        "audits[lcp-lazy-loaded].description"
+      ],
+      "core/audits/layout-shifts.js | title": [
+        "audits[layout-shifts].title"
+      ],
+      "core/audits/layout-shifts.js | description": [
+        "audits[layout-shifts].description"
+      ],
+      "core/audits/long-tasks.js | title": [
+        "audits[long-tasks].title"
+      ],
+      "core/audits/long-tasks.js | description": [
+        "audits[long-tasks].description"
+      ],
+      "core/audits/non-composited-animations.js | title": [
+        "audits[non-composited-animations].title"
+      ],
+      "core/audits/non-composited-animations.js | description": [
+        "audits[non-composited-animations].description"
+      ],
+      "core/audits/unsized-images.js | title": [
+        "audits[unsized-images].title"
+      ],
+      "core/audits/unsized-images.js | description": [
+        "audits[unsized-images].description"
+      ],
+      "core/audits/prioritize-lcp-image.js | title": [
+        "audits[prioritize-lcp-image].title"
+      ],
+      "core/audits/prioritize-lcp-image.js | description": [
+        "audits[prioritize-lcp-image].description"
+      ],
+      "core/audits/byte-efficiency/uses-long-cache-ttl.js | title": [
+        "audits[uses-long-cache-ttl].title"
+      ],
+      "core/audits/byte-efficiency/uses-long-cache-ttl.js | description": [
+        "audits[uses-long-cache-ttl].description"
+      ],
+      "core/audits/byte-efficiency/total-byte-weight.js | title": [
+        "audits[total-byte-weight].title"
+      ],
+      "core/audits/byte-efficiency/total-byte-weight.js | description": [
+        "audits[total-byte-weight].description"
+      ],
+      "core/audits/byte-efficiency/offscreen-images.js | title": [
+        "audits[offscreen-images].title"
+      ],
+      "core/audits/byte-efficiency/offscreen-images.js | description": [
+        "audits[offscreen-images].description"
+      ],
+      "core/audits/byte-efficiency/render-blocking-resources.js | title": [
+        "audits[render-blocking-resources].title"
+      ],
+      "core/audits/byte-efficiency/render-blocking-resources.js | description": [
+        "audits[render-blocking-resources].description"
+      ],
+      "core/audits/byte-efficiency/unminified-css.js | title": [
+        "audits[unminified-css].title"
+      ],
+      "core/audits/byte-efficiency/unminified-css.js | description": [
+        "audits[unminified-css].description"
+      ],
+      "core/audits/byte-efficiency/unminified-javascript.js | title": [
+        "audits[unminified-javascript].title"
+      ],
+      "core/audits/byte-efficiency/unminified-javascript.js | description": [
+        "audits[unminified-javascript].description"
+      ],
+      "core/audits/byte-efficiency/unused-css-rules.js | title": [
+        "audits[unused-css-rules].title"
+      ],
+      "core/audits/byte-efficiency/unused-css-rules.js | description": [
+        "audits[unused-css-rules].description"
+      ],
+      "core/audits/byte-efficiency/unused-javascript.js | title": [
+        "audits[unused-javascript].title"
+      ],
+      "core/audits/byte-efficiency/unused-javascript.js | description": [
+        "audits[unused-javascript].description"
+      ],
+      "core/audits/byte-efficiency/modern-image-formats.js | title": [
+        "audits[modern-image-formats].title"
+      ],
+      "core/audits/byte-efficiency/modern-image-formats.js | description": [
+        "audits[modern-image-formats].description"
+      ],
+      "core/audits/byte-efficiency/uses-optimized-images.js | title": [
+        "audits[uses-optimized-images].title"
+      ],
+      "core/audits/byte-efficiency/uses-optimized-images.js | description": [
+        "audits[uses-optimized-images].description"
+      ],
+      "core/audits/byte-efficiency/uses-text-compression.js | title": [
+        "audits[uses-text-compression].title"
+      ],
+      "core/audits/byte-efficiency/uses-text-compression.js | description": [
+        "audits[uses-text-compression].description"
+      ],
+      "core/audits/byte-efficiency/uses-responsive-images.js | title": [
+        "audits[uses-responsive-images].title"
+      ],
+      "core/audits/byte-efficiency/uses-responsive-images.js | description": [
+        "audits[uses-responsive-images].description"
+      ],
+      "core/audits/byte-efficiency/efficient-animated-content.js | title": [
+        "audits[efficient-animated-content].title"
+      ],
+      "core/audits/byte-efficiency/efficient-animated-content.js | description": [
+        "audits[efficient-animated-content].description"
+      ],
+      "core/audits/byte-efficiency/duplicated-javascript.js | title": [
+        "audits[duplicated-javascript].title"
+      ],
+      "core/audits/byte-efficiency/duplicated-javascript.js | description": [
+        "audits[duplicated-javascript].description"
+      ],
+      "core/audits/byte-efficiency/legacy-javascript.js | title": [
+        "audits[legacy-javascript].title"
+      ],
+      "core/audits/byte-efficiency/legacy-javascript.js | description": [
+        "audits[legacy-javascript].description"
+      ],
+      "core/audits/dobetterweb/dom-size.js | title": [
+        "audits[dom-size].title"
+      ],
+      "core/audits/dobetterweb/dom-size.js | description": [
+        "audits[dom-size].description"
+      ],
+      "core/audits/dobetterweb/no-document-write.js | title": [
+        "audits[no-document-write].title"
+      ],
+      "core/audits/dobetterweb/no-document-write.js | description": [
+        "audits[no-document-write].description"
+      ],
+      "core/audits/dobetterweb/uses-http2.js | title": [
+        "audits[uses-http2].title"
+      ],
+      "core/audits/dobetterweb/uses-http2.js | description": [
+        "audits[uses-http2].description"
+      ],
+      "core/audits/dobetterweb/uses-passive-event-listeners.js | title": [
+        "audits[uses-passive-event-listeners].title"
+      ],
+      "core/audits/dobetterweb/uses-passive-event-listeners.js | description": [
+        "audits[uses-passive-event-listeners].description"
+      ],
+      "core/audits/bf-cache.js | title": [
+        "audits[bf-cache].title"
+      ],
+      "core/audits/bf-cache.js | description": [
+        "audits[bf-cache].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/CLSCulprits.js | title": [
+        "audits[cls-culprits-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/CLSCulprits.js | description": [
+        "audits[cls-culprits-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | title": [
+        "audits[document-latency-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DocumentLatency.js | description": [
+        "audits[document-latency-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | title": [
+        "audits[dom-size-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/DOMSize.js | description": [
+        "audits[dom-size-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/FontDisplay.js | title": [
+        "audits[font-display-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/FontDisplay.js | description": [
+        "audits[font-display-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ForcedReflow.js | title": [
+        "audits[forced-reflow-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ForcedReflow.js | description": [
+        "audits[forced-reflow-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ImageDelivery.js | title": [
+        "audits[image-delivery-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ImageDelivery.js | description": [
+        "audits[image-delivery-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/InteractionToNextPaint.js | title": [
+        "audits[interaction-to-next-paint-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/InteractionToNextPaint.js | description": [
+        "audits[interaction-to-next-paint-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPDiscovery.js | title": [
+        "audits[lcp-discovery-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPDiscovery.js | description": [
+        "audits[lcp-discovery-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPPhases.js | title": [
+        "audits[lcp-phases-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LCPPhases.js | description": [
+        "audits[lcp-phases-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LongCriticalNetworkTree.js | title": [
+        "audits[long-critical-network-tree-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/LongCriticalNetworkTree.js | description": [
+        "audits[long-critical-network-tree-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/RenderBlocking.js | title": [
+        "audits[render-blocking-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/RenderBlocking.js | description": [
+        "audits[render-blocking-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/SlowCSSSelector.js | title": [
+        "audits[slow-css-selector-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/SlowCSSSelector.js | description": [
+        "audits[slow-css-selector-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | title": [
+        "audits[third-parties-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/ThirdParties.js | description": [
+        "audits[third-parties-insight].description"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Viewport.js | title": [
+        "audits[viewport-insight].title"
+      ],
+      "node_modules/@paulirish/trace_engine/models/trace/insights/Viewport.js | description": [
+        "audits[viewport-insight].description"
+      ],
+      "core/config/default-config.js | performanceCategoryTitle": [
+        "categories.performance.title"
+      ],
+      "core/config/default-config.js | metricGroupTitle": [
+        "categoryGroups.metrics.title"
+      ],
+      "core/config/default-config.js | insightGroupTitle": [
+        "categoryGroups.insights.title"
+      ],
+      "core/config/default-config.js | diagnosticsGroupTitle": [
+        "categoryGroups.diagnostics.title"
+      ],
+      "core/config/default-config.js | diagnosticsGroupDescription": [
+        "categoryGroups.diagnostics.description"
+      ],
+      "core/config/default-config.js | a11yBestPracticesGroupTitle": [
+        "categoryGroups[a11y-best-practices].title"
+      ],
+      "core/config/default-config.js | a11yBestPracticesGroupDescription": [
+        "categoryGroups[a11y-best-practices].description"
+      ],
+      "core/config/default-config.js | a11yColorContrastGroupTitle": [
+        "categoryGroups[a11y-color-contrast].title"
+      ],
+      "core/config/default-config.js | a11yColorContrastGroupDescription": [
+        "categoryGroups[a11y-color-contrast].description"
+      ],
+      "core/config/default-config.js | a11yNamesLabelsGroupTitle": [
+        "categoryGroups[a11y-names-labels].title"
+      ],
+      "core/config/default-config.js | a11yNamesLabelsGroupDescription": [
+        "categoryGroups[a11y-names-labels].description"
+      ],
+      "core/config/default-config.js | a11yNavigationGroupTitle": [
+        "categoryGroups[a11y-navigation].title"
+      ],
+      "core/config/default-config.js | a11yNavigationGroupDescription": [
+        "categoryGroups[a11y-navigation].description"
+      ],
+      "core/config/default-config.js | a11yAriaGroupTitle": [
+        "categoryGroups[a11y-aria].title"
+      ],
+      "core/config/default-config.js | a11yAriaGroupDescription": [
+        "categoryGroups[a11y-aria].description"
+      ],
+      "core/config/default-config.js | a11yLanguageGroupTitle": [
+        "categoryGroups[a11y-language].title"
+      ],
+      "core/config/default-config.js | a11yLanguageGroupDescription": [
+        "categoryGroups[a11y-language].description"
+      ],
+      "core/config/default-config.js | a11yAudioVideoGroupTitle": [
+        "categoryGroups[a11y-audio-video].title"
+      ],
+      "core/config/default-config.js | a11yAudioVideoGroupDescription": [
+        "categoryGroups[a11y-audio-video].description"
+      ],
+      "core/config/default-config.js | a11yTablesListsVideoGroupTitle": [
+        "categoryGroups[a11y-tables-lists].title"
+      ],
+      "core/config/default-config.js | a11yTablesListsVideoGroupDescription": [
+        "categoryGroups[a11y-tables-lists].description"
+      ],
+      "core/config/default-config.js | seoMobileGroupTitle": [
+        "categoryGroups[seo-mobile].title"
+      ],
+      "core/config/default-config.js | seoMobileGroupDescription": [
+        "categoryGroups[seo-mobile].description"
+      ],
+      "core/config/default-config.js | seoContentGroupTitle": [
+        "categoryGroups[seo-content].title"
+      ],
+      "core/config/default-config.js | seoContentGroupDescription": [
+        "categoryGroups[seo-content].description"
+      ],
+      "core/config/default-config.js | seoCrawlingGroupTitle": [
+        "categoryGroups[seo-crawl].title"
+      ],
+      "core/config/default-config.js | seoCrawlingGroupDescription": [
+        "categoryGroups[seo-crawl].description"
+      ],
+      "core/config/default-config.js | bestPracticesTrustSafetyGroupTitle": [
+        "categoryGroups[best-practices-trust-safety].title"
+      ],
+      "core/config/default-config.js | bestPracticesUXGroupTitle": [
+        "categoryGroups[best-practices-ux].title"
+      ],
+      "core/config/default-config.js | bestPracticesBrowserCompatGroupTitle": [
+        "categoryGroups[best-practices-browser-compat].title"
+      ],
+      "core/config/default-config.js | bestPracticesGeneralGroupTitle": [
+        "categoryGroups[best-practices-general].title"
+      ]
+    }
+  }
+}
