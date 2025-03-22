@@ -32,7 +32,6 @@ const config = {
                 '@babel/preset-env',
                 {
                   // 必要に応じて調整
-                  corejs: false,
                   targets: { chrome: '134' },
                   useBuiltIns: false,
                 },
