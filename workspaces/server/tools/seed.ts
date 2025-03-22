@@ -6,7 +6,6 @@ import { reset } from 'drizzle-seed';
 import { DateTime } from 'luxon';
 
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
-import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
 import * as bcrypt from 'bcrypt';
 import path from 'node:path';
 import { readdirSync } from 'node:fs';
@@ -76,7 +75,7 @@ const CHANNEL_NAME_LIST: Channel[] = [
 
 async function main() {
   const faker = new Faker({
-    locale: [{ lorem: { word: await fetchLoremIpsumWordList() } }, ja, en],
+    locale: [{}, ja, en],
   });
 
   faker.seed(2345678908);
