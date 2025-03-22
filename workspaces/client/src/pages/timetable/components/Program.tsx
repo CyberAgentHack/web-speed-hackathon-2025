@@ -69,7 +69,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
               </div>
             </div>
             <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
-              <img loading="lazy" decoding="async" fetchpriority="low"
+              <img loading="lazy" decoding="async" fetchPriority="low"
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
