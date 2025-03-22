@@ -366,6 +366,9 @@ importers:
       fastify-zod-openapi:
         specifier: 4.0.0
         version: 4.0.0(@fastify/swagger-ui@5.1.0)(@fastify/swagger@9.4.0)(fastify@5.1.0)(zod-openapi@4.2.0(zod@3.24.1))(zod@3.24.1)
+      htmlescape:
+        specifier: 1.1.1
+        version: 1.1.1
       luxon:
         specifier: 3.5.0
         version: 3.5.0
@@ -3436,6 +3439,10 @@ packages:
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
+
+  htmlescape@1.1.1:
+    resolution: {integrity: sha512-eVcrzgbR4tim7c7soKQKtxa/kQM4TzjnlU83rcZ9bHU6t31ehfV7SktN6McWgwPWg+JYMA/O3qpGxBvFq1z2Jg==}
+    engines: {node: '>=0.10'}
 
   http-deceiver@1.2.7:
     resolution: {integrity: sha512-LmpOGxTfbpgtGVxJrj5k7asXHCgNZp5nLfp+hWc8QQRqtb7fUy6kRY3BO1h9ddF6yIPYUARgxGOwB42DnxIaNw==}
@@ -8560,6 +8567,8 @@ snapshots:
   html-entities@2.5.2: {}
 
   html-escaper@2.0.2: {}
+
+  htmlescape@1.1.1: {}
 
   http-deceiver@1.2.7: {}
 
