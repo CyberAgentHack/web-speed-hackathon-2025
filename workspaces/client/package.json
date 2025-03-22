@@ -62,6 +62,7 @@
     "@unocss/preset-wind3": "66.1.0-beta.5",
     "@unocss/reset": "66.1.0-beta.5",
     "@unocss/runtime": "66.1.0-beta.5",
+    "@vitejs/plugin-react": "4.3.4",
     "@wsh-2025/configs": "workspace:*",
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
@@ -70,31 +71,28 @@
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "video.js": "8.21.0",
-    "webpack": "5.96.1",
-    "webpack-bundle-analyzer": "4.10.2",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.1.0",
+    "vite": "6.2.2",
     "wireit": "0.14.9"
   },
   "wireit": {
     "analyze": {
-      "command": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+      "command": "echo 'TODO: Implement bundle analysis'"
     },
     "build": {
-      "command": "webpack",
+      "command": "vite build",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*",
-        "./webpack.config.mjs",
-        "./package.json"
+        "./index.html",
+        "./vite.config.ts"
       ],
       "output": [
         "./dist/**/*"
       ]
     },
     "production-build": {
-      "command": "webpack",
+      "command": "vite build --mode production",
       "env": {
         "NODE_ENV": {
           "default": "production",
@@ -105,8 +103,8 @@
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*",
-        "./webpack.config.mjs",
-        "./package.json"
+        "./index.html",
+        "./vite.config.ts"
       ],
       "output": [
         "./dist/**/*"

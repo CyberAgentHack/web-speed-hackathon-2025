@@ -79,6 +79,7 @@
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
+        "../client/dist/**/*",
         "./src/**/*"
       ],
       "dependencies": [
