@@ -49,11 +49,11 @@ export function registerStreams(app: FastifyInstance): void {
       #EXT-X-VERSION:3
       #EXT-X-MEDIA-SEQUENCE:1
       ${Array.from({ length: stream.numberOfChunks }, (_, idx) => {
-        return dedent`
+      return dedent`
           #EXTINF:2.000000,
           /streams/${stream.id}/${String(idx).padStart(3, '0')}.ts
         `;
-      }).join('\n')}
+    }).join('\n')}
       #EXT-X-ENDLIST
     `;
 
@@ -122,7 +122,7 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${randomBytes(16).toString('base64')}"`,
           ].join(',')}
         `,
       );
