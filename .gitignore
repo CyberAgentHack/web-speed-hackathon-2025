@@ -222,3 +222,6 @@ $RECYCLE.BIN/
 
 # direnv
 .direnv/
+
+# webpack-bundle-analyzer
+stats.json
