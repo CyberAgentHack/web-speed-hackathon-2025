@@ -1,6 +1,7 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
+import React from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
@@ -60,3 +61,6 @@ export const JumbotronSection = ({ module }: Props) => {
     </Hoverable>
   );
 };
+
+
+export const MemoJumbotronSection = React.memo(JumbotronSection);

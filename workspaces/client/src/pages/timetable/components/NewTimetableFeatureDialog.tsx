@@ -1,6 +1,7 @@
 import FeatureExplainImageUrl from '@wsh-2025/client/assets/timetable/feature-explain.png';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useCloseNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useCloseNewFeatureDialog';
+import { alterExterntion } from '@wsh-2025/client/src/utility/file';
 
 interface Props {
   isOpen: boolean;
@@ -29,7 +30,7 @@ export const NewTimetableFeatureDialog = ({ isOpen }: Props) => {
           引き続き皆様に快適にご利用いただけるよう、サービスの改善に努めてまいります。今後ともどうぞよろしくお願いいたします。
         </p>
 
-        <img alt="" className="mb-[24px] w-full" loading="lazy" src={FeatureExplainImageUrl} />
+        <img alt="" className="mb-[24px] w-full" loading="lazy" src={alterExterntion(FeatureExplainImageUrl)} />
 
         <div className="flex flex-row justify-center">
           <button

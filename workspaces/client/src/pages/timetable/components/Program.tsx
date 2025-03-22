@@ -10,6 +10,7 @@ import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/compon
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
+import { alterExterntion } from '@wsh-2025/client/src/utility/file';
 
 interface Props {
   height: number;
@@ -74,7 +75,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 loading="lazy"
-                src={program.thumbnailUrl}
+                src={alterExterntion(program.thumbnailUrl)}
               />
             </div>
           </div>

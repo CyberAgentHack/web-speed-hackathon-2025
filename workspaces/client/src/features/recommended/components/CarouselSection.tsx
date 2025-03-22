@@ -1,11 +1,12 @@
 import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
+import React from 'react';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
-import { EpisodeItem } from '@wsh-2025/client/src/features/recommended/components/EpisodeItem';
-import { SeriesItem } from '@wsh-2025/client/src/features/recommended/components/SeriesItem';
+import { MemoEpisodeItem } from '@wsh-2025/client/src/features/recommended/components/EpisodeItem';
+import { MemoSeriesItem } from '@wsh-2025/client/src/features/recommended/components/SeriesItem';
 import { useCarouselItemWidth } from '@wsh-2025/client/src/features/recommended/hooks/useCarouselItemWidth';
 import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/useScrollSnap';
 
@@ -30,8 +31,8 @@ export const CarouselSection = ({ module }: Props) => {
         >
           {module.items.map((item) => (
             <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
-              {item.series != null ? <SeriesItem series={item.series} /> : null}
-              {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
+              {item.series != null ? <MemoSeriesItem series={item.series} /> : null}
+              {item.episode != null ? <MemoEpisodeItem episode={item.episode} /> : null}
             </div>
           ))}
         </div>
@@ -41,3 +42,5 @@ export const CarouselSection = ({ module }: Props) => {
     </>
   );
 };
+
+export const MemoCarouselSection = React.memo(CarouselSection);

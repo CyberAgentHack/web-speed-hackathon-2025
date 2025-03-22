@@ -7,6 +7,7 @@ import { ArrayValues } from 'type-fest';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
+import { alterExterntion } from '@wsh-2025/client/src/utility/file';
 
 interface Props {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
           loading="lazy"
-          src={program.thumbnailUrl}
+          src={alterExterntion(program.thumbnailUrl)}
         />
 
         {episode != null ? (
@@ -49,7 +50,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
               loading="lazy"
-              src={episode.thumbnailUrl}
+              src={alterExterntion(episode.thumbnailUrl)}
             />
           </>
         ) : null}
