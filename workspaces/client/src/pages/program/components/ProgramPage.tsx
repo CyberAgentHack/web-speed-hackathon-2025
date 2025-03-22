@@ -24,12 +24,13 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const since = now.startOf('day').toISO();
   const until = now.endOf('day').toISO();
 
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ limit: 1, referenceId: programId });
+  const [program, channels, timetable, modules] = await Promise.all([
+    store.getState().features.program.fetchProgramById({ programId }),
+    store.getState().features.channel.fetchChannels(),
+    store.getState().features.timetable.fetchTimetable({ since, until }),
+    store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ limit: 1, referenceId: programId }),
+  ]);
+
   return { channels, modules, program, timetable };
 };
 
