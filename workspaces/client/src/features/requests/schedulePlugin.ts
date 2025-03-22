@@ -6,8 +6,7 @@ export const schedulePlugin = {
       const scheduler = typeof window !== 'undefined' ? window.scheduler : undefined;
 
       if (scheduler) {
-        // 遅延を0に設定して即時実行
-        return await scheduler.postTask(() => request, { delay: 0 });
+        return await scheduler.postTask(() => request, { delay: 1000 });
       } else {
         return await new Promise<typeof request>((resolve) => {
           queueMicrotask(() => {
