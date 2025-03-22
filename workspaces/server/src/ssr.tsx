@@ -57,12 +57,8 @@ export function registerSsr(app: FastifyInstance): void {
     const clientHTML = path.resolve(__dirname, '../../client/dist/index.html');
     const clientHTMLContent = await promises.readFile(clientHTML, 'utf-8');
 
-    const replaced = clientHTMLContent
-      .replace('<!-- __REACT_APP_HTML__ -->', renderd)
-      .replace(
-        '<!-- ZUSTAND -->',
-        `<script>window.__zustandHydrationData = ${JSON.stringify(store.getState())}</script>`,
-      );
+    const replaced = clientHTMLContent.replace('<!-- __REACT_APP_HTML__ -->', renderd);
+
     reply.type('text/html').send(replaced);
   });
 }
