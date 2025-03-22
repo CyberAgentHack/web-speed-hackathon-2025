@@ -80,7 +80,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "webpack --json > stats.json",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",

@@ -508,7 +508,47 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(modules);
+
+      
+      // `description` を 256 文字に制限する関数
+      const trimDescription = (text: string | null | undefined, maxLength: number) =>
+        text ? text.substring(0, maxLength) : text;
+    
+      // 取得したデータを加工
+      const trimmedModules = modules.map(module => ({
+        ...module,
+        items: module.items.map(item => ({
+          ...item,
+          episode: item.episode
+            ? {
+                ...item.episode,
+                description: trimDescription(item.episode.description, 512),
+                series: item.episode.series
+                  ? {
+                      ...item.episode.series,
+                      description: trimDescription(item.episode.series.description, 64),
+                      episodes: item.episode.series.episodes.map(episode => ({
+                        ...episode,
+                        description: trimDescription(episode.description, 64),
+                      })),
+                    }
+                  : null,
+              }
+            : null,
+          series: item.series
+            ? {
+                ...item.series,
+                description: trimDescription(item.series.description, 512),
+                episodes: item.series.episodes.map(episode => ({
+                  ...episode,
+                  description: trimDescription(episode.description, 64),
+                })),
+              }
+            : null,
+        })),
+      }));
+
+      reply.code(200).send(trimmedModules);
     },
   });
 
