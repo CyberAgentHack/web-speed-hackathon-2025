@@ -84,9 +84,6 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
-      react-ellipsis-component:
-        specifier: 1.1.11
-        version: 1.1.11(react@19.0.0)
       react-final-form:
         specifier: 6.5.9
         version: 6.5.9(final-form@4.20.10)(react@19.0.0)
@@ -3760,7 +3757,6 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lie@3.3.0:
@@ -4321,12 +4317,6 @@ packages:
     resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
     peerDependencies:
       react: ^19.0.0
-
-  react-ellipsis-component@1.1.11:
-    resolution: {integrity: sha512-7qPeHrqgS241sdIOoNNMQWqWLI04ae7myiau8XvMOFJVWWVVs61FjImht2TViu27PAGaVrejV6x18cLoVIX29w==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>=16'
 
   react-final-form@6.5.9:
     resolution: {integrity: sha512-x3XYvozolECp3nIjly+4QqxdjSSWfcnpGEL5K8OBT6xmGrq5kBqbA6+/tOqoom9NwqIPPbxPNsOViFlbKgowbA==}
@@ -9210,11 +9200,6 @@ snapshots:
     dependencies:
       react: 19.0.0
       scheduler: 0.25.0
-
-  react-ellipsis-component@1.1.11(react@19.0.0):
-    dependencies:
-      react: 19.0.0
-      resize-observer-polyfill: 1.5.1
 
   react-final-form@6.5.9(final-form@4.20.10)(react@19.0.0):
     dependencies:
