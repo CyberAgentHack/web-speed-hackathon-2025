@@ -51,6 +51,18 @@ importers:
       '@standard-schema/spec':
         specifier: 1.0.0
         version: 1.0.0
+      '@unocss/preset-icons':
+        specifier: 66.1.0-beta.5
+        version: 66.1.0-beta.5
+      '@unocss/preset-wind3':
+        specifier: 66.1.0-beta.5
+        version: 66.1.0-beta.5
+      '@unocss/reset':
+        specifier: 66.1.0-beta.5
+        version: 66.1.0-beta.5
+      '@unocss/runtime':
+        specifier: 66.1.0-beta.5
+        version: 66.1.0-beta.5
       '@wsh-2025/client':
         specifier: workspace:*
         version: 'link:'
@@ -181,18 +193,6 @@ importers:
       '@types/wicg-task-scheduling':
         specifier: 2024.1.0
         version: 2024.1.0
-      '@unocss/preset-icons':
-        specifier: 66.1.0-beta.5
-        version: 66.1.0-beta.5
-      '@unocss/preset-wind3':
-        specifier: 66.1.0-beta.5
-        version: 66.1.0-beta.5
-      '@unocss/reset':
-        specifier: 66.1.0-beta.5
-        version: 66.1.0-beta.5
-      '@unocss/runtime':
-        specifier: 66.1.0-beta.5
-        version: 66.1.0-beta.5
       '@wsh-2025/configs':
         specifier: workspace:*
         version: link:../configs
