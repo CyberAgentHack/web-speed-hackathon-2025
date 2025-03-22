@@ -17,6 +17,10 @@ async function getSeekThumbnail({ episode }: Params) {
 
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
+  // await ffmpeg.load({
+  //   coreURL: await import('@/assets/ffmpeg-core.js?arraybuffer'),
+  //   wasmURL: await import('@/assets/ffmpeg-core.wasm?arraybuffer'),
+  // });
   await ffmpeg.load({
     coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
       return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
@@ -64,7 +68,7 @@ async function getSeekThumbnail({ episode }: Params) {
   const output = await ffmpeg.readFile('preview.jpg');
   ffmpeg.terminate();
 
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
+  return URL.createObjectURL(new Blob([output], { type: 'image/webp' }));
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();

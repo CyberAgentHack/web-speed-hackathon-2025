@@ -1,12 +1,13 @@
 import path from 'node:path';
 
+import CompressionPlugin from 'compression-webpack-plugin'
 import webpack from 'webpack';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -22,10 +23,9 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  targets: {
+                    chrome: '134'
+                  },
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -36,6 +36,10 @@ const config = {
       },
       {
         test: /\.png$/,
+        type: 'asset/inline',
+      },
+      {
+        test: /\.webp$/,
         type: 'asset/inline',
       },
       {
@@ -61,6 +65,13 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // new BundleAnalyzerPlugin(),
+    new CompressionPlugin({
+      algorithm: 'brotliCompress',
+      compressionOptions: { level: 11 },
+      deleteOriginalAssets: false,
+      test: /\.wasm$/,
+    }),
   ],
   resolve: {
     alias: {
