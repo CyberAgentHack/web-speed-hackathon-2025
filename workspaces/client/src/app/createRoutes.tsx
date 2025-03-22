@@ -1,10 +1,12 @@
-import lazy from 'p-min-delay';
-import { RouteObject } from 'react-router';
+import lazy from "p-min-delay";
+import { RouteObject } from "react-router";
 
-import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
-import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Document, prefetch } from "@wsh-2025/client/src/app/Document";
+import { createStore } from "@wsh-2025/client/src/app/createStore";
 
-export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
+export function createRoutes(
+  store: ReturnType<typeof createStore>
+): RouteObject[] {
   return [
     {
       children: [
@@ -12,8 +14,8 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           index: true,
           async lazy() {
             const { HomePage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/home/components/HomePage'),
-              1000,
+              import("@wsh-2025/client/src/pages/home/components/HomePage"),
+              300
             );
             return {
               Component: HomePage,
@@ -26,8 +28,10 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         {
           async lazy() {
             const { EpisodePage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
-              1000,
+              import(
+                "@wsh-2025/client/src/pages/episode/components/EpisodePage"
+              ),
+              300
             );
             return {
               Component: EpisodePage,
@@ -36,13 +40,15 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               },
             };
           },
-          path: '/episodes/:episodeId',
+          path: "/episodes/:episodeId",
         },
         {
           async lazy() {
             const { prefetch, ProgramPage } = await lazy(
-              import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
-              1000,
+              import(
+                "@wsh-2025/client/src/pages/program/components/ProgramPage"
+              ),
+              300
             );
             return {
               Component: ProgramPage,
@@ -51,13 +57,13 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               },
             };
           },
-          path: '/programs/:programId',
+          path: "/programs/:programId",
         },
         {
           async lazy() {
             const { prefetch, SeriesPage } = await lazy(
-              import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
-              1000,
+              import("@wsh-2025/client/src/pages/series/components/SeriesPage"),
+              300
             );
             return {
               Component: SeriesPage,
@@ -66,13 +72,15 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               },
             };
           },
-          path: '/series/:seriesId',
+          path: "/series/:seriesId",
         },
         {
           async lazy() {
             const { prefetch, TimetablePage } = await lazy(
-              import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
-              1000,
+              import(
+                "@wsh-2025/client/src/pages/timetable/components/TimetablePage"
+              ),
+              300
             );
             return {
               Component: TimetablePage,
@@ -81,13 +89,15 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               },
             };
           },
-          path: '/timetable',
+          path: "/timetable",
         },
         {
           async lazy() {
             const { NotFoundPage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
-              1000,
+              import(
+                "@wsh-2025/client/src/pages/not_found/components/NotFoundPage"
+              ),
+              400
             );
             return {
               Component: NotFoundPage,
@@ -96,14 +106,14 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               },
             };
           },
-          path: '*',
+          path: "*",
         },
       ],
       Component: Document,
       async loader() {
         return await prefetch(store);
       },
-      path: '/',
+      path: "/",
     },
   ];
 }
