@@ -42,7 +42,10 @@
     "heroku-build": {
       "dependencies": [
         "build"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
     },
     "heroku-cleanup": {
       "//": "Heroku の buildpacks サイズ削減のため、サーバー起動に必要ないものを削除します",
