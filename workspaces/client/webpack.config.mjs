@@ -15,8 +15,9 @@ const config = {
   module: {
     rules: [
       {
-        exclude: /node_modules/,
-        test: /\.(js|mjs|cjs|jsx|ts|tsx)$/,
+        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        resolve: { fullySpecified: false },
+        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -89,7 +90,7 @@ const config = {
   output: {
     // ハッシュ付きでキャッシュ防止
     chunkFilename: 'chunk-[contenthash].js',
-    filename: '[name].[contenthash].js',
+    filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
@@ -118,7 +119,7 @@ const config = {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
       '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
-    extensions: ['.js', '.cjs', '.mjs', '.ts', '.tsx', '.jsx'],
+    extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };
 
