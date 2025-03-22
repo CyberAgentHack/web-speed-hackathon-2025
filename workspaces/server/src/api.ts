@@ -21,7 +21,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-zod-openapi';
-import ffmpeg from 'fluent-ffmpeg';
+import ffmpeg, { FfmpegCommand } from 'fluent-ffmpeg';
 import { Parser } from 'm3u8-parser';
 import fetch from 'node-fetch';
 import { z } from 'zod';
@@ -704,7 +704,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
         const outputVideoPath = path.join(tempDir, 'output.mp4');
         await new Promise((resolve, reject) => {
-          ffmpeg()
+          const command: FfmpegCommand = ffmpeg();
+          command
             .input(concatFilePath)
             .inputOptions('-f concat', '-safe 0')
             .output(outputVideoPath)
