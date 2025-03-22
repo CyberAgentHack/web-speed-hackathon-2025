@@ -4,7 +4,7 @@ import webpack from 'webpack';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const plugins = [
-  new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+  // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
   new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   // new BundleAnalyzerPlugin(),
 ];
