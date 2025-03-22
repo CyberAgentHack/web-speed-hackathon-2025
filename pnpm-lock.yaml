@@ -112,9 +112,6 @@ importers:
       zustand:
         specifier: 5.0.3
         version: 5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
-      zustand-di:
-        specifier: 0.0.16
-        version: 0.0.16(react@19.0.0)(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))
     devDependencies:
       '@ffmpeg/core':
         specifier: 0.12.10
@@ -3790,7 +3787,6 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lie@3.3.0:
@@ -5454,12 +5450,6 @@ packages:
 
   zod@3.24.1:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
-
-  zustand-di@0.0.16:
-    resolution: {integrity: sha512-d0KoomJAgqNPi/HO1SPa9O8cPsPEWLZ3k+1qBpa2GqnyT+7BLWez5/SLIzC3n4WQnFFpZrpNXEbZsjC+ikeJOA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      zustand: ^4.4.0 || ^5.0.0
 
   zustand@5.0.3:
     resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
@@ -10721,11 +10711,6 @@ snapshots:
       zod: 3.24.1
 
   zod@3.24.1: {}
-
-  zustand-di@0.0.16(react@19.0.0)(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))):
-    dependencies:
-      react: 19.0.0
-      zustand: 5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
 
   zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)):
     optionalDependencies:
