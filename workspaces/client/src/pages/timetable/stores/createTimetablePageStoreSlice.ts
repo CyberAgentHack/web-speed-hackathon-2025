@@ -1,14 +1,15 @@
-import { lens } from '@dhmk/zustand-lens';
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { produce } from 'immer';
-import _ from 'lodash';
-import { ArrayValues } from 'type-fest';
+import { lens } from "@dhmk/zustand-lens";
+import { StandardSchemaV1 } from "@standard-schema/spec";
+import * as schema from "@wsh-2025/schema/src/api/schema";
+import { produce } from "immer";
+import { ArrayValues } from "type-fest";
 
-import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
+import { DEFAULT_WIDTH } from "@wsh-2025/client/src/features/timetable/constants/grid_size";
 
 type ChannelId = string;
-type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+type Program = ArrayValues<
+  StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>
+>;
 
 interface TimetablePageState {
   columnWidthRecord: Record<ChannelId, number>;
@@ -29,8 +30,12 @@ export const createTimetablePageStoreSlice = () => {
     changeColumnWidth: (params: { channelId: string; delta: number }) => {
       set((state) => {
         return produce(state, (draft) => {
-          const current = draft.columnWidthRecord[params.channelId] ?? DEFAULT_WIDTH;
-          draft.columnWidthRecord[params.channelId] = Math.max(current + params.delta, 100);
+          const current = draft.columnWidthRecord[params.channelId] ??
+            DEFAULT_WIDTH;
+          draft.columnWidthRecord[params.channelId] = Math.max(
+            current + params.delta,
+            100,
+          );
         });
       });
     },
@@ -41,7 +46,7 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
+    refreshCurrentUnixtimeMs: debounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
@@ -54,4 +59,17 @@ export const createTimetablePageStoreSlice = () => {
     },
     shownNewFeatureDialog: true,
   }));
+};
+
+const debounce = (fn: () => void, delay: number) => {
+  let timeoutId: number | null = null;
+  return () => {
+    if (timeoutId != null) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(() => {
+      timeoutId = null;
+      fn();
+    }, delay);
+  };
 };
