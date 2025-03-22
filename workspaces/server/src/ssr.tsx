@@ -10,7 +10,7 @@ import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
 import htmlescape from 'htmlescape';
 import { StrictMode } from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToPipeableStream } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
 function getFiles(parent: string): string[] {
@@ -39,7 +39,6 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/*', async (req, reply) => {
-    // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
 
     const store = createStore({});
@@ -51,7 +50,7 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+    renderToPipeableStream(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
@@ -61,8 +60,8 @@ export function registerSsr(app: FastifyInstance): void {
 
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
+      // getFilePaths('public/images', rootDir),
+      // getFilePaths('public/animations', rootDir),
       getFilePaths('public/logos', rootDir),
     ].flat();
 

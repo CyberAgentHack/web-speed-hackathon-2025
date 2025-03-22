@@ -9,13 +9,22 @@
     "moduleResolution": "bundler",
     "outDir": "./dist",
     "paths": {
-      "@wsh-2025/schema/*": ["./*"]
+      "@wsh-2025/schema/*": [
+        "./*"
+      ]
     },
     "skipLibCheck": true,
     "sourceMap": true,
     "target": "ESNext"
   },
-  "exclude": ["dist"],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
   "extends": "@wsh-2025/configs/tsconfig.json",
-  "include": ["**/*", "**/*.mjs", "../client/**/*"]
+  "include": [
+    "**/*",
+    "**/*.mjs",
+    "../client/**/*"
+  ]
 }
