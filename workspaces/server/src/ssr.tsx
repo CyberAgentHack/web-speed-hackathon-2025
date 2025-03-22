@@ -4,7 +4,7 @@ const heroImageHeight = 720;
 
 // 例: 直接 img タグを組み立てる
 const heroImageHtml = `
-  <img
+  <imges
     src="/public/images/hero.jpg"
     alt="Hero"
     width="${heroImageWidth}"
@@ -18,7 +18,7 @@ const heroImageHtml = `
 // あるいは React で返すなら:
 function HeroImage() {
   return (
-    <img
+    <imges
       src="/public/images/hero.jpg"
       alt="Hero"
       width={heroImageWidth}
