@@ -12,6 +12,8 @@ import htmlescape from 'htmlescape';
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
+import { createUnocssGenerator } from '@wsh-2025/client/src/setups/unocssSsr';
+import { get } from 'node:http';
 
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
@@ -26,6 +28,7 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
 }
 
 export function registerSsr(app: FastifyInstance): void {
+  const unocssGenerator = createUnocssGenerator();
   app.register(fastifyStatic, {
     prefix: '/public/',
     root: [
@@ -54,10 +57,12 @@ export function registerSsr(app: FastifyInstance): void {
     const appHtml = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
+          <StaticRouterProvider context={context} hydrate={true} router={router} />
         </StoreProvider>
       </StrictMode>,
     );
+
+    const { layers, getLayer } = await (await unocssGenerator).generate(appHtml);
 
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
@@ -72,10 +77,11 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          ${layers.map((layer) => `<style id="__unocss__${layer}">${getLayer(layer)}</style>`).join('\n')}
           <script src="/public/main.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
-        <body><div id="root">${appHtml}</div></body>
+        <body><h1>Welcome to the SSR Page</h1><div id="root">${appHtml}</div></body>
       </html>
       <script>
         window.__staticRouterHydrationData = ${htmlescape({
