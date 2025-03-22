@@ -16,17 +16,27 @@ declare global {
 }
 
 function main() {
+  // ストアとルーターの作成を先に行う
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <StoreProvider createStore={() => store}>
-        <RouterProvider router={router} />
-      </StoreProvider>
-    </StrictMode>,
-  );
+  // requestIdleCallbackを使用して優先度の低いタイミングでハイドレーションを実行
+  const idleCallback = (cb) => setTimeout(cb, 1);
+  idleCallback(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <RouterProvider router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
+  });
 }
 
-document.addEventListener('DOMContentLoaded', main);
+// DOMの準備ができたら実行
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', main);
+} else {
+  main();
+}

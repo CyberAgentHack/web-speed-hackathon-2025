@@ -6,6 +6,7 @@ import webpack from 'webpack';
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
+  // mode: 'production',
   mode: 'none',
   module: {
     rules: [
@@ -50,6 +51,11 @@ const config = {
         },
       },
     ],
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',

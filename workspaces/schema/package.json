@@ -1,6 +1,7 @@
 {
   "name": "@wsh-2025/schema",
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "format": "wireit",
     "format:eslint": "wireit",
