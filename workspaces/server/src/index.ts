@@ -22,7 +22,7 @@ async function main() {
       reply.header('cache-control', 'public, max-age=86400, stale-while-revalidate=172800');
     }
     // 2. 静的アセット（長時間キャッシュ）
-    else if (path.includes('/images/') || path.match(/\.(jpg|jpeg|png|webp|svg|css|js)(\?|$)/)) {
+    else if (path.includes('/public/') || path.match(/\.(jpg|jpeg|png|webp|svg|css|js|ico)(\?|$)/)) {
       reply.header('cache-control', 'public, max-age=86400, immutable');
     }
     // 3. エピソードや番組メタデータ（短時間キャッシュ）
