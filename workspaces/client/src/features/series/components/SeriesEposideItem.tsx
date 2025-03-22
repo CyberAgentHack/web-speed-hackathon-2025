@@ -2,7 +2,7 @@ import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+// import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
   episode: {
@@ -17,7 +17,7 @@ interface Props {
 
 export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
   return (
-    <Hoverable classNames={{ hovered: 'opacity-75' }}>
+    <div className="cursor-pointer hover:opacity-75">
       <NavLink
         viewTransition
         className="block flex w-full flex-row items-start justify-between gap-x-[16px]"
@@ -50,6 +50,6 @@ export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
           );
         }}
       </NavLink>
-    </Hoverable>
+    </div>
   );
 };
