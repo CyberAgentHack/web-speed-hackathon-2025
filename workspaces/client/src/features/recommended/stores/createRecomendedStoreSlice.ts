@@ -21,6 +21,9 @@ interface RecommendedActions {
   fetchRecommendedModulesByReferenceId: (params: {
     referenceId: ReferenceId;
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  fetchRecommendeModulesForEntrance: () => Promise<
+    StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>
+  >;
 }
 
 export const createRecommendedStoreSlice = () => {
@@ -30,6 +33,18 @@ export const createRecommendedStoreSlice = () => {
       set((state) => {
         return produce(state, (draft) => {
           draft.references[referenceId] = modules.map((module) => module.id);
+          for (const module of modules) {
+            draft.recommendedModules[module.id] = module;
+          }
+        });
+      });
+      return modules;
+    },
+    fetchRecommendeModulesForEntrance: async () => {
+      const modules = await recommendedService.fetchRecommendedModulesForEntrance();
+      set((state) => {
+        return produce(state, (draft) => {
+          draft.references['entrance'] = modules.map((module) => module.id);
           for (const module of modules) {
             draft.recommendedModules[module.id] = module;
           }
