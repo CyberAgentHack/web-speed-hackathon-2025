@@ -19,14 +19,14 @@ class ShakaPlayerWrapper implements PlayerWrapper {
   constructor(playerType: PlayerType.ShakaPlayer) {
     this.playerType = playerType;
     this._player.configure({
-      streaming: {
-        bufferingGoal: 50,
-        useNativeHlsOnSafari: true, // SafariではネイティブHLSを使用
-      },
       // パフォーマンス最適化のための設定
       abr: {
-        enabled: true,
-        defaultBandwidthEstimate: 500000, // 初期帯域幅の見積もり（500kbps）
+        defaultBandwidthEstimate: 500000,
+        enabled: true, // 初期帯域幅の見積もり（500kbps）
+      },
+      streaming: {
+        bufferingGoal: 50,
+        // useNativeHlsOnSafari: true, // SafariではネイティブHLSを使用
       },
     });
   }
@@ -78,16 +78,16 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     volume: 0.25,
   });
   private _player = new HlsJs({
-    enableWorker: true, // Web Workerを有効化
-    maxBufferLength: 10,
-    maxMaxBufferLength: 30,
-    liveSyncDurationCount: 3,
-    // メインスレッドの負荷を軽減するための追加設定
-    backBufferLength: 30, // バックバッファの長さを制限
-    fragLoadingMaxRetry: 2, // フラグメントロードの最大リトライ回数
-    manifestLoadingMaxRetry: 2, // マニフェストロードの最大リトライ回数
-    levelLoadingMaxRetry: 2, // レベルロードの最大リトライ回数
-    abrEwmaDefaultEstimate: 500000, // 初期帯域幅の見積もり（500kbps）
+    // レベルロードの最大リトライ回数
+    abrEwmaDefaultEstimate: 500000, // メインスレッドの負荷を軽減するための追加設定
+    backBufferLength: 30,
+    enableWorker: true,
+    // バックバッファの長さを制限
+    fragLoadingMaxRetry: 2,
+    // マニフェストロードの最大リトライ回数
+    levelLoadingMaxRetry: 2, liveSyncDurationCount: 3, // フラグメントロードの最大リトライ回数
+    manifestLoadingMaxRetry: 2, // Web Workerを有効化
+    maxBufferLength: 10, maxMaxBufferLength: 30, // 初期帯域幅の見積もり（500kbps）
     testBandwidth: false, // 初期帯域幅テストを無効化
   });
   readonly playerType: PlayerType.HlsJS;
@@ -158,9 +158,9 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
     this._player.options({
       html5: {
         vhs: {
-          overrideNative: !videojs.browser.IS_SAFARI,
           enableLowInitialPlaylist: true,
           limitRenditionByPlayerDimensions: true,
+          overrideNative: !videojs.browser.IS_SAFARI,
           useDevicePixelRatio: true,
         },
       },
