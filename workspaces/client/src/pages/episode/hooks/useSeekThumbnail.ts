@@ -1,4 +1,3 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
@@ -15,6 +14,9 @@ async function getSeekThumbnail({ episode }: Params) {
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
+  // FFmpeg の動的インポート
+  const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+  
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
