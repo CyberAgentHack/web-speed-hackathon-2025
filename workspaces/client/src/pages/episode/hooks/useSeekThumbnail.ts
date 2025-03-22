@@ -1,4 +1,3 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
@@ -9,62 +8,87 @@ interface Params {
 }
 
 async function getSeekThumbnail({ episode }: Params) {
-  // HLS のプレイリストを取得
+  // Get HLS playlist
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
   const parser = new Parser();
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
-  // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  // Calculate thumbnail count (assume we want 1 thumbnail per second)
+  const segmentDuration = 2; // Each segment is ~2 seconds based on server code
+  const totalDuration = parser.manifest.segments.length * segmentDuration;
+  const thumbnailCount = Math.min(250, totalDuration);
 
-  // 動画のセグメントファイルを取得
-  const segmentFiles = await Promise.all(
-    parser.manifest.segments.map((s) => {
-      return fetch(s.uri).then(async (res) => {
-        const binary = await res.arrayBuffer();
-        return { binary, id: Math.random().toString(36).slice(2) };
+  // Create video element for thumbnail generation
+  const video = document.createElement('video');
+  video.crossOrigin = 'anonymous';
+  video.muted = true;
+
+  // Create canvas for drawing thumbnails
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Could not create canvas context');
+
+  // Set dimensions for each thumbnail
+  const thumbnailWidth = 160;
+  const thumbnailHeight = 90;
+  canvas.width = thumbnailCount * thumbnailWidth;
+  canvas.height = thumbnailHeight;
+
+  // Create HLS source
+  const sourceUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
+
+  // Function to capture frame at specific time
+  const captureFrame = (time: number, position: number): Promise<void> => {
+    return new Promise((resolve) => {
+      const handleTimeUpdate = () => {
+        if (Math.abs(video.currentTime - time) < 0.1) {
+          video.removeEventListener('timeupdate', handleTimeUpdate);
+          ctx.drawImage(video, position * thumbnailWidth, 0, thumbnailWidth, thumbnailHeight);
+          resolve();
+        }
+      };
+
+      video.addEventListener('timeupdate', handleTimeUpdate);
+      video.currentTime = time;
+    });
+  };
+
+  return new Promise<string>((resolve) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    video.addEventListener('loadedmetadata', async () => {
+      // Generate thumbnails at regular intervals
+      const interval = totalDuration / thumbnailCount;
+      const capturePromises = [];
+
+      // Generate fewer thumbnails initially to provide faster feedback
+      for (let i = 0; i < Math.min(10, thumbnailCount); i += 2) {
+        capturePromises.push(captureFrame(i * interval, i));
+      }
+
+      // Wait for initial thumbnails
+      await Promise.all(capturePromises);
+
+      // Generate URL from what we have so far
+      const initialUrl = canvas.toDataURL('image/jpeg', 0.7);
+      resolve(initialUrl);
+
+      // Continue generating the rest in the background
+      const remainingPromises = [];
+      for (let i = 1; i < thumbnailCount; i += 2) {
+        remainingPromises.push(captureFrame(i * interval, i));
+      }
+
+      // Fill in the remaining thumbnails
+      Promise.all(remainingPromises).then(() => {
+        const finalUrl = canvas.toDataURL('image/jpeg', 0.7);
+        weakMap.set(episode, Promise.resolve(finalUrl));
       });
-    }),
-  );
-  // FFmpeg にセグメントファイルを追加
-  for (const file of segmentFiles) {
-    await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
-  }
+    });
 
-  // セグメントファイルをひとつの mp4 動画に結合
-  await ffmpeg.exec(
-    [
-      ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
-      ['-c:v', 'copy'],
-      ['-map', '0:v:0'],
-      ['-f', 'mp4'],
-      'concat.mp4',
-    ].flat(),
-  );
-
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
-  await ffmpeg.exec(
-    [
-      ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
-      ['-frames:v', '1'],
-      'preview.jpg',
-    ].flat(),
-  );
-
-  const output = await ffmpeg.readFile('preview.jpg');
-  ffmpeg.terminate();
-
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
+    video.src = sourceUrl;
+    video.load();
+  });
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();
