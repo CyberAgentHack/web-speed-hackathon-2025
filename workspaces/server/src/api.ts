@@ -543,13 +543,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                 where(series, { inArray }) {
                   return inArray(series.id, [...seriesIds]);
                 },
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
               });
 
               seriesMap = new Map(seriesArray.map((series) => [series.id, series]));
@@ -563,16 +556,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                   return inArray(episode.id, [...episodeIds]);
                 },
                 with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
+                  series: true,
                 },
+              });
+
+              episodeArray.forEach((episode) => {
+                if (episode.description && episode.description.length > 400) {
+                  episode.description = episode.description.substring(0, 400);
+                }
               });
 
               episodeMap = new Map(episodeArray.map((episode) => [episode.id, episode]));
@@ -581,12 +572,38 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         }
 
         return modules.map((module) => ({
-          ...module,
-          items: module.items.map((item) => ({
-            ...item,
-            series: item.seriesId ? seriesMap.get(item.seriesId) || null : null,
-            episode: item.episodeId ? episodeMap.get(item.episodeId) || null : null,
-          })),
+          id: module.id,
+          type: module.type,
+          title: module.title,
+          items: module.items.map((item) => {
+            const series = item.seriesId ? seriesMap.get(item.seriesId) : null;
+            const episode = item.episodeId ? episodeMap.get(item.episodeId) : null;
+
+            return {
+              id: item.id,
+              series: series
+                ? {
+                    id: series.id,
+                    title: series.title,
+                    thumbnailUrl: series.thumbnailUrl,
+                  }
+                : null,
+              episode: episode
+                ? {
+                    id: episode.id,
+                    title: episode.title,
+                    description: episode.description,
+                    thumbnailUrl: episode.thumbnailUrl,
+                    premium: episode.premium,
+                    series: episode.series
+                      ? {
+                          title: episode.series.title,
+                        }
+                      : null,
+                  }
+                : null,
+            };
+          }),
         }));
       });
 
