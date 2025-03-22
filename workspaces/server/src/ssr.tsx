@@ -1,8 +1,6 @@
 import { promises } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import fastifyStatic from '@fastify/static';
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -14,18 +12,6 @@ import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
 export function registerSsr(app: FastifyInstance): void {
-  app.register(fastifyStatic, {
-    prefix: '/public/',
-    root: [
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/public'),
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
-    ],
-  });
-
-  app.get('/favicon.ico', (_, reply) => {
-    reply.status(404).send();
-  });
-
   app.get('/*', async (req, reply) => {
     // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
