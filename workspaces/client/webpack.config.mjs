@@ -1,24 +1,28 @@
-const path = require('path');
+import path from 'node:path';
+import webpack from 'webpack';
 
-module.exports = {
-  entry: './src/index.js', // 必要に応じてエントリーポイントを変更してください
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
-  },
+/** @type {import('webpack').Configuration} */
+const config = {
+  devtool: 'inline-source-map',
+  entry: './src/main.tsx',
   mode: 'production',
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
+        // 対象ファイルから特定の node_modules を除外
+        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        resolve: {
+          fullySpecified: false,
+        },
+        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
           loader: 'swc-loader',
           options: {
             jsc: {
               parser: {
-                syntax: 'ecmascript',
-                jsx: true // React を利用している場合は true に設定
+                // TypeScript と JSX を処理する設定（必要に応じて decorators 等も追加）
+                syntax: 'typescript',
+                tsx: true,
               },
               transform: {
                 react: {
@@ -28,12 +32,41 @@ module.exports = {
             }
           }
         }
-      }
-    ]
+      },
+      {
+        test: /\.png$/,
+        type: 'asset/inline',
+      },
+      {
+        resourceQuery: /raw/,
+        type: 'asset/source',
+      },
+      {
+        resourceQuery: /arraybuffer/,
+        type: 'javascript/auto',
+        use: {
+          loader: 'arraybuffer-loader',
+        },
+      },
+    ],
   },
-  // Webpack のファイルシステムキャッシュを有効化
-  cache: {
-    type: 'filesystem',
-    cacheDirectory: path.resolve(__dirname, '.webpack_cache')
-  }
+  output: {
+    chunkFilename: 'chunk-[contenthash].js',
+    filename: 'main.js',
+    path: path.resolve(import.meta.dirname, './dist'),
+    publicPath: 'auto',
+  },
+  plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+  ],
+  resolve: {
+    alias: {
+      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+    },
+    extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
+  },
 };
+
+export default config;
