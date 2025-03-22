@@ -74,7 +74,7 @@ export function registerSsr(app: FastifyInstance): void {
           loaderData: context.loaderData,
         })};
       </script>`;
-    clientHTMLContent.replace('<!-- DATA_FETCH_HYDRATION -->', dataFetchHTML);
-    reply.type('text/html').send(clientHTMLContent);
+    const modifiedHTMLContent = clientHTMLContent.replace('<!-- DATA_FETCH_HYDRATION -->', dataFetchHTML);
+    reply.type('text/html').send(modifiedHTMLContent);
   });
 }
