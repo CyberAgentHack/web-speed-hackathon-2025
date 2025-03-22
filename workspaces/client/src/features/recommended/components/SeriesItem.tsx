@@ -1,3 +1,4 @@
+import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getThumbnailUrl';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
@@ -17,7 +18,7 @@ export const SeriesItem = ({ series }: Props) => {
           <>
             <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
               <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
-                <img loading='lazy' alt="" className="h-auto w-full" src={series.thumbnailUrl.replace("jpeg", "avif")} />
+                <img loading='lazy' alt="" className="h-auto w-full" src={getThumbnailUrl(series.thumbnailUrl)} />
               </Flipped>
             </div>
             <div className="p-[8px]">

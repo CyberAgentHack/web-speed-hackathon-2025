@@ -7,6 +7,7 @@ import { ArrayValues } from 'type-fest';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
+import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getThumbnailUrl';
 
 interface Props {
   isOpen: boolean;
@@ -28,7 +29,7 @@ const _ProgramDetailDialog = ({ program, onClose }: Omit<Props, 'isOpen'> & {onC
         loading='lazy'
         alt=""
         className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-        src={program.thumbnailUrl.replace("jpeg", "avif")}
+        src={getThumbnailUrl(program.thumbnailUrl)}
       />
 
       {episode != null ? (
@@ -43,7 +44,7 @@ const _ProgramDetailDialog = ({ program, onClose }: Omit<Props, 'isOpen'> & {onC
             loading='lazy'
             alt=""
             className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-            src={episode.thumbnailUrl.replace("jpeg", "avif")}
+            src={getThumbnailUrl(episode.thumbnailUrl)}
           />
         </>
       ) : null}

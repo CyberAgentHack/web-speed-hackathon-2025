@@ -14,6 +14,7 @@ import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/componen
 import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
+import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getThumbnailUrl';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
@@ -114,7 +115,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img loading='lazy' alt="" className="h-auto w-full" src={program.thumbnailUrl.replace("jpeg", "avif")} />
+                <img loading='lazy' alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -140,7 +141,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img loading='lazy' alt="" className="h-auto w-full" src={program.thumbnailUrl.replace("jpeg", "avif")} />
+                <img loading='lazy' alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
