@@ -21,8 +21,8 @@ async function getSeekThumbnail({ episode }: Params) {
 
   // public/ffmpeg/ に ffmpeg-core.js, ffmpeg-core.wasm を配置している想定
   await ffmpeg.load({
-    coreURL: '/ffmpeg/ffmpeg-core.js',
-    wasmURL: '/ffmpeg/ffmpeg-core.wasm',
+    coreURL: 'ffmpeg-core.js',
+    wasmURL: 'ffmpeg-core.wasm',
   });
 
   // 動画のセグメントファイルを取得
