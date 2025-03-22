@@ -3,14 +3,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
-// import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
+import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
 import htmlescape from 'htmlescape';
-// import { renderToString } from 'react-dom/server';
-import { createStaticHandler } from 'react-router'; // , createStaticRouter, StaticRouterProvider
+import { renderToString } from 'react-dom/server';
+import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
 // function getFiles(parent: string): string[] {
 //   const dirents = readdirSync(parent, { withFileTypes: true });
@@ -49,12 +49,12 @@ export function registerSsr(app: FastifyInstance): void {
       return reply.send(context);
     }
 
-    // const router = createStaticRouter(handler.dataRoutes, context);
-    // const appHtml = renderToString(
-    //   <StoreProvider createStore={() => store}>
-    //     <StaticRouterProvider context={context} hydrate={false} router={router} />
-    //   </StoreProvider>,
-    // );
+    const router = createStaticRouter(handler.dataRoutes, context);
+    const appHtml = renderToString(
+      <StoreProvider createStore={() => store}>
+        <StaticRouterProvider context={context} hydrate={false} router={router} />
+      </StoreProvider>,
+    );
 
     // const rootDir = path.resolve(__dirname, '../../../');
     // const imagePaths = [
@@ -64,7 +64,6 @@ export function registerSsr(app: FastifyInstance): void {
     // ].flat();
 
     // ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
-    // <div id="root">${appHtml}</div>
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
@@ -75,6 +74,7 @@ export function registerSsr(app: FastifyInstance): void {
           <script src="/public/main.js" defer></script>
         </head>
         <body>
+          <div id="root">${appHtml}</div>
           <script>
             window.__staticRouterHydrationData = ${htmlescape({
               actionData: context.actionData,
