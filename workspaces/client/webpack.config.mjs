@@ -26,7 +26,7 @@ const config = {
                 {
                   corejs: '3.41',
                   forceAllTransforms: true,
-                  targets: 'defaults',
+                  targets: 'chrome134',
                   useBuiltIns: 'entry',
                 },
               ],
