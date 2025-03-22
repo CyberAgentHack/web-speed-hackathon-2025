@@ -24,7 +24,7 @@
    ```
 4. フォーク元のレポジトリに対して Pull Request を作成します
    - Heroku の [Review Apps](https://devcenter.heroku.com/articles/github-integration-review-apps) として、自動的に環境がデプロイされます
-     - デプロイ先の URL は `https://wsh-2025-cyberagent-pr-<PR 番号>.herokuapp.com/` となります
+     - デプロイ先の URL は `https://wsh-2025-cyberagent-pr-57.herokuapp.com/` となります
    - この方法では、デプロイ時のログを自分で確認できません
      - デプロイに失敗した場合は、運営にお問い合わせいただければログを提供します
 

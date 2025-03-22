@@ -2,7 +2,6 @@ import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
-import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
 
@@ -17,15 +16,28 @@ declare global {
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const router = createBrowserRouter(createRoutes(store), {
+    hydrationData: window.__staticRouterHydrationData
+  });
 
-  hydrateRoot(
-    document,
-    <StrictMode>
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    console.error('Root element not found, falling back to document body');
+    // SSRでレンダリングされたHTMLとの整合性を考慮
+    hydrateRoot(
+      document.body,
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
-      </StoreProvider>
-    </StrictMode>,
+      </StoreProvider>,
+    );
+    return;
+  }
+
+  hydrateRoot(
+    rootElement,
+    <StoreProvider createStore={() => store}>
+      <RouterProvider router={router} />
+    </StoreProvider>,
   );
 }
 

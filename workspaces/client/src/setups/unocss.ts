@@ -3,7 +3,15 @@ import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
+// CSSのプリロード
+const tailwindCompatReset = fetch(new URL('@unocss/reset/tailwind-compat.css', import.meta.url))
+  .then(res => res.text())
+  .catch(() => '/* Failed to load reset CSS */');
+
 async function init() {
+  // 重要なCSSリセットを先に取得
+  const resetCss = await tailwindCompatReset;
+
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -14,7 +22,7 @@ async function init() {
       },
       preflights: [
         {
-          getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
+          getCSS: () => Promise.resolve(resetCss),
           layer: 'reset',
         },
         {
