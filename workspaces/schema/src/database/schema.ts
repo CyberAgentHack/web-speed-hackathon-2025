@@ -2,8 +2,7 @@
 import '@wsh-2025/schema/src/setups/luxon';
 
 import { relations } from 'drizzle-orm';
-import { sqliteTable as table } from 'drizzle-orm/sqlite-core';
-import * as t from 'drizzle-orm/sqlite-core';
+import { customType, index, integer, sqliteTable as table, text } from 'drizzle-orm/sqlite-core';
 import { DateTime } from 'luxon';
 
 function parseTime(timeString: string): DateTime {
@@ -21,7 +20,7 @@ function formatTime(isoString: string): string {
 }
 
 // 競技のため、時刻のみ保持して、日付は現在の日付にします
-const startAtTimestamp = t.customType<{
+const startAtTimestamp = customType<{
   data: string;
   driverData: string;
 }>({
@@ -38,7 +37,7 @@ const startAtTimestamp = t.customType<{
 
 // 競技のため、時刻のみ保持して、日付は現在の日付にします
 // 放送終了時刻が 00:00:00 の場合は、翌日の 00:00:00 にします
-const endAtTimestamp = t.customType<{
+const endAtTimestamp = customType<{
   data: string;
   driverData: string;
 }>({
@@ -60,8 +59,8 @@ const endAtTimestamp = t.customType<{
 export const stream = table(
   'stream',
   {
-    id: t.text().primaryKey(),
-    numberOfChunks: t.integer().notNull(),
+    id: text().primaryKey(),
+    numberOfChunks: integer().notNull(),
   },
   () => [],
 );
@@ -69,10 +68,10 @@ export const stream = table(
 export const series = table(
   'series',
   {
-    id: t.text().primaryKey(),
-    description: t.text().notNull(),
-    thumbnailUrl: t.text().notNull(),
-    title: t.text().notNull(),
+    id: text().primaryKey(),
+    description: text().notNull(),
+    thumbnailUrl: text().notNull(),
+    title: text().notNull(),
   },
   () => [],
 );
@@ -83,22 +82,23 @@ export const seriesRelation = relations(series, ({ many }) => ({
 export const episode = table(
   'episode',
   {
-    id: t.text().primaryKey(),
-    description: t.text().notNull(),
-    thumbnailUrl: t.text().notNull(),
-    title: t.text().notNull(),
-    order: t.integer().notNull(),
-    seriesId: t
-      .text()
+    id: text().primaryKey(),
+    description: text().notNull(),
+    thumbnailUrl: text().notNull(),
+    title: text().notNull(),
+    order: integer().notNull(),
+    seriesId: text()
       .notNull()
       .references(() => series.id),
-    streamId: t
-      .text()
+    streamId: text()
       .notNull()
       .references(() => stream.id),
-    premium: t.integer({ mode: 'boolean' }).notNull(),
+    premium: integer({ mode: 'boolean' }).notNull(),
   },
-  () => [],
+  (t) => [
+    index("idx_episode_seriesId").on(t.seriesId),
+    index("idx_episode_streamId").on(t.streamId),
+  ],
 );
 export const episodeRelation = relations(episode, ({ one }) => ({
   series: one(series, {
@@ -114,9 +114,9 @@ export const episodeRelation = relations(episode, ({ one }) => ({
 export const channel = table(
   'channel',
   {
-    id: t.text().primaryKey(),
-    name: t.text().notNull(),
-    logoUrl: t.text().notNull(),
+    id: text().primaryKey(),
+    name: text().notNull(),
+    logoUrl: text().notNull(),
   },
   () => [],
 );
@@ -124,22 +124,23 @@ export const channel = table(
 export const program = table(
   'program',
   {
-    id: t.text().primaryKey(),
-    title: t.text().notNull(),
-    description: t.text().notNull(),
+    id: text().primaryKey(),
+    title: text().notNull(),
+    description: text().notNull(),
     startAt: startAtTimestamp().notNull(),
     endAt: endAtTimestamp().notNull(),
-    thumbnailUrl: t.text().notNull(),
-    channelId: t
-      .text()
+    thumbnailUrl: text().notNull(),
+    channelId: text()
       .notNull()
       .references(() => channel.id),
-    episodeId: t
-      .text()
+    episodeId: text()
       .notNull()
       .references(() => episode.id),
   },
-  () => [],
+  (t) => [
+    index("idx_program_channelId").on(t.channelId),
+    index("idx_program_episodeId").on(t.episodeId),
+  ],
 );
 export const programRelation = relations(program, ({ one }) => ({
   channel: one(channel, {
@@ -155,16 +156,19 @@ export const programRelation = relations(program, ({ one }) => ({
 export const recommendedItem = table(
   'recommendedItem',
   {
-    id: t.text().primaryKey(),
-    order: t.integer().notNull(),
-    moduleId: t
-      .text()
+    id: text().primaryKey(),
+    order: integer().notNull(),
+    moduleId: text()
       .notNull()
       .references(() => recommendedModule.id),
-    seriesId: t.text().references(() => series.id),
-    episodeId: t.text().references(() => episode.id),
+    seriesId: text().references(() => series.id),
+    episodeId: text().references(() => episode.id),
   },
-  () => [],
+  (t) => [
+    index("idx_recommendedItem_moduleId").on(t.moduleId),
+    index("idx_recommendedItem_seriesId").on(t.seriesId),
+    index("idx_recommendedItem_episodeId").on(t.episodeId),
+  ],
 );
 export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
   module: one(recommendedModule, {
@@ -184,13 +188,15 @@ export const recommendedItemRelation = relations(recommendedItem, ({ one }) => (
 export const recommendedModule = table(
   'recommendedModule',
   {
-    id: t.text().primaryKey(),
-    order: t.integer().notNull(),
-    title: t.text().notNull(),
-    referenceId: t.text().notNull(),
-    type: t.text().notNull(),
+    id: text().primaryKey(),
+    order: integer().notNull(),
+    title: text().notNull(),
+    referenceId: text().notNull(),
+    type: text().notNull(),
   },
-  () => [],
+  (t) => [
+    index("idx_recommendedModule_referenceId").on(t.referenceId),
+  ],
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
   items: many(recommendedItem),
@@ -199,9 +205,9 @@ export const recommendedModuleRelation = relations(recommendedModule, ({ many })
 export const user = table(
   'user',
   {
-    id: t.integer().primaryKey().notNull(),
-    email: t.text().notNull().unique(),
-    password: t.text().notNull(),
+    id: integer().primaryKey().notNull(),
+    email: text().notNull().unique(),
+    password: text().notNull(),
   },
   () => [],
 );
