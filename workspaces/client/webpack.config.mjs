@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 import TerserPlugin from 'terser-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -82,6 +83,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
+    new BundleAnalyzerPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 5 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
