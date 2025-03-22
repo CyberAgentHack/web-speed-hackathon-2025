@@ -51,6 +51,9 @@ importers:
       '@standard-schema/spec':
         specifier: 1.0.0
         version: 1.0.0
+      '@ungap/with-resolvers':
+        specifier: 0.1.0
+        version: 0.1.0
       '@wsh-2025/client':
         specifier: workspace:*
         version: 'link:'
@@ -2150,6 +2153,9 @@ packages:
   '@typescript-eslint/visitor-keys@8.16.0':
     resolution: {integrity: sha512-pq19gbaMOmFE3CbL0ZB8J8BFCo2ckfHBfaIsaOZgBIF4EoISJIdLX5xRhd0FGB0LlHReNRuzoJoMGpTjq8F2CQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@ungap/with-resolvers@0.1.0':
+    resolution: {integrity: sha512-g7f0IkJdPW2xhY7H4iE72DAsIyfuwEFc6JWc2tYFwKDMWWAF699vGjrM348cwQuOXgHpe1gWFe+Eiyjx/ewvvw==}
 
   '@unocss/core@66.1.0-beta.5':
     resolution: {integrity: sha512-1kZzSrB87KKd+xP+vMN7IP03j2UPEykna447aw3UaK5RYTDd/LuVtxoep6gvjN9TJiB4K+Qx0sAtgnfhPpka9Q==}
@@ -4769,6 +4775,7 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
+    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -7123,6 +7130,8 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.16.0
       eslint-visitor-keys: 4.2.0
+
+  '@ungap/with-resolvers@0.1.0': {}
 
   '@unocss/core@66.1.0-beta.5': {}
 

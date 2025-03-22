@@ -29,4 +29,5 @@ function main() {
   );
 }
 
-document.addEventListener('DOMContentLoaded', main);
+// document.addEventListener('DOMContentLoaded', main);
+main();
