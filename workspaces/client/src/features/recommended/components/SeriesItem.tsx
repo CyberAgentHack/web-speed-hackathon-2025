@@ -12,10 +12,12 @@ interface Props {
   };
 }
 
-export const SeriesItem = ({ series }: Props) => {
-  // thumbnailUrl の拡張子を .webp に変更
-  const thumbnailUrlWithWebp = series.thumbnailUrl.replace(/\.[a-zA-Z0-9]+$/, '_400w.webp');
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 
+export const SeriesItem = ({ series }: Props) => {
   return (
     <Hoverable classNames={{ hovered: 'opacity-75' }}>
       <NavLink viewTransition className="block w-full overflow-hidden" to={`/series/${series.id}`}>
@@ -24,7 +26,7 @@ export const SeriesItem = ({ series }: Props) => {
             <>
               <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
                 <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
-                  <img alt="" className="h-auto w-full" src={thumbnailUrlWithWebp} />
+                  <img alt="" className="h-auto w-full" src={changeImageExtension(series.thumbnailUrl)} />
                 </Flipped>
               </div>
               <div className="p-[8px]">

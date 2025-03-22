@@ -27,7 +27,10 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
   return { episode, modules };
 };
-
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 export const EpisodePage = () => {
   const authActions = useAuthActions();
   const user = useAuthUser();
@@ -53,7 +56,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={changeImageExtension(episode.thumbnailUrl)} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

@@ -15,7 +15,10 @@ interface Props {
   height: number;
   program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
 }
-
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 export const Program = ({ height, program }: Props): ReactElement => {
   const width = useColumnWidth(program.channelId);
 
@@ -73,7 +76,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-                src={program.thumbnailUrl}
+                src={changeImageExtension(program.thumbnailUrl)}
               />
             </div>
           </div>
