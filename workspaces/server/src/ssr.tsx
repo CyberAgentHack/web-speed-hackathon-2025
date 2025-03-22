@@ -73,15 +73,15 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" />`).join('\n')}
         </head>
         <body></body>
       </html>
       <script>
         window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
+      actionData: context.actionData,
+      loaderData: context.loaderData,
+    })};
       </script>
     `);
   });
