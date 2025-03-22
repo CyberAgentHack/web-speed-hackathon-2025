@@ -20,13 +20,14 @@ export function registerSsr(app: FastifyInstance): void {
   app.get('/*', async (_, reply) => {
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
-      <html className="size-full" lang="ja">
+      <html lang="ja">
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          <link rel="stylesheet" href="/public/styles.css" />
           <script src="/public/main.js"></script>
         </head>
-        <body className="size-full bg-[#000000] text-[#ffffff]">
+        <body>
           <div id="root"></div>
         </body>
       </html>
