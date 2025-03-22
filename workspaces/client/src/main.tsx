@@ -1,8 +1,9 @@
+import '@wsh-2025/client/src/setups/polyfill';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
-import { hydrateRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
 
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
@@ -18,8 +19,8 @@ function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
-  hydrateRoot(
-    document,
+  const root = createRoot(document);
+  root.render(
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
