@@ -17,7 +17,8 @@ export function registerSsr(app: FastifyInstance): void {
     reply.status(404).send();
   });
 
-  app.get('/*', async (_, reply) => {
+  app.get('/*', async (req, reply) => {
+    console.log(req.ip);
     reply.type('text/html').send(/* html */ `
 <!DOCTYPE html>
 <html lang="ja">
