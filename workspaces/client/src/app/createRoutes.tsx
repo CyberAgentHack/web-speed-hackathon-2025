@@ -1,12 +1,10 @@
-import lazy from "p-min-delay";
-import { RouteObject } from "react-router";
+import lazy from 'p-min-delay';
+import { RouteObject } from 'react-router';
 
-import { Document, prefetch } from "@wsh-2025/client/src/app/Document";
-import { createStore } from "@wsh-2025/client/src/app/createStore";
+import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
+import { createStore } from '@wsh-2025/client/src/app/createStore';
 
-export function createRoutes(
-  store: ReturnType<typeof createStore>
-): RouteObject[] {
+export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
     {
       children: [
@@ -14,8 +12,8 @@ export function createRoutes(
           index: true,
           async lazy() {
             const { HomePage, prefetch } = await lazy(
-              import("@wsh-2025/client/src/pages/home/components/HomePage"),
-              300
+              import('@wsh-2025/client/src/pages/home/components/HomePage'),
+              500,
             );
             return {
               Component: HomePage,
@@ -28,10 +26,8 @@ export function createRoutes(
         {
           async lazy() {
             const { EpisodePage, prefetch } = await lazy(
-              import(
-                "@wsh-2025/client/src/pages/episode/components/EpisodePage"
-              ),
-              300
+              import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
+              300,
             );
             return {
               Component: EpisodePage,
@@ -40,15 +36,13 @@ export function createRoutes(
               },
             };
           },
-          path: "/episodes/:episodeId",
+          path: '/episodes/:episodeId',
         },
         {
           async lazy() {
             const { prefetch, ProgramPage } = await lazy(
-              import(
-                "@wsh-2025/client/src/pages/program/components/ProgramPage"
-              ),
-              300
+              import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
+              300,
             );
             return {
               Component: ProgramPage,
@@ -57,13 +51,13 @@ export function createRoutes(
               },
             };
           },
-          path: "/programs/:programId",
+          path: '/programs/:programId',
         },
         {
           async lazy() {
             const { prefetch, SeriesPage } = await lazy(
-              import("@wsh-2025/client/src/pages/series/components/SeriesPage"),
-              300
+              import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
+              300,
             );
             return {
               Component: SeriesPage,
@@ -72,15 +66,13 @@ export function createRoutes(
               },
             };
           },
-          path: "/series/:seriesId",
+          path: '/series/:seriesId',
         },
         {
           async lazy() {
             const { prefetch, TimetablePage } = await lazy(
-              import(
-                "@wsh-2025/client/src/pages/timetable/components/TimetablePage"
-              ),
-              300
+              import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
+              300,
             );
             return {
               Component: TimetablePage,
@@ -89,15 +81,13 @@ export function createRoutes(
               },
             };
           },
-          path: "/timetable",
+          path: '/timetable',
         },
         {
           async lazy() {
             const { NotFoundPage, prefetch } = await lazy(
-              import(
-                "@wsh-2025/client/src/pages/not_found/components/NotFoundPage"
-              ),
-              400
+              import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
+              400,
             );
             return {
               Component: NotFoundPage,
@@ -106,14 +96,14 @@ export function createRoutes(
               },
             };
           },
-          path: "*",
+          path: '*',
         },
       ],
       Component: Document,
       async loader() {
         return await prefetch(store);
       },
-      path: "/",
+      path: '/',
     },
   ];
 }
