@@ -176,7 +176,7 @@ export const recommendedItem = table(
   },
   (table) => {
     return {
-      oduleIdIndex: index('moduleId_index').on(table.moduleId),
+      moduleIdIndex: index('moduleId_index').on(table.moduleId),
       seriesIdIndex: index('seriesId_index').on(table.seriesId),
       episodeIdIndex: index('episodeId_index').on(table.episodeId),
     };
