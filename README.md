@@ -20,7 +20,7 @@ https://github.com/CyberAgentHack/web-speed-hackathon-2025-scoring-tool/issues/n
 ## デプロイ
 
 デプロイ方法は [./docs/deployment.md](./docs/deployment.md) を参照してください。
-
+デプロイテスト
 ## 採点
 
 採点は GitHub Actions で Lighthouse を動かして行います。
