@@ -1,38 +1,28 @@
 {
   "name": "@wsh-2025/client",
-  "private": true,
   "scripts": {
-    "build": "wireit",
-    "dev": "webpack serve --config ./webpack.config.mjs --mode development --hot --port 3000"
+    "build": "wireit"
   },
   "dependencies": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "video.js": "8.21.0"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0"
   },
   "devDependencies": {
-    "@babel/core": "7.26.0",
-    "@babel/preset-env": "7.26.0",
-    "@babel/preset-react": "7.25.9",
-    "@babel/preset-typescript": "7.26.0",
-    "babel-loader": "9.2.1",
-    "typescript": "5.7.2",
-    "webpack": "5.96.1",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.1.0"
+    "swc-loader": "^0.12.3",
+    "@swc/core": "^1.3.62"
   },
   "wireit": {
     "build": {
-      "command": "webpack --config ./webpack.config.mjs",
+      "command": "webpack --config webpack.config.js --mode production",
       "files": [
-        "../../pnpm-lock.yaml",
-        "../schema/src/**/*",
-        "./src/**/*",
-        "./webpack.config.mjs"
+        "src/**/*",
+        "webpack.config.js",
+        "package.json"
       ],
       "output": [
-        "./dist/**/*"
-      ]
+        "dist"
+      ],
+      "cache": true
     }
   }
 }
