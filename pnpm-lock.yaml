@@ -10,7 +10,7 @@ overrides:
 
 patchedDependencies:
   shaka-player:
-    hash: cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c
+    hash: ztcamgtqc3a62la4l6p3d6w4ae
     path: patches/shaka-player.patch
 
 importers:
@@ -123,9 +123,6 @@ importers:
       valibot:
         specifier: 1.0.0-rc.3
         version: 1.0.0-rc.3(typescript@5.7.2)
-      view-transitions-polyfill:
-        specifier: 1.0.3
-        version: 1.0.3
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -199,15 +196,12 @@ importers:
       babel-loader:
         specifier: 9.2.1
         version: 9.2.1(@babel/core@7.26.0)(webpack@5.96.1)
-      core-js:
-        specifier: 3.41.0
-        version: 3.41.0
       hls.js:
         specifier: 1.5.17
         version: 1.5.17
       shaka-player:
         specifier: 4.12.5
-        version: 4.12.5(patch_hash=cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c)
+        version: 4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae)
       typescript:
         specifier: 5.7.2
         version: 5.7.2
@@ -2608,9 +2602,6 @@ packages:
 
   core-js-compat@3.39.0:
     resolution: {integrity: sha512-VgEUx3VwlExr5no0tXlBt+silBvhTryPwCXRI2Id1PN8WTKu7MreethvddqOubrYxkFdv/RnYrqlv1sFNAUelw==}
-
-  core-js@3.41.0:
-    resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -5139,9 +5130,6 @@ packages:
   videojs-vtt.js@0.15.5:
     resolution: {integrity: sha512-yZbBxvA7QMYn15Lr/ZfhhLPrNpI/RmCSCqgIff57GC2gIrV5YfyzLfLyZMj0NnZSAz8syB4N0nHXpZg9MyrMOQ==}
 
-  view-transitions-polyfill@1.0.3:
-    resolution: {integrity: sha512-o7tiNKAsuqvL0u4Epo/jrSOx7qy1/KH3ajzHsY0GU4zWIOiiC6Pyczyf6QgJneyFKlu8QdcMeCQocUl94R+fvA==}
-
   watchpack@2.4.2:
     resolution: {integrity: sha512-TnbFSbcOCcDgjZ4piURLCbJ3nJhznVh9kw6F6iokjiFPl8ONxe9A6nMDVXDiNbrSfLILs6vB07F7wLBrwPYzJw==}
     engines: {node: '>=10.13.0'}
@@ -7634,8 +7622,6 @@ snapshots:
     dependencies:
       browserslist: 4.24.2
 
-  core-js@3.41.0: {}
-
   core-util-is@1.0.3: {}
 
   cross-spawn@7.0.6:
@@ -9813,7 +9799,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  shaka-player@4.12.5(patch_hash=cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c):
+  shaka-player@4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae):
     dependencies:
       eme-encryption-scheme-polyfill: 2.1.6
 
@@ -10280,8 +10266,6 @@ snapshots:
   videojs-vtt.js@0.15.5:
     dependencies:
       global: 4.4.0
-
-  view-transitions-polyfill@1.0.3: {}
 
   watchpack@2.4.2:
     dependencies:
