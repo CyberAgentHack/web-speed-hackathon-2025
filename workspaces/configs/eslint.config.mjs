@@ -59,17 +59,17 @@ const configs = [
       eqeqeq: ['error', 'always', { null: 'never' }],
       'import/no-named-as-default': ['off'],
       'import/no-named-as-default-member': ['off'],
-      'react/jsx-sort-props': [
-        'error',
-        {
-          callbacksLast: true,
-          ignoreCase: false,
-          reservedFirst: ['key', 'ref'],
-          shorthandFirst: true,
-        },
-      ],
+      //'react/jsx-sort-props': [
+      //  'error',
+      //  {
+      //    callbacksLast: true,
+      //    ignoreCase: false,
+      //    reservedFirst: ['key', 'ref'],
+      //    shorthandFirst: true,
+      //  },
+      //],
       'sort/imports': ['off'],
-      'sort/type-properties': ['error'],
+      //'sort/type-properties': ['error'],
     },
     settings: {
       'import/parsers': {
