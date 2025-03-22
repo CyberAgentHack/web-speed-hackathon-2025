@@ -29,6 +29,8 @@ const config = {
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
+            cacheDirectory: true,
+            cacheCompression: true,
           },
         },
       },
@@ -57,8 +59,8 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 100 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
   resolve: {
     alias: {
