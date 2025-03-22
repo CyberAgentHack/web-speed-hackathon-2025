@@ -3,32 +3,22 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
   mode: 'production',
   module: {
     rules: [
       {
-        // 対象ファイルから特定の node_modules を除外
+        // 一部除外するモジュールはそのまま
         exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: {
-          fullySpecified: false,
-        },
+        resolve: { fullySpecified: false },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
           loader: 'swc-loader',
           options: {
             jsc: {
-              parser: {
-                // TypeScript と JSX を処理する設定（必要に応じて decorators 等も追加）
-                syntax: 'typescript',
-                tsx: true,
-              },
-              transform: {
-                react: {
-                  runtime: 'automatic'
-                }
-              }
+              parser: { syntax: 'typescript', tsx: true },
+              transform: { react: { runtime: 'automatic' } }
             }
           }
         }
@@ -44,9 +34,7 @@ const config = {
       {
         resourceQuery: /arraybuffer/,
         type: 'javascript/auto',
-        use: {
-          loader: 'arraybuffer-loader',
-        },
+        use: { loader: 'arraybuffer-loader' },
       },
     ],
   },
@@ -54,11 +42,27 @@ const config = {
     chunkFilename: 'chunk-[contenthash].js',
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto',
+    publicPath: '/public/',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 20000,
+      maxSize: 70000,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+            return `npm.${packageName.replace('@', '')}`;
+          },
+        },
+      },
+    },
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
   resolve: {
     alias: {
