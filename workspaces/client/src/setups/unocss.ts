@@ -1,5 +1,6 @@
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
+import resetCss from '@unocss/reset/tailwind-compat.css?raw';
 
 async function init() {
   await initUnocssRuntime({
@@ -11,34 +12,34 @@ async function init() {
       },
       preflights: [
         {
-          getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
+          getCSS: () => resetCss,
           layer: 'reset',
         },
         {
           getCSS: () => /* css */ `
-          @view-transition {
-            navigation: auto;
-          }
-          html,
-          :host {
-            font-family: 'Noto Sans JP', sans-serif !important;
-          }
-          video {
-            max-height: 100%;
-            max-width: 100%;
-          }
+@view-transition {
+  navigation: auto;
+}
+html,
+:host {
+  font-family: 'Noto Sans JP', sans-serif !important;
+}
+video {
+  max-height: 100%;
+  max-width: 100%;
+}
         `,
         },
         {
           getCSS: () => /* css */ `
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
         `,
         },
       ],

@@ -10,16 +10,12 @@ import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 
-declare global {
-  var __zustandHydrationData: unknown;
-}
-
 function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
   hydrateRoot(
-    document,
+    document.body,
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />

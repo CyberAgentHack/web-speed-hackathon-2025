@@ -27,7 +27,7 @@ export function registerSsr(app: FastifyInstance): void {
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <script type="module" src="/public/main.js" defer></script>
   </head>
-  <body></body>
+  <body className="size-full bg-[#000000] text-[#ffffff]"></body>
 </html>
     `);
   });
