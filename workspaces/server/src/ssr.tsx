@@ -20,6 +20,12 @@ const CRITICAL_IMAGES = [
 
 
 export function registerSsr(app: FastifyInstance): void {
+  app.register(
+    import('@fastify/compress'),
+    {
+      encodings: ['gzip'],
+    },
+  );
   app.register(fastifyStatic, {
     prefix: '/public/',
     root: [
@@ -52,6 +58,8 @@ export function registerSsr(app: FastifyInstance): void {
         </StoreProvider>
       </StrictMode>,
     );
+
+    // .header('Vary', 'Accept-Encoding')
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>

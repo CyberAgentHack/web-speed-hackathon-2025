@@ -1,6 +1,7 @@
 import path from 'node:path';
 import webpack from 'webpack';
-import BundleAnalyzerPlugin from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import CompressionPlugin from 'compression-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -62,7 +63,8 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 100 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
-    // new BundleAnalyzerPlugin.BundleAnalyzerPlugin(),
+    new CompressionPlugin({ algorithm: 'gzip' }),
+    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
