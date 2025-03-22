@@ -3,6 +3,7 @@ import path from 'node:path';
 // import CompressionPlugin from 'compression-webpack-plugin';
 // import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
@@ -57,39 +58,17 @@ const config = {
 
   optimization: {
     minimize: true,
-    /* minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          compress: {
-            drop_console: true, // console.log を削除
-            drop_debugger: true, // debugger を削除
-          },
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          chunks: 'all',
+          name: 'vendors',
+          test: /[\\/]node_modules[\\/]/,
         },
-      }),
-    ], // 最小化を有効 */
-    // runtimeChunk: 'single', // ランタイム分割でキャッシュ効率UP
-    // sideEffects: true, // 未使用のexportを削除 (tree shaking)
-
-    // splitChunks: {
-    //   automaticNameDelimiter: '-',
-    //   cacheGroups: {
-    //     vendors: {
-    //       chunks: 'all',
-    //       name: 'vendors',
-    //       test: /[\\/]node_modules[\\/]/,
-    //     },
-    //   },
-    //   chunks: 'all', // 20KB以上のチャンクは分割
-    //   maxSize: 150 * 1024,
-    //   // 150KBを超えたら分割
-    //   minChunks: 1,
-    //   minSize: 20 * 1024,
-    // },
-
-    // // 副作用のないモジュールを削除
-    // usedExports: true,
+      },
+      chunks: 'all',
+    },
   },
-
   output: {
     // ハッシュ付きでキャッシュ防止
     chunkFilename: 'chunk-[contenthash].js',
@@ -97,26 +76,7 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  plugins: [
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-    // Gzip圧縮で配信サイズを削減
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    // new CompressionPlugin({
-    //   algorithm: 'gzip',
-    //   // 10KB以上のファイルに適用
-    //   minRatio: 0.8,
-    //   test: /\.(js|css|html|svg)$/,
-    //   threshold: 10 * 1024,
-    // }),
-    // // バンドルサイズを可視化
-    // new BundleAnalyzerPlugin({
-    //   analyzerMode: 'static', // ローカルHTMLに結果を出力
-    //   reportFilename: 'report.html',
-    // }),
-  ],
-
+  plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }), new BundleAnalyzerPlugin()],
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
