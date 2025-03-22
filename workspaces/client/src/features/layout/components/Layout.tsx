@@ -82,11 +82,18 @@ export const Layout = ({ children }: Props) => {
                 <img
                   className="shrink-0 grow-0"
                   height={20}
+                  loading="lazy"
                   src="/public/icons/fa-solid--sign-out-alt.svg"
                   width={20}
                 />
               ) : (
-                <img className="shrink-0 grow-0" height={20} src="/public/icons/fa-solid--user.svg" width={20} />
+                <img
+                  className="shrink-0 grow-0"
+                  height={20}
+                  loading="lazy"
+                  src="/public/icons/fa-solid--user.svg"
+                  width={20}
+                />
               )}
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
