@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
@@ -61,6 +61,11 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: true,
+      reportFilename: 'bundle-report.html',
+    }),
   ],
   resolve: {
     alias: {

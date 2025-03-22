@@ -4,10 +4,9 @@ import * as schema from '@wsh-2025/schema/src/database/schema';
 import { drizzle } from 'drizzle-orm/libsql';
 import { reset } from 'drizzle-seed';
 import { DateTime } from 'luxon';
-
+import bcrypt from 'bcryptjs';
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
-import * as bcrypt from 'bcrypt';
 import path from 'node:path';
 import { readdirSync } from 'node:fs';
 
