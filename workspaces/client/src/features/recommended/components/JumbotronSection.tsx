@@ -54,17 +54,17 @@ export const JumbotronSection = ({ module }: Props) => {
         setIsPlayerLoaded(true);
       }, 100);
 
-      return () => clearTimeout(timer);
+      return () => { clearTimeout(timer); };
     }
   }, [isVisible, isPlayerLoaded]);
 
   return (
     <Hoverable classNames={{ hovered: 'opacity-50' }}>
       <NavLink
+        ref={containerRef}
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
         to={`/episodes/${episode.id}`}
-        ref={containerRef}
       >
         {({ isTransitioning }) => {
           return (
@@ -90,7 +90,8 @@ export const JumbotronSection = ({ module }: Props) => {
                     />
                   ) : (
                     <div className="size-full bg-[#212121] flex items-center justify-center">
-                      <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" />
+                      {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
+                      <img className="size-[48px]" src="/public/svg/loading.svg" />
                     </div>
                   )}
                 </div>
