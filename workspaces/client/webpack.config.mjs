@@ -1,12 +1,10 @@
 import path from 'node:path';
 
-import webpack from 'webpack';
-
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -18,12 +16,15 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            // キャッシュを有効化
+            cacheDirectory: true,
             presets: [
               [
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  forceAllTransforms: true,
+                  // 必要な変換のみ行うように変更
+                  forceAllTransforms: false,
                   targets: 'defaults',
                   useBuiltIns: 'entry',
                 },
@@ -35,8 +36,14 @@ const config = {
         },
       },
       {
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8 * 1024, // 8KB以下はインライン化
+          },
+        },
         test: /\.png$/,
-        type: 'asset/inline',
+        // 小さい画像はインライン化、大きい画像は個別ファイルとして出力
+        type: 'asset',
       },
       {
         resourceQuery: /raw/,
@@ -51,23 +58,48 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'all',
+          name: 'vendors',
+          test: /[\\/]node_modules[\\/]/,
+        },
+      },
+      chunks: 'all',
+      maxInitialRequests: 6,
+    },
+    usedExports: true,
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: 'chunk-[name].[contenthash].js',
+    chunkFormat: 'array-push',
+    clean: true,
+    filename: '[name].[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  performance: {
+    hints: 'warning',
+    maxAssetSize: 250 * 1024, // 250KB
+    maxEntrypointSize: 500 * 1024, // 500KB
+  },
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
       '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
+    symlinks: false,
+  },
+  stats: {
+    assets: true,
+    chunks: false,
+    modules: false,
   },
 };
 
