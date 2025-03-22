@@ -1,3 +1,5 @@
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import * as schema from '@wsh-2025/schema/src/api/schema';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -5,9 +7,9 @@ import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+// import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
+// import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
@@ -22,10 +24,24 @@ export const SeriesPage = () => {
   const { seriesId } = useParams();
   invariant(seriesId);
 
-  const series = useSeriesById({ seriesId });
-  invariant(series);
+  const hydrationData = window.__staticRouterHydrationData as {
+    loaderData?: {
+      '0-3'?: {
+        modules?: StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>;
+        series?: StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>;
+      };
+    };
+  };
+  const modules = hydrationData.loaderData?.['0-3']?.modules;
+  const series = hydrationData.loaderData?.['0-3']?.series;
 
-  const modules = useRecommended({ referenceId: seriesId });
+  invariant(series);
+  invariant(modules);
+
+  // const series = useSeriesById({ seriesId });
+  // invariant(series);
+
+  // const modules = useRecommended({ referenceId: seriesId });
 
   return (
     <>
