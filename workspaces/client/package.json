@@ -13,7 +13,6 @@
     "@better-fetch/fetch": "1.1.15",
     "@dhmk/zustand-lens": "5.0.0",
     "@epic-web/restore-scroll": "1.1.1",
-    "@ffmpeg/ffmpeg": "0.12.15",
     "@headlessui/react": "2.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@standard-schema/spec": "1.0.0",
@@ -37,11 +36,8 @@
     "react-use": "17.6.0",
     "setimmediate": "1.0.5",
     "tiny-invariant": "1.3.3",
-    "type-fest": "4.29.1",
     "use-callback-ref": "1.3.3",
     "use-sync-external-store": "1.4.0",
-    "valibot": "1.0.0-rc.3",
-    "zod": "3.24.1",
     "zustand": "5.0.3",
     "zustand-di": "0.0.16"
   },
@@ -51,6 +47,7 @@
     "@babel/preset-react": "7.25.9",
     "@babel/preset-typescript": "7.26.0",
     "@ffmpeg/core": "0.12.10",
+    "@ffmpeg/ffmpeg": "0.12.15",
     "@ffmpeg/util": "0.12.2",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
@@ -68,12 +65,15 @@
     "hls.js": "1.5.17",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
+    "type-fest": "4.29.1",
+    "valibot": "1.0.0-rc.3",
     "video.js": "8.21.0",
     "webpack": "5.96.1",
     "webpack-bundle-analyzer": "4.10.2",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "5.1.0",
-    "wireit": "0.14.9"
+    "wireit": "0.14.9",
+    "zod": "3.24.1"
   },
   "wireit": {
     "build": {
