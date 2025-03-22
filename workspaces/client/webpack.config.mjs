@@ -5,7 +5,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
   mode: 'none',
   module: {
@@ -16,24 +16,42 @@ const config = {
           fullySpecified: false,
         },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
+        // use: {
+        //   loader: 'babel-loader',
+        //   options: {
+        //     presets: [
+        //       [
+        //         '@babel/preset-env',
+        //         {
+        //           corejs: '3.41',
+        //           forceAllTransforms: true,
+        //           targets: 'defaults',
+        //           useBuiltIns: 'entry',
+        //         },
+        //       ],
+        //       ['@babel/preset-react', { runtime: 'automatic' }],
+        //       ['@babel/preset-typescript'],
+        //     ],
+        //   },
+        // },
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
             presets: [
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
                   targets: 'defaults',
+                  corejs: '3.41',
                   useBuiltIns: 'entry',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
+              '@babel/preset-typescript',
             ],
           },
-        },
+        },        
       },
       {
         test: /\.png$/,
@@ -72,7 +90,22 @@ const config = {
   },
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin()],
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          ecma: 2020,
+          compress: {
+            drop_console: true, // 不要なconsole.logを削除
+          },
+        },
+      }),
+    ],
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 0,
+    },
   },
 };
 
