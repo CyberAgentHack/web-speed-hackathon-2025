@@ -219,3 +219,5 @@ $RECYCLE.BIN/
 
 # Wireit
 .wireit
+
+/.direnv
