@@ -12,7 +12,7 @@ export function useCarouselItemWidth() {
   useEffect(() => {
     const interval = setInterval(function tick() {
       forceUpdate();
-    }, 250);
+    }, 2000);
     return () => {
       clearInterval(interval);
     };
