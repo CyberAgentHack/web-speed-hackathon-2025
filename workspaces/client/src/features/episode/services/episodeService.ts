@@ -38,7 +38,7 @@ const batcher = batshit.create({
   },
   scheduler: batshit.windowedFiniteBatchScheduler({
     maxBatchSize: 100,
-    windowMs: ,
+    windowMs: 1000,
   }),
 });
 
