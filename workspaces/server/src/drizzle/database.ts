@@ -1,6 +1,7 @@
 import fsp from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { env } from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { createClient } from '@libsql/client';
@@ -30,6 +31,7 @@ export async function initializeDatabase(): Promise<void> {
       syncInterval: 1000,
       url: `file:${TEMP_PATH}`,
     }),
+    logger: env['DEBUG']?.split(',').includes('drizzle') ? true : undefined,
     schema,
   });
 }
