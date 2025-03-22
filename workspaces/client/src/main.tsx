@@ -1,6 +1,8 @@
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/polyfills';
-import '@wsh-2025/client/src/setups/unocss';
+import './index.css';
+import 'virtual:uno.css';
+import '@unocss/reset/tailwind.css';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
