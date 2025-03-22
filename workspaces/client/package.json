@@ -39,7 +39,6 @@
     "zustand-di": "0.0.16"
   },
   "devDependencies": {
-    "@iconify/react": "5.2.0",
     "@types/luxon": "3.4.2",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
