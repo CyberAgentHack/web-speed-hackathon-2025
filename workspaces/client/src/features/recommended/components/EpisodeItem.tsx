@@ -8,11 +8,9 @@ interface Props {
   episode: {
     id: string;
     premium: boolean;
-    series: {
-      title: string;
-    };
     thumbnailUrl: string;
     title: string;
+    seriesTitle: string;
   };
 }
 
@@ -42,7 +40,7 @@ export const EpisodeItem = ({ episode }: Props) => {
                   <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
                 </div>
                 <div className="text-[12px] text-[#999999]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.series.title} visibleLine={2} />
+                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.seriesTitle} visibleLine={2} />
                 </div>
               </div>
             </>
