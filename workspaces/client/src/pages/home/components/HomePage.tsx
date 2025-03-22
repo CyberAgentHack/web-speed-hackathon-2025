@@ -3,14 +3,20 @@ import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/co
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
+  const now = new Date();
+  console.log('prefetch', now);
   const modules = await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
+  console.log('prefetch', new Date().getTime() - now.getTime());
   return { modules };
 };
 
 export const HomePage = () => {
+  const now = new Date();
+  console.log('HomePage', now);
   const modules = useRecommended({ referenceId: 'entrance' });
+  console.log('HomePage', new Date().getTime() - now.getTime());
 
   return (
     <>

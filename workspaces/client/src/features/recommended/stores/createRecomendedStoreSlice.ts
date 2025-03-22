@@ -26,7 +26,10 @@ interface RecommendedActions {
 export const createRecommendedStoreSlice = () => {
   return lens<RecommendedState & RecommendedActions>((set) => ({
     fetchRecommendedModulesByReferenceId: async ({ referenceId }) => {
+      const now = new Date();
+      console.log('fetchRecommendedModulesByReferenceId', now);
       const modules = await recommendedService.fetchRecommendedModulesByReferenceId({ referenceId });
+      console.log('fetchRecommendedModulesByReferenceId', new Date().getTime() - now.getTime(), modules);
       set((state) => {
         return produce(state, (draft) => {
           draft.references[referenceId] = modules.map((module) => module.id);

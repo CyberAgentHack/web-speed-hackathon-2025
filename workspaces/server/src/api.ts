@@ -476,6 +476,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
 
+      // const modules2 = await database.select().from(recommendedModule).leftJoin(recommendedItem, eq(recommendedModule.id, recommendedItem.moduleId))
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -485,28 +486,17 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           items: {
-            orderBy(item, { asc }) {
-              return asc(item.order);
-            },
             with: {
               series: {
                 with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+                  episodes: true,
                 },
               },
               episode: {
                 with: {
                   series: {
                     with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                      episodes: true,
                     },
                   },
                 },
