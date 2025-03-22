@@ -82,7 +82,7 @@
         "./src/**/*"
       ],
       "dependencies": [
-        "../client:build"
+        "../client:start"
       ]
     },
     "heroku-start": {

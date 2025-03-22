@@ -31,7 +31,8 @@
   "wireit": {
     "start": {
       "dependencies": [
-        "./workspaces/server:start"
+        "./workspaces/server:start",
+        "./workspaces/client:start"
       ]
     },
     "build": {

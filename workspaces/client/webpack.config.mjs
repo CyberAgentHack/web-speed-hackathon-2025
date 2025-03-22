@@ -16,10 +16,12 @@ const plugins =
 if (mode === 'development') {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
   plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }));
+  plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 /** @type {import('webpack').Configuration} */
 const config = {
+  devServer: { hot: true },
   devtool: 'source-map',
   entry: './src/main.tsx',
   mode,

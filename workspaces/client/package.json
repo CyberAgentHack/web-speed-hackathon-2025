@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "wireit",
+    "start": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit"
@@ -54,6 +55,7 @@
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
     "@iconify/types": "2.0.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.5.15",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
     "@types/m3u8-parser": "7.2.0",
@@ -70,6 +72,7 @@
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
     "hls.js": "1.5.17",
+    "react-refresh": "0.16.0",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "video.js": "8.21.0",
@@ -91,6 +94,11 @@
       "output": [
         "./dist/**/*"
       ]
+    },
+    "start": {
+      "command": "webpack-dev-server",
+      "service": true,
+      "daemon": true
     },
     "format": {
       "command": "pnpm run format:eslint && pnpm run format:prettier"

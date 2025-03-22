@@ -160,6 +160,9 @@ importers:
       '@iconify/types':
         specifier: 2.0.0
         version: 2.0.0
+      '@pmmmwh/react-refresh-webpack-plugin':
+        specifier: 0.5.15
+        version: 0.5.15(react-refresh@0.16.0)(type-fest@4.29.1)(webpack-dev-server@5.1.0)(webpack@5.96.1)
       '@types/lodash':
         specifier: 4.17.16
         version: 4.17.16
@@ -208,6 +211,9 @@ importers:
       hls.js:
         specifier: 1.5.17
         version: 1.5.17
+      react-refresh:
+        specifier: 0.16.0
+        version: 0.16.0
       shaka-player:
         specifier: 4.12.5
         version: 4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae)
@@ -1749,6 +1755,32 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  '@pmmmwh/react-refresh-webpack-plugin@0.5.15':
+    resolution: {integrity: sha512-LFWllMA55pzB9D34w/wXUCf8+c+IYKuJDgxiZ3qMhl64KRMBHYM1I3VdGaD2BV5FNPV2/S2596bppxHbv2ZydQ==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      '@types/webpack': 4.x || 5.x
+      react-refresh: '>=0.10.0 <1.0.0'
+      sockjs-client: ^1.4.0
+      type-fest: '>=0.17.0 <5.0.0'
+      webpack: '>=4.43.0 <6.0.0'
+      webpack-dev-server: 3.x || 4.x || 5.x
+      webpack-hot-middleware: 2.x
+      webpack-plugin-serve: 0.x || 1.x
+    peerDependenciesMeta:
+      '@types/webpack':
+        optional: true
+      sockjs-client:
+        optional: true
+      type-fest:
+        optional: true
+      webpack-dev-server:
+        optional: true
+      webpack-hot-middleware:
+        optional: true
+      webpack-plugin-serve:
+        optional: true
+
   '@polka/url@1.0.0-next.28':
     resolution: {integrity: sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==}
 
@@ -2321,6 +2353,11 @@ packages:
     engines: {'0': node >= 0.8.0}
     hasBin: true
 
+  ansi-html@0.0.9:
+    resolution: {integrity: sha512-ozbS3LuenHVxNRh/wdnN16QapUHzauqSomAl1jwwJRRsGwFwtj644lIhxfWu0Fy0acCij2+AEgHvjscq3dlVXg==}
+    engines: {'0': node >= 0.8.0}
+    hasBin: true
+
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
     engines: {node: '>=8'}
@@ -2615,6 +2652,9 @@ packages:
 
   core-js-compat@3.39.0:
     resolution: {integrity: sha512-VgEUx3VwlExr5no0tXlBt+silBvhTryPwCXRI2Id1PN8WTKu7MreethvddqOubrYxkFdv/RnYrqlv1sFNAUelw==}
+
+  core-js-pure@3.41.0:
+    resolution: {integrity: sha512-71Gzp96T9YPk63aUvE5Q5qP+DryB4ZloUZPSOebGM88VNw8VNfvdA7z6kGA8iGOTEzAomsRidp4jXSmUIJsL+Q==}
 
   core-js@3.41.0:
     resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
@@ -3846,6 +3886,10 @@ packages:
     resolution: {integrity: sha512-I5d00Pd/jwMD2QCduo657+YM/6L3KZu++pmX9VFncxaxvHcru9jx1lBaFft+r4Mt2jK0Yhp41XlRAihzPxHNCg==}
     engines: {node: '>=4.0.0'}
 
+  loader-utils@2.0.4:
+    resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
+    engines: {node: '>=8.9.0'}
+
   local-pkg@1.1.1:
     resolution: {integrity: sha512-WunYko2W1NcdfAFpuLUoucsgULmgDBRkdxHxWQ7mK0cQqwPiy8E1enjuRBrhLtZkB5iScJ1XIPdhVEFK8aOLSg==}
     engines: {node: '>=14'}
@@ -4466,6 +4510,10 @@ packages:
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
+  react-refresh@0.16.0:
+    resolution: {integrity: sha512-FPvF2XxTSikpJxcr+bHut2H4gJ17+18Uy20D5/F+SKzFap62R3cM5wH6b8WN3LyGSYeQilLEcJcR1fjBSI2S1A==}
+    engines: {node: '>=0.10.0'}
+
   react-router-dom@7.0.2:
     resolution: {integrity: sha512-VJOQ+CDWFDGaWdrG12Nl+d7yHtLaurNgAQZVgaIy7/Xd+DojgmYLosFfZdGz1wpxmjJIAkAMVTKWcvkx1oggAw==}
     engines: {node: '>=20.0.0'}
@@ -4801,6 +4849,10 @@ packages:
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
+
+  source-map@0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
 
   spdy-transport@3.0.0:
     resolution: {integrity: sha512-hsLVFE5SjA6TCisWeJXFKniGGOpBgMLmerfO2aCyCU5s7nJ/rpAepqmFifv/GCbSbueEeAJJnmSQ2rKC/g8Fcw==}
@@ -6666,6 +6718,21 @@ snapshots:
     dependencies:
       playwright: 1.50.1
 
+  '@pmmmwh/react-refresh-webpack-plugin@0.5.15(react-refresh@0.16.0)(type-fest@4.29.1)(webpack-dev-server@5.1.0)(webpack@5.96.1)':
+    dependencies:
+      ansi-html: 0.0.9
+      core-js-pure: 3.41.0
+      error-stack-parser: 2.1.4
+      html-entities: 2.5.2
+      loader-utils: 2.0.4
+      react-refresh: 0.16.0
+      schema-utils: 4.2.0
+      source-map: 0.7.4
+      webpack: 5.96.1(webpack-cli@5.1.4)
+    optionalDependencies:
+      type-fest: 4.29.1
+      webpack-dev-server: 5.1.0(webpack-cli@5.1.4)(webpack@5.96.1)
+
   '@polka/url@1.0.0-next.28': {}
 
   '@radix-ui/number@1.1.0': {}
@@ -7313,6 +7380,8 @@ snapshots:
 
   ansi-html-community@0.0.8: {}
 
+  ansi-html@0.0.9: {}
+
   ansi-regex@5.0.1: {}
 
   ansi-regex@6.1.0: {}
@@ -7653,6 +7722,8 @@ snapshots:
   core-js-compat@3.39.0:
     dependencies:
       browserslist: 4.24.2
+
+  core-js-pure@3.41.0: {}
 
   core-js@3.41.0: {}
 
@@ -8986,6 +9057,12 @@ snapshots:
       emojis-list: 3.0.0
       json5: 1.0.2
 
+  loader-utils@2.0.4:
+    dependencies:
+      big.js: 5.2.2
+      emojis-list: 3.0.0
+      json5: 2.2.3
+
   local-pkg@1.1.1:
     dependencies:
       mlly: 1.7.4
@@ -9528,6 +9605,8 @@ snapshots:
 
   react-is@16.13.1: {}
 
+  react-refresh@0.16.0: {}
+
   react-router-dom@7.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       react: 19.0.0
@@ -9925,6 +10004,8 @@ snapshots:
   source-map@0.5.6: {}
 
   source-map@0.6.1: {}
+
+  source-map@0.7.4: {}
 
   spdy-transport@3.0.0:
     dependencies:
