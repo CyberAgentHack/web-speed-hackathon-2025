@@ -51,7 +51,6 @@ async function init() {
           collections: {
             'fa-solid': () =>
               import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
             'line-md': () =>
               import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
             'material-symbols': () =>
