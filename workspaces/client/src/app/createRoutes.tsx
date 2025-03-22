@@ -13,7 +13,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           async lazy() {
             const { HomePage, prefetch } = await lazy(
               import('@wsh-2025/client/src/pages/home/components/HomePage'),
-              1000,
+              10,
             );
             return {
               Component: HomePage,
