@@ -20,6 +20,12 @@ async function init() {
 @view-transition {
   navigation: auto;
 }
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  color: #ffffff;
+}
 html,
 :host {
   font-family: 'Noto Sans JP', sans-serif !important;
