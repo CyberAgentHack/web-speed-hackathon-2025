@@ -151,12 +151,6 @@ importers:
       '@ffmpeg/util':
         specifier: 0.12.2
         version: 0.12.2
-      '@iconify/json':
-        specifier: 2.2.317
-        version: 2.2.317
-      '@iconify/types':
-        specifier: 2.0.0
-        version: 2.0.0
       '@types/lodash':
         specifier: 4.17.16
         version: 4.17.16
@@ -1599,9 +1593,6 @@ packages:
   '@humanwhocodes/retry@0.4.1':
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
-
-  '@iconify/json@2.2.317':
-    resolution: {integrity: sha512-RMf7b3Wd4FMKR7roYmJ8mO6Lwm1JCzuuuVCi0aPcBvBwZkgoWSNHEOFG504L3GMz95cid5KS5Yc4Gt1TPA5bJA==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -4237,9 +4228,6 @@ packages:
   path-to-regexp@0.1.10:
     resolution: {integrity: sha512-7lf7qcQidTku0Gu3YDPc8DJ1q7OOucfa/BSsIwjuh56VU7katFvuM8hULfkwB3Fns/rsVF7PwPKVw1sl5KQS9w==}
 
-  pathe@1.1.2:
-    resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
-
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
@@ -6483,11 +6471,6 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.1': {}
-
-  '@iconify/json@2.2.317':
-    dependencies:
-      '@iconify/types': 2.0.0
-      pathe: 1.1.2
 
   '@iconify/types@2.0.0': {}
 
@@ -9338,8 +9321,6 @@ snapshots:
       minipass: 7.1.2
 
   path-to-regexp@0.1.10: {}
-
-  pathe@1.1.2: {}
 
   pathe@2.0.3: {}
 
