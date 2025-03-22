@@ -1,6 +1,6 @@
 # Web Speed Hackathon 2025 AREMA
 
-## 概要
+## 概要 ##
 
 **"Web Speed Hackathon 2025" は、非常に重たい Web アプリをチューニングして、いかに高速にするかを競う競技です。**
 
@@ -10,6 +10,7 @@
 - 開催日程 | 2025/03/22 10:30 JST - 2025/03/23 17:30 JST
 - 募集要項 | https://cyberagent.connpass.com/event/338797
 - リーダーボード・順位表 | https://web-speed-hackathon-scoring-board-2025.fly.dev/
+- 
 
 ## 提出方法
 
