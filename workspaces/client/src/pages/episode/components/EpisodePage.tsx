@@ -59,7 +59,10 @@ export const EpisodePage = () => {
                   <button
                     className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
                     type="button"
-                    onClick={authActions.openSignInDialog}
+                    onClick={() => {
+                      console.log('openSignInDialog');
+                      authActions.openSignInDialog();
+                    }}
                   >
                     ログイン
                   </button>

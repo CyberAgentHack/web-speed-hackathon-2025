@@ -68,12 +68,19 @@ export const Layout = ({ children }: Props) => {
           </Link>
         </header>
 
-        <aside className="sticky top-[0px] flex h-[100vh] flex-col items-center bg-[#171717] pt-[80px] [grid-area:a1/a1/a2/a2]">
+        <aside className="pointer-events-auto sticky top-[0px] flex h-[100vh] flex-col items-center bg-[#171717] pt-[80px] [grid-area:a1/a1/a2/a2]">
           <nav>
             <button
               className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               type="button"
-              onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
+              onClick={() => {
+                console.log(isSignedIn);
+                if (isSignedIn) {
+                  authActions.openSignOutDialog();
+                } else {
+                  authActions.openSignInDialog();
+                }
+              }}
             >
               {/* <div
                 className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}

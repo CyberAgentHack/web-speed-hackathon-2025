@@ -4,7 +4,7 @@ import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
@@ -12,7 +12,6 @@ import { createStore } from '@wsh-2025/client/src/app/createStore';
 
 declare global {
   var __zustandHydrationData: unknown;
-  var __staticRouterHydrationData: HydrationState;
 }
 
 function main() {
@@ -20,8 +19,7 @@ function main() {
   const router = createBrowserRouter(createRoutes(store), {});
 
   hydrateRoot(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    document.getElementById('root')!,
+    document,
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
