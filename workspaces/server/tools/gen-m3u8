@@ -1,0 +1,24 @@
+#!/bin/bash
+
+for dir in "$(dirname "$0")/../streams"/*; do
+  if [ ! -d $dir ]; then
+    echo "Error: $dir is not a directory"
+    continue
+  fi
+
+  id="$(basename $dir)"
+
+  echo "Processing $dir"
+  o="$dir/playlist.m3u8"
+  echo "#EXTM3U" > $o
+  echo "#EXT-X-TARGETDURATION:3" >> $o
+  echo "#EXT-X-VERSION:3" >> $o
+  echo "#EXT-X-MEDIA-SEQUENCE:1" >> $o
+
+  for file in $dir/*.ts; do
+    echo "#EXTINF:2.000000," >> $o
+    echo "/streams/$id/$(basename $file)" >> $o
+  done
+  echo "#EXT-X-ENDLIST" >> $o
+  sed "s/\/streams\/$id\///g" $o > "$dir/playlist-rel.m3u8"
+done

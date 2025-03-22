@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import path from 'node:path';
+import { env } from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
@@ -29,11 +30,9 @@ export function registerStreams(app: FastifyInstance): void {
     const database = getDatabase();
 
     const episode = await database.query.episode.findFirst({
+      columns: { streamId: true },
       where(episode, { eq }) {
         return eq(episode.id, req.params.episodeId);
-      },
-      with: {
-        stream: true,
       },
     });
 
@@ -41,23 +40,12 @@ export function registerStreams(app: FastifyInstance): void {
       throw new Error('The episode is not found.');
     }
 
-    const stream = episode.stream;
-
-    const playlist = dedent`
-      #EXTM3U
-      #EXT-X-TARGETDURATION:3
-      #EXT-X-VERSION:3
-      #EXT-X-MEDIA-SEQUENCE:1
-      ${Array.from({ length: stream.numberOfChunks }, (_, idx) => {
-        return dedent`
-          #EXTINF:2.000000,
-          /streams/${stream.id}/${String(idx).padStart(3, '0')}.ts
-        `;
-      }).join('\n')}
-      #EXT-X-ENDLIST
-    `;
-
-    reply.type('application/vnd.apple.mpegurl').send(playlist);
+    if (env['STREAM_BASE_URL']) {
+      const url = new URL(`${episode.streamId}/playlist.m3u8`, env['STREAM_BASE_URL']);
+      reply.redirect(url.toString());
+    } else {
+      reply.redirect(`/streams/${episode.streamId}/playlist.m3u8`);
+    }
   });
 
   app.get<{
