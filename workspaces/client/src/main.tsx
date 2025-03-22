@@ -16,6 +16,7 @@ declare global {
 }
 
 function main() {
+  console.log(`deploy success`)
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
