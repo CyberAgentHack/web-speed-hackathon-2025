@@ -4,9 +4,9 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: process.env['NODE_ENV'] === 'production' ? 'source-map' : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
   module: {
     rules: [
       {
@@ -51,16 +51,28 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: process.env['NODE_ENV'] === 'production',
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          name: 'vendors',
+        },
+      },
+    },
+    runtimeChunk: 'single',
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: '[name].[contenthash].js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'development' }),
   ],
   resolve: {
     alias: {
