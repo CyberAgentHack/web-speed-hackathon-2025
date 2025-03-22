@@ -62,7 +62,11 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-    new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static', // 静的レポートを生成して終了
+      openAnalyzer: false,    // ブラウザで自動的にレポートを開かない
+      reportFilename: 'bundle-report.html',
+    }),
   ],
   resolve: {
     alias: {
