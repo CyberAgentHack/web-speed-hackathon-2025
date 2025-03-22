@@ -3,17 +3,24 @@ import { RouteObject } from 'react-router';
 
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
-import { HomePage } from '@wsh-2025/client/src/pages/home/components/HomePage';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
     {
       children: [
         {
-          Component: HomePage,
           index: true,
-          async loader() {
-            return await prefetch(store);
+          async lazy() {
+            const { HomePage, prefetch } = await lazy(
+              import('@wsh-2025/client/src/pages/home/components/HomePage'),
+              1000,
+            );
+            return {
+              Component: HomePage,
+              async loader() {
+                return await prefetch(store);
+              },
+            };
           },
         },
         {
