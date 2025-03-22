@@ -16,31 +16,30 @@ async function main() {
 
   const app = fastify();
 
-  // Static images (/public/images/*) → キャッシュ 30 日
+  // 1 回目の fastifyStatic 登録（画像用）
   app.register(fastifyStatic, {
     root: path.resolve(__dirname, '../public/images'),
     prefix: '/images/',
     maxAge: '30d',
   });
 
-  // Static images (/public/logos/*) → キャッシュ 30 日
+  // 2 回目の fastifyStatic 登録（ロゴ用）
   app.register(fastifyStatic, {
     root: path.resolve(__dirname, '../public/logos'),
     prefix: '/logos/',
     maxAge: '30d',
+    decorateReply: false, // デコレーターの再登録を防ぐ
   });
 
   // その他 → no-store
   app.addHook('onSend', async (req, reply, payload) => {
-    if (!req.url.startsWith('/public/images/') && !req.url.startsWith('/public/logos/')) {
+    if (!req.url.startsWith('/images/') && !req.url.startsWith('/logos/')) {
       reply.header('cache-control', 'no-store');
     }
     return payload;
   });
 
-  app.register(cors, {
-    origin: true,
-  });
+  app.register(cors, { origin: true });
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
   app.register(registerSsr);
