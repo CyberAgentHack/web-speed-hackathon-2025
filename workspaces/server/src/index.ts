@@ -10,11 +10,10 @@ import { registerStreams } from '@wsh-2025/server/src/streams';
 
 async function main() {
   await initializeDatabase();
-
   const app = fastify();
 
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    reply.header('cache-control', 'public, max-age=86400, s-maxage=86400');
   });
   app.register(cors, {
     origin: true,
