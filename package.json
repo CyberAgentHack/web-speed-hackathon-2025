@@ -14,10 +14,7 @@
     "wireit": "0.14.9"
   },
   "devDependencies": {
-    "@types/fluent-ffmpeg": "2.1.27",
-    "@types/webpack-bundle-analyzer": "4.7.0",
-    "@wsh-2025/configs": "workspace:*",
-    "webpack-bundle-analyzer": "4.10.2"
+    "@wsh-2025/configs": "workspace:*"
   },
   "packageManager": "pnpm@10.6.5+sha512.cdf928fca20832cd59ec53826492b7dc25dc524d4370b6b4adbf65803d32efaa6c1c88147c0ae4e8d579a6c9eec715757b50d4fa35eea179d868eada4ed043af",
   "engines": {
