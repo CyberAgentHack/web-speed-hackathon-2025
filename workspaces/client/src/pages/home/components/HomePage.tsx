@@ -1,3 +1,4 @@
+// HomePage.tsx
 import { Suspense, memo } from 'react';
 import { createStore } from '@/app/createStore';
 import { RecommendedSection } from '@/features/recommended/components/RecommendedSection';
@@ -17,7 +18,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 
 const LoadingFallback = () => (
   <div className="text-white text-center mt-10" role="status" aria-live="polite">
-    読み込み中...
+    ホーム画面を読み込み中...
   </div>
 );
 
@@ -32,7 +33,7 @@ export const HomePage = () => {
 
   return (
     <>
-      <title>Home - AremaTV</title>
+      {/* もしここで <title> 書くなら <Document /> 側と重複しないよう注意 */}
       <Suspense fallback={<LoadingFallback />}>
         <main className="w-full py-[48px]" aria-label="おすすめセクション">
           {modules.map((module) => (
