@@ -61,9 +61,19 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  />
+                  {playing ? (
+                    <img
+                      className="m-[14px] block size-[20px] shrink-0 grow-0"
+                      loading="lazy"
+                      src="/public/icons/material-symbols--pause-rounded.svg"
+                    />
+                  ) : (
+                    <img
+                      className="m-[14px] block size-[20px] shrink-0 grow-0"
+                      loading="lazy"
+                      src="/public/icons/material-symbols--play-arrow-rounded.svg"
+                    />
+                  )}
                 </button>
               </Hoverable>
 
@@ -81,13 +91,23 @@ export const PlayerController = ({ episode }: Props) => {
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"
                 type="button"
+                onClick={() => {
+                  toggleMuted();
+                }}
               >
-                <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  onClick={() => {
-                    toggleMuted();
-                  }}
-                />
+                {muted ? (
+                  <img
+                    className="m-[14px] block size-[20px] shrink-0 grow-0"
+                    loading="lazy"
+                    src="/public/icons/material-symbols--volume-off-rounded.svg"
+                  />
+                ) : (
+                  <img
+                    className="m-[14px] block size-[20px] shrink-0 grow-0"
+                    loading="lazy"
+                    src="/public/icons/material-symbols--volume-up-rounded.svg"
+                  />
+                )}
               </button>
             </Hoverable>
           </div>
