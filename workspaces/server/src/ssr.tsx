@@ -12,7 +12,12 @@ import { createStaticHandler } from 'react-router';
 
 export function registerSsr(app: FastifyInstance): void {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  app.register(fastifyCompress);
+  app.register(fastifyCompress, {
+    customTypes:
+      /^(text\/html|application\/json|text\/plain|text\/css|text\/javascript|application\/javascript|application\/vnd\.apple\.mpegurl|application\/x-mpegurl|video\/mp2t)$/,
+    global: true,
+    threshold: 0,
+  });
 
   app.register(fastifyStatic, {
     prefix: '/public/',
