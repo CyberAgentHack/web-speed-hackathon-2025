@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 
 import { getDatabase } from '@wsh-2025/server/src/drizzle/database';
 
-const SEQUENCE_DURATION_MS = 2 * 1000;
+const SEQUENCE_DURATION_MS = 1 * 1000;
 const SEQUENCE_COUNT_PER_PLAYLIST = 10;
 
 // 競技のため、時刻のみを返す
