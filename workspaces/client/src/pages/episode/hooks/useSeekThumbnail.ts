@@ -8,6 +8,33 @@ interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
+// FFmpegインスタンスをグローバルに保持
+let ffmpegInstance: FFmpeg | null = null;
+let ffmpegLoading: Promise<FFmpeg> | null = null;
+
+// FFmpegの遅延ロードを行う関数
+async function loadFFmpeg(): Promise<FFmpeg> {
+  if (ffmpegInstance) return ffmpegInstance;
+
+  if (ffmpegLoading) return ffmpegLoading;
+
+  ffmpegLoading = (async () => {
+    const ffmpeg = new FFmpeg();
+    await ffmpeg.load({
+      coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
+        return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
+      }),
+      wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+        return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
+      }),
+    });
+    ffmpegInstance = ffmpeg;
+    return ffmpeg;
+  })();
+
+  return ffmpegLoading;
+}
+
 async function getSeekThumbnail({ episode }: Params) {
   // HLS のプレイリストを取得
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
@@ -15,16 +42,8 @@ async function getSeekThumbnail({ episode }: Params) {
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
-  // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  // FFmpeg の初期化（遅延ロード）
+  const ffmpeg = await loadFFmpeg();
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
@@ -35,6 +54,7 @@ async function getSeekThumbnail({ episode }: Params) {
       });
     }),
   );
+
   // FFmpeg にセグメントファイルを追加
   for (const file of segmentFiles) {
     await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
@@ -62,7 +82,13 @@ async function getSeekThumbnail({ episode }: Params) {
   );
 
   const output = await ffmpeg.readFile('preview.jpg');
-  ffmpeg.terminate();
+
+  // ファイルをクリーンアップ
+  for (const file of segmentFiles) {
+    await ffmpeg.deleteFile(file.id);
+  }
+  await ffmpeg.deleteFile('concat.mp4');
+  await ffmpeg.deleteFile('preview.jpg');
 
   return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
 }

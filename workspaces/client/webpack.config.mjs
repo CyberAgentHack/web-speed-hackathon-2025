@@ -78,6 +78,20 @@ const config = {
       reportFilename: 'bundle-report.html',
     }),
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        ffmpeg: {
+          test: /[\\/]node_modules[\\/]@ffmpeg/,
+          name: 'ffmpeg',
+          priority: 10,
+          chunks: 'async',
+        },
+        // 他の大きなライブラリも同様に設定可能
+      },
+    },
+  },
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
