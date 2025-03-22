@@ -28,43 +28,27 @@
 		"patchedDependencies": {
 			"shaka-player": "patches/shaka-player.patch"
 		},
-		"onlyBuiltDependencies": [
-			"bcrypt"
-		],
-		"ignoredBuiltDependencies": [
-			"core-js",
-			"esbuild"
-		]
+		"onlyBuiltDependencies": ["bcrypt"]
 	},
 	"wireit": {
 		"start": {
-			"dependencies": [
-				"./workspaces/server:start"
-			]
+			"dependencies": ["./workspaces/server:start"]
 		},
 		"build": {
-			"dependencies": [
-				"./workspaces/client:build"
-			]
+			"dependencies": ["./workspaces/client:build"]
 		},
 		"heroku-build": {
-			"dependencies": [
-				"build"
-			]
+			"dependencies": ["build"]
 		},
 		"heroku-cleanup": {
 			"//": "Heroku の buildpacks サイズ削減のため、サーバー起動に必要ないものを削除します",
 			"command": "rm -rf ./node_modules ./workspaces/*/.wireit ./workspaces/test && pnpm install --prod"
 		},
 		"heroku-start": {
-			"dependencies": [
-				"./workspaces/server:heroku-start"
-			]
+			"dependencies": ["./workspaces/server:heroku-start"]
 		},
 		"test": {
-			"dependencies": [
-				"./workspaces/test:test"
-			]
+			"dependencies": ["./workspaces/test:test"]
 		}
 	}
 }
