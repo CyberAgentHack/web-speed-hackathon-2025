@@ -1,74 +1,67 @@
-import path from 'node:path';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-import webpack from 'webpack';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-/** @type {import('webpack').Configuration} */
-const config = {
-  devtool: 'inline-source-map',
-  entry: './src/main.tsx',
-  mode: 'none',
+export default {
+
+  mode: 'production',
+
+
+  entry: './src/index.tsx',
+
+
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    publicPath: '/',  
+    clean: true      
+
+  // import/export 解決方法
+  resolve: {
+    extensions: ['.js', '.ts', '.tsx', '.mjs']
+  },
+
+  
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: {
-          fullySpecified: false,
-        },
-        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
+        test: /\.[jt]sx?$/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
+            // Babel のプリセット
             presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript'
             ],
-          },
-        },
+            
+          }
+        }
       },
       {
-        test: /\.png$/,
-        type: 'asset/inline',
-      },
-      {
-        resourceQuery: /raw/,
-        type: 'asset/source',
-      },
-      {
-        resourceQuery: /arraybuffer/,
-        type: 'javascript/auto',
-        use: {
-          loader: 'arraybuffer-loader',
-        },
-      },
-    ],
+        
+        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf)$/,
+        type: 'asset/resource'
+      }
+    ]
   },
-  output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
-    path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto',
-  },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
-  resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+  optimization: {
+    splitChunks: {
+      chunks: 'all',    
+      
     },
-    extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
+    runtimeChunk: 'single'
   },
-};
 
-export default config;
+  plugins: [
+    
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    })
+  ]
+};
