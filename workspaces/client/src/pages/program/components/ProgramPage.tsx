@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
@@ -54,44 +54,63 @@ export const ProgramPage = () => {
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+  const CHECK_INTERVAL = 1000;
+  
+  // ブロードキャスト状態を計算する関数
+  const getBroadcastState = (startAt: string, endAt: string) => {
+    const now = DateTime.now();
+    const programStart = DateTime.fromISO(startAt);
+    const programEnd = DateTime.fromISO(endAt);
+    
+    if (now < programStart) return 'before';
+    if (now > programEnd) return 'after';
+    return 'during';
+  };
+  
+  // 状態をuseStateを使って管理し、不要な再計算を防止
+  const [broadcastState, setBroadcastState] = useState(() => 
+    getBroadcastState(program.startAt, program.endAt)
+  );
+
   useEffect(() => {
     if (isArchivedRef.current) {
       return;
     }
 
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
-    if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
-        forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
-      return () => {
-        clearTimeout(timeout);
-      };
+    // 初期状態が「放送前」の場合だけ監視
+    if (broadcastState === 'before') {
+      const intervalId = setInterval(() => {
+        const newState = getBroadcastState(program.startAt, program.endAt);
+        if (newState !== broadcastState) {
+          setBroadcastState(newState);
+        }
+      }, CHECK_INTERVAL);
+      
+      return () => clearInterval(intervalId);
     }
 
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-    let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
-        return;
-      }
-
-      if (nextProgram?.id) {
-        void navigate(`/programs/${nextProgram.id}`, {
-          preventScrollReset: true,
-          replace: true,
-          state: { loading: 'none' },
-        });
-      } else {
-        isArchivedRef.current = true;
-        forceUpdate();
-      }
-    }, 250);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [isBroadcastStarted, nextProgram?.id]);
+    // 放送中の場合は、終了時刻だけを監視
+    if (broadcastState === 'during') {
+      const endTime = DateTime.fromISO(program.endAt).toMillis();
+      const timeUntilEnd = endTime - DateTime.now().toMillis();
+      
+      // 終了までの時間がある場合のみタイマーを設定
+    if (timeUntilEnd > 0) {
+      const timerId = setTimeout(() => {
+        if (nextProgram?.id) {
+          void navigate(`/programs/${nextProgram.id}`, {
+            preventScrollReset: true,
+            replace: true,
+            state: { loading: 'none' },
+          });
+        } else {
+          setBroadcastState('after');
+        }
+      }, timeUntilEnd + 100);
+      return () => clearTimeout(timerId);
+    }
+  }
+}, [broadcastState, program.startAt, program.endAt, nextProgram?.id, navigate]);
 
   return (
     <>
