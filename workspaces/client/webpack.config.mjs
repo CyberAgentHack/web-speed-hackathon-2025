@@ -6,7 +6,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 // 基本プラグイン
 const basePlugins = [
-  new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
   new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
 ];
 
