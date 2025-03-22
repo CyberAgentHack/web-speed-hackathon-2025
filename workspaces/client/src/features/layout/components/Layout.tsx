@@ -57,13 +57,13 @@ export const Layout = ({ children }: Props) => {
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
         <header
           className={classNames(
-            'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
+            'pointer-events-none sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
             !isLoading && shouldHeaderBeTransparent
               ? 'bg-gradient-to-b from-[#171717] to-transparent'
               : 'bg-gradient-to-b from-[#171717] to-[#171717]',
           )}
         >
-          <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
+          <Link className="pointer-events-auto block flex w-[188px] items-center justify-center px-[8px]" to="/">
             <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
           </Link>
         </header>
