@@ -193,4 +193,6 @@ export const createPlayer = (playerType: PlayerType): PlayerWrapper => {
 			throw new Error("Invalid player type.");
 		}
 	}
+
+	// return new VideoJSPlayerWrapper(playerType);
 };

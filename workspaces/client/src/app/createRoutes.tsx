@@ -5,7 +5,7 @@ import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import type { createStore } from '@wsh-2025/client/src/app/createStore';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
-  const lazy_t = 1000;
+  const lazy_t = 10;
   return [
     {
       children: [

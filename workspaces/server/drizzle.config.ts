@@ -10,5 +10,5 @@ export default defineConfig({
 	},
 	dialect: "turso",
 	out: "./migrations",
-	schema: require.resolve("@wsh-2025/schema/src/database/ts"),
+	schema: require.resolve("@wsh-2025/schema/src/database/schema.ts"),
 });
