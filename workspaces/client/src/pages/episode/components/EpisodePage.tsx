@@ -74,6 +74,7 @@ export const EpisodePage = () => {
                       <img
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
+                        loading="lazy"
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />

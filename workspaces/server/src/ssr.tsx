@@ -62,6 +62,8 @@ export function registerSsr(app: FastifyInstance): void {
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
       getFilePaths('public/images', rootDir),
+    ].flat();
+    const imagePaths2 = [
       getFilePaths('public/animations', rootDir),
       getFilePaths('public/logos', rootDir),
     ].flat();
@@ -73,7 +75,8 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="prefetch"/>`).join('\n')}
+          ${imagePaths2.map((imagePath2) => `<link as="image" href="${imagePath2}" rel="prefetch"/>`).join('\n')}
         </head>
         <body></body>
       </html>
