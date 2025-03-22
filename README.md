@@ -63,3 +63,4 @@ https://github.com/CyberAgentHack/web-speed-hackathon-2025-scoring-tool/issues/n
   - 作品名は [メディア芸術データベースデータセット](https://github.com/mediaarts-db/dataset) をもとにランダム値を生成しています
     - > メディア芸術データベースデータセットは、自由な二次利用が可能です。
   - 説明文は『吾輩は猫である（夏目漱石 著）』をもとにランダム値を生成しています
+
