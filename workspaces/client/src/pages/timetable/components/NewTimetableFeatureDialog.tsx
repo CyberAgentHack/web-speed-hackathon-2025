@@ -33,7 +33,7 @@ export const NewTimetableFeatureDialog = ({ isOpen }: Props) => {
           className="mb-[24px] w-full"
           height={288}
           loading="lazy"
-          src={'/public/feature-explain.png'}
+          src={'/public/feature-explain.webp'}
           width={513}
         />
 
