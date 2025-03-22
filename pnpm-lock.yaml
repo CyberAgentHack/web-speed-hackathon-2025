@@ -363,24 +363,12 @@ importers:
       fastify-openapi-glue:
         specifier: 4.7.4
         version: 4.7.4
-      fastify-standard-request-reply:
-        specifier: 0.1.3
-        version: 0.1.3
       fastify-zod-openapi:
         specifier: 4.0.0
         version: 4.0.0(@fastify/swagger-ui@5.1.0)(@fastify/swagger@9.4.0)(fastify@5.1.0)(zod-openapi@4.2.0(zod@3.24.1))(zod@3.24.1)
       luxon:
         specifier: 3.5.0
         version: 3.5.0
-      react:
-        specifier: 19.0.0
-        version: 19.0.0
-      react-dom:
-        specifier: 19.0.0
-        version: 19.0.0(react@19.0.0)
-      react-router:
-        specifier: 7.0.2
-        version: 7.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tsx:
         specifier: 4.19.2
         version: 4.19.2
@@ -412,12 +400,6 @@ importers:
       '@types/node':
         specifier: 22.10.0
         version: 22.10.0
-      '@types/react':
-        specifier: 19.0.1
-        version: 19.0.1
-      '@types/react-dom':
-        specifier: 19.0.2
-        version: 19.0.2(@types/react@19.0.1)
       '@wsh-2025/configs':
         specifier: workspace:*
         version: link:../configs
@@ -3163,10 +3145,6 @@ packages:
 
   fastify-plugin@5.0.1:
     resolution: {integrity: sha512-HCxs+YnRaWzCl+cWRYFnHmeRFyR5GVnJTAaCJQiYzQSDwK9MgJdyAsuL3nh0EWRCYMgQ5MeziymvmAhUHYHDUQ==}
-
-  fastify-standard-request-reply@0.1.3:
-    resolution: {integrity: sha512-UsMFDBmJ4afwuLCmFQixVArGsh91ndosXb4X0Z7HHCKI7veLiSHD5QaXCUZ/dUHj0fpOxOFHirTEHXnslPGtzw==}
-    engines: {node: '>=18.0.0'}
 
   fastify-zod-openapi@4.0.0:
     resolution: {integrity: sha512-0EZGhBkSF8HOG1AXxFGGsACH6k4SOaz3g8AuMm/3wIFw9za1qihzglzr8tjGwSJbGaq8G6lj2omY096Vr5JpAA==}
@@ -8271,8 +8249,6 @@ snapshots:
       minimist: 1.2.8
 
   fastify-plugin@5.0.1: {}
-
-  fastify-standard-request-reply@0.1.3: {}
 
   fastify-zod-openapi@4.0.0(@fastify/swagger-ui@5.1.0)(@fastify/swagger@9.4.0)(fastify@5.1.0)(zod-openapi@4.2.0(zod@3.24.1))(zod@3.24.1):
     dependencies:
