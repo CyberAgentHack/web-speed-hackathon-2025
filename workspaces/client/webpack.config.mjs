@@ -1,6 +1,13 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+const plugins = [
+  new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+  new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+  // new BundleAnalyzerPlugin(),
+];
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -56,10 +63,7 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  plugins,
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
