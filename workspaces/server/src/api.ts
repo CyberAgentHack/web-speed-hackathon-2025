@@ -487,6 +487,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                   series: true,
                 },
               },
+              series: true,
             },
           },
         },
