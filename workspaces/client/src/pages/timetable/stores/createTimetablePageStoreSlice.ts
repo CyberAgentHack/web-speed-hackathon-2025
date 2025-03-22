@@ -2,9 +2,9 @@ import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { ArrayValues } from 'type-fest';
 
+import { createDebounce } from '@wsh-2025/client/src/utils/debounce';
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 
 type ChannelId = string;
@@ -41,7 +41,7 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
+    refreshCurrentUnixtimeMs: createDebounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
