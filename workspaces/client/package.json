@@ -98,5 +98,8 @@
     "format:prettier": {
       "command": "prettier --write ."
     }
-  }
+  },
+  "browserslist": [
+    "last 1 Chrome version"
+  ]
 }
