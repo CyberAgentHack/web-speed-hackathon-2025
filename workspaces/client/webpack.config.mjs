@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+// import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
@@ -35,8 +36,13 @@ const config = {
         },
       },
       {
-        test: /\.png$/,
-        type: 'asset/inline',
+        // parser: {
+        //   dataUrlCondition: {
+        //     maxSize: 4 * 1024, // 4KB以下はインライン化
+        //   },
+        // },
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset',
       },
       {
         resourceQuery: /raw/,
@@ -61,6 +67,17 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // new ImageMinimizerPlugin({
+    //   minimizer: {
+    //     implementation: ImageMinimizerPlugin.imageminMinify,
+    //     options: {
+    //       plugins: [
+    //         ['optipng', { optimizationLevel: 5 }],
+    //         ['mozjpeg', { quality: 80 }],
+    //       ],
+    //     },
+    //   },
+    // }),
   ],
   resolve: {
     alias: {
