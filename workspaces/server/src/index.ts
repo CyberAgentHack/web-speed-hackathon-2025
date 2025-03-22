@@ -1,6 +1,8 @@
 import '@wsh-2025/server/src/setups/luxon';
+import path from 'path';
 
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import fastify from 'fastify';
 
 import { registerApi } from '@wsh-2025/server/src/api';
@@ -13,8 +15,11 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onRequest', (req, reply, done) => {
+    if (!req.url.includes('/auth/')) {
+      reply.header('cache-control', 'public, max-age=3600');
+    }
+    done();
   });
   app.register(cors, {
     origin: true,
