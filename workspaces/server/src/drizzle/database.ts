@@ -30,6 +30,7 @@ export async function initializeDatabase(): Promise<void> {
       syncInterval: 1000,
       url: `file:${TEMP_PATH}`,
     }),
+    logger: true,
     schema,
   });
 }

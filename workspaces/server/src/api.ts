@@ -28,7 +28,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  const now = new Date();
+  console.log('1', new Date().getTime() - now.getTime());
   await app.register(fastifyCookie);
+  console.log('2', new Date().getTime() - now.getTime());
   await app.register(fastifySession, {
     cookie: {
       path: '/',
@@ -36,7 +39,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     cookieName: 'wsh-2025-session',
     secret: randomBytes(32).toString('base64'),
   });
+  console.log('3', new Date().getTime() - now.getTime());
   await app.register(fastifyZodOpenApiPlugin);
+  console.log('4', new Date().getTime() - now.getTime());
   await app.register(fastifySwagger, {
     openapi: {
       info: {
@@ -48,10 +53,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     transform: fastifyZodOpenApiTransform,
     transformObject: fastifyZodOpenApiTransformObject,
   });
+  console.log('5', new Date().getTime() - now.getTime());
   await app.register(fastifySwaggerUi, {
     routePrefix: '/docs',
   });
 
+  console.log('6', new Date().getTime() - now.getTime());
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
@@ -469,6 +476,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
 
+      // const modules2 = await database.select().from(recommendedModule).leftJoin(recommendedItem, eq(recommendedModule.id, recommendedItem.moduleId))
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -478,28 +486,17 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           items: {
-            orderBy(item, { asc }) {
-              return asc(item.order);
-            },
             with: {
               series: {
                 with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+                  episodes: true,
                 },
               },
               episode: {
                 with: {
                   series: {
                     with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                      episodes: true,
                     },
                   },
                 },
