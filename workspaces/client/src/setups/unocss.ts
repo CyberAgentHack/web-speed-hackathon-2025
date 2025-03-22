@@ -3,6 +3,29 @@ import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
+// 実際に使用しているアイコンのリスト
+const usedIcons = [
+  // 例: 実際に使用しているアイコンのみをリスト
+  'fluent:play-24-regular',
+  'fluent:pause-24-regular',
+  'material-symbols:volume-up',
+  'material-symbols:volume-off',
+  'material-symbols:fullscreen',
+  'material-symbols:fullscreen-exit',
+  'material-symbols:chevron-left',
+  'material-symbols:chevron-right',
+  // 他の使用中のアイコンをここに追加
+];
+
+// アイコンのコレクション名とアイコン名に分割する関数
+function splitIconName(name: string): [string, string] {
+  const [collection, iconName] = name.split(':');
+  return [collection, iconName];
+}
+
+// 使用しているコレクションのみを取得
+const usedCollections = [...new Set(usedIcons.map(icon => splitIconName(icon)[0]))];
+
 async function init() {
   await initUnocssRuntime({
     defaults: defineConfig({
@@ -48,19 +71,59 @@ async function init() {
       presets: [
         presetWind3(),
         presetIcons({
+          // 個別のアイコンのみをロード
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // 使用しているコレクションのみ条件付きで含める
+            ...(usedCollections.includes('bi') && {
+              bi: async () => {
+                const icons = await import('@iconify/json/icons/bi.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
+            ...(usedCollections.includes('bx') && {
+              bx: async () => {
+                const icons = await import('@iconify/json/icons/bx.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
+            ...(usedCollections.includes('fa-regular') && {
+              'fa-regular': async () => {
+                const icons = await import('@iconify/json/icons/fa-regular.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
+            ...(usedCollections.includes('fa-solid') && {
+              'fa-solid': async () => {
+                const icons = await import('@iconify/json/icons/fa-solid.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
+            ...(usedCollections.includes('fluent') && {
+              fluent: async () => {
+                const icons = await import('@iconify/json/icons/fluent.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
+            ...(usedCollections.includes('line-md') && {
+              'line-md': async () => {
+                const icons = await import('@iconify/json/icons/line-md.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
+            ...(usedCollections.includes('material-symbols') && {
+              'material-symbols': async () => {
+                const icons = await import('@iconify/json/icons/material-symbols.json');
+                return icons.default as IconifyJSON;
+              }
+            }),
           },
+          // 使用するアイコンだけを含める
+          extraProperties: {
+            'display': 'inline-block',
+            'vertical-align': 'middle',
+          },
+          // 使用しているアイコンのみをインクルード
+          include: usedIcons.map(icon => new RegExp(`^${icon.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}$`)),
         }),
       ],
     }),
