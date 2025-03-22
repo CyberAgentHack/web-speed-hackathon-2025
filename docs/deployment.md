@@ -12,7 +12,7 @@
 本レポジトリに PR を出すことで、運営で用意している Heroku アカウントへデプロイすることができます。
 デプロイに問題が起きた場合はこの方法に限りサポートを行います。
 
-1. このレポジトリを自分のレポジトリに fork します
+1. このレポジトリを自分のレポジトリにforkします
    - https://docs.github.com/ja/github/getting-started-with-github/fork-a-repo
 2. ブランチを作成します
    ```bash
