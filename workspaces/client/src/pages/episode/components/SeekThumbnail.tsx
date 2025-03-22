@@ -7,6 +7,7 @@ import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuratio
 import { useSeekThumbnail } from '@wsh-2025/client/src/pages/episode/hooks/useSeekThumbnail';
 
 const SEEK_THUMBNAIL_WIDTH = 160;
+// const SEEK_THUMBNAIL_HEIGHT = 90;
 
 interface Props {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
@@ -14,27 +15,32 @@ interface Props {
 
 export const SeekThumbnail = ({ episode }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const seekThumbnail = useSeekThumbnail({ episode });
+  const { thumbnailUrl, loading, error } = useSeekThumbnail({ episode });
   const pointer = usePointer();
   const duration = useDuration();
 
+  if (loading || error || !thumbnailUrl) {
+    return null;
+  }
+
   const elementRect = ref.current?.parentElement?.getBoundingClientRect() ?? { left: 0, width: 0 };
   const relativeX = pointer.x - elementRect.left;
-
   const percentage = Math.max(0, Math.min(relativeX / elementRect.width, 1));
   const pointedTime = duration * percentage;
 
-  // サムネイルが画面からはみ出ないようにサムネイル中央を基準として left を計算する
+  // サムネイルが画面からはみ出ないように中央揃え
   const MIN_LEFT = SEEK_THUMBNAIL_WIDTH / 2;
   const MAX_LEFT = elementRect.width - SEEK_THUMBNAIL_WIDTH / 2;
+  const left = Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT));
 
   return (
     <div
       ref={ref}
-      className={`absolute h-[90px] w-[160px] bg-[size:auto_100%] bg-[url(${seekThumbnail})] bottom-0 translate-x-[-50%]`}
+      aria-label={`Preview at ${Math.floor(pointedTime)} seconds`}
+      className="absolute bottom-0 h-[90px] w-[160px] translate-x-[-50%] bg-cover bg-center"
       style={{
-        backgroundPositionX: -1 * SEEK_THUMBNAIL_WIDTH * Math.floor(pointedTime),
-        left: Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT)),
+        backgroundImage: `url(${thumbnailUrl})`,
+        left,
       }}
     />
   );

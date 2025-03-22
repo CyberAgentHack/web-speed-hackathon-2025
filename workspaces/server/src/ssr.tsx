@@ -25,6 +25,13 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
   return files.map((file) => path.join('/', path.relative(rootDir, file)));
 }
 
+const rootDir = path.resolve(__dirname, '../../../');
+const imagePaths = [
+  getFilePaths('public/images', rootDir),
+  getFilePaths('public/animations', rootDir),
+  getFilePaths('public/logos', rootDir),
+].flat();
+
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/public/',
@@ -58,13 +65,6 @@ export function registerSsr(app: FastifyInstance): void {
         </StoreProvider>
       </StrictMode>,
     );
-
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>

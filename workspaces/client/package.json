@@ -7,12 +7,14 @@
     "format:eslint": "wireit",
     "format:prettier": "wireit"
   },
+  "browserslist": [
+    "last 1 Chrome version"
+  ],
   "dependencies": {
     "@babel/runtime": "7.26.10",
     "@better-fetch/fetch": "1.1.15",
     "@dhmk/zustand-lens": "5.0.0",
     "@epic-web/restore-scroll": "1.1.1",
-    "@ffmpeg/ffmpeg": "0.12.15",
     "@headlessui/react": "2.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@standard-schema/spec": "1.0.0",
