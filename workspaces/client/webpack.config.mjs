@@ -2,11 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: isProd ? false : 'source-map',
   entry: './src/main.tsx',
-  mode: ['development', 'production'].includes(process.env.NODE_ENV) ? process.env.NODE_ENV : 'development',
+  mode: isProd ? 'production' : 'development',
   module: {
     rules: [
       {
@@ -22,10 +24,7 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  targets: ['Chrome >= 134'],
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -35,8 +34,11 @@ const config = {
         },
       },
       {
+        generator: {
+          filename: 'images/[name].[contenthash][ext]',
+        },
         test: /\.png$/,
-        type: 'asset/inline',
+        type: 'asset/resource',
       },
       {
         resourceQuery: /raw/,
@@ -50,6 +52,12 @@ const config = {
         },
       },
     ],
+  },
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
