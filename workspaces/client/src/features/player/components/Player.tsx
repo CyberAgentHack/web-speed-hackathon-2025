@@ -47,7 +47,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
   return (
     <div className={className}>
       <div className="relative size-full">
-        <div ref={mountRef} className="aspect-video w-full" />
+        <div ref={mountRef} className="size-full" />
 
         <div className="absolute inset-0 z-[-10] grid place-content-center">
           {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
