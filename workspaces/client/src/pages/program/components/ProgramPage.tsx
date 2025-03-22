@@ -29,7 +29,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
   const modules = await store
     .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+    .features.recommended.fetchRecommendedModulesByReferenceId({ limit: 1, referenceId: programId });
   return { channels, modules, program, timetable };
 };
 

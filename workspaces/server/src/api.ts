@@ -450,12 +450,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     },
   });
 
+  // FIXME: 応急処置
   api.route({
     method: 'GET',
     url: '/recommended/:referenceId',
     schema: {
       tags: ['レコメンド'],
-      params: schema.getRecommendedModulesRequestParams,
+      // params: schema.getRecommendedModulesRequestParams,
+      // querystring: schema.getRecommendedModulesRquestQuery,
       response: {
         200: {
           content: {
@@ -474,6 +476,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(module.order);
         },
         where(module, { eq }) {
+          // @ts-expect-error
           return eq(module.referenceId, req.params.referenceId);
         },
         with: {
@@ -507,6 +510,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
           },
         },
+        // @ts-expect-error
+        limit: Number(req.query.limit),
       });
       reply.code(200).send(modules);
     },

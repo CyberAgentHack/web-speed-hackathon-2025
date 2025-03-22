@@ -14,7 +14,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId
   const series = await store.getState().features.series.fetchSeriesById({ seriesId });
   const modules = await store
     .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+    .features.recommended.fetchRecommendedModulesByReferenceId({ limit: 1, referenceId: seriesId });
   return { modules, series };
 };
 
