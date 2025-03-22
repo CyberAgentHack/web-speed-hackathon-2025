@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -6,6 +7,7 @@ import type { FastifyInstance } from 'fastify';
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
+    preCompressed: true,
     prefix: '/public/',
     root: [
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
@@ -13,21 +15,22 @@ export function registerSsr(app: FastifyInstance): void {
     ],
   });
 
+  app.register(fastifyStatic, {
+    decorateReply: false,
+    preCompressed: true,
+    prefix: '/assets/',
+    root: [path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/assets')],
+  });
+
   app.get('/favicon.ico', (_, reply) => {
     reply.status(404).send();
   });
 
   app.get('/*', async (_req, reply) => {
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-        </head>
-        <body></body>
-      </html>
-    `);
+    const html = await fs.readFile(
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/index.html'),
+      'utf-8',
+    );
+    reply.type('text/html').send(html);
   });
 }

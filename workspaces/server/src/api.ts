@@ -1,15 +1,15 @@
-import 'zod-openapi/extend';
+import "zod-openapi/extend";
 
-import { randomBytes } from 'node:crypto';
+import { randomBytes } from "node:crypto";
 
-import fastifyCookie from '@fastify/cookie';
-import fastifySession from '@fastify/session';
-import fastifySwagger from '@fastify/swagger';
-import fastifySwaggerUi from '@fastify/swagger-ui';
-import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
-import * as schema from '@wsh-2025/schema/src/openapi/schema';
-import * as bcrypt from 'bcrypt';
-import type { FastifyInstance } from 'fastify';
+import fastifyCookie from "@fastify/cookie";
+import fastifySession from "@fastify/session";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
+import * as databaseSchema from "@wsh-2025/schema/src/database/schema";
+import * as schema from "@wsh-2025/schema/src/openapi/schema";
+import * as bcrypt from "bcrypt";
+import type { FastifyInstance } from "fastify";
 import {
   fastifyZodOpenApiPlugin,
   type FastifyZodOpenApiSchema,
@@ -18,11 +18,68 @@ import {
   type FastifyZodOpenApiTypeProvider,
   serializerCompiler,
   validatorCompiler,
-} from 'fastify-zod-openapi';
-import { z } from 'zod';
-import type { ZodOpenApiVersion } from 'zod-openapi';
+} from "fastify-zod-openapi";
+import { z } from "zod";
+import type { ZodOpenApiVersion } from "zod-openapi";
 
-import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+import {
+  getDatabase,
+  initializeDatabase,
+} from "@wsh-2025/server/src/drizzle/database";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const cache = new Map<string, any>();
+const getRecommendedModulesFromDatabase = async (referenceId: string) => {
+  if (cache.has(referenceId)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return cache.get(referenceId);
+  }
+  const database = getDatabase();
+
+  const modules = await database.query.recommendedModule.findMany({
+    orderBy(module, { asc }) {
+      return asc(module.order);
+    },
+    where(module, { eq }) {
+      return eq(module.referenceId, referenceId);
+    },
+    with: {
+      items: {
+        orderBy(item, { asc }) {
+          return asc(item.order);
+        },
+        with: {
+          episode: {
+            with: {
+              series: {
+                with: {
+                  episodes: {
+                    orderBy(episode, { asc }) {
+                      return asc(episode.order);
+                    },
+                  },
+                },
+              },
+            },
+          },
+          series: {
+            with: {
+              episodes: {
+                orderBy(episode, { asc }) {
+                  return asc(episode.order);
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  cache.set(referenceId, modules);
+
+  return modules;
+};
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -31,39 +88,39 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   await app.register(fastifyCookie);
   await app.register(fastifySession, {
     cookie: {
-      path: '/',
+      path: "/",
     },
-    cookieName: 'wsh-2025-session',
-    secret: randomBytes(32).toString('base64'),
+    cookieName: "wsh-2025-session",
+    secret: randomBytes(32).toString("base64"),
   });
   await app.register(fastifyZodOpenApiPlugin);
   await app.register(fastifySwagger, {
     openapi: {
       info: {
-        title: 'Web Speed Hackathon 2025 API',
-        version: '1.0.0',
+        title: "Web Speed Hackathon 2025 API",
+        version: "1.0.0",
       },
-      openapi: '3.0.3' satisfies ZodOpenApiVersion,
+      openapi: "3.0.3" satisfies ZodOpenApiVersion,
     },
     transform: fastifyZodOpenApiTransform,
     transformObject: fastifyZodOpenApiTransformObject,
   });
   await app.register(fastifySwaggerUi, {
-    routePrefix: '/docs',
+    routePrefix: "/docs",
   });
 
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
   api.route({
-    method: 'POST',
-    url: '/initialize',
+    method: "POST",
+    url: "/initialize",
     schema: {
-      tags: ['初期化'],
+      tags: ["初期化"],
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: z.object({}),
             },
           },
@@ -77,15 +134,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/channels',
+    method: "GET",
+    url: "/channels",
     schema: {
-      tags: ['チャンネル'],
+      tags: ["チャンネル"],
       querystring: schema.getChannelsRequestQuery,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getChannelsResponse,
             },
           },
@@ -101,7 +158,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         where(channel, { inArray }) {
           if (req.query.channelIds != null) {
-            const channelIds = req.query.channelIds.split(',');
+            const channelIds = req.query.channelIds.split(",");
             return inArray(channel.id, channelIds);
           }
           return void 0;
@@ -112,15 +169,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/channels/:channelId',
+    method: "GET",
+    url: "/channels/:channelId",
     schema: {
-      tags: ['チャンネル'],
+      tags: ["チャンネル"],
       params: schema.getChannelByIdRequestParams,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getChannelByIdResponse,
             },
           },
@@ -143,15 +200,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/episodes',
+    method: "GET",
+    url: "/episodes",
     schema: {
-      tags: ['エピソード'],
+      tags: ["エピソード"],
       querystring: schema.getEpisodesRequestQuery,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getEpisodesResponse,
             },
           },
@@ -167,7 +224,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         where(episode, { inArray }) {
           if (req.query.episodeIds != null) {
-            const episodeIds = req.query.episodeIds.split(',');
+            const episodeIds = req.query.episodeIds.split(",");
             return inArray(episode.id, episodeIds);
           }
           return void 0;
@@ -189,15 +246,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/episodes/:episodeId',
+    method: "GET",
+    url: "/episodes/:episodeId",
     schema: {
-      tags: ['エピソード'],
+      tags: ["エピソード"],
       params: schema.getEpisodeByIdRequestParams,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getEpisodeByIdResponse,
             },
           },
@@ -231,15 +288,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/series',
+    method: "GET",
+    url: "/series",
     schema: {
-      tags: ['シリーズ'],
+      tags: ["シリーズ"],
       querystring: schema.getSeriesRequestQuery,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getSeriesResponse,
             },
           },
@@ -255,7 +312,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         where(series, { inArray }) {
           if (req.query.seriesIds != null) {
-            const seriesIds = req.query.seriesIds.split(',');
+            const seriesIds = req.query.seriesIds.split(",");
             return inArray(series.id, seriesIds);
           }
           return void 0;
@@ -276,15 +333,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/series/:seriesId',
+    method: "GET",
+    url: "/series/:seriesId",
     schema: {
-      tags: ['シリーズ'],
+      tags: ["シリーズ"],
       params: schema.getSeriesByIdRequestParams,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getSeriesByIdResponse,
             },
           },
@@ -317,15 +374,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/timetable',
+    method: "GET",
+    url: "/timetable",
     schema: {
-      tags: ['番組表'],
+      tags: ["番組表"],
       querystring: schema.getTimetableRequestQuery,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getTimetableResponse,
             },
           },
@@ -353,15 +410,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/programs',
+    method: "GET",
+    url: "/programs",
     schema: {
-      tags: ['番組'],
+      tags: ["番組"],
       querystring: schema.getProgramsRequestQuery,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getProgramsResponse,
             },
           },
@@ -377,7 +434,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         where(program, { inArray }) {
           if (req.query.programIds != null) {
-            const programIds = req.query.programIds.split(',');
+            const programIds = req.query.programIds.split(",");
             return inArray(program.id, programIds);
           }
           return void 0;
@@ -404,15 +461,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/programs/:programId',
+    method: "GET",
+    url: "/programs/:programId",
     schema: {
-      tags: ['番組'],
+      tags: ["番組"],
       params: schema.getProgramByIdRequestParams,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getProgramByIdResponse,
             },
           },
@@ -451,15 +508,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'GET',
-    url: '/recommended/:referenceId',
+    method: "GET",
+    url: "/recommended/:referenceId",
     schema: {
-      tags: ['レコメンド'],
+      tags: ["レコメンド"],
       params: schema.getRecommendedModulesRequestParams,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getRecommendedModulesResponse,
             },
           },
@@ -467,61 +524,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
-      const database = getDatabase();
-
-      const modules = await database.query.recommendedModule.findMany({
-        orderBy(module, { asc }) {
-          return asc(module.order);
-        },
-        where(module, { eq }) {
-          return eq(module.referenceId, req.params.referenceId);
-        },
-        with: {
-          items: {
-            orderBy(item, { asc }) {
-              return asc(item.order);
-            },
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const modules = await getRecommendedModulesFromDatabase(
+        req.params.referenceId,
+      );
       reply.code(200).send(modules);
     },
   });
 
   api.route({
-    method: 'POST',
-    url: '/signIn',
+    method: "POST",
+    url: "/signIn",
     schema: {
-      tags: ['認証'],
+      tags: ["認証"],
       body: schema.signInRequestBody,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.signInResponse,
             },
           },
@@ -540,23 +560,26 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(401).send();
       }
 
-      const ret = schema.signInResponse.parse({ id: user.id, email: user.email });
+      const ret = schema.signInResponse.parse({
+        id: user.id,
+        email: user.email,
+      });
 
-      req.session.set('id', ret.id.toString());
+      req.session.set("id", ret.id.toString());
       reply.code(200).send(user);
     },
   });
 
   api.route({
-    method: 'POST',
-    url: '/signUp',
+    method: "POST",
+    url: "/signUp",
     schema: {
-      tags: ['認証'],
+      tags: ["認証"],
       body: schema.signUpRequestBody,
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.signUpResponse,
             },
           },
@@ -588,22 +611,25 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(500).send();
       }
 
-      const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
+      const ret = schema.signUpResponse.parse({
+        id: user.id,
+        email: user.email,
+      });
 
-      req.session.set('id', ret.id.toString());
+      req.session.set("id", ret.id.toString());
       reply.code(200).send(ret);
     },
   });
 
   api.route({
-    method: 'GET',
-    url: '/users/me',
+    method: "GET",
+    url: "/users/me",
     schema: {
-      tags: ['認証'],
+      tags: ["認証"],
       response: {
         200: {
           content: {
-            'application/json': {
+            "application/json": {
               schema: schema.getUserResponse,
             },
           },
@@ -613,7 +639,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getSession(req, reply) {
       const database = getDatabase();
 
-      const userId = req.session.get('id');
+      const userId = req.session.get("id");
       if (!userId) {
         return reply.code(401).send();
       }
@@ -631,17 +657,17 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   api.route({
-    method: 'POST',
-    url: '/signOut',
+    method: "POST",
+    url: "/signOut",
     schema: {
-      tags: ['認証'],
+      tags: ["認証"],
     } satisfies FastifyZodOpenApiSchema,
     handler: async function signOut(req, reply) {
-      const userId = req.session.get('id');
+      const userId = req.session.get("id");
       if (!userId) {
         return reply.code(401).send();
       }
-      req.session.set('id', void 0);
+      req.session.set("id", void 0);
       reply.code(200).send();
     },
   });
