@@ -122,21 +122,33 @@ export const getEpisodesResponse = z.array(
 export const getEpisodeByIdRequestParams = z.object({
   episodeId: z.string(),
 });
-export const getEpisodeByIdResponse = episode.extend({
-  series: series.extend({
-    episodes: z.array(episode.extend({})),
-  }),
-});
+// --backup
+// export const getEpisodeByIdResponse = episode.extend({
+//   series: series.extend({
+//     episodes: z.array(episode.extend({})),
+//   }),
+// });
+// --AfterChange
+export const getEpisodeByIdResponse = z.array(
+  // episodes のネストを除去（シリーズの基本情報のみ返す）
+  series
+);
 
 // GET /series
 export const getSeriesRequestQuery = z.object({
   seriesIds: z.string().optional(),
 });
+// --AfterChange
 export const getSeriesResponse = z.array(
-  series.extend({
-    episodes: z.array(episode.extend({})),
-  }),
+  // episodes のネストを除去（シリーズの基本情報のみ返す）
+  series
 );
+// --backup
+// export const getSeriesResponse = z.array(
+//   series.extend({
+//     episodes: z.array(episode.extend({})),
+//   }),
+// );
 
 // GET /series/:seriesId
 export const getSeriesByIdRequestParams = z.object({
@@ -159,12 +171,21 @@ export const getProgramsRequestQuery = z.object({
 });
 export const getProgramsResponse = z.array(
   program.extend({
-    channel: channel.extend({}),
+    // --after change
+    channel: channel,
+    // --backup
+    // channel: channel.extend({}),
+    // --AfterChange
     episode: episode.extend({
-      series: series.extend({
-        episodes: z.array(episode.extend({})),
-      }),
+      // シリーズの中の episodes を除去して、シリーズの基本情報のみ返す
+      series: series,
     }),
+    // --backup
+    // episode: episode.extend({
+    //   series: series.extend({
+    //     episodes: z.array(episode.extend({})),
+    //   }),
+    // }),
   }),
 );
 
@@ -173,11 +194,17 @@ export const getProgramByIdRequestParams = z.object({
   programId: z.string(),
 });
 export const getProgramByIdResponse = program.extend({
-  channel: channel.extend({}),
+  // --backup
+  // channel: channel.extend({}),
+  // episode: episode.extend({
+  //   series: series.extend({
+  //     episodes: z.array(episode.extend({})),
+  //   }),
+  // }),
+  //-- AfterChange
+  channel: channel,
   episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
+    series: series, // episodes のネストを除去
   }),
 });
 
