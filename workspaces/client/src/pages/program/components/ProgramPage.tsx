@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
-import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -52,7 +51,6 @@ export const ProgramPage = () => {
 
   const playerRef = usePlayerRef();
 
-  const forceUpdate = useUpdate();
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
@@ -62,25 +60,25 @@ export const ProgramPage = () => {
     if (isArchivedRef.current) {
       return;
     }
-
+  
     if (!isBroadcastStarted) {
       // 放送開始前に定期的に更新し続ける
       let timeout = setTimeout(function tick() {
-        forceUpdate();
+        // 状態更新なしで再レンダリングさせない
         timeout = setTimeout(tick, 250);
       }, 250);
       return () => {
         clearTimeout(timeout);
       };
     }
-
+  
     // 放送終了後に次の番組に切り替える
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
         timeout = setTimeout(tick, 250);
         return;
       }
-
+  
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
           preventScrollReset: true,
@@ -89,10 +87,10 @@ export const ProgramPage = () => {
         });
       } else {
         isArchivedRef.current = true;
-        forceUpdate();
+        // 状態更新なしで強制的な再レンダリングを行わない
       }
     }, 250);
-
+  
     return () => {
       clearTimeout(timeout);
     };

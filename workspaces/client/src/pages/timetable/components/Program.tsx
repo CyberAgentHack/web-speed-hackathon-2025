@@ -43,7 +43,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
       const imageHeight = imageRef.current?.clientHeight ?? 0;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
+    }, 1000);
     return () => {
       clearInterval(interval);
     };
