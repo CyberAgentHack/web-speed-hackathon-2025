@@ -6,6 +6,7 @@ import webpack from 'webpack';
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
+
   mode: 'none',
   module: {
     rules: [
@@ -25,6 +26,7 @@ const config = {
                   corejs: '3.41',
                   forceAllTransforms: true,
                   targets: 'defaults',
+
                   useBuiltIns: 'entry',
                 },
               ],
@@ -34,6 +36,7 @@ const config = {
           },
         },
       },
+
       {
         test: /\.png$/,
         type: 'asset/inline',
@@ -59,7 +62,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {

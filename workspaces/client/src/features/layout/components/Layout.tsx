@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -31,24 +31,33 @@ export const Layout = ({ children }: Props) => {
   const authDialogType = useAuthDialogType();
   const user = useAuthUser();
 
-  const [scrollTopOffset, setScrollTopOffset] = useState(0);
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollTopOffset(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+  const handleScroll = useCallback(() => {
+    setShouldHeaderBeTransparent(window.scrollY > 80);
   }, []);
 
   useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
-  }, [scrollTopOffset]);
+    let ticking = false;
+
+    const scrollListener = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', scrollListener);
+
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', scrollListener);
+    };
+  }, [handleScroll]);
 
   const isSignedIn = user != null;
 
@@ -64,7 +73,7 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+            <img alt="AREMA" className="object-contain" height={36} rel="preload" src="/public/arema.svg" width={98} />
           </Link>
         </header>
 
