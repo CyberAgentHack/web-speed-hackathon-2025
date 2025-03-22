@@ -4,19 +4,25 @@ import { RouteObject } from 'react-router';
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 
+// アプリケーションのルート定義を作成する関数
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
     {
+      // ルートレイアウトの設定
       children: [
         {
+          // トップページのルート設定
           index: true,
           async lazy() {
+            // 遅延ロード: コンポーネントを非同期で読み込み
+            // p-min-delay: ローディング時間を最低1秒確保（UX向上）
             const { HomePage, prefetch } = await lazy(
               import('@wsh-2025/client/src/pages/home/components/HomePage'),
               1000,
             );
             return {
               Component: HomePage,
+              // データローダー: ページ表示前にデータをフェッチ
               async loader() {
                 return await prefetch(store);
               },
@@ -24,6 +30,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           },
         },
         {
+          // エピソードページのルート設定（動的ルーティング）
           async lazy() {
             const { EpisodePage, prefetch } = await lazy(
               import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
@@ -99,7 +106,9 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           path: '*',
         },
       ],
+      // 共通レイアウトコンポーネント
       Component: Document,
+      // ルートパスの設定
       async loader() {
         return await prefetch(store);
       },
