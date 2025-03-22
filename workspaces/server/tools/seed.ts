@@ -90,7 +90,7 @@ async function main() {
 
   const rootDir = path.resolve(__dirname, '../../..');
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
-  const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
+  const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file).replace(/\.jpeg$/, '.avif')));
 
   try {
     const animeList = await fetchAnimeList();
