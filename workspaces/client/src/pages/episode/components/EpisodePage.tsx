@@ -42,7 +42,6 @@ export const EpisodePage = () => {
   const modules = useRecommended({ referenceId: episodeId });
 
   const playerRef = usePlayerRef();
-  const playerRef = usePlayerRef();
 
   const isSignInRequired = episode.premium && user == null;
 
