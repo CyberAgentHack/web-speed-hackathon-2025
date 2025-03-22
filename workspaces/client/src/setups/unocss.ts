@@ -59,8 +59,6 @@ async function init() {
           collections: {
             'fa-regular': () =>
               import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
           },
         }),
       ],

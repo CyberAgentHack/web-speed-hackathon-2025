@@ -75,9 +75,14 @@ export const Layout = ({ children }: Props) => {
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
+              {/* <div
                 className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
-              />
+              /> */}
+              {isSignedIn ? (
+                <img className="size-[20px] shrink-0 grow-0" src="/public/icons/fa-solid--sign-out-alt.svg" />
+              ) : (
+                <img className="size-[20px] shrink-0 grow-0" src="/public/icons/fa-solid--user.svg" />
+              )}
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
@@ -96,7 +101,8 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/timetable"
             >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
+              {/* <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" /> */}
+              <img className="size-[20px] shrink-0 grow-0" src="/public/icons/fa-solid--calendar.svg" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
             </Link>
           </nav>
