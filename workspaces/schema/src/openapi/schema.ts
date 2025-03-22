@@ -18,10 +18,17 @@ assertSchema(channel, createSelectSchema(databaseSchema.channel));
 const episode = z.object({
   id: z.string().openapi({ format: 'uuid' }),
   title: z.string().openapi({ example: '第1話 吾輩は猫である' }),
-  description: z.string().openapi({
-    example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
-  }),
+  // backup
+  // description: z.string().openapi({
+  //   example:
+  //     '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
+  // }),
+  // AfterChange
+  description: z.string()
+    .transform((str) => str.slice(0, 35))
+    .openapi({
+      example: '冒頭35文字…',
+    }),
   order: z.number().openapi({ example: 1 }),
   seriesId: z.string().openapi({ format: 'uuid' }),
   streamId: z.string().openapi({ format: 'uuid' }),
@@ -35,10 +42,15 @@ assertSchema(episode, createSelectSchema(databaseSchema.episode));
 const series = z.object({
   id: z.string().openapi({ format: 'uuid' }),
   title: z.string().openapi({ example: '吾輩は猫である' }),
-  description: z.string().openapi({
-    example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
-  }),
+  // description: z.string().openapi({
+  //   example:
+  //     '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
+  // }),
+  description: z.string()
+    .transform((str) => str.slice(0, 35))
+    .openapi({
+      example: '冒頭35文字…',
+    }),
   thumbnailUrl: z.string().openapi({
     example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
   }),
@@ -48,10 +60,15 @@ assertSchema(series, createSelectSchema(databaseSchema.series));
 const program = z.object({
   id: z.string().openapi({ format: 'uuid' }),
   title: z.string().openapi({ example: '吾輩は猫である' }),
-  description: z.string().openapi({
-    example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
-  }),
+  // description: z.string().openapi({
+  //   example:
+  //     '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
+  // }),
+  description: z.string()
+    .transform((str) => str.slice(0, 35))
+    .openapi({
+      example: '冒頭35文字…',
+    }),
   startAt: z.string().openapi({ format: 'date-time' }),
   endAt: z.string().openapi({ format: 'date-time' }),
   thumbnailUrl: z.string().openapi({
