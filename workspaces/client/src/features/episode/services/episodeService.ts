@@ -24,13 +24,14 @@ const batcher = batshit.create({
   async fetcher(queries: { episodeId: string }[]) {
     const data = await $fetch('/episodes', {
       query: {
-        episodeIds: queries.map((q) => q.episodeId).join(','),
+        episodeIds: queries[0]?.episodeId ?? '',
       },
     });
+    console.log('fetcher', data);
     return data;
   },
   resolver(items, query: { episodeId: string }) {
-    const item = items.find((item) => item.id === query.episodeId);
+    const item = items.find((item) => item.id === query.episodeId); // itemsから
     if (item == null) {
       throw new Error('Episode is not found.');
     }
