@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import UnoCSS from '@unocss/postcss';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
@@ -49,7 +50,25 @@ const config = {
           loader: 'arraybuffer-loader',
         },
       },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: ['postcss-preset-env', UnoCSS()],
+              },
+            },
+          },
+        ],
+      },
     ],
+  },
+  optimization: {
+    realContentHash: true,
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
@@ -59,6 +78,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
+    // UnoCSS(),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],

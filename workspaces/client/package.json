@@ -60,6 +60,7 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
     "@types/wicg-task-scheduling": "2024.1.0",
+    "@unocss/postcss": "66.1.0-beta.6",
     "@unocss/preset-icons": "66.1.0-beta.5",
     "@unocss/preset-wind3": "66.1.0-beta.5",
     "@unocss/reset": "66.1.0-beta.5",
@@ -68,9 +69,15 @@
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
+    "css-loader": "7.1.2",
     "hls.js": "1.5.17",
+    "postcss": "8.5.3",
+    "postcss-loader": "8.1.1",
+    "postcss-preset-env": "10.1.5",
     "shaka-player": "4.12.5",
+    "style-loader": "4.0.0",
     "typescript": "5.7.2",
+    "unocss": "66.1.0-beta.5",
     "video.js": "8.21.0",
     "webpack": "5.96.1",
     "webpack-bundle-analyzer": "4.10.2",
@@ -85,7 +92,8 @@
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*",
-        "./webpack.config.mjs"
+        "./webpack.config.mjs",
+        "./uno.config.ts"
       ],
       "output": [
         "./dist/**/*"
