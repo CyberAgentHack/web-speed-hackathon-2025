@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { memo, ReactNode, useEffect, useState } from 'react';
+import { memo, ReactNode, useEffect, useMemo, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -51,7 +51,8 @@ export const Layout = ({ children }: Props) => {
   }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
-
+  // flipKey を useMemo でメモ化
+  const flipKey = useMemo(() => location.key, [location.key]);
   return (
     <>
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
@@ -69,7 +70,7 @@ export const Layout = ({ children }: Props) => {
         </aside>
 
         <main className={isTimetablePage ? '[grid-area:b2]' : '[grid-area:b2/b2/b3/b3]'}>
-          <Flipper className="size-full" flipKey={location.key} spring="noWobble">
+          <Flipper className="size-full" flipKey={flipKey} spring="noWobble">
             {children}
           </Flipper>
         </main>
@@ -97,7 +98,6 @@ export const Layout = ({ children }: Props) => {
 };
 
 const Header = memo(function Header({ isTransparent }: { isTransparent: boolean }) {
-  console.log('header');
   return (
     <header
       className={classNames(
