@@ -9,7 +9,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 // import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 // import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
