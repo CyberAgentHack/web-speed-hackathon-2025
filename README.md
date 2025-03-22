@@ -1,6 +1,6 @@
 # Web Speed Hackathon 2025 AREMA
 
-deploy test
+deploy test!
 
 ## 概要
 
