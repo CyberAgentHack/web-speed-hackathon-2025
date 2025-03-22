@@ -59,6 +59,7 @@
     "@types/m3u8-parser": "7.2.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
+    "@types/webpack-bundle-analyzer": "4.7.0",
     "@types/wicg-task-scheduling": "2024.1.0",
     "@unocss/preset-icons": "66.1.0-beta.5",
     "@unocss/preset-wind3": "66.1.0-beta.5",

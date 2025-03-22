@@ -3,6 +3,7 @@ import path from 'node:path';
 import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -76,6 +77,11 @@ const config = {
       minRatio: 0.8,
       test: /\.(js|css|html|svg|webp|ts)$/,
       threshold: 10240,
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: 'bundle-report.html',
     }),
   ],
   resolve: {
