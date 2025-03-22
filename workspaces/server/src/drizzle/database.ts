@@ -19,12 +19,14 @@ export function getDatabase() {
 }
 
 export async function initializeDatabase(): Promise<void> {
+  // 既存のデータベースをクローズして新しいインスタンスを作成
   database?.$client.close();
   database = null;
 
   const TEMP_PATH = path.resolve(await fsp.mkdtemp(path.resolve(os.tmpdir(), './wsh-')), './database.sqlite');
   await fsp.copyFile(SQLITE_PATH, TEMP_PATH);
 
+  // Drizzleインスタンスの初期化
   database = drizzle({
     client: createClient({
       syncInterval: 1000,
@@ -32,4 +34,37 @@ export async function initializeDatabase(): Promise<void> {
     }),
     schema,
   });
+
+  // インデックス作成処理の追加
+  await createIndexes();
+}
+
+// インデックス作成のための関数
+async function createIndexes(): Promise<void> {
+  const client = database?.$client;
+
+  if (!client) {
+    throw new Error('Database client not initialized.');
+  }
+
+  // インデックス作成SQLクエリ
+  const createIndexQueries = [
+    // recommendedModuleテーブルにインデックスを作成
+    `CREATE INDEX IF NOT EXISTS idx_recommendedModule_referenceId ON recommendedModule (referenceId);`,
+    // recommendedItemテーブルにインデックスを作成
+    `CREATE INDEX IF NOT EXISTS idx_recommendedItem_moduleId ON recommendedItem (moduleId);`,
+    `CREATE INDEX IF NOT EXISTS idx_recommendedItem_seriesId ON recommendedItem (seriesId);`,
+    `CREATE INDEX IF NOT EXISTS idx_recommendedItem_episodeId ON recommendedItem (episodeId);`,
+    // programテーブルにインデックスを作成
+    `CREATE INDEX IF NOT EXISTS idx_program_channelId ON program (channelId);`,
+    `CREATE INDEX IF NOT EXISTS idx_program_episodeId ON program (episodeId);`,
+    // episodeテーブルにインデックスを作成
+    `CREATE INDEX IF NOT EXISTS idx_episode_seriesId ON episode (seriesId);`,
+    `CREATE INDEX IF NOT EXISTS idx_episode_streamId ON episode (streamId);`,
+  ];
+
+  // インデックス作成クエリを実行
+  for (const query of createIndexQueries) {
+    await client.execute(query);
+  }
 }
