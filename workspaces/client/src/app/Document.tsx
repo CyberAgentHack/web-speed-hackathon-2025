@@ -15,16 +15,15 @@ export const Document = () => {
 			<head>
 				<meta charSet="UTF-8" />
 				<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-				{/* TODO: チャンクして先に読みむjsだけ記述して、それ以外は非同期で読み込む*/}
-				<script src="/public/main.js" />
 			</head>
 			<body className="size-full bg-[#000000] text-[#ffffff]">
-				<Suspense>
-					<Layout>
+				<Layout>
+					<Suspense>
 						<Outlet />
-					</Layout>
-				</Suspense>
+					</Suspense>
+				</Layout>
 				<ScrollRestoration />
+				<script src="/public/main.js"></script>
 			</body>
 		</html>
 	);
