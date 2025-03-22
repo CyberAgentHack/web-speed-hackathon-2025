@@ -6,7 +6,7 @@
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit",
-    "analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+    "analyze": "ANALYZE=true NODE_ENV=production webpack"
   },
   "dependencies": {
     "@babel/runtime": "7.26.10",
