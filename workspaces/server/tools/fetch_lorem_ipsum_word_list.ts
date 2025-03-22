@@ -5,6 +5,7 @@ import iconv from 'iconv-lite';
 import JSZip from 'jszip';
 import mikan from 'mikanjs';
 
+// TODO: Implement fetchLoremIpsumWordList function
 export async function fetchLoremIpsumWordList(): Promise<string[]> {
   const zipBinary = await fetch('https://www.aozora.gr.jp/cards/000148/files/789_ruby_5639.zip').then((r) =>
     r.arrayBuffer(),
