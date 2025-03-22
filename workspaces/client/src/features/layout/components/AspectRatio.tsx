@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode } from "react";
 
 interface Props {
 	children: ReactNode;
@@ -7,13 +7,9 @@ interface Props {
 }
 
 export const AspectRatio = ({ children }: Props) => {
-	const containerRef = useRef<HTMLDivElement>(null);
+	// const containerRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {}, []);
+	// useEffect(() => {}, []);
 
-	return (
-		<div ref={containerRef} className={`aspect-16/9 relative w-full`}>
-			{children}
-		</div>
-	);
+	return <div className={`aspect-16/9 relative w-full`}>{children}</div>;
 };

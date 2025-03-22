@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { ReactElement } from 'react';
+import { ReactElement, useCallback } from 'react';
 import { Link } from 'react-router';
 import { ArrayValues } from 'type-fest';
 
@@ -17,9 +17,9 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
   const episode = useEpisode(program.episodeId);
   const [, setProgram] = useSelectedProgramId();
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setProgram(null);
-  };
+  }, [setProgram]);
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>

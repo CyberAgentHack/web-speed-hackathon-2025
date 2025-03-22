@@ -15,7 +15,6 @@ declare global {
   var __staticRouterHydrationData: HydrationState;
 }
 
-startTransition(() => {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
@@ -27,4 +26,3 @@ startTransition(() => {
       </StoreProvider>
     </StrictMode>,
   );
-})
