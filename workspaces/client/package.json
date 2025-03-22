@@ -71,6 +71,7 @@
     "compression-webpack-plugin": "11.1.0",
     "core-js": "3.41.0",
     "css-loader": "7.1.2",
+    "esbuild-loader": "4.3.0",
     "hls.js": "1.5.17",
     "shaka-player": "4.12.5",
     "style-loader": "4.0.0",
