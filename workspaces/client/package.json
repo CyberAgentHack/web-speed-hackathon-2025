@@ -67,7 +67,6 @@
     "core-js": "3.41.0",
     "hls.js": "1.5.17",
     "typescript": "5.7.2",
-    "video.js": "8.21.0",
     "webpack": "5.96.1",
     "webpack-bundle-analyzer": "4.10.2",
     "webpack-cli": "5.1.4",
