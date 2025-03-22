@@ -449,6 +449,69 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(program);
     },
   });
+  // 今の所 /recommended/:referenceId のパクリだけど、最適化できそうな気がしてる
+  api.route({
+    method: 'GET',
+    url: '/recommended/error',
+    schema: {
+      tags: ['レコメンド'],
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getRecommendedModulesResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getRecommendedModules(req, reply) {
+      const database = getDatabase();
+
+      const modules = await database.query.recommendedModule.findMany({
+        orderBy(module, { asc }) {
+          return asc(module.order);
+        },
+        where(module, { eq }) {
+          const a =eq(module.referenceId, 'error');
+          return a
+        },
+        with: {
+          items: {
+            orderBy(item, { asc }) {
+              return asc(item.order);
+            },
+            with: {
+              series: {
+                with: {
+                  episodes: {
+                    orderBy(episode, { asc }) {
+                      return asc(episode.order);
+                    },
+                  },
+                },
+              },
+              episode: {
+                with: {
+                  series: {
+                    with: {
+                      episodes: {
+                        orderBy(episode, { asc }) {
+                          return asc(episode.order);
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      reply.code(200).send(modules);
+    },
+  })
+
 
   api.route({
     method: 'GET',
