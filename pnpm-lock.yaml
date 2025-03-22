@@ -45,6 +45,24 @@ importers:
       '@headlessui/react':
         specifier: 2.2.0
         version: 2.2.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@iconify/icons-bi':
+        specifier: 1.2.19
+        version: 1.2.19
+      '@iconify/icons-fa-solid':
+        specifier: 1.2.4
+        version: 1.2.4
+      '@iconify/icons-fluent':
+        specifier: 1.2.38
+        version: 1.2.38
+      '@iconify/icons-line-md':
+        specifier: 1.2.30
+        version: 1.2.30
+      '@iconify/icons-material-symbols':
+        specifier: 1.2.58
+        version: 1.2.58
+      '@iconify/react':
+        specifier: 5.2.0
+        version: 5.2.0(react@19.0.0)
       '@radix-ui/react-slider':
         specifier: 1.2.3
         version: 1.2.3(@types/react-dom@19.0.2(@types/react@19.0.1))(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1607,8 +1625,28 @@ packages:
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
 
+  '@iconify/icons-bi@1.2.19':
+    resolution: {integrity: sha512-P3enKEBR83a4fcK6vOsSueYpldYS3OdtSSto58bYU0sWThlxl+YXcmXY6Pu0ORKuMHK/hQagpwXPb+hT4vaO2g==}
+
+  '@iconify/icons-fa-solid@1.2.4':
+    resolution: {integrity: sha512-gLH+zYl/Srpnlsb++vys7WNXNGPTXjd/BaUO0Q9Z52vpZnmdiHx420TzsGSS5Pi5AR3QL1wdbkopS3EIaSdsZg==}
+
+  '@iconify/icons-fluent@1.2.38':
+    resolution: {integrity: sha512-nwCCUD3GLl/0xUDFnNIFYDhOr00mUTBToDBZaspFeXAaCnfHklMRtf0uHevBjKgGVqwlaV5c8zer7aNjwyRBGQ==}
+
+  '@iconify/icons-line-md@1.2.30':
+    resolution: {integrity: sha512-gFZmHkWSkSGDZEauw7D1m4HEIGXFHRv9H3tiZYwXKD43j1QmtF4D/A2e4UYJ+rfcS1BZ1lmdzLQUzmH3vCIsPQ==}
+
+  '@iconify/icons-material-symbols@1.2.58':
+    resolution: {integrity: sha512-EFBflkqoJmk8FJqA5U8xgJub3a3IaIX4hZVEY4nTnCr8XM4Qopu8H5DRRI9qStF8K3t7XQIJz3AeWmSZrF3+7w==}
+
   '@iconify/json@2.2.317':
     resolution: {integrity: sha512-RMf7b3Wd4FMKR7roYmJ8mO6Lwm1JCzuuuVCi0aPcBvBwZkgoWSNHEOFG504L3GMz95cid5KS5Yc4Gt1TPA5bJA==}
+
+  '@iconify/react@5.2.0':
+    resolution: {integrity: sha512-7Sdjrqq3fkkQNks9SY3adGC37NQTHsBJL2PRKlQd455PoDi9s+Es9AUTY+vGLFOYs5yO9w9yCE42pmxCwG26WA==}
+    peerDependencies:
+      react: '>=16'
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -6502,10 +6540,35 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.1': {}
 
+  '@iconify/icons-bi@1.2.19':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-fa-solid@1.2.4':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-fluent@1.2.38':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-line-md@1.2.30':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/icons-material-symbols@1.2.58':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify/json@2.2.317':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
+
+  '@iconify/react@5.2.0(react@19.0.0)':
+    dependencies:
+      '@iconify/types': 2.0.0
+      react: 19.0.0
 
   '@iconify/types@2.0.0': {}
 
