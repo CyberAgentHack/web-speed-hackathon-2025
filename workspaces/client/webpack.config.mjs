@@ -2,12 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
-// test
+import BundleAnalyzerPlugin from 'webpack-bundle-analyzer';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -62,6 +63,10 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin.BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+    }),
   ],
   resolve: {
     alias: {
