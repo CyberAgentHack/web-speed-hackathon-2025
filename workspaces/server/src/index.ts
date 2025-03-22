@@ -13,8 +13,42 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onSend', async (req, reply) => {
+    // パスベースのキャッシュポリシー
+    const path = req.url;
+    
+    // 1. 動画ストリーミングファイル（長時間キャッシュ）
+    if (path.includes('.m3u8') || path.includes('.ts') || path.startsWith('/streams/')) {
+      reply.header('cache-control', 'public, max-age=86400, stale-while-revalidate=172800');
+    }
+    // 2. 静的アセット（長時間キャッシュ）
+    else if (path.includes('/images/') || path.match(/\.(jpg|jpeg|png|webp|svg|css|js)(\?|$)/)) {
+      reply.header('cache-control', 'public, max-age=86400, immutable');
+    }
+    // 3. エピソードや番組メタデータ（短時間キャッシュ）
+    else if (path.match(/\/api\/episodes\/|\/api\/programs\//)) {
+      reply.header('cache-control', 'public, max-age=3600, stale-while-revalidate=7200');
+    }
+    // 4. サムネイル画像（中程度のキャッシュ）
+    else if (path.includes('/preview.jpg') || path.includes('/thumbnail')) {
+      reply.header('cache-control', 'public, max-age=43200'); // 12時間
+    }
+    // 5. ユーザー固有のデータやセッション（キャッシュなし）
+    else if (path.includes('/api/user/') || path.includes('/api/auth/')) {
+      reply.header('cache-control', 'no-store');
+    }
+    // 6. その他のAPI（短時間キャッシュ）
+    else if (path.startsWith('/api/')) {
+      if (req.method === 'GET') {
+        reply.header('cache-control', 'public, max-age=60, stale-while-revalidate=300');
+      } else {
+        reply.header('cache-control', 'no-store');
+      }
+    }
+    // 7. その他すべて（デフォルト）
+    else {
+      reply.header('cache-control', 'no-cache');
+    }
   });
   app.register(cors, {
     origin: true,
