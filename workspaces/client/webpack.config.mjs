@@ -1,12 +1,16 @@
 import path from 'node:path';
-
+import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -22,10 +26,12 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  corejs: false,
+                  forceAllTransforms: false,
+                  targets: {
+                     chrome: '134',
+                    },
+                  useBuiltIns: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -55,17 +61,22 @@ const config = {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
     filename: 'main.js',
-    path: path.resolve(import.meta.dirname, './dist'),
+    path: path.resolve(__dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',  // ビルド後にHTMLレポートを生成
+      openAnalyzer: false,     // ビルド完了後自動でブラウザを開くかどうか
+      reportFilename: 'bundle-report.html', // レポートの出力先ファイル
+    }),
   ],
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      '@ffmpeg/core$': path.resolve(__dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      '@ffmpeg/core/wasm$': path.resolve(__dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },

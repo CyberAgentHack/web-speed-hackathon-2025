@@ -2,7 +2,6 @@ import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
@@ -24,8 +23,19 @@ interface TimetablePageActions {
   selectProgram: (program: Program | null) => void;
 }
 
+function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(...args);
+    }, wait);
+  };
+}
+
 export const createTimetablePageStoreSlice = () => {
   return lens<TimetablePageState & TimetablePageActions>((set, _get) => ({
+    // actions
     changeColumnWidth: (params: { channelId: string; delta: number }) => {
       set((state) => {
         return produce(state, (draft) => {
@@ -39,19 +49,21 @@ export const createTimetablePageStoreSlice = () => {
         shownNewFeatureDialog: false,
       }));
     },
-    columnWidthRecord: {},
-    currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
-      set(() => ({
-        currentUnixtimeMs: Date.now(),
-      }));
-    }, 50),
-    selectedProgramId: null,
     selectProgram: (program: Program | null) => {
       set(() => ({
         selectedProgramId: program?.id ?? null,
       }));
     },
+    refreshCurrentUnixtimeMs: debounce(() => {
+      set(() => ({
+        currentUnixtimeMs: Date.now(),
+      }));
+    }, 50),
+
+    // state
+    columnWidthRecord: {},
+    currentUnixtimeMs: 0,
+    selectedProgramId: null,
     shownNewFeatureDialog: true,
   }));
 };

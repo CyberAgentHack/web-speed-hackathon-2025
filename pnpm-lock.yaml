@@ -10,7 +10,7 @@ overrides:
 
 patchedDependencies:
   shaka-player:
-    hash: ztcamgtqc3a62la4l6p3d6w4ae
+    hash: cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c
     path: patches/shaka-player.patch
 
 importers:
@@ -69,9 +69,6 @@ importers:
       immer:
         specifier: 10.1.1
         version: 10.1.1
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
       luxon:
         specifier: 3.5.0
         version: 3.5.0
@@ -160,9 +157,6 @@ importers:
       '@iconify/types':
         specifier: 2.0.0
         version: 2.0.0
-      '@types/lodash':
-        specifier: 4.17.16
-        version: 4.17.16
       '@types/luxon':
         specifier: 3.4.2
         version: 3.4.2
@@ -207,7 +201,7 @@ importers:
         version: 1.5.17
       shaka-player:
         specifier: 4.12.5
-        version: 4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae)
+        version: 4.12.5(patch_hash=cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c)
       typescript:
         specifier: 5.7.2
         version: 5.7.2
@@ -1502,6 +1496,7 @@ packages:
   '@faker-js/faker@9.2.0':
     resolution: {integrity: sha512-ulqQu4KMr1/sTFIYvqSdegHT8NIkt66tFAkugGnHA+1WAfEn6hMzNR+svjXGFRVLnapxvej67Z/LwchFrnLBUg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/accept-negotiator@2.0.0':
     resolution: {integrity: sha512-/Sce/kBzuTxIq5tJh85nVNOq9wKD8s+viIgX0fFMDBdw95gnpf53qmF1oBgJym3cPFliWUuSloVg/1w/rH0FcQ==}
@@ -1999,9 +1994,6 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
-
-  '@types/lodash@4.17.16':
-    resolution: {integrity: sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==}
 
   '@types/luxon@3.4.2':
     resolution: {integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==}
@@ -3859,9 +3851,6 @@ packages:
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
-
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -6910,8 +6899,6 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/lodash@4.17.16': {}
-
   '@types/luxon@3.4.2': {}
 
   '@types/m3u8-parser@7.2.0': {}
@@ -8988,8 +8975,6 @@ snapshots:
 
   lodash.merge@4.6.2: {}
 
-  lodash@4.17.21: {}
-
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -9813,7 +9798,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  shaka-player@4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae):
+  shaka-player@4.12.5(patch_hash=cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c):
     dependencies:
       eme-encryption-scheme-polyfill: 2.1.6
 
