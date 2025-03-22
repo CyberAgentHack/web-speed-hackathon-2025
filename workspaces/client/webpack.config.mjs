@@ -7,7 +7,7 @@ import webpack from 'webpack';
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -53,14 +53,17 @@ const config = {
     ],
   },
   optimization: {
+    // 副作用のないモジュールを削除
     minimize: true,
-    runtimeChunk: 'single',
+    runtimeChunk: 'single', // 未使用コードを削除
+    sideEffects: true,
     splitChunks: {
       chunks: 'all',
       // 50KB以上のチャンクを分割
       maxSize: 200 * 1024,
       minSize: 50 * 1024, // 200KBを超える場合は分割
     },
+    usedExports: true,
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
