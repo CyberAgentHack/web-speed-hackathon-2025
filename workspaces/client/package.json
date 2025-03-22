@@ -58,6 +58,7 @@
     "@wsh-2025/configs": "workspace:*",
     "rollup-plugin-visualizer": "5.14.0",
     "shaka-player": "4.12.5",
+    "terser": "5.39.0",
     "typescript": "5.7.2",
     "vite": "6.2.2",
     "wireit": "0.14.9"
