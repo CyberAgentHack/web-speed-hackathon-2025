@@ -71,14 +71,14 @@ export function registerSsr(app: FastifyInstance): void {
      
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
-      <html lang="ja">
+      <html lang="ja" style="background: #000; color: #fff;">
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
         </head>
-        <body>
-          <div id="app-root" style="height: 100vh; width: 100%; background: #000;"></div>
+        <body style="background: #000; color: #fff; margin: 0; padding: 0;">
+          <div id="app-root" style="min-height: 100dvh; width: 100dvw;"></div>
           <script>
             window.__staticRouterHydrationData = ${htmlescape({
               actionData: context.actionData,
