@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename)
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
   mode: 'production',
   module: {
@@ -26,10 +26,12 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  corejs: false,
+                  forceAllTransforms: false,
+                  targets: {
+                     chrome: '134',
+                    },
+                  useBuiltIns: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
