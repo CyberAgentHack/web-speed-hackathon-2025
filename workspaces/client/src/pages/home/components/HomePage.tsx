@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
@@ -8,6 +10,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
   return { modules };
 };
+const MemoizedRecommendedSection = memo(RecommendedSection);
 
 export const HomePage = () => {
   const modules = useRecommended({ referenceId: 'entrance' });
@@ -20,7 +23,7 @@ export const HomePage = () => {
         {modules.map((module) => {
           return (
             <div key={module.id} className="mb-[24px] px-[24px]">
-              <RecommendedSection module={module} />
+              <MemoizedRecommendedSection module={module} />
             </div>
           );
         })}
