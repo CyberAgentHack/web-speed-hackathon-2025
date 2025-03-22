@@ -1,5 +1,5 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import { merge } from 'lodash';
+import { merge } from '@wsh-2025/client/src/utils/merge';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
