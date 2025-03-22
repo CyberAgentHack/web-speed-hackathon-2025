@@ -121,7 +121,7 @@ export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <img alt="エラー" className="m-[4px] size-[20px]" src="/icons/error-outline.svg" />
+                  <img alt="エラー" className="m-[4px] size-[20px]" src="/public/icons/error-outline.svg" />
                   <span>{submitError}</span>
                 </div>
               ) : null}

@@ -29,7 +29,7 @@ export const EpisodeItem = ({ episode }: Props) => {
                   <img
                     alt="再生"
                     className="absolute bottom-[4px] left-[4px] m-[4px] block size-[20px] text-[#ffffff]"
-                    src="/icons/play-arrow-rounded.svg"
+                    src="/public/icons/play-arrow-rounded.svg"
                   />
                   {episode.premium ? (
                     <span className="absolute bottom-[8px] right-[4px] inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
