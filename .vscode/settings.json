@@ -1,3 +1,7 @@
 {
+  "files.exclude": {
+    "**/.github": true,
+    "**/patches": true
+  },
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }
