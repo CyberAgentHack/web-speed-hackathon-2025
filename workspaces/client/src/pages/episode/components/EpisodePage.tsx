@@ -72,7 +72,13 @@ export const EpisodePage = () => {
             ) : (
               <Suspense
                 fallback={
-                  <AspectRatio ratioHeight={9} ratioWidth={16}>
+                  <div
+                    style={{
+                      width: '100%',
+                      aspectRatio: 16 / 9,
+                      position: 'relative',
+                    }}
+                  >
                     <div className="grid size-full">
                       <img
                         alt=""
@@ -82,7 +88,7 @@ export const EpisodePage = () => {
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
                       <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
                     </div>
-                  </AspectRatio>
+                  </div>
                 }
               >
                 <div className="relative size-full">
