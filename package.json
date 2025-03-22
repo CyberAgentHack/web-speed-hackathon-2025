@@ -9,6 +9,7 @@
     "start": "wireit",
     "test": "wireit"
   },
+  "sideEffects": false,
   "dependencies": {
     "wireit": "0.14.9"
   },
