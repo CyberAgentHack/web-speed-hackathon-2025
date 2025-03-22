@@ -49,16 +49,21 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            bi: () => fetch('https://cdn.jsdelivr.net/npm/@iconify-json/bi/icons.json')
+              .then(response => response.json())
+              .then(data => data as IconifyJSON),
+            'fa-regular': () => fetch('https://cdn.jsdelivr.net/npm/@iconify-json/fa-regular/icons.json')
+              .then(response => response.json())
+              .then(data => data as IconifyJSON),
+            'fa-solid': () => fetch('https://cdn.jsdelivr.net/npm/@iconify-json/fa-solid/icons.json')
+              .then(response => response.json())
+              .then(data => data as IconifyJSON),
+            'line-md': () => fetch('https://cdn.jsdelivr.net/npm/@iconify-json/line-md/icons.json')
+              .then(response => response.json())
+              .then(data => data as IconifyJSON),
+            'material-symbols': () => fetch('https://cdn.jsdelivr.net/npm/@iconify-json/material-symbols/icons.json')
+                .then(response => response.json())
+                .then(data => data as IconifyJSON),
           },
         }),
       ],
