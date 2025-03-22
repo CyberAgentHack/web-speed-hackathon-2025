@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
-import { Flipper } from 'react-flip-toolkit';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigationType } from 'react-router-dom';
 
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
@@ -12,22 +11,29 @@ import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useA
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
+import { ErrorBoundary } from '@wsh-2025/client/src/app/ErrorBoundary';
 
 interface Props {
   children: ReactNode;
 }
 
+// 簡素化したLayoutコンポーネント
 export const Layout = ({ children }: Props) => {
   useSubscribePointer();
-
-  const isLoading = false;
-
-  const location = useLocation();
-  const isTimetablePage = location.pathname === '/timetable';
 
   const authActions = useAuthActions();
   const authDialogType = useAuthDialogType();
   const user = useAuthUser();
+
+  // パスの代わりにナビゲーションタイプを使用（より安定）
+  const navigationType = useNavigationType();
+  const [isTimetablePage, setIsTimetablePage] = useState(false);
+
+  // 現在のURLからページタイプを判定
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    setIsTimetablePage(pathname === '/timetable');
+  }, [navigationType]);
 
   const [scrollTopOffset, setScrollTopOffset] = useState(0);
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
@@ -49,9 +55,17 @@ export const Layout = ({ children }: Props) => {
   }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
+  const isLoading = false;
 
   return (
-    <>
+    <ErrorBoundary
+      fallback={
+        <div className="bg-red-900 p-4 text-white">
+          <h2 className="mb-2 text-xl font-bold">レイアウトエラー</h2>
+          <p>レイアウトコンポーネントでエラーが発生しました。</p>
+        </div>
+      }
+    >
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
         <header
           className={classNames(
@@ -100,9 +114,8 @@ export const Layout = ({ children }: Props) => {
         </aside>
 
         <main className={isTimetablePage ? '[grid-area:b2]' : '[grid-area:b2/b2/b3/b3]'}>
-          <Flipper className="size-full" flipKey={location.key} spring="noWobble">
-            {children}
-          </Flipper>
+          {/* React Flipping機能を削除して簡略化 */}
+          <div className="size-full">{children}</div>
         </main>
 
         {isLoading ? (
@@ -123,6 +136,6 @@ export const Layout = ({ children }: Props) => {
         onOpenSignIn={authActions.openSignInDialog}
       />
       <SignOutDialog isOpen={authDialogType === AuthDialogType.SignOut} onClose={authActions.closeDialog} />
-    </>
+    </ErrorBoundary>
   );
 };

@@ -7,9 +7,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
-import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Document } from '@wsh-2025/client/src/app/Document';
+import { ErrorBoundary } from '@wsh-2025/client/src/app/ErrorBoundary';
 import { HomePage } from '@wsh-2025/client/src/pages/home/components/HomePage';
 import { EpisodePage } from '@wsh-2025/client/src/pages/episode/components/EpisodePage';
 import { ProgramPage } from '@wsh-2025/client/src/pages/program/components/ProgramPage';
@@ -17,9 +16,18 @@ import { SeriesPage } from '@wsh-2025/client/src/pages/series/components/SeriesP
 import { TimetablePage } from '@wsh-2025/client/src/pages/timetable/components/TimetablePage';
 import { NotFoundPage } from '@wsh-2025/client/src/pages/not_found/components/NotFoundPage';
 
-function main() {
-  const store = createStore({});
+// グローバルエラーハンドラ
+const GlobalError = ({ error }: { error: Error }) => (
+  <div className="flex h-screen items-center justify-center">
+    <div className="max-w-md rounded bg-red-900 p-6 text-white">
+      <h2 className="mb-3 text-xl font-bold">アプリケーションエラー</h2>
+      <p className="mb-4">予期しないエラーが発生しました。</p>
+      <div className="max-h-[200px] overflow-auto rounded bg-black/30 p-3 text-sm opacity-80">{error.message}</div>
+    </div>
+  </div>
+);
 
+function main() {
   // rootノードを取得（なければ作成）
   const rootElement = document.getElementById('root');
   if (!rootElement) {
@@ -34,12 +42,11 @@ function main() {
     [
       {
         path: '/',
-        element: (
-          <html className="size-full" lang="ja">
-            <body className="size-full bg-[#000000] text-[#ffffff]">
-              <Document />
-            </body>
-          </html>
+        element: <Document />,
+        errorElement: (
+          <ErrorBoundary>
+            <GlobalError error={new Error('ルーティングエラーが発生しました')} />
+          </ErrorBoundary>
         ),
         children: [
           {
@@ -74,13 +81,13 @@ function main() {
     },
   );
 
-  // RouterProviderでルーターをレンダリング
+  // コンテキストを正しく構成
   const root = createRoot(document.getElementById('root') || document.body);
   root.render(
     <StrictMode>
-      <StoreProvider createStore={() => store}>
+      <ErrorBoundary>
         <RouterProvider router={router} />
-      </StoreProvider>
+      </ErrorBoundary>
     </StrictMode>,
   );
 }
@@ -96,5 +103,13 @@ window.addEventListener('DOMContentLoaded', () => {
     main();
   } catch (error) {
     console.error('Failed to initialize application:', error);
+    const root = document.getElementById('root');
+    if (root) {
+      createRoot(root).render(
+        <ErrorBoundary>
+          <GlobalError error={error instanceof Error ? error : new Error('不明なエラーが発生しました')} />
+        </ErrorBoundary>,
+      );
+    }
   }
 });
