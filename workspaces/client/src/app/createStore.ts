@@ -1,4 +1,5 @@
 import { withLenses } from '@dhmk/zustand-lens';
+// TODO: lodashを剥がす
 import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
