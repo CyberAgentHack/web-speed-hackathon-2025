@@ -219,3 +219,6 @@ $RECYCLE.BIN/
 
 # Wireit
 .wireit
+
+# drizzle.config.ts を無視する設定
+workspaces/server/drizzle.config.ts
