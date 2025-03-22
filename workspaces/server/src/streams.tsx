@@ -49,7 +49,7 @@ export function registerStreams(app: FastifyInstance): void {
       #EXT-X-MEDIA-SEQUENCE:1
       ${Array.from({ length: stream.numberOfChunks }, (_, idx) => {
         return dedent`
-          #EXTINF:2.000000,
+          #EXTINF:2.0,
           /streams/${stream.id}/${String(idx).padStart(3, '0')}.ts
         `;
       }).join('\n')}

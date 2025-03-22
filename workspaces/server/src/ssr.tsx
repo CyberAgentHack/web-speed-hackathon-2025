@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -10,6 +11,9 @@ import htmlescape from 'htmlescape';
 import { createStaticHandler } from 'react-router';
 
 export function registerSsr(app: FastifyInstance): void {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  app.register(fastifyCompress);
+
   app.register(fastifyStatic, {
     prefix: '/public/',
     root: [
