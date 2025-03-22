@@ -6,14 +6,16 @@ import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/public/',
+  base: '/',
 
   build: {
     minify: 'terser',
     sourcemap: true,
+    outDir: 'dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/main.tsx'),
+        main: resolve(__dirname, 'index.html'),
       },
       output: {
         format: 'es',

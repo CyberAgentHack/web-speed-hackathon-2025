@@ -611,22 +611,44 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getSession(req, reply) {
-      const database = getDatabase();
+      try {
+        console.log('GET /users/me が呼び出されました');
+        const database = getDatabase();
 
-      const userId = req.session.get('id');
-      if (!userId) {
-        return reply.code(401).send();
-      }
+        const userId = req.session.get('id');
+        console.log('セッションID:', userId);
 
-      const user = await database.query.user.findFirst({
-        where(user, { eq }) {
-          return eq(user.id, Number(userId));
-        },
-      });
-      if (!user) {
-        return reply.code(401).send();
+        // ユーザーIDがセッションにある場合はユーザー情報を返す
+        if (userId) {
+          console.log('ユーザーIDが見つかりました:', userId);
+          try {
+            const user = await database.query.user.findFirst({
+              where(user, { eq }) {
+                return eq(user.id, Number(userId));
+              },
+            });
+
+            console.log('取得したユーザー:', user);
+            if (user) {
+              return reply.code(200).send(user);
+            }
+          } catch (dbError) {
+            console.error('データベースエラー:', dbError);
+            return reply.code(500).send({ error: 'データベースエラー' });
+          }
+        }
+
+        // ログインしていない場合は、空のユーザーオブジェクトとログインしていないことを示すフラグを返す
+        console.log('認証されていません');
+        reply.code(200).send({
+          id: null,
+          email: null,
+          isAuthenticated: false,
+        });
+      } catch (error) {
+        console.error('認証エラー:', error);
+        reply.code(500).send({ error: '認証エラー' });
       }
-      reply.code(200).send(user);
     },
   });
 

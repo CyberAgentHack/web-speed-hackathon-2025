@@ -1,96 +1,135 @@
-import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
-import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
-import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
-import { createStore } from '@wsh-2025/client/src/app/createStore';
 import type { FastifyInstance } from 'fastify';
-import { createStandardRequest } from 'fastify-standard-request-reply';
-import htmlescape from 'htmlescape';
-import { StrictMode } from 'react';
-import { renderToString } from 'react-dom/server';
-import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
-
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
 
 export function registerSsr(app: FastifyInstance): void {
+  const clientDistPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist');
+  console.log('Client dist path:', clientDistPath);
+
+  // client/distのassetsディレクトリを/assetsプレフィックスで提供
   app.register(fastifyStatic, {
+    root: path.join(clientDistPath, 'assets'),
+    prefix: '/assets/',
+    decorateReply: false,
+    logLevel: 'info', // ログレベルを上げて問題を診断
+    setHeaders: (res, filePath) => {
+      console.log('Serving asset file:', filePath);
+      // JavaScriptファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+      }
+      // CSSファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+      }
+      // マップファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.map')) {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      }
+      // SVGファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.svg')) {
+        res.setHeader('Content-Type', 'image/svg+xml');
+      }
+      // WASMファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.wasm')) {
+        res.setHeader('Content-Type', 'application/wasm');
+      }
+    },
+  });
+
+  // クライアントの公開ディレクトリを静的ファイルとして配信（favicon用）
+  app.register(fastifyStatic, {
+    root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/public'),
     prefix: '/public/',
-    root: [
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
-    ],
+    decorateReply: false,
+    setHeaders: (res, filePath) => {
+      // SVGファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.svg')) {
+        res.setHeader('Content-Type', 'image/svg+xml');
+      }
+    },
   });
 
+  // クライアントのdistディレクトリをルートとして配信
+  app.register(fastifyStatic, {
+    root: clientDistPath,
+    prefix: '/',
+    logLevel: 'info', // ログレベルを上げて問題を診断
+    setHeaders: (res, filePath) => {
+      console.log('Serving root file:', filePath);
+      // JavaScriptファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+      }
+      // CSSファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+      }
+      // マップファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.map')) {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      }
+      // SVGファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.svg')) {
+        res.setHeader('Content-Type', 'image/svg+xml');
+      }
+      // WASMファイルに適切なMIMEタイプを設定
+      if (filePath.endsWith('.wasm')) {
+        res.setHeader('Content-Type', 'application/wasm');
+      }
+    },
+  });
+
+  // favicon.icoの特別なルートを追加
   app.get('/favicon.ico', (_, reply) => {
-    reply.status(404).send();
+    reply.sendFile('favicon.ico', clientDistPath);
   });
 
-  app.get('/*', async (req, reply) => {
-    // @ts-expect-error ................
-    const request = createStandardRequest(req, reply);
-
-    const store = createStore({});
-    const handler = createStaticHandler(createRoutes(store));
-    const context = await handler.query(request);
-
-    if (context instanceof Response) {
-      return reply.send(context);
+  // 静的アセットの拡張子をチェックし、NotFoundHandlerに渡さないようにする
+  app.addHook('onRequest', (request, reply, done) => {
+    const url = request.url;
+    // アセットリクエストをログに記録
+    if (url.startsWith('/assets/')) {
+      console.log('Asset request:', url);
     }
 
-    const router = createStaticRouter(handler.dataRoutes, context);
-    
-    try {
-      renderToString(
-        <StrictMode>
-          {/* @ts-expect-error StoreProviderは正常に動作しますが型エラーが発生します */}
-          <StoreProvider createStore={() => store}>
-            <StaticRouterProvider context={context} hydrate={false} router={router} />
-          </StoreProvider>
-        </StrictMode>,
-      );
-    } catch (error) {
-      console.error('Rendering error:', error);
+    // 静的アセットの拡張子を持つURLはNotFoundHandlerに渡さない
+    if (
+      url.endsWith('.js') ||
+      url.endsWith('.css') ||
+      url.endsWith('.map') ||
+      url.endsWith('.svg') ||
+      url.endsWith('.wasm') ||
+      url.endsWith('.jpg') ||
+      url.endsWith('.png') ||
+      url.endsWith('.ico') ||
+      url.endsWith('.json')
+    ) {
+      // 静的ファイルハンドラに任せる
+      // 存在しない場合は自動的に404になる
+      done();
+      return;
+    }
+    done();
+  });
+
+  // SPA対応：存在しないパスへのリクエストはすべてindex.htmlにリダイレクト
+  app.setNotFoundHandler((request, reply) => {
+    // APIリクエストの場合は通常の404を返す
+    if (request.url.startsWith('/api/')) {
+      return;
     }
 
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
+    // 拡張子がある場合は通常の404を返す（静的ファイルが見つからない場合）
+    if (request.url.includes('.') && !request.url.endsWith('.html')) {
+      console.log('Not found with extension:', request.url);
+      return;
+    }
 
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
-        </head>
-        <body>
-          <div id="root"></div>
-          <script type="module" src="/public/assets/main.js"></script>
-          <script>
-            window.__staticRouterHydrationData = ${htmlescape({
-              actionData: context.actionData,
-              loaderData: context.loaderData,
-            })};
-          </script>
-        </body>
-      </html>
-    `);
+    // その他のリクエストはindex.htmlを返す
+    console.log('Serving index.html for:', request.url);
+    reply.sendFile('index.html', clientDistPath);
   });
 }

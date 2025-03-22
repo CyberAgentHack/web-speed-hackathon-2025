@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
-import { Link, useLocation, useNavigation } from 'react-router';
+import { Link, useLocation } from 'react-router-dom';
 
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
@@ -20,9 +20,7 @@ interface Props {
 export const Layout = ({ children }: Props) => {
   useSubscribePointer();
 
-  const navigation = useNavigation();
-  const isLoading =
-    navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
+  const isLoading = false;
 
   const location = useLocation();
   const isTimetablePage = location.pathname === '/timetable';
