@@ -37,12 +37,6 @@ const config = {
           options: {
             cacheDirectory: true,
             presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: 'last 1 versions, not dead',
-                },
-              ],
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
