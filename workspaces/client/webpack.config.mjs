@@ -1,9 +1,9 @@
 import path from 'node:path';
 
-import CompressionPlugin from 'compression-webpack-plugin';
+// import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -66,21 +66,21 @@ const config = {
     runtimeChunk: 'single', // ランタイム分割でキャッシュ効率UP
     sideEffects: true, // 未使用のexportを削除 (tree shaking)
 
-    splitChunks: {
-      automaticNameDelimiter: '-',
-      cacheGroups: {
-        vendors: {
-          chunks: 'all',
-          name: 'vendors',
-          test: /[\\/]node_modules[\\/]/,
-        },
-      },
-      chunks: 'all', // 20KB以上のチャンクは分割
-      maxSize: 150 * 1024,
-      // 150KBを超えたら分割
-      minChunks: 1,
-      minSize: 20 * 1024,
-    },
+    // splitChunks: {
+    //   automaticNameDelimiter: '-',
+    //   cacheGroups: {
+    //     vendors: {
+    //       chunks: 'all',
+    //       name: 'vendors',
+    //       test: /[\\/]node_modules[\\/]/,
+    //     },
+    //   },
+    //   chunks: 'all', // 20KB以上のチャンクは分割
+    //   maxSize: 150 * 1024,
+    //   // 150KBを超えたら分割
+    //   minChunks: 1,
+    //   minSize: 20 * 1024,
+    // },
 
     // 副作用のないモジュールを削除
     usedExports: true,
@@ -99,18 +99,18 @@ const config = {
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     // Gzip圧縮で配信サイズを削減
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    new CompressionPlugin({
-      algorithm: 'gzip',
-      // 10KB以上のファイルに適用
-      minRatio: 0.8,
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10 * 1024,
-    }),
-    // バンドルサイズを可視化
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static', // ローカルHTMLに結果を出力
-      reportFilename: 'report.html',
-    }),
+    // new CompressionPlugin({
+    //   algorithm: 'gzip',
+    //   // 10KB以上のファイルに適用
+    //   minRatio: 0.8,
+    //   test: /\.(js|css|html|svg)$/,
+    //   threshold: 10 * 1024,
+    // }),
+    // // バンドルサイズを可視化
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static', // ローカルHTMLに結果を出力
+    //   reportFilename: 'report.html',
+    // }),
   ],
 
   resolve: {
