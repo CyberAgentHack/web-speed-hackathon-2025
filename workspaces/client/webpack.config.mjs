@@ -5,9 +5,9 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -52,15 +52,40 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      cacheGroups: {
+        ffmpeg: {
+          chunks: 'all',
+          name: 'ffmpeg',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]@ffmpeg/,
+        },
+        iconify: {
+          chunks: 'all',
+          name: 'iconify',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]@iconify/,
+        },
+        vendor: {
+          chunks: 'all',
+          name: 'vendors',
+          priority: 10,
+          test: /[\\/]node_modules[\\/]/,
+        },
+      },
+      chunks: 'all',
+    },
+    usedExports: true,
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: '[name].chunk.js',
+    filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto',
+    publicPath: '/public/',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     ...(process.env['ANALYZE'] ? [new BundleAnalyzerPlugin()] : []),
   ],
