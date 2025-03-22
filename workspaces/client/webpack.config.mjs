@@ -77,6 +77,10 @@ const config = {
       openAnalyzer: true,
       reportFilename: 'bundle-report.html',
     }),
+    // Lodashを使用しないようにする設定
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^lodash$/,
+    }),
   ],
   optimization: {
     splitChunks: {
