@@ -2,11 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+const isDev = process.env['NODE_ENV'] === 'development';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: isDev ? 'source-map' : false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: isDev ? 'development' : 'production',
   module: {
     rules: [
       {
@@ -60,7 +62,7 @@ const config = {
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
   resolve: {
     alias: {
