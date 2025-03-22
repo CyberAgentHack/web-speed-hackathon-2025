@@ -11,28 +11,12 @@ const config = {
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: {
-          fullySpecified: false,
-        },
-        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
+        exclude: /node_modules/,
+        test: /\.(ts|tsx|js|jsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'ts-loader',
           options: {
-            compact: true,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
+            transpileOnly: true,
           },
         },
       },
