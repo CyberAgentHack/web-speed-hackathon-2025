@@ -1,6 +1,6 @@
 import path from 'node:path';
 import webpack from 'webpack';
-import TerserPlugin from 'terser-webpack-plugin';
+
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -64,10 +64,6 @@ const config = {
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };
