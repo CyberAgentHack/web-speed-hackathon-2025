@@ -1,8 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import '@wsh-2025/client/src/setups/luxon';
-
 import fastifyStatic from '@fastify/static';
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
@@ -44,6 +42,8 @@ export function registerSsr(app: FastifyInstance): void {
         <StaticRouterProvider context={context} hydrate={false} router={router} />
       </StoreProvider>,
     );
+
+  
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
