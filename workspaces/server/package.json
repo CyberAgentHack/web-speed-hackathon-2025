@@ -9,7 +9,7 @@
     "format:prettier": "wireit",
     "heroku-start": "wireit",
     "start": "wireit",
-    "database:transform": "wireit"
+    "cmd": "wireit"
   },
   "dependencies": {
     "@fastify/cookie": "11.0.2",
@@ -35,6 +35,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "7.0.2",
+    "sharp": "0.33.5",
     "tsx": "4.19.2",
     "typescript": "5.7.2",
     "wireit": "0.14.9",
@@ -64,8 +65,8 @@
     "database:reset": {
       "command": "tsx ./tools/seed.ts"
     },
-    "database:transform": {
-      "command": "tsx ./tools/trim-description.ts"
+    "cmd": {
+      "command": "tsx ./tools/avif.ts"
     },
     "start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
