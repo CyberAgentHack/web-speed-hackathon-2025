@@ -93,6 +93,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannels(req, reply) {
+      console.log("call getChannels");
       const database = getDatabase();
 
       const channels = await database.query.channel.findMany({
@@ -128,6 +129,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannelById(req, reply) {
+      console.log("call getChannelById");
       const database = getDatabase();
 
       const channel = await database.query.channel.findFirst({
@@ -159,6 +161,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodes(req, reply) {
+      console.log("call getEpisodes");
       const database = getDatabase();
 
       const episodes = await database.query.episode.findMany({
@@ -205,6 +208,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodeById(req, reply) {
+      console.log("call getEpisodeById");
       const database = getDatabase();
 
       const episode = await database.query.episode.findFirst({
@@ -247,6 +251,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getSeries(req, reply) {
+      console.log("call getSeries");
       const database = getDatabase();
 
       const series = await database.query.series.findMany({
@@ -292,6 +297,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getProgramById(req, reply) {
+      console.log("call getProgramById");
       const database = getDatabase();
 
       const series = await database.query.series.findFirst({
@@ -333,6 +339,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getTimetable(req, reply) {
+      console.log("call getTimetable");
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
@@ -369,6 +376,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getPrograms(req, reply) {
+      console.log("call getPrograms");
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
@@ -420,6 +428,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getProgramById(req, reply) {
+      console.log("call getProgramById");
       const database = getDatabase();
 
       const program = await database.query.program.findFirst({
@@ -467,6 +476,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
+      console.log("call getRecommendedModules");
       const database = getDatabase();
 
       const modules = await database.query.recommendedModule.findMany({
@@ -529,6 +539,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function signIn(req, reply) {
+      console.log("call signIn");
       const database = getDatabase();
 
       const user = await database.query.user.findFirst({
@@ -564,6 +575,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function signUp(req, reply) {
+      console.log("call signUp");
       const database = getDatabase();
 
       const hasAlreadyExists = await database.query.user.findFirst({
@@ -611,6 +623,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getSession(req, reply) {
+      console.log("call getSession");
       const database = getDatabase();
 
       const userId = req.session.get('id');
@@ -637,6 +650,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       tags: ['認証'],
     } satisfies FastifyZodOpenApiSchema,
     handler: async function signOut(req, reply) {
+      console.log("call signOut");
       const userId = req.session.get('id');
       if (!userId) {
         return reply.code(401).send();
