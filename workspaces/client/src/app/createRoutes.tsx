@@ -64,9 +64,8 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           async lazy() {
-            const { prefetch, TimetablePage } = await lazy(
-              import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
-              1000,
+            const { prefetch, TimetablePage } = await import(
+              '@wsh-2025/client/src/pages/timetable/components/TimetablePage'
             );
             return {
               Component: TimetablePage,

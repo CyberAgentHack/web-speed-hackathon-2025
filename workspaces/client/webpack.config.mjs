@@ -28,12 +28,12 @@ const config = {
         },
       },
       {
-        test: /\.png$/,
-        type: 'asset/inline',
-      },
-      {
         resourceQuery: /raw/,
         type: 'asset/source',
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
       },
       {
         resourceQuery: /arraybuffer/,
