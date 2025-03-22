@@ -7,7 +7,8 @@
     "heroku-cleanup": "wireit",
     "heroku-start": "wireit",
     "start": "wireit",
-    "test": "wireit"
+    "test": "wireit",
+    "analyze": "wireit"
   },
   "dependencies": {
     "wireit": "0.14.9"
@@ -37,6 +38,11 @@
     "build": {
       "dependencies": [
         "./workspaces/client:build"
+      ]
+    },
+    "analyze": {
+      "dependencies": [
+        "./workspaces/client:analyze"
       ]
     },
     "heroku-build": {
