@@ -23,6 +23,13 @@ async function main() {
   app.register(registerStreams);
   app.register(registerSsr);
 
+  // await app.register(
+  //   import('@fastify/compress'),
+  //   {
+  //     encodings: ['gzip'],
+  //   },
+  // );
+
   await app.ready();
   const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });
   console.log(`Server listening at ${address}`);
