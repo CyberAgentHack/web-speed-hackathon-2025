@@ -15,16 +15,9 @@ async function getSeekThumbnail({ episode }: Params) {
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
-  // FFmpeg の初期化
+  // @ffmpeg/ffmpegの初期化
   const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  await ffmpeg.load(); // coreURLとwasmURLの指定は不要
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
@@ -35,30 +28,21 @@ async function getSeekThumbnail({ episode }: Params) {
       });
     }),
   );
+
   // FFmpeg にセグメントファイルを追加
   for (const file of segmentFiles) {
     await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
   }
 
-  // セグメントファイルをひとつの mp4 動画に結合
+  // concatファイル形式を生成して、セグメントを結合
+  const concatList = segmentFiles.map(f => f.id).join('|');
   await ffmpeg.exec(
-    [
-      ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
-      ['-c:v', 'copy'],
-      ['-map', '0:v:0'],
-      ['-f', 'mp4'],
-      'concat.mp4',
-    ].flat(),
+    ['-i', `concat:${concatList}`, '-c:v', 'copy', '-map', '0:v:0', '-f', 'mp4', 'concat.mp4']
   );
 
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
+  // fps=30 とみなして、30フレームごと（1秒ごと）にサムネイルを生成
   await ffmpeg.exec(
-    [
-      ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
-      ['-frames:v', '1'],
-      'preview.jpg',
-    ].flat(),
+    ['-i', 'concat.mp4', '-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1", '-frames:v', '1', 'preview.jpg']
   );
 
   const output = await ffmpeg.readFile('preview.jpg');
