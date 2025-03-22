@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -24,10 +24,12 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
+                  // corejs: '3.41',
                   forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  targets: {
+                    chrome: '134',
+                  },
+                  useBuiltIns: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -56,7 +58,7 @@ const config = {
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
-    filename: 'main.js',
+    filename: 'main-[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
