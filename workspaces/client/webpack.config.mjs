@@ -8,7 +8,6 @@ const basePlugins = [
   new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
 ];
 
-// 条件付きでアナライザープラグインを追加
 const plugins = process.env['ANALYZE'] === 'true'
   ? [
     ...basePlugins,
@@ -40,10 +39,9 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  targets: {
+                    chrome: '130',
+                  },
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],

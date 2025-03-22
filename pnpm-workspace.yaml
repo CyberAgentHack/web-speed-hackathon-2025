@@ -6,5 +6,4 @@ packages:
   - ./workspaces/test
 onlyBuiltDependencies:
   - bcrypt
-  - core-js
   - esbuild
