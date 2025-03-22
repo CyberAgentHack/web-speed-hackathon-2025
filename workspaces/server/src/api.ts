@@ -23,6 +23,8 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase, getCachedQuery } from '@wsh-2025/server/src/drizzle/database';
+import { execSync } from 'node:child_process';
+import path from 'node:path';
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -743,6 +745,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       }
       req.session.set('id', void 0);
       reply.code(200).send();
+    },
+  });
+
+  api.route({
+    method: 'POST',
+    url: '/resetDatabase',
+    schema: {
+      tags: ['管理'],
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function resetDatabase(_req, reply) {
+      try {
+        const serverDir = path.resolve(__dirname, '..');
+        execSync('tsx ./tools/seed.ts', { cwd: serverDir });
+        reply.code(200).send({ success: true });
+      } catch (error) {
+        console.error('データベースのリセットに失敗しました:', error);
+        reply.code(500).send({ success: false });
+      }
     },
   });
 }
