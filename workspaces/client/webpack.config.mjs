@@ -23,12 +23,9 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
                   targets: {
                     chrome: '134'
                   },
-                  useBuiltIns: 'entry',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
