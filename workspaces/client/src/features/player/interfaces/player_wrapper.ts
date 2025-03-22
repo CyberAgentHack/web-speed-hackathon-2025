@@ -1,5 +1,3 @@
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
-
 export interface PlayerWrapper {
   readonly currentTime: number;
   destory(): void;
@@ -9,7 +7,6 @@ export interface PlayerWrapper {
   pause(): void;
   readonly paused: boolean;
   play(): void;
-  readonly playerType: PlayerType;
   seekTo(second: number): void;
   setMuted(muted: boolean): void;
   readonly videoElement: HTMLVideoElement;
