@@ -20,6 +20,9 @@ export async function waitForImageToLoad(imageLocator: Locator): Promise<void> {
 
 export async function waitForVideoToLoad(videoLocator: Locator): Promise<void> {
   // メタデータが読み込まれれば、動画のサイズが取得できる
+  await videoLocator.scrollIntoViewIfNeeded();
+  await expect(videoLocator).toBeVisible();
+
   await videoLocator.evaluate((video) => {
     if (!(video instanceof HTMLVideoElement)) {
       throw new Error('Element is not a video');
@@ -31,6 +34,23 @@ export async function waitForVideoToLoad(videoLocator: Locator): Promise<void> {
       }
 
       video.addEventListener('loadedmetadata', () => {
+        resolve(null);
+      });
+    });
+  });
+
+  // データが少なくとも一部読み込まれるまで待機
+  await videoLocator.evaluate((video) => {
+    if (!(video instanceof HTMLVideoElement)) {
+      throw new Error('Element is not a video');
+    }
+    return new Promise((resolve) => {
+      if (video.readyState >= 3) {
+        resolve(null);
+        return;
+      }
+
+      video.addEventListener('canplay', () => {
         resolve(null);
       });
     });
