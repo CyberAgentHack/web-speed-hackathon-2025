@@ -2,6 +2,7 @@
   "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
+    "analyze": "vite build --mode analyze",
     "build": "wireit",
     "dev": "lsof -i :3000 -t | xargs -r kill -9 && vite",
     "format": "wireit",
@@ -67,6 +68,7 @@
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
     "hls.js": "1.5.17",
+    "rollup-plugin-visualizer": "5.14.0",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "unocss": "66.1.0-beta.6",
