@@ -1,3 +1,4 @@
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import webpack from 'webpack';
@@ -61,6 +62,17 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // バンドル情報をJSON出力するプラグイン
+    {
+      apply: (compiler) => {
+        compiler.hooks.done.tap('MetafilePlugin', (stats) => {
+          const metafilePath = path.resolve(import.meta.dirname, './dist/metafile.json');
+          const jsonStats = stats.toJson({ all: true });
+          writeFileSync(metafilePath, JSON.stringify(jsonStats, null, 2));
+          console.log(`Metafile generated: ${metafilePath}`);
+        });
+      },
+    },
   ],
   resolve: {
     alias: {
@@ -69,6 +81,7 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
+  stats: 'verbose',
 };
 
 export default config;
