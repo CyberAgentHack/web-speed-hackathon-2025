@@ -1,4 +1,3 @@
-//import { readdir, readFile } from 'node:fs/promises'; // node:fs/promises をインポート
 import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,26 +21,10 @@ function getFiles(parent: string): string[] {
     .map((dirent) => path.join(parent, dirent.name));
 }
 
-/*
-async function getFiles(parent: string): Promise<string[]> { // async 関数に変更
-  const dirents = await readdir(parent, { withFileTypes: true }); // readdir を使用し、await で待つ
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-*/
-
 function getFilePaths(relativePath: string, rootDir: string): string[] {
   const files = getFiles(path.resolve(rootDir, relativePath));
   return files.map((file) => path.join('/', path.relative(rootDir, file)));
 }
-
-/*
-async function getFilePaths(relativePath: string, rootDir: string): Promise<string[]> { // async 関数に変更
-  const files = await getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
-*/
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
@@ -95,12 +78,6 @@ export function registerSsr(app: FastifyInstance): void {
         </head>
         <body></body>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
     `);
   });
 }

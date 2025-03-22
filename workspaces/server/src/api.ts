@@ -469,6 +469,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
 
+      const limit = z.object({ limit: z.coerce.number() }).safeParse(req.query).data?.limit;
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -476,34 +477,37 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         where(module, { eq }) {
           return eq(module.referenceId, req.params.referenceId);
         },
+        limit,
         with: {
           items: {
             orderBy(item, { asc }) {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              series: true,
+              episode: true,
+              // series: {
+              //   with: {
+              //     episodes: {
+              //       orderBy(episode, { asc }) {
+              //         return asc(episode.order);
+              //       },
+              //     },
+              //   },
+              // },
+              // episode: {
+              //   with: {
+              //     series: {
+              //       with: {
+              //         episodes: {
+              //           orderBy(episode, { asc }) {
+              //             return asc(episode.order);
+              //           },
+              //         },
+              //       },
+              //     },
+              //   },
+              // },
             },
           },
         },
