@@ -12,3 +12,13 @@ declare module '*?arraybuffer' {
   const value: ArrayBuffer;
   export = value;
 }
+
+declare module 'process' {
+  global {
+    namespace NodeJS {
+      interface ProcessEnv {
+        NODE_ENV: 'development' | 'production';
+      }
+    }
+  }
+}

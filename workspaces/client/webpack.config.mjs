@@ -2,15 +2,17 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+const NODE_ENV = process.env['NODE_ENV'] ?? 'production';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: NODE_ENV === 'production' ? false : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: NODE_ENV,
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        exclude: [/node_modules/],
         resolve: {
           fullySpecified: false,
         },
@@ -22,10 +24,8 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  forceAllTransforms: false,
+                  useBuiltIns: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -36,7 +36,7 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/inline',
+        type: 'asset/resource',
       },
       {
         resourceQuery: /raw/,
@@ -58,10 +58,7 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV })],
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
