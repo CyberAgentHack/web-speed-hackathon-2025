@@ -29,6 +29,15 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
+          <link
+            rel="preload"
+            as="style"
+            href="/path/to/tailwind.css"
+            onload="this.onload=null;this.rel='stylesheet'"
+          />
+          <noscript>
+            <link rel="stylesheet" href="/path/to/tailwind.css" />
+          </noscript>
         </head>
         <body></body>
       </html>
