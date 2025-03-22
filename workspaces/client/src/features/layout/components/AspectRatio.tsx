@@ -14,7 +14,7 @@ export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   useEffect(() => {
     const interval = setInterval(function tick() {
       forceUpdate();
-    }, 100);
+    }, 1000);
     return () => {
       clearInterval(interval);
     };

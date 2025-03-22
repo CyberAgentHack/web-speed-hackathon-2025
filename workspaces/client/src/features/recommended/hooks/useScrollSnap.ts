@@ -55,7 +55,7 @@ export function useScrollSnap({ scrollPadding }: { scrollPadding: number }) {
 
       timer = setTimeout(() => {
         isSnapping.current = false;
-      }, 100);
+      }, 1000);
     });
 
     containerRef.current.addEventListener('scroll', handleScroll);
