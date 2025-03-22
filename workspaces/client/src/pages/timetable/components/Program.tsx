@@ -6,7 +6,6 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
@@ -49,47 +48,45 @@ export const Program = ({ height, program }: Props): ReactElement => {
 
   return (
     <>
-      <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
-        <button
-          className={classNames(
-            isBroadcasting ? 'bg-[#FCF6E5]' : 'bg-[#212121]',
-            isArchived ? 'opacity-50' : 'opacity-100',
-            'h-[var(--height)] w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left',
-          )}
-          style={{ '--height': `${height}px`, width } as React.CSSProperties}
-          type="button"
-          onClick={onClick}
-        >
-          <div className="flex size-full flex-col overflow-hidden">
-            <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
-              <span
-                className={classNames(
-                  isBroadcasting ? 'text-[#767676]' : 'text-[#999999]',
-                  'mr-[8px] shrink-0 grow-0 text-[14px] font-bold',
-                )}
-              >
-                {DateTime.fromISO(program.startAt).toFormat('mm')}
-              </span>
-              <div
-                className={classNames(
-                  isBroadcasting ? 'text-[#212121]' : 'text-[#ffffff]',
-                  'grow-1 shrink-1 overflow-hidden text-[14px] font-bold',
-                )}
-              >
-                <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
-              </div>
-            </div>
-            <div className={classNames(shouldImageBeVisible ? 'opacity-100' : 'opacity-0', 'w-full')}>
-              <img
-                ref={imageRef}
-                alt=""
-                className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-                src={program.thumbnailUrl}
-              />
+      <button
+        className={classNames(
+          isBroadcasting ? 'bg-[#FCF6E5]' : 'bg-[#212121]',
+          isArchived ? 'opacity-50 hover:brightness-200' : 'opacity-100 hover:brightness-125',
+          'h-[var(--height)] w-auto cursor-pointer border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left',
+        )}
+        style={{ '--height': `${height}px`, width } as React.CSSProperties}
+        type="button"
+        onClick={onClick}
+      >
+        <div className="flex size-full flex-col overflow-hidden">
+          <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
+            <span
+              className={classNames(
+                isBroadcasting ? 'text-[#767676]' : 'text-[#999999]',
+                'mr-[8px] shrink-0 grow-0 text-[14px] font-bold',
+              )}
+            >
+              {DateTime.fromISO(program.startAt).toFormat('mm')}
+            </span>
+            <div
+              className={classNames(
+                isBroadcasting ? 'text-[#212121]' : 'text-[#ffffff]',
+                'grow-1 shrink-1 overflow-hidden text-[14px] font-bold',
+              )}
+            >
+              <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
             </div>
           </div>
-        </button>
-      </Hoverable>
+          <div className={classNames(shouldImageBeVisible ? 'opacity-100' : 'opacity-0', 'w-full')}>
+            <img
+              ref={imageRef}
+              alt=""
+              className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              src={program.thumbnailUrl}
+            />
+          </div>
+        </div>
+      </button>
       <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />
     </>
   );
