@@ -10,7 +10,7 @@ const config = {
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        exclude: /node_modules/,
         resolve: {
           fullySpecified: false,
         },
