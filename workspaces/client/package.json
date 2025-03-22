@@ -80,7 +80,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "NODE_ENV=production webpack",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",

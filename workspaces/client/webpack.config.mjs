@@ -2,11 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+const isProduction = process.env[ 'NODE_ENV' ] === 'production';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: isProduction ? false : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       {
