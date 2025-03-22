@@ -36,7 +36,18 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/inline',
+        // type: 'asset/inline', // 古い設定（Base64を使用）
+        type: 'asset/resource', // 新しい設定（ファイルとして扱う）
+        generator: {
+          filename: 'images/[name][ext]', // 出力されるファイルパス
+        },
+      },
+      {
+        test: /\.webp$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name][ext]',
+        },
       },
       {
         resourceQuery: /raw/,

@@ -1,6 +1,9 @@
 import '@wsh-2025/server/src/setups/luxon';
 
+import path from 'path';
+
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import fastify from 'fastify';
 
 import { registerApi } from '@wsh-2025/server/src/api';
@@ -13,12 +16,21 @@ async function main() {
 
   const app = fastify();
 
+  // 静的ファイル配信の設定 - png.cjsで指定した/static/パスに対応
+  await app.register(fastifyStatic, {
+    root: path.join(__dirname, '../..'),
+    prefix: '/static/',
+    decorateReply: false,
+  });
+
   app.addHook('onSend', async (_req, reply) => {
     reply.header('cache-control', 'no-store');
   });
+
   app.register(cors, {
     origin: true,
   });
+
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
   app.register(registerSsr);
