@@ -15,14 +15,20 @@ export const Document = () => {
       <head>
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <script src="/public/main.js"></script>
+
+        {/* ↓ preload + correct script loading */}
+        <link rel="preload" href="/main.js" as="script" />
+        <script src="/main.js" defer></script>
+        <link rel="preload" href="/hero-image.jpg" as="image" />
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
-        <Suspense>
+     
+        <Suspense fallback={<div className="h-screen flex items-center justify-center">読み込み中...</div>}>
           <Layout>
             <Outlet />
           </Layout>
         </Suspense>
+
         <ScrollRestoration />
       </body>
     </html>
