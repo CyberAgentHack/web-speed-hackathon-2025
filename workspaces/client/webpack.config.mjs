@@ -6,7 +6,6 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
   entry: './src/main.tsx',
   mode: 'production',
   module: {
@@ -24,10 +23,7 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  targets: '134',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
