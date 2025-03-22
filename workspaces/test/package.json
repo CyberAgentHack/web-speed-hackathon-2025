@@ -12,7 +12,7 @@
   },
   "wireit": {
     "test": {
-      "command": "playwright test",
+      "command": "playwright test --update-snapshots",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
