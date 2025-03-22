@@ -37,20 +37,23 @@
     },
     "build": {
       "dependencies": [
-        "./workspaces/client:build"
+        "./workspaces/client:build:nocheck"
       ]
     },
     "heroku-build": {
-      "dependencies": [
-        "build"
-      ]
+      "command": "pnpm install --prod && cd workspaces/client && pnpm install --prod && pnpm run heroku-build && cd ../..",
+      "dependencies": []
     },
     "heroku-cleanup": {
       "//": "Heroku の buildpacks サイズ削減のため、サーバー起動に必要ないものを削除します",
-      "command": "rm -rf ./node_modules ./workspaces/*/.wireit ./workspaces/test && pnpm install --prod"
+      "command": "rm -rf ./node_modules ./workspaces/*/.wireit ./workspaces/test && pnpm install --prod && cd workspaces/server && pnpm install --prod",
+      "dependencies": [
+        "heroku-build"
+      ]
     },
     "heroku-start": {
       "dependencies": [
+        "heroku-cleanup",
         "./workspaces/server:heroku-start"
       ]
     },
