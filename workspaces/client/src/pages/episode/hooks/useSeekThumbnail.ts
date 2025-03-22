@@ -1,8 +1,8 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Parser } from 'm3u8-parser';
-import { use } from 'react';
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { StandardSchemaV1 } from "@standard-schema/spec";
+import * as schema from "@wsh-2025/schema/src/api/schema";
+import { Parser } from "m3u8-parser";
+import { use } from "react";
 
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
@@ -18,12 +18,8 @@ async function getSeekThumbnail({ episode }: Params) {
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
+    coreURL: "/ffmpeg-core.js",
+    wasmURL: "/ffmpeg-core.wasm",
   });
 
   // 動画のセグメントファイルを取得
@@ -43,28 +39,28 @@ async function getSeekThumbnail({ episode }: Params) {
   // セグメントファイルをひとつの mp4 動画に結合
   await ffmpeg.exec(
     [
-      ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
-      ['-c:v', 'copy'],
-      ['-map', '0:v:0'],
-      ['-f', 'mp4'],
-      'concat.mp4',
+      ["-i", `concat:${segmentFiles.map((f) => f.id).join("|")}`],
+      ["-c:v", "copy"],
+      ["-map", "0:v:0"],
+      ["-f", "mp4"],
+      "concat.mp4",
     ].flat(),
   );
 
   // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
   await ffmpeg.exec(
     [
-      ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
-      ['-frames:v', '1'],
-      'preview.jpg',
+      ["-i", "concat.mp4"],
+      ["-vf", "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
+      ["-frames:v", "1"],
+      "preview.jpg",
     ].flat(),
   );
 
-  const output = await ffmpeg.readFile('preview.jpg');
+  const output = await ffmpeg.readFile("preview.jpg");
   ffmpeg.terminate();
 
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
+  return URL.createObjectURL(new Blob([output], { type: "image/jpeg" }));
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();
