@@ -9,6 +9,8 @@ const plugins = [
   // new BundleAnalyzerPlugin(),
 ];
 
+// test
+
 const ffmpegConfig = {
   '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
   '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
