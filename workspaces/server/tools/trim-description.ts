@@ -12,19 +12,16 @@ async function trimDescription() {
   });
 
   try {
-    const seriesList = await database.select().from(schema.series);
+    const episodeList = await database.select().from(schema.episode);
 
-    for (const series of seriesList) {
-      console.log(series.description);
-      const trimmedDescription = series.description.slice(0, 300);
-      await database
-        .update(schema.series)
-        .set({ description: trimmedDescription })
-        .where(eq(schema.series.id, series.id));
+    for (const episode of episodeList) {
+      const editedUrl = episode.thumbnailUrl.split('jpeg')[0] + 'avif';
+      console.log(editedUrl);
+      await database.update(schema.episode).set({ thumbnailUrl: editedUrl }).where(eq(schema.episode.id, episode.id));
     }
-    console.log(seriesList.length);
+    console.log(episodeList.length);
 
-    console.log('series descriptions have been trimmed to 300 characters.');
+    console.log('episode descriptions have been trimmed to 300 characters.');
   } finally {
     database.$client.close();
   }
