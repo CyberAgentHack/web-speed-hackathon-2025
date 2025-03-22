@@ -8,7 +8,8 @@
     "format:eslint": "wireit",
     "format:prettier": "wireit",
     "heroku-start": "wireit",
-    "start": "wireit"
+    "start": "wireit",
+    "database:transform": "wireit"
   },
   "dependencies": {
     "@fastify/cookie": "11.0.2",
@@ -53,6 +54,7 @@
     "iconv-lite": "0.6.3",
     "jszip": "3.10.1",
     "mikanjs": "1.0.14",
+    "ts-node": "10.9.2",
     "type-fest": "4.29.1"
   },
   "wireit": {
@@ -61,6 +63,9 @@
     },
     "database:reset": {
       "command": "tsx ./tools/seed.ts"
+    },
+    "database:transform": {
+      "command": "tsx ./tools/trim-description.ts"
     },
     "start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",

@@ -90,7 +90,7 @@ async function main() {
 
   const rootDir = path.resolve(__dirname, '../../..');
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
-  const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file).replace(/\.jpeg$/, '.avif')));
+  const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
 
   try {
     const animeList = await fetchAnimeList();
@@ -129,9 +129,9 @@ async function main() {
     const seriesList: (typeof schema.series.$inferSelect)[] = [];
     {
       const data: (typeof schema.series.$inferInsert)[] = Array.from({ length: 30 }, () => ({
-        description: faker.lorem.paragraph({ max: 10, min: 8 }).replace(/\s/g, '').replace(/\./g, '。'),
+        description: faker.lorem.paragraph(8).replace(/\s/g, '').replace(/\./g, '。'),
         id: faker.string.uuid(),
-        thumbnailUrl: faker.helpers.arrayElement(imagePaths),
+        thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
         title: faker.helpers.arrayElement(seriesTitleList),
       }));
       const result = await database.insert(schema.series).values(data).returning();
@@ -145,12 +145,12 @@ async function main() {
       const data: (typeof schema.episode.$inferInsert)[] = Array.from(
         { length: faker.number.int({ max: 20, min: 10 }) },
         (_, idx) => ({
-          description: faker.lorem.paragraph({ max: 10, min: 8 }).replace(/\s/g, '').replace(/\./g, '。'),
+          description: faker.lorem.paragraph(8).replace(/\s/g, '').replace(/\./g, '。'),
           id: faker.string.uuid(),
           order: idx + 1,
           seriesId: series.id,
           streamId: faker.helpers.arrayElement(streamList).id,
-          thumbnailUrl: faker.helpers.arrayElement(imagePaths),
+          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
           title: `第${String(idx + 1)}話 ${faker.helpers.arrayElement(episodeTitleList)}`,
           premium: idx % 5 === 0,
         }),
@@ -178,12 +178,12 @@ async function main() {
         const series = seriesList.find((s) => s.id === episode.seriesId);
         const program: typeof schema.program.$inferInsert = {
           channelId: channel.id,
-          description: faker.lorem.paragraph({ max: 10, min: 8 }).replace(/\s/g, '').replace(/\./g, '。'),
+          description: faker.lorem.paragraph(8).replace(/\s/g, '').replace(/\./g, '。'),
           endAt: new Date(endAt).toISOString(),
           episodeId: episode.id,
           id: faker.string.uuid(),
           startAt: new Date(startAt).toISOString(),
-          thumbnailUrl: faker.helpers.arrayElement(imagePaths),
+          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
           title: `${series?.title ?? ''} ${episode.title}`,
         };
         programList.push(program);
