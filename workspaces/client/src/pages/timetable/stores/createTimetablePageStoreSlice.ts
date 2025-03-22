@@ -2,10 +2,19 @@ import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
+
+function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(fn: T, delay: number): T {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let timeoutId: any
+  return ((...args: Parameters<T>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  }) as T;
+}
 
 type ChannelId = string;
 type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
@@ -41,7 +50,7 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
+    refreshCurrentUnixtimeMs: debounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
