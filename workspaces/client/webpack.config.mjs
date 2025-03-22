@@ -60,23 +60,11 @@ const config = {
     ],
   },
   
-  // ---- ここが重要 ----
   optimization: {
     // コード分割 (splitChunks) を有効にして、キャッシュや読み込みを最適化
     splitChunks: {
       chunks: 'all',  // すべてのチャンクから分割
-      // さらに細かい制御が必要なら cacheGroups や minSize, maxSize を調整
-      // 例:
-      // cacheGroups: {
-      //   vendors: {
-      //     test: /[\\/]node_modules[\\/]/,
-      //     name: 'vendors',
-      //     chunks: 'all',
-      //   },
-      // },
     },
-    // もし Tree Shaking/Minification をより最適化する場合は、minimizer に TerserPlugin 等を明示
-    // minimizer: [new TerserPlugin({ /* オプション */ })],
   },
   // --------------------
 
