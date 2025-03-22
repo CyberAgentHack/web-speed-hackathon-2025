@@ -1,7 +1,8 @@
 import path from 'node:path';
 
-import { rspack } from '@rspack/core';
+import webpack from 'webpack';
 
+/** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
@@ -58,7 +59,8 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new rspack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {
     alias: {
