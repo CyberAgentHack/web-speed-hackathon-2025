@@ -20,20 +20,20 @@ async function main() {
   app.register(fastifyStatic, {
     root: path.resolve(__dirname, '../public/images'),
     prefix: '/images/',
-    maxAge: '30d',
+    maxAge: 36000,
   });
 
   // 2 回目の fastifyStatic 登録（ロゴ用）
   app.register(fastifyStatic, {
     root: path.resolve(__dirname, '../public/logos'),
     prefix: '/logos/',
-    maxAge: '30d',
+    maxAge: 36000,
     decorateReply: false, // デコレーターの再登録を防ぐ
   });
 
   // その他 → no-store
   app.addHook('onSend', async (req, reply, payload) => {
-    if (!req.url.startsWith('/images/') && !req.url.startsWith('/logos/')) {
+    if (!req.url.startsWith('/public/images/') && !req.url.startsWith('/public/logos/')) {
       reply.header('cache-control', 'no-store');
     }
     return payload;
