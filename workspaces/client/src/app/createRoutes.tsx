@@ -15,7 +15,7 @@ export function createRoutes(
 					async lazy() {
 						const { HomePage, prefetch } = await lazy(
 							import("@wsh-2025/client/src/pages/home/components/HomePage"),
-							100,
+							1000,
 						);
 						return {
 							Component: HomePage,
@@ -31,7 +31,7 @@ export function createRoutes(
 							import(
 								"@wsh-2025/client/src/pages/episode/components/EpisodePage"
 							),
-							100,
+							1000,
 						);
 						return {
 							Component: EpisodePage,
@@ -48,7 +48,7 @@ export function createRoutes(
 							import(
 								"@wsh-2025/client/src/pages/program/components/ProgramPage"
 							),
-							100,
+							1000,
 						);
 						return {
 							Component: ProgramPage,
@@ -63,7 +63,7 @@ export function createRoutes(
 					async lazy() {
 						const { prefetch, SeriesPage } = await lazy(
 							import("@wsh-2025/client/src/pages/series/components/SeriesPage"),
-							100,
+							1000,
 						);
 						return {
 							Component: SeriesPage,
@@ -80,7 +80,7 @@ export function createRoutes(
 							import(
 								"@wsh-2025/client/src/pages/timetable/components/TimetablePage"
 							),
-							100,
+							1000,
 						);
 						return {
 							Component: TimetablePage,
@@ -97,7 +97,7 @@ export function createRoutes(
 							import(
 								"@wsh-2025/client/src/pages/not_found/components/NotFoundPage"
 							),
-							100,
+							1000,
 						);
 						return {
 							Component: NotFoundPage,
