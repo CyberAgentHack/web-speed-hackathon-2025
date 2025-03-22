@@ -82,6 +82,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 src={program.thumbnailUrl}
+                decoding="async"
+                loading="lazy"
               />
             </div>
           </div>

@@ -34,6 +34,8 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
           src={program.thumbnailUrl}
+          decoding="async"
+          loading="lazy"
         />
 
         {episode != null ? (
@@ -48,6 +50,8 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
               src={episode.thumbnailUrl}
+              decoding="async"
+              loading="lazy"
             />
           </>
         ) : null}
