@@ -37,6 +37,7 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
               src={series.thumbnailUrl}
             />
           </Flipped>

@@ -1,12 +1,13 @@
 import path from 'node:path';
 
+import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -50,6 +51,26 @@ const config = {
         },
       },
     ],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: 4,
+        terserOptions: {
+          compress: {
+            comparisons: false,
+            ecma: 5,
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
+          },
+        },
+      }),
+    ],
+
+    nodeEnv: 'production',
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
