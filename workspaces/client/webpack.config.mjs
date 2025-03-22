@@ -36,16 +36,16 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            sourceType: 'unambiguous', // この行を追加：モジュールタイプを自動判別
             presets: [
               [
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  // forceAllTransforms: true, // この行をコメントアウト
                   targets: {
                     browsers: ['last 2 Chrome versions', 'last 2 Firefox versions', 'last 2 Safari versions'],
                   },
-                  useBuiltIns: 'usage', // entry から usage に変更
+                  useBuiltIns: 'usage',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
