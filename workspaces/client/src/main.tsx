@@ -14,8 +14,10 @@ declare global {
   var __zustandHydrationData: unknown;
   var __staticRouterHydrationData: HydrationState;
 }
-// テスト用コメント
+
 function main() {
+  // テスト用コメント
+  console.log(`start`)
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
