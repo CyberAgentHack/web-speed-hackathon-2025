@@ -3,7 +3,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 const VideoPlayerPage = lazy(() => import('./pages/VideoPlayerPage'));
-// ↑この import() の返す Promise ごとに別チャンクが作られる
+
 
 function App() {
   return (
