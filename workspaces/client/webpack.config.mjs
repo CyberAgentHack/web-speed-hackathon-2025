@@ -41,16 +41,18 @@ const config = {
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  // forceAllTransforms: true, // この行をコメントアウト
+                  targets: {
+                    browsers: ['last 2 Chrome versions', 'last 2 Firefox versions', 'last 2 Safari versions'],
+                  },
+                  useBuiltIns: 'usage', // entry から usage に変更
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
-            cacheDirectory: true, // Babelのキャッシュを有効化
-            cacheCompression: false, // キャッシュ圧縮を無効化して処理を高速化
+            cacheDirectory: true,
+            cacheCompression: false,
           },
         },
       },
@@ -145,11 +147,22 @@ const config = {
     minimizer: [
       new TerserPlugin({
         terserOptions: {
+          parse: {
+            // ECMAScript 2020 構文をサポート
+            ecma: 2020,
+          },
           compress: {
             drop_console: true,
+            // 安全でない圧縮を無効化
+            unsafe: false,
           },
           format: {
             comments: false,
+          },
+          // 保持する構文を指定
+          mangle: {
+            keep_classnames: true,
+            keep_fnames: true,
           },
         },
         extractComments: false,
