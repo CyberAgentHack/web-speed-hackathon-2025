@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -69,6 +70,24 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: 4,
+        terserOptions: {
+          compress: {
+            ecma: 5,
+            comparisons: false,
+            inline: 2,
+            passes: 2,
+          },
+          mangle: true,
+          
+        }
+      }),
+    ]
+  }
 };
 
 export default config;
