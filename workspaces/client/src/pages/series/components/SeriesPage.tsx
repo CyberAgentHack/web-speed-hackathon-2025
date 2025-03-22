@@ -31,27 +31,27 @@ export const SeriesPage = () => {
     <>
       <title>{`${series.title} - AremaTV`}</title>
 
-      <div className="m-auto px-[24px] py-[48px]">
-        <header className="mb-[24px] flex w-full flex-row items-start justify-between gap-[24px]">
+      <div className="m-auto px-6 py-12">
+        <header className="mb-6 flex w-full flex-row items-start justify-between gap-6">
           <Flipped stagger flipId={`series-${series.id}`}>
             <img
               alt=""
-              className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              className="border-0.5 rounded-2 h-auto w-[400px] shrink-0 grow-0 border-solid border-[#FFFFFF1F]"
               src={series.thumbnailUrl}
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
-            <h1 className="mb-[16px] text-[32px] font-bold text-[#ffffff]">
+            <h1 className="text-8 mb-4 font-bold text-white">
               <Ellipsis ellipsis reflowOnResize maxLine={2} text={series.title} visibleLine={2} />
             </h1>
-            <div className="text-[14px] text-[#999999]">
+            <div className="text-3.5 text-[#999999]">
               <Ellipsis ellipsis reflowOnResize maxLine={3} text={series.description} visibleLine={3} />
             </div>
           </div>
         </header>
 
-        <div className="mb-[24px]">
-          <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
+        <div className="mb-6">
+          <h2 className="mb-3 text-[22px] font-bold text-white">エピソード</h2>
           <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} />
         </div>
 

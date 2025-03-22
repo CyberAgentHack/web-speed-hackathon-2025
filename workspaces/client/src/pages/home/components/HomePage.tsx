@@ -16,10 +16,10 @@ export const HomePage = () => {
     <>
       <title>Home - AremaTV</title>
 
-      <div className="w-full py-[48px]">
+      <div className="w-full py-12">
         {modules.map((module) => {
           return (
-            <div key={module.id} className="mb-[24px] px-[24px]">
+            <div key={module.id} className="mb-6 px-6">
               <RecommendedSection module={module} />
             </div>
           );

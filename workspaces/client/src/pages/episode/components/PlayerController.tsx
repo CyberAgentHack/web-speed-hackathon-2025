@@ -25,14 +25,14 @@ export const PlayerController = ({ episode }: Props) => {
     <div className="relative h-[120px]">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#212121] to-transparent" />
 
-      <div className="absolute inset-x-0 bottom-0 px-[12px]">
+      <div className="absolute inset-x-0 bottom-0 px-3">
         <div className="group relative size-full">
           <div className="pointer-events-none relative size-full opacity-0 group-hover:opacity-100">
             <SeekThumbnail episode={episode} />
           </div>
 
           <Slider.Root
-            className="group relative flex h-[20px] w-full cursor-pointer touch-none select-none flex-row items-center"
+            className="group relative flex h-5 w-full cursor-pointer touch-none select-none flex-row items-center"
             max={duration}
             min={0}
             orientation="horizontal"
@@ -42,10 +42,10 @@ export const PlayerController = ({ episode }: Props) => {
               updateCurrentTime(t);
             }}
           >
-            <Slider.Track className="grow-1 relative h-[2px] rounded-[4px] bg-[#999999] group-hover:h-[4px]">
-              <Slider.Range className="absolute h-[2px] rounded-[4px] bg-[#1c43d1] group-hover:h-[4px]" />
+            <Slider.Track className="grow-1 rounded-1 relative h-0.5 bg-[#999999] group-hover:h-1">
+              <Slider.Range className="rounded-1 absolute h-0.5 bg-[#1c43d1] group-hover:h-1" />
             </Slider.Track>
-            <Slider.Thumb className="block size-[20px] rounded-[10px] bg-[#1c43d1] opacity-0 focus:outline-none group-hover:opacity-100" />
+            <Slider.Thumb className="rounded-2.5 block size-5 bg-[#1c43d1] opacity-0 focus:outline-none group-hover:opacity-100" />
           </Slider.Root>
         </div>
 
@@ -55,19 +55,19 @@ export const PlayerController = ({ episode }: Props) => {
               <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
                 <button
                   aria-label={playing ? '一時停止する' : '再生する'}
-                  className="block rounded-[4px]"
+                  className="rounded-1 block"
                   type="button"
                   onClick={() => {
                     togglePlaying();
                   }}
                 >
                   <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-3.5 block size-5 shrink-0 grow-0 text-white`}
                   />
                 </button>
               </Hoverable>
 
-              <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
+              <span className="text-3 ml-1 block shrink-0 grow-0 font-bold text-white">
                 {Duration.fromObject({ seconds: currentTime }).toFormat('mm:ss')}
                 {' / '}
                 {Duration.fromObject({ seconds: duration }).toFormat('mm:ss')}
@@ -79,11 +79,11 @@ export const PlayerController = ({ episode }: Props) => {
             <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
               <button
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
-                className="block rounded-[4px]"
+                className="rounded-1 block"
                 type="button"
               >
                 <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-3.5 block size-5 shrink-0 grow-0 text-white`}
                   onClick={() => {
                     toggleMuted();
                   }}

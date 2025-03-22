@@ -18,7 +18,7 @@ export const SeriesEpisodeList = ({ episodes, selectedEpisodeId }: Props) => {
   });
 
   return (
-    <div className="flex w-full flex-col gap-y-[16px]">
+    <div className="flex w-full flex-col gap-y-4">
       {orderedEpisodes.map((episode) => (
         <div key={episode.id} className="shrink-0 grow-0">
           <SeriesEpisodeItem episode={episode} selected={episode.id === selectedEpisodeId} />

@@ -46,19 +46,17 @@ export const EpisodePage = () => {
     <>
       <title>{`${episode.title} - ${episode.series.title} - AremaTV`}</title>
 
-      <div className="px-[24px] py-[48px]">
+      <div className="px-6 py-12">
         <Flipped stagger flipId={`episode-${episode.id}`}>
-          <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          <div className="m-auto mb-4 h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" loading="lazy" src={episode.thumbnailUrl} />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
-                  <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
-                    プレミアムエピソードの視聴にはログインが必要です
-                  </p>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-6">
+                  <p className="text-6 mb-8 font-bold text-white">プレミアムエピソードの視聴にはログインが必要です</p>
                   <button
-                    className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+                    className="rounded-1 text-3.5 block flex w-40 flex-row items-center justify-center bg-[#1c43d1] p-3 font-bold text-white disabled:opacity-50"
                     type="button"
                     onClick={authActions.openSignInDialog}
                   >
@@ -77,7 +75,7 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <div className="i-line-md:loading-twotone-loop size-12 place-self-center text-white [grid-area:1/-1]" />
                     </div>
                   </AspectRatio>
                 }
@@ -99,33 +97,33 @@ export const EpisodePage = () => {
           </div>
         </Flipped>
 
-        <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
+        <div className="mb-6">
+          <div className="text-4 text-white">
             <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
           </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
+          <h1 className="mt-2 text-[22px] font-bold text-white">
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
           </h1>
           {episode.premium ? (
-            <div className="mt-[8px]">
-              <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
+            <div className="mt-2">
+              <span className="rounded-1 text-2.5 inline-flex items-center justify-center bg-[#1c43d1] p-1 text-white">
                 プレミアム
               </span>
             </div>
           ) : null}
-          <div className="mt-[16px] text-[16px] text-[#999999]">
+          <div className="text-4 mt-4 text-[#999999]">
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
           </div>
         </div>
 
         {modules[0] != null ? (
-          <div className="mt-[24px]">
+          <div className="mt-6">
             <RecommendedSection module={modules[0]} />
           </div>
         ) : null}
 
-        <div className="mt-[24px]">
-          <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
+        <div className="mt-6">
+          <h2 className="mb-3 text-[22px] font-bold text-white">エピソード</h2>
           <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />
         </div>
       </div>

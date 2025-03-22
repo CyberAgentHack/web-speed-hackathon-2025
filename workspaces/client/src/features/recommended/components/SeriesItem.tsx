@@ -19,13 +19,13 @@ export const SeriesItem = ({ series }: Props) => {
         {({ isTransitioning }) => {
           return (
             <>
-              <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
+              <div className="border-0.5 rounded-2 relative overflow-hidden border-solid border-[#FFFFFF1F]">
                 <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
                   <img alt="" className="h-auto w-full" loading="lazy" src={series.thumbnailUrl} />
                 </Flipped>
               </div>
-              <div className="p-[8px]">
-                <div className="text-[14px] font-bold text-[#ffffff]">
+              <div className="p-2">
+                <div className="text-3.5 font-bold text-white">
                   <Ellipsis ellipsis reflowOnResize maxLine={2} text={series.title} visibleLine={2} />
                 </div>
               </div>

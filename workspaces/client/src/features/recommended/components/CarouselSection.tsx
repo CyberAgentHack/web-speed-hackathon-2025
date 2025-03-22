@@ -21,11 +21,11 @@ export const CarouselSection = ({ module }: Props) => {
   return (
     <>
       <div className="w-full">
-        <h2 className="mb-[16px] w-full text-[22px] font-bold">{module.title}</h2>
+        <h2 className="mb-4 w-full text-[22px] font-bold">{module.title}</h2>
         <div
           key={module.id}
           ref={mergedRef}
-          className={`relative mx-[-24px] flex flex-row gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]`}
+          className={`relative mx-[-24px] flex flex-row gap-x-3 overflow-x-auto overflow-y-hidden pl-6 pr-14`}
           data-scroll-restore={`carousel-${module.id}`}
         >
           {module.items.map((item) => (

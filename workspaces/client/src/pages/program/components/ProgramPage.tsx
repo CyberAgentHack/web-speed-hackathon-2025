@@ -96,17 +96,17 @@ export const ProgramPage = () => {
     <>
       <title>{`${program.title} - ${program.episode.series.title} - AremaTV`}</title>
 
-      <div className="px-[24px] py-[48px]">
+      <div className="px-6 py-12">
         <Flipped stagger flipId={`program-${program.id}`}>
-          <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          <div className="m-auto mb-4 max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
-                  <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-6">
+                  <p className="text-6 mb-8 font-bold text-white">この番組は放送が終了しました</p>
                   <Link
-                    className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+                    className="rounded-1 text-3.5 block flex w-40 flex-row items-center justify-center bg-[#1c43d1] p-3 font-bold text-white disabled:opacity-50"
                     to={`/episodes/${program.episode.id}`}
                   >
                     見逃し視聴する
@@ -129,8 +129,8 @@ export const ProgramPage = () => {
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
-                  <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-6">
+                  <p className="text-6 mb-8 font-bold text-white">
                     この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
                   </p>
                 </div>
@@ -139,31 +139,31 @@ export const ProgramPage = () => {
           </div>
         </Flipped>
 
-        <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
+        <div className="mb-6">
+          <div className="text-4 text-white">
             <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.episode.series.title} visibleLine={1} />
           </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
+          <h1 className="mt-2 text-[22px] font-bold text-white">
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
           </h1>
-          <div className="mt-[8px] text-[16px] text-[#999999]">
+          <div className="text-4 mt-2 text-[#999999]">
             {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')}
             {' 〜 '}
             {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')}
           </div>
-          <div className="mt-[16px] text-[16px] text-[#999999]">
+          <div className="text-4 mt-4 text-[#999999]">
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />
           </div>
         </div>
 
         {modules[0] != null ? (
-          <div className="mt-[24px]">
+          <div className="mt-6">
             <RecommendedSection module={modules[0]} />
           </div>
         ) : null}
 
-        <div className="mt-[24px]">
-          <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">関連するエピソード</h2>
+        <div className="mt-6">
+          <h2 className="mb-3 text-[22px] font-bold text-white">関連するエピソード</h2>
           <SeriesEpisodeList episodes={program.episode.series.episodes} selectedEpisodeId={program.episode.id} />
         </div>
       </div>
