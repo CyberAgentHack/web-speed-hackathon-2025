@@ -131,7 +131,7 @@ async function main() {
       const data: (typeof schema.series.$inferInsert)[] = Array.from({ length: 30 }, () => ({
         description: faker.lorem.paragraph({ max: 200, min: 100 }).replace(/\s/g, '').replace(/\./g, '。'),
         id: faker.string.uuid(),
-        thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
+        thumbnailUrl: faker.helpers.arrayElement(imagePaths),
         title: faker.helpers.arrayElement(seriesTitleList),
       }));
       const result = await database.insert(schema.series).values(data).returning();
@@ -140,9 +140,9 @@ async function main() {
 
     // Create episodes
     console.log('Creating episodes...');
-    const episodeList: (typeof schema.episode.$inferSelect)[] = [];
+    const allEpisodes: (typeof schema.episode.$inferInsert)[] = [];
     for (const series of seriesList) {
-      const data: (typeof schema.episode.$inferInsert)[] = Array.from(
+      const episodes = Array.from(
         { length: faker.number.int({ max: 20, min: 10 }) },
         (_, idx) => ({
           description: faker.lorem.paragraph({ max: 200, min: 100 }).replace(/\s/g, '').replace(/\./g, '。'),
@@ -150,21 +150,21 @@ async function main() {
           order: idx + 1,
           seriesId: series.id,
           streamId: faker.helpers.arrayElement(streamList).id,
-          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
+          thumbnailUrl: faker.helpers.arrayElement(imagePaths),
           title: `第${String(idx + 1)}話 ${faker.helpers.arrayElement(episodeTitleList)}`,
           premium: idx % 5 === 0,
         }),
       );
-      const result = await database.insert(schema.episode).values(data).returning();
-      episodeList.push(...result);
+      allEpisodes.push(...episodes);
     }
+    const episodeList = await database.insert(schema.episode).values(allEpisodes).returning();
 
     // Create programs
     console.log('Creating programs...');
     const programList: (typeof schema.program.$inferInsert)[] = [];
     const episodeListGroupedByStreamId = Object.values(Object.groupBy(episodeList, (episode) => episode.streamId));
     for (const channel of channelList) {
-      let remainingMinutes = 24 * 60;
+      let remainingMinutes = 60;
       let startAt = DateTime.now().startOf('day').toMillis();
 
       while (remainingMinutes > 0) {
@@ -229,6 +229,7 @@ async function main() {
                 const relatedEpisodes = episodeList.filter((e) => e.seriesId === series?.id);
                 return relatedEpisodes.every((r) => r.id !== target.id);
               }
+              // TODO: エラーの場合は、エラーのみを返す
               default: {
                 return true;
               }
