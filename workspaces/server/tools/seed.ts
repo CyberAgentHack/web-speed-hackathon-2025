@@ -91,7 +91,7 @@ async function main() {
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
   const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
 
-  console.log("imagePaths in seed.ts", imagePaths)
+  console.log('imagePaths in seed.ts', imagePaths);
 
   try {
     const animeList = await fetchAnimeList();

@@ -108,6 +108,9 @@ importers:
       react-use:
         specifier: 17.6.0
         version: 17.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      setimmediate:
+        specifier: 1.0.5
+        version: 1.0.5
       thread-loader:
         specifier: 4.0.4
         version: 4.0.4(webpack@5.96.1)
@@ -4721,6 +4724,7 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
+    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
