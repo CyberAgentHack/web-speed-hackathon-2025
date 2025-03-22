@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -58,9 +59,12 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // new BundleAnalyzerPlugin({}),
   ],
   resolve: {
     alias: {
