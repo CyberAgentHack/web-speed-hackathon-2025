@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "wireit",
+    "dev": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit"
@@ -99,6 +100,9 @@
     },
     "format:prettier": {
       "command": "prettier --write ."
+    },
+    "dev": {
+      "command": "webpack serve --open --config webpack.config.mjs"
     }
   }
 }

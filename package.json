@@ -3,6 +3,7 @@
   "license": "MPL-2.0",
   "scripts": {
     "build": "wireit",
+    "dev": "wireit",
     "heroku-build": "wireit",
     "heroku-cleanup": "wireit",
     "heroku-start": "wireit",
@@ -35,6 +36,11 @@
     "start": {
       "dependencies": [
         "./workspaces/server:start"
+      ]
+    },
+    "dev": {
+      "dependencies": [
+        "./workspaces/client:dev"
       ]
     },
     "build": {

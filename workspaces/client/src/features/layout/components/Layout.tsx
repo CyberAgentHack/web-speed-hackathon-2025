@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { memo, ReactNode, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -55,49 +55,16 @@ export const Layout = ({ children }: Props) => {
   return (
     <>
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
-        <header
-          className={classNames(
-            'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
-            !isLoading && shouldHeaderBeTransparent
-              ? 'bg-gradient-to-b from-[#171717] to-transparent'
-              : 'bg-gradient-to-b from-[#171717] to-[#171717]',
-          )}
-        >
-          <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
-          </Link>
-        </header>
-
+        <Header isTransparent={!isLoading && shouldHeaderBeTransparent} />
         <aside className="sticky top-[0px] flex h-[100vh] flex-col items-center bg-[#171717] pt-[80px] [grid-area:a1/a1/a2/a2]">
           <nav>
-            <button
-              className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              type="button"
-              onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
-            >
-              <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
-              />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
-                {isSignedIn ? 'ログアウト' : 'ログイン'}
-              </span>
-            </button>
-
-            <Link
-              className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              to="/"
-            >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
-            </Link>
-
-            <Link
-              className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              to="/timetable"
-            >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
-            </Link>
+            <LoginButton
+              isSignedIn={isSignedIn}
+              openSignInDialog={authActions.openSignInDialog}
+              openSignOutDialog={authActions.openSignOutDialog}
+            />
+            <HomeLink />
+            <ChannelLink />
           </nav>
         </aside>
 
@@ -128,3 +95,66 @@ export const Layout = ({ children }: Props) => {
     </>
   );
 };
+
+const Header = memo(function Header({ isTransparent }: { isTransparent: boolean }) {
+  console.log('header');
+  return (
+    <header
+      className={classNames(
+        'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
+        'bg-gradient-to-b from-[#171717] to-[#171717]',
+        isTransparent
+          ? 'bg-gradient-to-b from-[#171717] to-transparent'
+          : 'bg-gradient-to-b from-[#171717] to-[#171717]',
+      )}
+    >
+      <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
+        <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
+      </Link>
+    </header>
+  );
+});
+
+const HomeLink = memo(function HomeLink(_props) {
+  return (
+    <Link
+      className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+      to="/"
+    >
+      <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
+      <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
+    </Link>
+  );
+});
+
+const ChannelLink = memo(function ChannelLink(_props) {
+  return (
+    <Link
+      className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+      to="/timetable"
+    >
+      <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
+      <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
+    </Link>
+  );
+});
+
+type LoginButtonProps = {
+  isSignedIn: boolean;
+  openSignInDialog: () => void;
+  openSignOutDialog: () => void;
+};
+const LoginButton = memo(function LoginButton({ isSignedIn, openSignInDialog, openSignOutDialog }: LoginButtonProps) {
+  return (
+    <button
+      className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+      type="button"
+      onClick={isSignedIn ? openSignOutDialog : openSignInDialog}
+    >
+      <div className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`} />
+      <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
+        {isSignedIn ? 'ログアウト' : 'ログイン'}
+      </span>
+    </button>
+  );
+});
