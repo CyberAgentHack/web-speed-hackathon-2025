@@ -51,7 +51,12 @@ export const Program = ({ height, program }: Props): ReactElement => {
       <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
         <button
           className="w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left"
-          style={{ width, height: `${height}px`, background: isBroadcasting ? '#FCF6E5' : '#212121',opacity: isArchived ? 50 : 100 }}
+          style={{
+            background: isBroadcasting ? '#FCF6E5' : '#212121',
+            height: `${height}px`,
+            opacity: isArchived ? 50 : 100,
+            width,
+          }}
           type="button"
           onClick={onClick}
         >
@@ -75,6 +80,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+                loading="lazy"
                 src={program.thumbnailUrl}
               />
             </div>

@@ -1,41 +1,32 @@
-import react from "@vitejs/plugin-react";
-import { visualizer } from "rollup-plugin-visualizer";
-import UnoCSS from "unocss/vite";
-import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import react from '@vitejs/plugin-react';
+import { visualizer } from 'rollup-plugin-visualizer';
+import UnoCSS from 'unocss/vite';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(({ mode }) => ({
   build: {
     emptyOutDir: true,
-    outDir: "dist",
+    outDir: 'dist',
     rollupOptions: {
-      input: "index.html",
+      input: 'index.html',
       plugins: [visualizer()],
     },
   },
   define: {
-    "process.env.API_BASE_URL": JSON.stringify("/api"),
-    "process.env.NODE_ENV": JSON.stringify(mode),
+    'process.env.API_BASE_URL': JSON.stringify('/api'),
+    'process.env.NODE_ENV': JSON.stringify(mode),
   },
   plugins: [react(), tsconfigPaths(), UnoCSS()],
   resolve: {
-    extensions: [
-      ".js",
-      ".cjs",
-      ".mjs",
-      ".ts",
-      ".cts",
-      ".mts",
-      ".tsx",
-      ".jsx",
-    ],
+    extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
   server: {
     open: true,
     proxy: {
-      "/api": "http://localhost:8000",
-      "/public": "http://localhost:8000",
-      "/streams": "http://localhost:8000",
+      '/api': 'http://localhost:8000',
+      '/public': 'http://localhost:8000',
+      '/streams': 'http://localhost:8000',
     },
   },
 }));
