@@ -13,17 +13,17 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
-// function getFiles(parent: string): string[] {
-//   const dirents = readdirSync(parent, { withFileTypes: true });
-//   return dirents
-//     .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-//     .map((dirent) => path.join(parent, dirent.name));
-// }
+function getFiles(parent: string): string[] {
+  const dirents = readdirSync(parent, { withFileTypes: true });
+  return dirents
+    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
+    .map((dirent) => path.join(parent, dirent.name));
+}
 
-// function getFilePaths(relativePath: string, rootDir: string): string[] {
-//   const files = getFiles(path.resolve(rootDir, relativePath));
-//   return files.map((file) => path.join('/', path.relative(rootDir, file)));
-// }
+function getFilePaths(relativePath: string, rootDir: string): string[] {
+  const files = getFiles(path.resolve(rootDir, relativePath));
+  return files.map((file) => path.join('/', path.relative(rootDir, file)));
+}
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
@@ -39,24 +39,16 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/*', async (req, reply) => {
-    console.log('/* 1', performance.now());
     // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
-    console.log('/* 2', performance.now());
 
     const store = createStore({});
-    console.log('/* 3', performance.now());
     const handler = createStaticHandler(createRoutes(store));
-    console.log('/* 4', performance.now());
     const context = await handler.query(request);
-    console.log('/* 5', performance.now());
 
     if (context instanceof Response) {
-      console.log('/* 6', performance.now());
       return reply.send(context);
     }
-    console.log('/* 7', performance.now());
-
 
     const router = createStaticRouter(handler.dataRoutes, context);
     renderToString(
@@ -67,6 +59,13 @@ export function registerSsr(app: FastifyInstance): void {
       </StrictMode>,
     );
 
+    const rootDir = path.resolve(__dirname, '../../../');
+    const imagePaths = [
+      getFilePaths('public/images', rootDir),
+      getFilePaths('public/animations', rootDir),
+      getFilePaths('public/logos', rootDir),
+    ].flat();
+
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
       <html lang="ja">
@@ -74,11 +73,12 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
+          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body></body>
       </html>
       <script>
-        window.__staticRouterHydrationData = ${JSON.stringify({
+        window.__staticRouterHydrationData = ${htmlescape({
           actionData: context.actionData,
           loaderData: context.loaderData,
         })};
