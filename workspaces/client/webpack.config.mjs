@@ -3,6 +3,7 @@ import path from 'node:path';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const isProduction = process.env[ 'NODE_ENV' ] === 'production';
 
@@ -102,6 +103,11 @@ const config = {
   },
   plugins: [
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: 'bundle-report.html',
+    }),
   ],
   resolve: {
     alias: {
