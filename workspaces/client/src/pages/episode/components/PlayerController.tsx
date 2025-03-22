@@ -64,7 +64,7 @@ export const PlayerController = ({ episode }: Props) => {
                   <img
                     alt={playing ? '一時停止する' : '再生する'}
                     className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
-                    src={playing ? '/icons/pause-rounded.svg' : '/icons/play-arrow-rounded.svg'}
+                    src={playing ? '/public/icons/pause-rounded.svg' : '/public/icons/play-arrow-rounded.svg'}
                   />
                 </button>
               </Hoverable>
@@ -87,7 +87,7 @@ export const PlayerController = ({ episode }: Props) => {
                 <img
                   alt={muted ? 'ミュート解除する' : 'ミュートする'}
                   className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
-                  src={muted ? '/icons/volume-off-rounded.svg' : '/icons/volume-up-rounded.svg'}
+                  src={muted ? '/public/icons/volume-off-rounded.svg' : '/public/icons/volume-up-rounded.svg'}
                   onClick={() => {
                     toggleMuted();
                   }}
