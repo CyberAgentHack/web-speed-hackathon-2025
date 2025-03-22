@@ -5,9 +5,6 @@ import fastifyStatic from '@fastify/static';
 import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
 
-
-
-
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/public/',
