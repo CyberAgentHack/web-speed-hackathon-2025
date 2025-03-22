@@ -62,31 +62,21 @@ const config = {
   },
 
   output: {
-    // メインバンドル
-    filename: 'main.[contenthash].js',
-    // 分割チャンク側
-    chunkFilename: '[name].[contenthash].js',
+    filename: 'main.js',
     path: path.resolve(process.cwd(), 'dist'),
     publicPath: 'auto',
-  },
-
-  plugins: [
-    // LimitChunkCountPlugin を削除してコード分割を有効化
-    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }), ← 削除
-
-    // 環境変数プラグイン (必要に応じて修正)
-    new webpack.EnvironmentPlugin({
-      API_BASE_URL: '/api',
-      NODE_ENV: '',
-    }),
-
-    // バンドルアナライザプラグイン (サイズ把握用)
+    },
+    plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    
+    // BundleAnalyzerPlugin を追加
     new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: true,
-      reportFilename: 'report.html',
+    analyzerMode: 'static', // 'server' や 'json' なども指定可能
+    openAnalyzer: true, // ビルド後に自動でブラウザを開きます
+    reportFilename: 'report.html',
     }),
-  ],
+    ],
 
   // @ffmpeg/core の alias を削除して、初期バンドルから外しやすくする
   resolve: {
