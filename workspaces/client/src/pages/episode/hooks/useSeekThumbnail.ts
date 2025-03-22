@@ -3,6 +3,7 @@ import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
+import { v4 as uuid } from 'uuid';
 
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
@@ -31,7 +32,7 @@ async function getSeekThumbnail({ episode }: Params) {
     parser.manifest.segments.map((s) => {
       return fetch(s.uri).then(async (res) => {
         const binary = await res.arrayBuffer();
-        return { binary, id: Math.random().toString(36).slice(2) };
+        return { binary, id: uuid };
       });
     }),
   );
