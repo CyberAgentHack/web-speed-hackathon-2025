@@ -452,6 +452,71 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   api.route({
     method: 'GET',
+    url: '/recommended/error',
+    schema: {
+      tags: ['レコメンド'],
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getRecommendedModulesResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getErrorRecommendedModule(_req, reply) {
+      const database = getDatabase();
+
+      // errorページ用に最適化：先頭の1つのモジュールのみ取得
+      const module = await database.query.recommendedModule.findFirst({
+        orderBy(module, { asc }) {
+          return asc(module.order);
+        },
+        where(module, { eq }) {
+          return eq(module.referenceId, 'error');
+        },
+        with: {
+          items: {
+            orderBy(item, { asc }) {
+              return asc(item.order);
+            },
+            with: {
+              series: {
+                with: {
+                  episodes: {
+                    orderBy(episode, { asc }) {
+                      return asc(episode.order);
+                    },
+                  },
+                },
+              },
+              episode: {
+                with: {
+                  series: {
+                    with: {
+                      episodes: {
+                        orderBy(episode, { asc }) {
+                          return asc(episode.order);
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // 配列の形で返す（NotFoundPageではat(0)を使用しているため）
+      const response = module ? [module] : [];
+      reply.code(200).send(response);
+    },
+  });
+
+  api.route({
+    method: 'GET',
     url: '/recommended/:referenceId',
     schema: {
       tags: ['レコメンド'],
