@@ -36,13 +36,28 @@ export const Program = ({ height, program }: Props): ReactElement => {
 
   const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
   useEffect(() => {
-    const interval = setInterval(() => {
+    const updateVisibility = () => {
       const imageHeight = imageRef.current?.clientHeight ?? 0;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
+    };
+  
+    const resizeObserver = new ResizeObserver(() => {
+      updateVisibility();
+    });
+  
+    if (imageRef.current) {
+      resizeObserver.observe(imageRef.current);
+    }
+    if (titleRef.current) {
+      resizeObserver.observe(titleRef.current);
+    }
+  
+    // 初期サイズチェック
+    updateVisibility();
+  
     return () => {
-      clearInterval(interval);
+      resizeObserver.disconnect();
     };
   }, [height]);
 

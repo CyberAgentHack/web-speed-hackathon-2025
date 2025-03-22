@@ -357,6 +357,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             sql`time(${req.query.until}, '+9 hours')`,
           );
         },
+        with: {
+          episode: true,
+        }
       });
       reply.code(200).send(programs);
     },
@@ -438,15 +441,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           channel: true,
-          episode: {
+          // episode: {
+          //   with: {
+          //     series: {
+          //       with: {
+          //         episodes: {
+          //           orderBy(episode, { asc }) {
+          //             return asc(episode.order);
+          //           },
+          //         },
+          //       },
+          //     },
+          //   },
+          // },
+          series: {
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+              episodes: {
+                orderBy(episode, { asc }) {
+                  return asc(episode.order);
                 },
               },
             },

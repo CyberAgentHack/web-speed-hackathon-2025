@@ -94,7 +94,7 @@ export const ProgramPage = () => {
 
   return (
     <>
-      <title>{`${program.title} - ${program.episode.series.title} - AremaTV`}</title>
+      <title>{`${program.title} - ${program.series.title} - AremaTV`}</title>
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>
@@ -107,7 +107,7 @@ export const ProgramPage = () => {
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
                   <Link
                     className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
-                    to={`/episodes/${program.episode.id}`}
+                    to={`/episodes/${program.episodeId}`}
                   >
                     見逃し視聴する
                   </Link>
@@ -141,7 +141,7 @@ export const ProgramPage = () => {
 
         <div className="mb-[24px]">
           <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.episode.series.title} visibleLine={1} />
+            <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.series.title} visibleLine={1} />
           </div>
           <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
@@ -164,7 +164,7 @@ export const ProgramPage = () => {
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">関連するエピソード</h2>
-          <SeriesEpisodeList episodes={program.episode.series.episodes} selectedEpisodeId={program.episode.id} />
+          <SeriesEpisodeList episodes={program.series.episodes} selectedEpisodeId={program.episodeId} />
         </div>
       </div>
     </>

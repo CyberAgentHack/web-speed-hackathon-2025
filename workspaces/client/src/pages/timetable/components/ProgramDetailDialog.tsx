@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { ArrayValues } from 'type-fest';
 
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
-import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
+// import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
 
 interface Props {
@@ -14,12 +14,14 @@ interface Props {
 }
 
 export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement => {
-  const episode = useEpisode(program.episodeId);
+  // const episode = useEpisode(program.episodeId);
   const [, setProgram] = useSelectedProgramId();
 
   const onClose = () => {
     setProgram(null);
   };
+
+  const episode = program.episode;
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>

@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { createClient } from '@libsql/client';
 import * as schema from '@wsh-2025/schema/src/database/schema';
 import { drizzle } from 'drizzle-orm/libsql';
+import { eq } from 'drizzle-orm';
+import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 
 const SQLITE_PATH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../database.sqlite');
 
@@ -16,6 +18,27 @@ export function getDatabase() {
     throw new Error('database is initializing.');
   }
   return database;
+}
+
+async function addSeriesIdToPrograms() {
+  const db = getDatabase();
+  const programs = await db.query.program.findMany();
+  for (const program of programs) {
+    const joinedEpisode = await db.query.episode.findFirst({
+      where(episode, { eq }) {
+        return eq(episode.id, program.episodeId);
+      },
+    });
+    
+    const seriesId = joinedEpisode?.seriesId;
+    if (seriesId) {
+      await db
+        .update(databaseSchema.program)
+        .set({ seriesId })
+        .where(eq(databaseSchema.program.id, program.id))
+        .execute();
+    }
+  }
 }
 
 export async function initializeDatabase(): Promise<void> {
@@ -32,4 +55,6 @@ export async function initializeDatabase(): Promise<void> {
     }),
     schema,
   });
+
+  await addSeriesIdToPrograms();
 }
