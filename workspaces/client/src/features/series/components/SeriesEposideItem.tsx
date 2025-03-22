@@ -28,7 +28,7 @@ export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
             <>
               <Flipped stagger flipId={!selected && isTransitioning ? `episode-${episode.id}` : 0}>
                 <div className="relative shrink-0 grow-0 overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F] before:absolute before:inset-x-0 before:bottom-0 before:block before:h-[64px] before:bg-gradient-to-t before:from-[#212121] before:to-transparent before:content-['']">
-                  <img alt="" className="h-auto w-[192px]" loading="lazy" src={episode.thumbnailUrl} />
+                  <img alt="" height={108} loading="lazy" src={episode.thumbnailUrl} width={192} />
                   <img
                     className="absolute bottom-[4px] left-[4px] m-[4px] block size-[20px]"
                     loading="lazy"

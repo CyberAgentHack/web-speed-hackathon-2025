@@ -29,6 +29,10 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
       }
       player = createPlayer(playerType);
       player.load(playlistUrl, { loop: loop ?? false });
+
+      player.videoElement.width = 462.22;
+      player.videoElement.height = 259.99;
+
       mountElement.appendChild(player.videoElement);
       assignRef(playerRef, player);
     });
