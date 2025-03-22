@@ -194,13 +194,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const trimmedEpisodes = episodes.map(episode => ({
         ...episode,
         description: trimString(episode.description, 512),
-        series: episode.series
-          ? {
+        series: {
               ...episode.series,
               description: trimString(episode.series.description, 512),
               episodes: [],
-            }
-          : null,
+            },
       }));
 
       reply.code(200).send(trimmedEpisodes);
@@ -527,8 +525,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-    
-      // 取得したデータを加工
+
       const trimmedModules = modules.map(module => ({
         ...module,
         items: module.items.map(item => ({
@@ -537,16 +534,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             ? {
                 ...item.episode,
                 description: trimString(item.episode.description, 512),
-                series: item.episode.series
-                  ? {
+                series: {
                       ...item.episode.series,
                       description: trimString(item.episode.series.description, 64),
-                      episodes: item.episode.series.episodes.map(episode => ({
-                        ...episode,
-                        description: trimString(episode.description, 512),
-                      })),
-                    }
-                  : null,
+                      episodes: [],
+                      // episodes: item.episode.series.episodes.map(episode => ({
+                      //   ...episode,
+                      //   description: trimString(episode.description, 512),
+                      // })),
+                    },
               }
             : null,
           series: item.series
@@ -561,7 +557,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             : null,
         })),
       }));
-
       reply.code(200).send(trimmedModules);
     },
   });
