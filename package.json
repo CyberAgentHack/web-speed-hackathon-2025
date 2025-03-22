@@ -7,7 +7,8 @@
     "heroku-cleanup": "wireit",
     "heroku-start": "wireit",
     "start": "wireit",
-    "test": "wireit"
+    "test": "wireit",
+    "clean": "rm -rf ./workspaces/client/dist ./workspaces/server/dist"
   },
   "dependencies": {
     "fluent-ffmpeg": "2.1.3",
