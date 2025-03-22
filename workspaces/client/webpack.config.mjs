@@ -4,9 +4,8 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -36,7 +35,7 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/inline',
+        type: 'asset/resource',
       },
       {
         resourceQuery: /raw/,
@@ -44,7 +43,7 @@ const config = {
       },
       {
         resourceQuery: /arraybuffer/,
-        type: 'javascript/auto',
+        type: 'asset/resource',
         use: {
           loader: 'arraybuffer-loader',
         },
