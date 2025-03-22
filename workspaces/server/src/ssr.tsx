@@ -32,6 +32,8 @@ export function registerSsr(app: FastifyInstance): void {
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
+    cacheControl: true,
+    maxAge: '1d',
   });
 
   app.get('/*', async (req, reply) => {
