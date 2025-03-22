@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, memo } from 'react';
 import { createStore } from '@/app/createStore';
 import { RecommendedSection } from '@/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@/features/recommended/hooks/useRecommended';
@@ -15,18 +15,31 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
   }
 };
 
+const LoadingFallback = () => (
+  <div className="text-white text-center mt-10" role="status" aria-live="polite">
+    読み込み中...
+  </div>
+);
+
+const ModuleBlock = memo(({ module }: { module: any }) => (
+  <div key={module.id} className="mb-[24px] px-[24px]">
+    <RecommendedSection module={module} />
+  </div>
+));
+
 export const HomePage = () => {
   const modules = useRecommended({ referenceId: 'entrance' });
 
   return (
-    <Suspense fallback={<div className="text-white text-center mt-10">読み込み中...</div>}>
-      <div className="w-full py-[48px]">
-        {modules.map((module) => (
-          <div key={module.id} className="mb-[24px] px-[24px]">
-            <RecommendedSection module={module} />
-          </div>
-        ))}
-      </div>
-    </Suspense>
+    <>
+      <title>Home - AremaTV</title>
+      <Suspense fallback={<LoadingFallback />}>
+        <main className="w-full py-[48px]" aria-label="おすすめセクション">
+          {modules.map((module) => (
+            <ModuleBlock key={module.id} module={module} />
+          ))}
+        </main>
+      </Suspense>
+    </>
   );
 };
