@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "target": "ESNext"
   },
-  "exclude": ["dist"],
+  "exclude": ["node_modules", "dist"],
   // "extends": "@wsh-2025/configs/tsconfig.json",
   "extends": "../configs/tsconfig.json",
   "include": ["**/*", "**/*.mjs"]

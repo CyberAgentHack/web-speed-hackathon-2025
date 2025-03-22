@@ -18,5 +18,6 @@
     "target": "ESNext"
   },
   "extends": "@wsh-2025/configs/tsconfig.json",
+  "exclude": ["./dist", "./streams", "../client/dist", "node_modules"], 
   "include": ["tools/**/*", "./src/**/*", "**/*.mjs", "drizzle.config.ts", "../client/**/*"]
 }
