@@ -48,7 +48,7 @@ export const ProgramPage = () => {
   invariant(program);
 
   const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
+  const nextProgram = timetable[program.channel.id]?.programs.find((p) => {
     return new Date(program.endAt).getTime() === new Date(p.startAt).getTime();
   });
 

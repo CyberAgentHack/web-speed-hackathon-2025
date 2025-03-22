@@ -116,7 +116,7 @@ async function main() {
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
         id: faker.string.uuid(),
-        logoUrl: `/public/logos/${id}.svg`,
+        logoUrl: `/public/logos/${id}.avif`,
         name,
       }));
       const result = await database.insert(schema.channel).values(data).returning();

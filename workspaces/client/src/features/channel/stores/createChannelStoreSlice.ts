@@ -11,28 +11,12 @@ interface ChannelState {
 }
 
 interface ChannelActions {
-  fetchChannelById: (params: {
-    channelId: ChannelId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof getChannelByIdResponse>>;
   fetchChannels: () => Promise<StandardSchemaV1.InferOutput<typeof getChannelsResponse>>;
 }
 
 export const createChannelStoreSlice = () => {
   return lens<ChannelState & ChannelActions>((set) => ({
     channels: {},
-    fetchChannelById: async ({ channelId }) => {
-      const channel = await channelService.fetchChannelById({ channelId });
-      set((state) => {
-        return {
-          ...state,
-          channels: {
-            ...state.channels,
-            [channel.id]: channel
-          }
-        };
-      });
-      return channel;
-    },
     fetchChannels: async () => {
       const channels = await channelService.fetchChannels();
       set((state) => {
@@ -42,7 +26,7 @@ export const createChannelStoreSlice = () => {
         }
         return {
           ...state,
-          channels: updatedChannels
+          channels: updatedChannels,
         };
       });
       return channels;
