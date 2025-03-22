@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
@@ -58,7 +59,7 @@ const config = {
     publicPath: 'auto',
   },
   externals: {
-    '@ffmpeg/ffmpeg': 'FFmpeg',
+    '@ffmpeg/ffmpeg': 'FFmpegWASM',
     '@ffmpeg/core': 'FFmpegCore',
     '@ffmpeg/util': 'FFmpegUtil'
   },

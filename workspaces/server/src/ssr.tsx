@@ -72,6 +72,11 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.2/dist/umd/ffmpeg-util.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.min.js"></script>
+          <script>
+            window.FFmpeg = FFmpegWASM.FFmpeg;
+          </script>
           <script src="/public/main.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
