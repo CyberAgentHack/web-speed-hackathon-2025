@@ -58,5 +58,8 @@
         "./workspaces/test:test"
       ]
     }
+  },
+  "volta": {
+    "node": "23.10.0"
   }
 }
