@@ -8,6 +8,7 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { Icon } from '@iconify/react';
 
 interface SignInFormValues {
   email: string;
@@ -121,7 +122,7 @@ export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
+                  <Icon icon="material-symbols:error-outline" className="m-[4px] size-[20px]" />
                   <span>{submitError}</span>
                 </div>
               ) : null}
