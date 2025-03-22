@@ -7,6 +7,9 @@ interface Props {
   ratioWidth: number;
 }
 
+/**
+ * @deprecated
+ */
 export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const forceUpdate = useUpdate();
   const containerRef = useRef<HTMLDivElement>(null);
