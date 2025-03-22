@@ -5,8 +5,14 @@ import fastifyStatic from '@fastify/static';
 import type { FastifyInstance } from 'fastify';
 
 export function registerSsr(app: FastifyInstance): void {
-  const clientDistPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist');
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const clientDistPath = path.resolve(__dirname, '../../client/dist');
+  const rootPath = path.resolve(__dirname, '../../../');
+  const rootPublicPath = path.join(rootPath, 'public');
+
   console.log('Client dist path:', clientDistPath);
+  console.log('Root project path:', rootPath);
+  console.log('Root public path:', rootPublicPath);
 
   // client/distのassetsディレクトリを/assetsプレフィックスで提供
   app.register(fastifyStatic, {
@@ -39,12 +45,13 @@ export function registerSsr(app: FastifyInstance): void {
     },
   });
 
-  // クライアントの公開ディレクトリを静的ファイルとして配信（favicon用）
+  // ルートプロジェクトのpublicディレクトリを配信
   app.register(fastifyStatic, {
-    root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/public'),
+    root: rootPublicPath,
     prefix: '/public/',
     decorateReply: false,
     setHeaders: (res, filePath) => {
+      console.log('Serving public file:', filePath);
       // SVGファイルに適切なMIMEタイプを設定
       if (filePath.endsWith('.svg')) {
         res.setHeader('Content-Type', 'image/svg+xml');
@@ -52,7 +59,40 @@ export function registerSsr(app: FastifyInstance): void {
     },
   });
 
-  // クライアントのdistディレクトリをルートとして配信
+  // favicon.icoの特別なルートを追加
+  app.get('/favicon.ico', (_, reply) => {
+    reply.sendFile('favicon.ico', clientDistPath);
+  });
+
+  // 静的アセットの拡張子をチェックし、NotFoundHandlerに渡さないようにする
+  app.addHook('onRequest', (request, reply, done) => {
+    const url = request.url;
+    // アセットリクエストをログに記録
+    if (url.startsWith('/assets/') || url.startsWith('/public/')) {
+      console.log('Asset request:', url);
+    }
+
+    // 静的アセットの拡張子を持つURLはNotFoundHandlerに渡さない
+    if (
+      url.endsWith('.js') ||
+      url.endsWith('.css') ||
+      url.endsWith('.map') ||
+      url.endsWith('.svg') ||
+      url.endsWith('.wasm') ||
+      url.endsWith('.jpg') ||
+      url.endsWith('.png') ||
+      url.endsWith('.ico') ||
+      url.endsWith('.json')
+    ) {
+      // 静的ファイルハンドラに任せる
+      // 存在しない場合は自動的に404になる
+      done();
+      return;
+    }
+    done();
+  });
+
+  // クライアントのdistディレクトリをルートとして配信（最後に登録して優先度を下げる）
   app.register(fastifyStatic, {
     root: clientDistPath,
     prefix: '/',
@@ -80,39 +120,6 @@ export function registerSsr(app: FastifyInstance): void {
         res.setHeader('Content-Type', 'application/wasm');
       }
     },
-  });
-
-  // favicon.icoの特別なルートを追加
-  app.get('/favicon.ico', (_, reply) => {
-    reply.sendFile('favicon.ico', clientDistPath);
-  });
-
-  // 静的アセットの拡張子をチェックし、NotFoundHandlerに渡さないようにする
-  app.addHook('onRequest', (request, reply, done) => {
-    const url = request.url;
-    // アセットリクエストをログに記録
-    if (url.startsWith('/assets/')) {
-      console.log('Asset request:', url);
-    }
-
-    // 静的アセットの拡張子を持つURLはNotFoundHandlerに渡さない
-    if (
-      url.endsWith('.js') ||
-      url.endsWith('.css') ||
-      url.endsWith('.map') ||
-      url.endsWith('.svg') ||
-      url.endsWith('.wasm') ||
-      url.endsWith('.jpg') ||
-      url.endsWith('.png') ||
-      url.endsWith('.ico') ||
-      url.endsWith('.json')
-    ) {
-      // 静的ファイルハンドラに任せる
-      // 存在しない場合は自動的に404になる
-      done();
-      return;
-    }
-    done();
   });
 
   // SPA対応：存在しないパスへのリクエストはすべてindex.htmlにリダイレクト
