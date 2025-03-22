@@ -65,7 +65,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 30 }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 9999 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
     // new BundleAnalyzerPlugin(),
   ],
