@@ -6,7 +6,7 @@
   ],
   "env": {
     "NODE_MODULES_CACHE": {
-      "value": "false"
+      "value": "true"
     },
     "WIREIT_CACHE": {
       "value": "none"
