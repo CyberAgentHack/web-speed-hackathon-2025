@@ -3,6 +3,8 @@ import { Form } from 'react-final-form';
 
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { ErrorOutline } from '@wsh-2025/client/src/foundation/icons/ErrorOutline';
+import { WarningOutlineRounded } from '@wsh-2025/client/src/foundation/icons/WarningOutlineRounded';
 
 interface Props {
   isOpen: boolean;
@@ -37,13 +39,15 @@ export const SignOutDialog = ({ isOpen, onClose }: Props) => {
           {({ handleSubmit, submitError }) => (
             <form className="mb-[16px]" onSubmit={(ev) => void handleSubmit(ev)}>
               <div className="mb-[24px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#DDAA00] bg-[#fffcee] p-[8px] text-[14px] font-bold text-[#DDAA00]">
-                <div className="i-material-symbols:warning-outline-rounded m-[4px] size-[20px]" />
+                <WarningOutlineRounded />
                 <span>プレミアムエピソードが視聴できなくなります。</span>
               </div>
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
+                  <div className="m-[4px] size-[20px]">
+                    <ErrorOutline />
+                  </div>
                   <span>{submitError}</span>
                 </div>
               ) : null}

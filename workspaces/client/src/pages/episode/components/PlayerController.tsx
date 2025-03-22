@@ -5,12 +5,15 @@ import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import { PauseRounded } from '@wsh-2025/client/src/foundation/icons/PauseRounded';
+import { PlayArrowRounded } from '@wsh-2025/client/src/foundation/icons/PlayArrowRounded';
+import { VolumeOffRounded } from '@wsh-2025/client/src/foundation/icons/VolumeOffRounded';
+import { VolumeUpRounded } from '@wsh-2025/client/src/foundation/icons/VolumeUpRounded';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useMuted } from '@wsh-2025/client/src/pages/episode/hooks/useMuted';
 import { usePlaying } from '@wsh-2025/client/src/pages/episode/hooks/usePlaying';
-
 interface Props {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
@@ -61,9 +64,9 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  />
+                  <span className={`m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}>
+                    {playing ? <PauseRounded /> : <PlayArrowRounded />}
+                  </span>
                 </button>
               </Hoverable>
 
@@ -81,13 +84,13 @@ export const PlayerController = ({ episode }: Props) => {
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"
                 type="button"
+                onClick={() => {
+                  toggleMuted();
+                }}
               >
-                <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  onClick={() => {
-                    toggleMuted();
-                  }}
-                />
+                <span className={`m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}>
+                  {muted ? <VolumeOffRounded /> : <VolumeUpRounded />}
+                </span>
               </button>
             </Hoverable>
           </div>
