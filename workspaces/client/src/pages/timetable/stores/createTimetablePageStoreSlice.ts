@@ -2,19 +2,10 @@ import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
+import _ from 'lodash';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
-
-function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  return (...args: Parameters<T>) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn(...args);
-    }, wait);
-  };
-}
 
 type ChannelId = string;
 type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
@@ -48,15 +39,13 @@ export const createTimetablePageStoreSlice = () => {
         shownNewFeatureDialog: false,
       }));
     },
-    refreshCurrentUnixtimeMs: debounce(() => {
+    columnWidthRecord: {},
+    currentUnixtimeMs: 0,
+    refreshCurrentUnixtimeMs: _.debounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
     }, 50),
-
-    // state
-    columnWidthRecord: {},
-    currentUnixtimeMs: 0,
     selectedProgramId: null,
     selectProgram: (program: Program | null) => {
       set(() => ({
