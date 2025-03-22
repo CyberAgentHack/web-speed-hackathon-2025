@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 
 const isProduction = process.env[ 'NODE_ENV' ] === 'production';
@@ -54,7 +56,20 @@ const config = {
     ],
   },
   optimization: {
-    minimize: false,
+    minimize: isProduction,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: isProduction,
+          },
+          format: {
+            comments: false,
+          },
+        },
+      }),
+      new CssMinimizerPlugin(),
+    ],
     splitChunks: {
       cacheGroups: {
         default: {
