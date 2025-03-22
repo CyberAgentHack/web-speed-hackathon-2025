@@ -29,6 +29,8 @@ setup:now
 	pnpm install
 db: now
 	cd workspaces/server && pnpm database:reset && pnpm database:migrate
+init:now
+	curl -X POST http://localhost:8000/api/initialize
 test:now
 	date && pnpm test && date
 dev:now

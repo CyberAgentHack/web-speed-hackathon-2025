@@ -74,7 +74,7 @@ export function registerSsr(app: FastifyInstance): void {
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <meta name="description" content="web-speed-hackathon-2025">
           <link rel="shortcut icon" href="/favicon.ico" />
-          <script src="/public/main.js"></script>
+          <script defer src="/public/main.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body></body>
