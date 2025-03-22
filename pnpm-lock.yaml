@@ -127,8 +127,8 @@ importers:
         specifier: 1.0.3
         version: 1.0.3
       zod:
-        specifier: 3.24.1
-        version: 3.24.1
+        specifier: link:@hookform/resolvers/zod
+        version: link:@hookform/resolvers/zod
       zustand:
         specifier: 5.0.3
         version: 5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
@@ -232,12 +232,19 @@ importers:
 
   workspaces/configs:
     dependencies:
+      globals:
+        specifier: 15.12.0
+        version: 15.12.0
+    devDependencies:
       '@eslint/js':
         specifier: 9.15.0
         version: 9.15.0
       '@tsconfig/strictest':
         specifier: 2.0.5
         version: 2.0.5
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
       eslint:
         specifier: 9.15.0
         version: 9.15.0
@@ -256,9 +263,6 @@ importers:
       eslint-plugin-sort:
         specifier: 4.0.0
         version: 4.0.0(eslint@9.15.0)(typescript@5.7.2)
-      globals:
-        specifier: 15.12.0
-        version: 15.12.0
       prettier:
         specifier: 3.4.0
         version: 3.4.0
@@ -277,10 +281,6 @@ importers:
       typescript-eslint:
         specifier: 8.16.0
         version: 8.16.0(eslint@9.15.0)(typescript@5.7.2)
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
 
   workspaces/schema:
     dependencies:
