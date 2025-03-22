@@ -199,6 +199,9 @@ importers:
       babel-loader:
         specifier: 9.2.1
         version: 9.2.1(@babel/core@7.26.0)(webpack@5.96.1)
+      compression-webpack-plugin:
+        specifier: 11.1.0
+        version: 11.1.0(webpack@5.96.1)
       core-js:
         specifier: 3.41.0
         version: 3.41.0
@@ -208,6 +211,9 @@ importers:
       shaka-player:
         specifier: 4.12.5
         version: 4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae)
+      terser-webpack-plugin:
+        specifier: 5.3.14
+        version: 5.3.14(webpack@5.96.1)
       typescript:
         specifier: 5.7.2
         version: 5.7.2
@@ -1502,6 +1508,7 @@ packages:
   '@faker-js/faker@9.2.0':
     resolution: {integrity: sha512-ulqQu4KMr1/sTFIYvqSdegHT8NIkt66tFAkugGnHA+1WAfEn6hMzNR+svjXGFRVLnapxvej67Z/LwchFrnLBUg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/accept-negotiator@2.0.0':
     resolution: {integrity: sha512-/Sce/kBzuTxIq5tJh85nVNOq9wKD8s+viIgX0fFMDBdw95gnpf53qmF1oBgJym3cPFliWUuSloVg/1w/rH0FcQ==}
@@ -2560,6 +2567,12 @@ packages:
   compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
     engines: {node: '>= 0.6'}
+
+  compression-webpack-plugin@11.1.0:
+    resolution: {integrity: sha512-zDOQYp10+upzLxW+VRSjEpRRwBXJdsb5lBMlRxx1g8hckIFBpe3DTI0en2w7h+beuq89576RVzfiXrkdPGrHhA==}
+    engines: {node: '>= 18.12.0'}
+    peerDependencies:
+      webpack: ^5.1.0
 
   compression@1.7.5:
     resolution: {integrity: sha512-bQJ0YRck5ak3LgtnpKkiabX5pNF7tMUh1BSy2ZBOTh0Dim0BUu6aPPwByIns6/A5Prh8PufSPerMDUklpzes2Q==}
@@ -4651,6 +4664,10 @@ packages:
     resolution: {integrity: sha512-L0jRsrPpjdckP3oPug3/VxNKt2trR8TcabrM6FOAAlvC/9Phcmm+cuAgTlxBqdBR1WJx7Naj9WHw+aOmheSVbw==}
     engines: {node: '>= 12.13.0'}
 
+  schema-utils@4.3.0:
+    resolution: {integrity: sha512-Gf9qqc58SpCA/xdziiHz35F4GNIWYWZrEshUc/G/r5BnLph6xpKuLeoJoQuj5WfBIx/eQLf+hmVPYHaxJu7V2g==}
+    engines: {node: '>= 10.13.0'}
+
   screenfull@5.2.0:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
     engines: {node: '>=0.10.0'}
@@ -4906,8 +4923,8 @@ packages:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
 
-  terser-webpack-plugin@5.3.10:
-    resolution: {integrity: sha512-BKFPWlPDndPs+NGGCr1U59t0XScL5317Y0UReNrHaw9/FwhPENlq6bfgs+4yPfyP51vqC1bQ4rp1EfXW5ZSH9w==}
+  terser-webpack-plugin@5.3.14:
+    resolution: {integrity: sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@swc/core': '*'
@@ -5450,7 +5467,7 @@ snapshots:
       '@babel/core': 7.26.0
       '@babel/helper-compilation-targets': 7.25.9
       '@babel/helper-plugin-utils': 7.25.9
-      debug: 4.3.7
+      debug: 4.4.0
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -6337,7 +6354,7 @@ snapshots:
   '@eslint/config-array@0.19.0':
     dependencies:
       '@eslint/object-schema': 2.1.4
-      debug: 4.3.7
+      debug: 4.4.0
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -6347,7 +6364,7 @@ snapshots:
   '@eslint/eslintrc@3.2.0':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.7
+      debug: 4.4.0
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.2
@@ -6989,7 +7006,7 @@ snapshots:
       '@typescript-eslint/types': 8.16.0
       '@typescript-eslint/typescript-estree': 8.16.0(typescript@5.7.2)
       '@typescript-eslint/visitor-keys': 8.16.0
-      debug: 4.3.7
+      debug: 4.4.0
       eslint: 9.15.0
     optionalDependencies:
       typescript: 5.7.2
@@ -7005,7 +7022,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 8.16.0(typescript@5.7.2)
       '@typescript-eslint/utils': 8.16.0(eslint@9.15.0)(typescript@5.7.2)
-      debug: 4.3.7
+      debug: 4.4.0
       eslint: 9.15.0
       ts-api-utils: 1.4.2(typescript@5.7.2)
     optionalDependencies:
@@ -7019,7 +7036,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.16.0
       '@typescript-eslint/visitor-keys': 8.16.0
-      debug: 4.3.7
+      debug: 4.4.0
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -7252,7 +7269,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -7590,6 +7607,12 @@ snapshots:
     dependencies:
       mime-db: 1.52.0
 
+  compression-webpack-plugin@11.1.0(webpack@5.96.1):
+    dependencies:
+      schema-utils: 4.3.0
+      serialize-javascript: 6.0.2
+      webpack: 5.96.1(webpack-cli@5.1.4)
+
   compression@1.7.5:
     dependencies:
       bytes: 3.1.2
@@ -7925,7 +7948,7 @@ snapshots:
 
   esbuild-register@3.6.0(esbuild@0.19.12):
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       esbuild: 0.19.12
     transitivePeerDependencies:
       - supports-color
@@ -8639,7 +8662,7 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.7
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -8883,7 +8906,7 @@ snapshots:
 
   json-schema-resolver@2.0.0:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       rfdc: 1.4.1
       uri-js: 4.4.1
     transitivePeerDependencies:
@@ -9721,6 +9744,13 @@ snapshots:
       ajv-formats: 2.1.1
       ajv-keywords: 5.1.0(ajv@8.17.1)
 
+  schema-utils@4.3.0:
+    dependencies:
+      '@types/json-schema': 7.0.15
+      ajv: 8.17.1
+      ajv-formats: 2.1.1
+      ajv-keywords: 5.1.0(ajv@8.17.1)
+
   screenfull@5.2.0: {}
 
   secure-json-parse@2.7.0: {}
@@ -9908,7 +9938,7 @@ snapshots:
 
   spdy-transport@3.0.0:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -9919,7 +9949,7 @@ snapshots:
 
   spdy@4.0.2:
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       handle-thing: 2.0.1
       http-deceiver: 1.2.7
       select-hose: 2.0.0
@@ -10062,11 +10092,11 @@ snapshots:
       mkdirp: 1.0.4
       yallist: 4.0.0
 
-  terser-webpack-plugin@5.3.10(webpack@5.96.1):
+  terser-webpack-plugin@5.3.14(webpack@5.96.1):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
-      schema-utils: 3.3.0
+      schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.36.0
       webpack: 5.96.1(webpack-cli@5.1.4)
@@ -10341,7 +10371,7 @@ snapshots:
       mime-types: 2.1.35
       on-finished: 2.4.1
       range-parser: 1.2.1
-      schema-utils: 4.2.0
+      schema-utils: 4.3.0
     optionalDependencies:
       webpack: 5.96.1(webpack-cli@5.1.4)
 
@@ -10414,7 +10444,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(webpack@5.96.1)
+      terser-webpack-plugin: 5.3.14(webpack@5.96.1)
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     optionalDependencies:
