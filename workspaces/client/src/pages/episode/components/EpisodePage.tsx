@@ -8,7 +8,6 @@ import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
-import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
