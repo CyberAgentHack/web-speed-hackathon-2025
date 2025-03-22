@@ -87,7 +87,8 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/"
             >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
+              {/* <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" /> */}
+              <img className="size-[20px] shrink-0 grow-0" src="/public/icons/house-fill.svg" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
             </Link>
 
