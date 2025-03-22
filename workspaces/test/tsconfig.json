@@ -9,7 +9,7 @@
     "moduleResolution": "bundler",
     "outDir": "./dist",
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "target": "ESNext"
   },
   "exclude": [
