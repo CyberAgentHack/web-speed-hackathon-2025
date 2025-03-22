@@ -1,12 +1,21 @@
 import path from 'node:path';
 import webpack from 'webpack';
-// ここを追加
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 
 /** @type {import('webpack').Configuration} */
 const config = {
   entry: './src/main.tsx',
   mode: 'production',
+
+  // コード分割 (SplitChunks) を有効化
+  optimization: {
+    splitChunks: {
+      // 'all' にすると、node_modules などの共通コードも自動的に別チャンク化される
+      chunks: 'all',
+    },
+  },
+
   module: {
     rules: [
       {
@@ -14,7 +23,7 @@ const config = {
         resolve: {
           fullySpecified: false,
         },
-        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
+        test: /\.(js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -22,13 +31,14 @@ const config = {
               [
                 '@babel/preset-env',
                 {
+                  // 必要に応じて調整
                   corejs: false,
                   targets: { chrome: '134' },
                   useBuiltIns: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
+              '@babel/preset-typescript',
             ],
           },
         },
@@ -50,35 +60,36 @@ const config = {
       },
     ],
   },
+
   output: {
-    filename: 'main.js',
+    // メインバンドル
+    filename: 'main.[contenthash].js',
+    // 分割チャンク側
+    chunkFilename: '[name].[contenthash].js',
     path: path.resolve(process.cwd(), 'dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
 
-    // BundleAnalyzerPlugin を追加
+  plugins: [
+    // LimitChunkCountPlugin を削除してコード分割を有効化
+    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }), ← 削除
+
+    // 環境変数プラグイン (必要に応じて修正)
+    new webpack.EnvironmentPlugin({
+      API_BASE_URL: '/api',
+      NODE_ENV: '',
+    }),
+
+    // バンドルアナライザプラグイン (サイズ把握用)
     new BundleAnalyzerPlugin({
-      analyzerMode: 'static', // 'server' や 'json' なども指定可能
-      openAnalyzer: true,     // ビルド後に自動でブラウザを開きます
+      analyzerMode: 'static',
+      openAnalyzer: true,
       reportFilename: 'report.html',
     }),
   ],
+
+  // @ffmpeg/core の alias を削除して、初期バンドルから外しやすくする
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(
-        import.meta.dirname,
-        'node_modules',
-        '@ffmpeg/core/dist/umd/ffmpeg-core.js'
-      ),
-      '@ffmpeg/core/wasm$': path.resolve(
-        import.meta.dirname,
-        'node_modules',
-        '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'
-      ),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };
