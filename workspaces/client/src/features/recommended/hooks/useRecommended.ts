@@ -14,7 +14,7 @@ export function useRecommended({ referenceId }: Params) {
   const { modules: prefetchedModules } = useLoaderData() as {
     modules: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>[];
   };
-  if (prefetchedModules != null) {
+  if (prefetchedModules) {
     return prefetchedModules;
   }
 
