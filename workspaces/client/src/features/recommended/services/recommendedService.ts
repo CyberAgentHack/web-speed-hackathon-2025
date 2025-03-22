@@ -23,9 +23,11 @@ interface RecommendedService {
 
 export const recommendedService: RecommendedService = {
   async fetchRecommendedModulesByReferenceId({ referenceId }) {
+    console.log('fetchRecommendedModulesByReferenceId 1')
     const data = await $fetch('/recommended/:referenceId', {
       params: { referenceId },
     });
+    console.log('fetchRecommendedModulesByReferenceId 2')
     return data;
   },
 };

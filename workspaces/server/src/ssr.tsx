@@ -39,16 +39,24 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/*', async (req, reply) => {
+    console.log('/* 1', performance.now());
     // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
+    console.log('/* 2', performance.now());
 
     const store = createStore({});
+    console.log('/* 3', performance.now());
     const handler = createStaticHandler(createRoutes(store));
+    console.log('/* 4', performance.now());
     const context = await handler.query(request);
+    console.log('/* 5', performance.now());
 
     if (context instanceof Response) {
+      console.log('/* 6', performance.now());
       return reply.send(context);
     }
+    console.log('/* 7', performance.now());
+
 
     const router = createStaticRouter(handler.dataRoutes, context);
     renderToString(
