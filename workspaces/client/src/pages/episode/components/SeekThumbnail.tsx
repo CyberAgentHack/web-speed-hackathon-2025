@@ -2,7 +2,7 @@ import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getEpisodeByIdResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { useRef } from 'react';
 
-import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
+import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useSeekThumbnail } from '@wsh-2025/client/src/pages/episode/hooks/useSeekThumbnail';
 
@@ -15,7 +15,7 @@ interface Props {
 export const SeekThumbnail = ({ episode }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const seekThumbnail = useSeekThumbnail({ episode });
-  const pointer = usePointer();
+  const pointer = useSubscribePointer();
   const duration = useDuration();
 
   const elementRect = ref.current?.parentElement?.getBoundingClientRect() ?? { left: 0, width: 0 };
