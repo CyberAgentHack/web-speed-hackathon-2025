@@ -22,6 +22,14 @@ async function init() {
           @view-transition {
             navigation: auto;
           }
+          html, body {
+            height: 100%;
+            width: 100%;
+          }
+          body {
+            background-color: #000000;
+            color: #ffffff;
+          }
           html,
           :host {
             font-family: 'Noto Sans JP', sans-serif !important;
