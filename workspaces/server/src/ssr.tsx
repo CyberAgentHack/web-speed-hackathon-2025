@@ -54,7 +54,7 @@ export function registerSsr(app: FastifyInstance): void {
     renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
+          <StaticRouterProvider context={context} hydrate={true} router={router} />
         </StoreProvider>
       </StrictMode>,
     );

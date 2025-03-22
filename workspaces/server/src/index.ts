@@ -13,8 +13,12 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onSend', async (req, reply) => {
+    if (req.url.startsWith('/public/') && process.env['NODE_ENV'] === 'production') {
+      reply.header('cache-control', 'public, max-age=3600, immutable');
+    } else {
+      reply.header('cache-control', 'no-store');
+    }
   });
   app.register(cors, {
     origin: true,
