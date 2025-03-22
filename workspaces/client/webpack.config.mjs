@@ -52,6 +52,16 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    runtimeChunk: 'single',
+    splitChunks: {
+      chunks: 'all',
+      // 50KB以上のチャンクを分割
+      maxSize: 200 * 1024,
+      minSize: 50 * 1024, // 200KBを超える場合は分割
+    },
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
