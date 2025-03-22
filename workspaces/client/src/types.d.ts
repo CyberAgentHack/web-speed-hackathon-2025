@@ -3,6 +3,11 @@ declare module '*.png' {
   export = value;
 }
 
+declare module '*.avif' {
+  const value: string;
+  export default value;
+}
+
 declare module '*?raw' {
   const value: string;
   export = value;
