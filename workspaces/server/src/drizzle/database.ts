@@ -1,5 +1,3 @@
-import fsp from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -9,27 +7,30 @@ import { drizzle } from 'drizzle-orm/libsql';
 
 const SQLITE_PATH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../database.sqlite');
 
-let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
+let database = null as ReturnType<typeof drizzle<typeof schema>> | null;
 
 export function getDatabase() {
-  if (database == null) {
-    throw new Error('database is initializing.');
+  if (!database) {
+    throw new Error('Database has not been initialized');
   }
   return database;
 }
 
 export async function initializeDatabase(): Promise<void> {
-  database?.$client.close();
-  database = null;
+  if (database) {
+    return;
+  }
 
-  const TEMP_PATH = path.resolve(await fsp.mkdtemp(path.resolve(os.tmpdir(), './wsh-')), './database.sqlite');
-  await fsp.copyFile(SQLITE_PATH, TEMP_PATH);
+  const client = createClient({
+    url: `file:${SQLITE_PATH}`,
+    syncInterval: 5000, // デフォルト1000ms → 更新頻度を下げて I/O 負荷軽減
 
-  database = drizzle({
-    client: createClient({
-      syncInterval: 1000,
-      url: `file:${TEMP_PATH}`,
-    }),
-    schema,
+    concurrency: 0,
   });
+
+  database = drizzle({ client, schema });
+
+  // パフォーマンス向上用 PRAGMA
+  await database.$client.execute(`PRAGMA journal_mode = WAL`);
+  await database.$client.execute(`PRAGMA synchronous = NORMAL`);
 }

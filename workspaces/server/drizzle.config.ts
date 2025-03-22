@@ -8,7 +8,7 @@ export default defineConfig({
   dbCredentials: {
     url: 'file:./database.sqlite',
   },
-  dialect: 'turso',
+  dialect: 'sqlite',
   out: './migrations',
   schema: require.resolve('@wsh-2025/schema/src/database/schema.ts'),
 });
