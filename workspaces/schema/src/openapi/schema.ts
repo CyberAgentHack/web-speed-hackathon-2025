@@ -45,6 +45,14 @@ const series = z.object({
 });
 assertSchema(series, createSelectSchema(databaseSchema.series));
 
+const simpleSeries = z.object({
+  id: z.string().openapi({ format: 'uuid' }),
+  title: z.string().openapi({ example: '吾輩は猫である' }),
+  thumbnailUrl: z.string().openapi({
+    example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+  }),
+});
+
 const program = z.object({
   id: z.string().openapi({ format: 'uuid' }),
   title: z.string().openapi({ example: '吾輩は猫である' }),
@@ -182,16 +190,10 @@ export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
-          .nullable(),
+        series: simpleSeries.nullable(),
         episode: episode
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
+            series: simpleSeries,
           })
           .nullable(),
       }),
