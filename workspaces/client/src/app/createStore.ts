@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -13,6 +12,36 @@ import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetab
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+
+function deepMerge<T extends object, S extends object>(target: T, source?: S): T & S {
+  if (!source) return target as T & S;
+  
+  const output = { ...target };
+  
+  for (const key in source) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      const targetValue = output[key as keyof typeof output];
+      const sourceValue = source[key];
+      
+      if (
+        typeof sourceValue === 'object' && sourceValue !== null &&
+        typeof targetValue === 'object' && targetValue !== null &&
+        !Array.isArray(sourceValue) && !Array.isArray(targetValue)
+      ) {
+        // オブジェクト同士の場合は再帰的にマージ
+        output[key as keyof typeof output] = deepMerge(
+          targetValue as object,
+          sourceValue as object
+        ) as any;
+      } else {
+        // その他の場合はソースの値で上書き
+        output[key as keyof typeof output] = sourceValue as any;
+      }
+    }
+  }
+  
+  return output as T & S;
+}
 
 interface Props {
   hydrationData?: unknown;
@@ -39,7 +68,7 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  store.setState((s) => deepMerge(s, hydrationData as object));
 
   return store;
 };
