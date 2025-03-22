@@ -14,7 +14,7 @@ async function main() {
   const app = fastify();
 
   // 圧縮プラグインを登録
-  app.register(fastifyCompress);
+  // app.register(fastifyCompress);
 
   app.addHook('onSend', async (_req, reply) => {
     reply.header('cache-control', 'no-store');
