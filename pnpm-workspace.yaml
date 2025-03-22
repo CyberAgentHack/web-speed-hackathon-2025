@@ -4,3 +4,4 @@ packages:
   - ./workspaces/client
   - ./workspaces/server
   - ./workspaces/test
+  - ./workspaces/script
