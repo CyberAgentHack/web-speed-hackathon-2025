@@ -2,6 +2,7 @@ import '@wsh-2025/server/src/setups/luxon';
 
 import cors from '@fastify/cors';
 import fastify from 'fastify';
+import compress from '@fastify/compress';
 
 import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
@@ -26,6 +27,7 @@ async function main() {
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
   app.register(registerSsr);
+  app.register(compress);
 
   await app.ready();
   const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });
