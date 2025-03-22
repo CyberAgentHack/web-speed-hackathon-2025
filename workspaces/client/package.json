@@ -1,6 +1,11 @@
 {
   "name": "@wsh-2025/client",
   "private": true,
+  "sideEffects": [
+    "*.css",
+    "./src/setups/*.ts",
+    "./src/main.tsx"
+  ],
   "scripts": {
     "build": "wireit",
     "format": "wireit",

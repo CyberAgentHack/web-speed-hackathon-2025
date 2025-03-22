@@ -5,7 +5,9 @@ import webpack from 'webpack';
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: process.env['NODE_ENV'] === 'production' ? 'source-map' : 'inline-source-map',
-  entry: './src/main.tsx',
+  entry: {
+    main: './src/main.tsx'
+  },
   mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
   module: {
     rules: [
@@ -53,6 +55,8 @@ const config = {
   },
   optimization: {
     minimize: process.env['NODE_ENV'] === 'production',
+    usedExports: true,
+    sideEffects: true,
     splitChunks: {
       chunks: 'all',
       cacheGroups: {
@@ -63,11 +67,13 @@ const config = {
         },
       },
     },
-    runtimeChunk: 'single',
+    runtimeChunk: {
+      name: 'runtime'
+    },
   },
   output: {
-    chunkFilename: '[name].[contenthash].js',
-    filename: '[name].[contenthash].js',
+    chunkFilename: 'chunk-[contenthash].js',
+    filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
