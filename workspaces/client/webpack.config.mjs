@@ -1,6 +1,7 @@
 import path from 'node:path';
-
 import webpack from 'webpack';
+// ここを追加
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -22,9 +23,7 @@ const config = {
                 '@babel/preset-env',
                 {
                   corejs: false,
-                  targets: {
-                    chrome: '134',
-                  },
+                  targets: { chrome: '134' },
                   useBuiltIns: false,
                 },
               ],
@@ -52,8 +51,6 @@ const config = {
     ],
   },
   output: {
-    // chunkFilename: 'chunk-[contenthash].js',
-    // chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(process.cwd(), 'dist'),
     publicPath: 'auto',
@@ -61,11 +58,26 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+
+    // BundleAnalyzerPlugin を追加
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static', // 'server' や 'json' なども指定可能
+      openAnalyzer: true,     // ビルド後に自動でブラウザを開きます
+      reportFilename: 'report.html',
+    }),
   ],
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      '@ffmpeg/core$': path.resolve(
+        import.meta.dirname,
+        'node_modules',
+        '@ffmpeg/core/dist/umd/ffmpeg-core.js'
+      ),
+      '@ffmpeg/core/wasm$': path.resolve(
+        import.meta.dirname,
+        'node_modules',
+        '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'
+      ),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
