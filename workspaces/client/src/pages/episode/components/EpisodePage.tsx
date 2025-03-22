@@ -1,3 +1,4 @@
+// import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
@@ -8,7 +9,6 @@ import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
-import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
@@ -74,9 +74,9 @@ export const EpisodePage = () => {
                 fallback={
                   <div
                     style={{
-                      width: '100%',
                       aspectRatio: 16 / 9,
                       position: 'relative',
+                      width: '100%',
                     }}
                   >
                     <div className="grid size-full">
