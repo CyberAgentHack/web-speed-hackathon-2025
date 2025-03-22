@@ -1,28 +1,28 @@
-import { readdirSync } from "node:fs";
+// import { readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import fastifyStatic from "@fastify/static";
-import { StoreProvider } from "@wsh-2025/client/src/app/StoreContext";
+// import { StoreProvider } from "@wsh-2025/client/src/app/StoreContext";
 import { createRoutes } from "@wsh-2025/client/src/app/createRoutes";
 import { createStore } from "@wsh-2025/client/src/app/createStore";
 import type { FastifyInstance } from "fastify";
 import { createStandardRequest } from "fastify-standard-request-reply";
 import htmlescape from "htmlescape";
-import { StrictMode } from "react";
-import { renderToString } from "react-dom/server";
+// import { StrictMode } from "react";
+// import { renderToString } from "react-dom/server";
 import {
-	StaticRouterProvider,
+	// StaticRouterProvider,
 	createStaticHandler,
-	createStaticRouter,
+	// createStaticRouter,
 } from "react-router";
 
-function getFiles(parent: string): string[] {
-	const dirents = readdirSync(parent, { withFileTypes: true });
-	return dirents
-		.filter((dirent) => dirent.isFile() && !dirent.name.startsWith("."))
-		.map((dirent) => path.join(parent, dirent.name));
-}
+// function getFiles(parent: string): string[] {
+// 	const dirents = readdirSync(parent, { withFileTypes: true });
+// 	return dirents
+// 		.filter((dirent) => dirent.isFile() && !dirent.name.startsWith("."))
+// 		.map((dirent) => path.join(parent, dirent.name));
+// }
 
 // function getFilePaths(relativePath: string, rootDir: string): string[] {
 // 	const files = getFiles(path.resolve(rootDir, relativePath));
@@ -60,18 +60,18 @@ export function registerSsr(app: FastifyInstance): void {
 			return reply.send(context);
 		}
 
-		const router = createStaticRouter(handler.dataRoutes, context);
-		renderToString(
-			<StrictMode>
-				<StoreProvider createStore={() => store}>
-					<StaticRouterProvider
-						context={context}
-						hydrate={true}
-						router={router}
-					/>
-				</StoreProvider>
-			</StrictMode>,
-		);
+		// const router = createStaticRouter(handler.dataRoutes, context);
+		// renderToString(
+		// 	<StrictMode>
+		// 		<StoreProvider createStore={() => store}>
+		// 			<StaticRouterProvider
+		// 				context={context}
+		// 				hydrate={true}
+		// 				router={router}
+		// 			/>
+		// 		</StoreProvider>
+		// 	</StrictMode>,
+		// );
 
 		// const rootDir = path.resolve(__dirname, "../../../");
 		// const imagePaths = [
