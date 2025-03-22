@@ -56,6 +56,9 @@
     "mikanjs": "1.0.14",
     "type-fest": "4.29.1"
   },
+  "volta": {
+    "node": "22.14.0"
+  },
   "wireit": {
     "database:migrate": {
       "command": "drizzle-kit generate && drizzle-kit push"
