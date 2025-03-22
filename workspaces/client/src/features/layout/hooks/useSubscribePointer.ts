@@ -10,7 +10,8 @@ export function useSubscribePointer(): void {
     const abortController = new AbortController();
 
     // 位置が変わったときだけ更新するように最適化
-    const handlePointerMove = debounce((ev: MouseEvent) => {
+    const handlePointerMove = debounce((...args: unknown[]) => {
+      const ev = args[0] as MouseEvent;
       updatePointer({ x: ev.clientX, y: ev.clientY });
     }, 16); // 約60FPSに制限
 
