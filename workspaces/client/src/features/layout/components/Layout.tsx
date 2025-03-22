@@ -1,17 +1,34 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, Suspense, lazy } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
-import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
-import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
-import { SignUpDialog } from '@wsh-2025/client/src/features/auth/components/SignUpDialog';
 import { AuthDialogType } from '@wsh-2025/client/src/features/auth/constants/auth_dialog_type';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
-import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
+
+const LazySignInDialog = lazy(() =>
+  import('@wsh-2025/client/src/features/auth/components/SignInDialog').then((module) => ({
+    default: module.SignInDialog,
+  })),
+);
+const LazySignUpDialog = lazy(() =>
+  import('@wsh-2025/client/src/features/auth/components/SignUpDialog').then((module) => ({
+    default: module.SignUpDialog,
+  })),
+);
+const LazySignOutDialog = lazy(() =>
+  import('@wsh-2025/client/src/features/auth/components/SignOutDialog').then((module) => ({
+    default: module.SignOutDialog,
+  })),
+);
+const LazyLoading = lazy(() =>
+  import('@wsh-2025/client/src/features/layout/components/Loading').then((module) => ({
+    default: module.Loading,
+  })),
+);
 
 interface Props {
   children: ReactNode;
@@ -40,7 +57,6 @@ export const Layout = ({ children }: Props) => {
     };
 
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -51,6 +67,31 @@ export const Layout = ({ children }: Props) => {
   }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
+
+  const renderAuthDialog = () => {
+    switch (authDialogType) {
+      case AuthDialogType.SignIn:
+        return (
+          <Suspense fallback={null}>
+            <LazySignInDialog isOpen onClose={authActions.closeDialog} onOpenSignUp={authActions.openSignUpDialog} />
+          </Suspense>
+        );
+      case AuthDialogType.SignUp:
+        return (
+          <Suspense fallback={null}>
+            <LazySignUpDialog isOpen onClose={authActions.closeDialog} onOpenSignIn={authActions.openSignInDialog} />
+          </Suspense>
+        );
+      case AuthDialogType.SignOut:
+        return (
+          <Suspense fallback={null}>
+            <LazySignOutDialog isOpen onClose={authActions.closeDialog} />
+          </Suspense>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -107,24 +148,16 @@ export const Layout = ({ children }: Props) => {
           </Flipper>
         </main>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="sticky top-[80px] z-50 [grid-area:b2]">
-            <Loading />
+            <Suspense fallback={null}>
+              <LazyLoading />
+            </Suspense>
           </div>
-        ) : null}
+        )}
       </div>
 
-      <SignInDialog
-        isOpen={authDialogType === AuthDialogType.SignIn}
-        onClose={authActions.closeDialog}
-        onOpenSignUp={authActions.openSignUpDialog}
-      />
-      <SignUpDialog
-        isOpen={authDialogType === AuthDialogType.SignUp}
-        onClose={authActions.closeDialog}
-        onOpenSignIn={authActions.openSignInDialog}
-      />
-      <SignOutDialog isOpen={authDialogType === AuthDialogType.SignOut} onClose={authActions.closeDialog} />
+      {renderAuthDialog()}
     </>
   );
 };
