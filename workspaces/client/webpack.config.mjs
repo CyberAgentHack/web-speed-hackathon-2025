@@ -69,7 +69,7 @@ const config = {
   plugins: [
     // new BundleAnalyzerPlugin(),
     // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
     // new BundleAnalyzerPlugin(),
   ],
   resolve: {
