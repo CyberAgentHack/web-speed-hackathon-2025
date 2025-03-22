@@ -1,13 +1,13 @@
 import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
-import { useId } from 'react';
+import { useId, memo } from 'react';
 import { Field, Form } from 'react-final-form';
 import { z } from 'zod';
 
-import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
-import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
-import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
-import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { useAuthActions } from '@/features/auth/hooks/useAuthActions';
+import { isValidEmail } from '@/features/auth/logics/isValidEmail';
+import { isValidPassword } from '@/features/auth/logics/isValidPassword';
+import { Dialog } from '@/features/dialog/components/Dialog';
 
 interface SignInFormValues {
   email: string;
@@ -20,21 +20,35 @@ interface Props {
   onOpenSignIn: () => void;
 }
 
-export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
+export const SignUpDialog = memo(function SignUpDialog({
+  isOpen,
+  onClose,
+  onOpenSignIn
+}: Props) {
   const authActions = useAuthActions();
   const emailId = useId();
   const passwordId = useId();
 
+  // バリデーションスキーマをコンポーネント外で定義してもOK
+  const schema = z.object({
+    email: z
+      .string({ required_error: 'メールアドレスを入力してください' })
+      .refine(isValidEmail, { message: 'メールアドレスが正しくありません' }),
+    password: z
+      .string({ required_error: 'パスワードを入力してください' })
+      .refine(isValidPassword, { message: 'パスワードが正しくありません' })
+  });
+
+  const validate = (values: SignInFormValues) => {
+    const result = schema.safeParse(values);
+    return result.success ? undefined : result.error.formErrors.fieldErrors;
+  };
+
   const onSubmit = async (values: SignInFormValues) => {
     try {
-      await authActions.signUp({
-        email: values.email,
-        password: values.password,
-      });
-
+      await authActions.signUp({ email: values.email, password: values.password });
       alert('新規会員登録に成功しました');
       onClose();
-      return;
     } catch (e) {
       if (e instanceof BetterFetchError && e.status === 400) {
         return { [FORM_ERROR]: '入力した情報が正しくありません' };
@@ -47,90 +61,75 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
+          <img
+            alt="AremaTVロゴ"
+            className="object-contain"
+            height={36}
+            src="/public/arema.svg"
+            width={98}
+            loading="lazy"
+          />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">会員登録</h2>
 
-        <Form
-          validate={(values) => {
-            const schema = z.object({
-              email: z
-                .string({ required_error: 'メールアドレスを入力してください' })
-                .and(z.custom(isValidEmail, { message: 'メールアドレスが正しくありません' })),
-              password: z
-                .string({ required_error: 'パスワードを入力してください' })
-                .and(z.custom(isValidPassword, { message: 'パスワードが正しくありません' })),
-            });
-            const result = schema.safeParse(values);
-            return result.success ? undefined : result.error.formErrors.fieldErrors;
-          }}
-          onSubmit={onSubmit}
-        >
+        <Form onSubmit={onSubmit} validate={validate}>
           {({ handleSubmit, hasValidationErrors, submitError, submitting }) => (
-            <form className="mb-[16px]" onSubmit={(ev) => void handleSubmit(ev)}>
+            <form className="mb-[16px]" onSubmit={handleSubmit}>
               <Field name="email">
-                {({ input, meta }) => {
-                  return (
-                    <div className="mb-[24px]">
-                      <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
-                        <label className="shrink-0 grow-0" htmlFor={emailId}>
-                          メールアドレス
-                        </label>
-                        {meta.modified && Array.isArray(meta.error) ? (
-                          <span className="shrink-0 grow-0 text-[#F0163A]">{meta.error[0]}</span>
-                        ) : null}
-                      </div>
-                      <input
-                        {...input}
-                        required
-                        className="w-full rounded-[4px] border-[2px] border-solid border-[#FFFFFF1F] bg-[#FFFFFF] p-[12px] text-[14px] text-[#212121] placeholder:text-[#999999]"
-                        id={emailId}
-                        placeholder="メールアドレスを入力"
-                        type="email"
-                      />
+                {({ input, meta }) => (
+                  <div className="mb-[24px]">
+                    <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
+                      <label htmlFor={emailId}>メールアドレス</label>
+                      {meta.modified && meta.error && Array.isArray(meta.error) && (
+                        <span className="text-[#F0163A]">{meta.error[0]}</span>
+                      )}
                     </div>
-                  );
-                }}
+                    <input
+                      {...input}
+                      id={emailId}
+                      type="email"
+                      required
+                      placeholder="メールアドレスを入力"
+                      className="w-full rounded-[4px] border-[2px] border-[#FFFFFF1F] bg-[#FFFFFF] p-[12px] text-[14px] text-[#212121]"
+                    />
+                  </div>
+                )}
               </Field>
 
               <Field name="password">
-                {({ input, meta }) => {
-                  return (
-                    <div className="mb-[24px]">
-                      <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
-                        <label className="shrink-0 grow-0" htmlFor={passwordId}>
-                          パスワード
-                        </label>
-                        {meta.modified && Array.isArray(meta.error) ? (
-                          <span className="shrink-0 grow-0 text-[#F0163A]">{meta.error[0]}</span>
-                        ) : null}
-                      </div>
-                      <input
-                        {...input}
-                        required
-                        className="w-full rounded-[4px] border-[2px] border-solid border-[#FFFFFF1F] bg-[#FFFFFF] p-[12px] text-[14px] text-[#212121] placeholder:text-[#999999]"
-                        id={passwordId}
-                        placeholder="パスワードを入力"
-                        type="password"
-                      />
+                {({ input, meta }) => (
+                  <div className="mb-[24px]">
+                    <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
+                      <label htmlFor={passwordId}>パスワード</label>
+                      {meta.modified && meta.error && Array.isArray(meta.error) && (
+                        <span className="text-[#F0163A]">{meta.error[0]}</span>
+                      )}
                     </div>
-                  );
-                }}
+                    <input
+                      {...input}
+                      id={passwordId}
+                      type="password"
+                      required
+                      placeholder="パスワードを入力"
+                      className="w-full rounded-[4px] border-[2px] border-[#FFFFFF1F] bg-[#FFFFFF] p-[12px] text-[14px] text-[#212121]"
+                    />
+                  </div>
+                )}
               </Field>
 
-              {submitError ? (
-                <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
+              {submitError && (
+                <div className="mb-[8px] flex w-full flex-row items-center rounded-[4px] border-[2px] border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
                   <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
                   <span>{submitError}</span>
                 </div>
-              ) : null}
+              )}
 
               <div className="flex flex-row justify-center">
                 <button
-                  className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
-                  disabled={submitting || hasValidationErrors}
                   type="submit"
+                  disabled={submitting || hasValidationErrors}
+                  className="block w-[160px] rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
                 >
                   アカウント作成
                 </button>
@@ -141,9 +140,9 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
 
         <div className="flex flex-row justify-center">
           <button
-            className="block bg-transparent text-[14px] text-[#999999] underline"
             type="button"
             onClick={onOpenSignIn}
+            className="bg-transparent text-[14px] text-[#999999] underline"
           >
             既にあるアカウントにログインする
           </button>
@@ -151,4 +150,4 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
       </div>
     </Dialog>
   );
-};
+});
