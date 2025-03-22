@@ -1,4 +1,3 @@
-
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -56,6 +55,8 @@ export function registerSsr(app: FastifyInstance): void {
           <script src="/public/runtime.js"></script>
           <script src="/public/vendors.js"></script>
           <script src="/public/main.js"></script>
+          <!-- 重要な画像のみをプリロード -->
+          <link rel="preload" href="/public/arema.svg" as="image" />
         </head>
         <body></body>
       </html>
