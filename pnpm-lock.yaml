@@ -90,9 +90,6 @@ importers:
       react-ellipsis-component:
         specifier: 1.1.11
         version: 1.1.11(react@19.0.0)
-      react-final-form:
-        specifier: 6.5.9
-        version: 6.5.9(final-form@4.20.10)(react@19.0.0)
       react-flip-toolkit:
         specifier: 7.2.4
         version: 7.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -127,8 +124,8 @@ importers:
         specifier: 1.0.3
         version: 1.0.3
       zod:
-        specifier: link:@hookform/resolvers/zod
-        version: link:@hookform/resolvers/zod
+        specifier: 3.24.1
+        version: 3.24.1
       zustand:
         specifier: 5.0.3
         version: 5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
@@ -232,19 +229,12 @@ importers:
 
   workspaces/configs:
     dependencies:
-      globals:
-        specifier: 15.12.0
-        version: 15.12.0
-    devDependencies:
       '@eslint/js':
         specifier: 9.15.0
         version: 9.15.0
       '@tsconfig/strictest':
         specifier: 2.0.5
         version: 2.0.5
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
       eslint:
         specifier: 9.15.0
         version: 9.15.0
@@ -263,6 +253,9 @@ importers:
       eslint-plugin-sort:
         specifier: 4.0.0
         version: 4.0.0(eslint@9.15.0)(typescript@5.7.2)
+      globals:
+        specifier: 15.12.0
+        version: 15.12.0
       prettier:
         specifier: 3.4.0
         version: 3.4.0
@@ -281,6 +274,10 @@ importers:
       typescript-eslint:
         specifier: 8.16.0
         version: 8.16.0(eslint@9.15.0)(typescript@5.7.2)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
 
   workspaces/schema:
     dependencies:
@@ -4441,12 +4438,6 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
-
-  react-final-form@6.5.9:
-    resolution: {integrity: sha512-x3XYvozolECp3nIjly+4QqxdjSSWfcnpGEL5K8OBT6xmGrq5kBqbA6+/tOqoom9NwqIPPbxPNsOViFlbKgowbA==}
-    peerDependencies:
-      final-form: ^4.20.4
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   react-flip-toolkit@7.2.4:
     resolution: {integrity: sha512-+aZBZwzHBDfJzMRLjAAOKiBkrk8PV0YFVE0k1x85+UsykApLwg8a0LlQ5H80uFltFZmGtrQ7EE1krhiZ1jI5ig==}
@@ -9492,12 +9483,6 @@ snapshots:
     dependencies:
       react: 19.0.0
       resize-observer-polyfill: 1.5.1
-
-  react-final-form@6.5.9(final-form@4.20.10)(react@19.0.0):
-    dependencies:
-      '@babel/runtime': 7.26.10
-      final-form: 4.20.10
-      react: 19.0.0
 
   react-flip-toolkit@7.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
