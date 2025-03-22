@@ -15,6 +15,8 @@ declare global {
   var __staticRouterHydrationData: HydrationState;
 }
 
+console.log('client');
+
 function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
