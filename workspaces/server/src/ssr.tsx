@@ -73,16 +73,9 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
         </head>
         <body></body>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${JSON.stringify({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
     `);
   });
 }
