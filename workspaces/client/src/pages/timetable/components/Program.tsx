@@ -1,9 +1,9 @@
-import { StandardSchemaV1 } from '@standard-schema/spec';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
-import { ArrayValues } from 'type-fest';
+import type { ArrayValues } from 'type-fest';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
@@ -35,14 +35,25 @@ export const Program = ({ height, program }: Props): ReactElement => {
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    let rafId: number | null = null;
+
+    const checkImageVisibility = () => {
       const imageHeight = imageRef.current?.clientHeight ?? 0;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
+
+      // 다음 프레임에 다시 요청
+      rafId = requestAnimationFrame(checkImageVisibility);
+    };
+
+    // 초기 애니메이션 프레임 요청
+    rafId = requestAnimationFrame(checkImageVisibility);
+
     return () => {
-      clearInterval(interval);
+      // 애니메이션 프레임 취소
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [height]);
 
