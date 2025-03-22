@@ -175,9 +175,6 @@ importers:
       '@types/react-dom':
         specifier: 19.0.2
         version: 19.0.2(@types/react@19.0.1)
-      '@types/webpack-bundle-analyzer':
-        specifier: 4.7.0
-        version: 4.7.0(webpack-cli@5.1.4)
       '@types/wicg-task-scheduling':
         specifier: 2024.1.0
         version: 2024.1.0
@@ -2049,9 +2046,6 @@ packages:
 
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
-
-  '@types/webpack-bundle-analyzer@4.7.0':
-    resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
 
   '@types/wicg-task-scheduling@2024.1.0':
     resolution: {integrity: sha512-9g5QVDU8Na3P6rPMbyYx5pS8UpGDfzys8T7Xq5HMTbI7elSq/YioGbBVAh2u67JGNTThZ3o9PK0/qBvaVOYPYQ==}
@@ -6966,17 +6960,6 @@ snapshots:
   '@types/sockjs@0.3.36':
     dependencies:
       '@types/node': 22.10.0
-
-  '@types/webpack-bundle-analyzer@4.7.0(webpack-cli@5.1.4)':
-    dependencies:
-      '@types/node': 22.10.0
-      tapable: 2.2.1
-      webpack: 5.96.1(webpack-cli@5.1.4)
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-      - webpack-cli
 
   '@types/wicg-task-scheduling@2024.1.0': {}
 
