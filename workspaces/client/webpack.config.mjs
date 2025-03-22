@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+// test
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
