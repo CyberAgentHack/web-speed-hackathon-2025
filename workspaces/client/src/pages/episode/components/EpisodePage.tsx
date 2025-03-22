@@ -3,6 +3,7 @@ import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
+import { Icon } from '@iconify/react';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
@@ -79,7 +80,10 @@ export const EpisodePage = () => {
                         loading="lazy"
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <Icon
+                        icon="line-md:loading-twotone-loop"
+                        className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]"
+                      />
                     </div>
                   </AspectRatio>
                 }
