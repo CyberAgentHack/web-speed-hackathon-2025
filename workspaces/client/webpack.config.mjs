@@ -52,6 +52,28 @@ const config = {
     moduleIds: 'deterministic',
     // runtimeChunk: 'single',
     splitChunks: false,
+    // minimizer: [
+    //   new TerserPlugin({
+    //     // 並列処理の実行を有効化
+    //     // 同時に実行するを数値を設定
+    //     parallel: 4,
+    //     // swcを有効化
+    //     // minify: TerserPlugin.swcMinify,
+    //     // Minify Optionsを設定
+    //     terserOptions: {
+    //       // 最適化
+    //       compress: {
+    //         ecma: 5,
+    //         comparisons: false,
+    //         inline: 2,
+    //       },
+    //       // 変数名を短く
+    //       mangle: {
+    //         safari10: true,
+    //       },
+    //     },
+    //   }),
+    // ],
   },
 
   plugins: [
@@ -61,10 +83,6 @@ const config = {
   ],
 
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };
