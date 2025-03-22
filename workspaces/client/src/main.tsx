@@ -16,10 +16,25 @@ declare global {
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const router = createBrowserRouter(createRoutes(store), {
+    hydrationData: window.__staticRouterHydrationData
+  });
+
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    console.error('Root element not found, falling back to document body');
+    // SSRでレンダリングされたHTMLとの整合性を考慮
+    hydrateRoot(
+      document.body,
+      <StoreProvider createStore={() => store}>
+        <RouterProvider router={router} />
+      </StoreProvider>,
+    );
+    return;
+  }
 
   hydrateRoot(
-    document,
+    rootElement,
     <StoreProvider createStore={() => store}>
       <RouterProvider router={router} />
     </StoreProvider>,
