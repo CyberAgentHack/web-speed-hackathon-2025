@@ -6,7 +6,6 @@ import webpack from 'webpack';
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-
   mode: 'none',
   module: {
     rules: [
@@ -26,7 +25,6 @@ const config = {
                   corejs: '3.41',
                   forceAllTransforms: true,
                   targets: 'defaults',
-
                   useBuiltIns: 'entry',
                 },
               ],
@@ -36,7 +34,6 @@ const config = {
           },
         },
       },
-
       {
         test: /\.png$/,
         type: 'asset/inline',
@@ -59,12 +56,9 @@ const config = {
     chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto',
+    publicPath: '/public/',
   },
-  plugins: [
-    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' })],
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),

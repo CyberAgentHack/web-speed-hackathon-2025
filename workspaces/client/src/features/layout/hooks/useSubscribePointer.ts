@@ -13,6 +13,10 @@ export function useSubscribePointer(): void {
       if (current.x !== ev.clientX || current.y !== ev.clientY) {
         current.x = ev.clientX;
         current.y = ev.clientY;
+
+        requestAnimationFrame(() => {
+          s.features.layout.updatePointer({ x: current.x, y: current.y });
+        });
       }
     };
     window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
