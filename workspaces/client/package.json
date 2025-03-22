@@ -14,6 +14,7 @@
     "@epic-web/restore-scroll": "1.1.1",
     "@ffmpeg/ffmpeg": "0.12.15",
     "@headlessui/react": "2.2.0",
+    "@iconify/react": "5.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@standard-schema/spec": "1.0.0",
     "@wsh-2025/client": "workspace:*",

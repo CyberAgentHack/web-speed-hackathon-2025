@@ -1,5 +1,6 @@
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { useMuted } from '@wsh-2025/client/src/pages/program/hooks/useMuted';
+import { Icon } from '@iconify/react';
 
 export const PlayerController = () => {
   const [muted, toggleMuted] = useMuted();
@@ -25,8 +26,9 @@ export const PlayerController = () => {
                   toggleMuted();
                 }}
               >
-                <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                <Icon
+                  icon={`material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'}`}
+                  className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
                 />
               </button>
             </Hoverable>

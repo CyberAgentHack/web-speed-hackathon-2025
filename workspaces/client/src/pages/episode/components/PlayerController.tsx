@@ -3,6 +3,7 @@ import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
+import { Icon } from '@iconify/react';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
@@ -61,8 +62,9 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  <Icon
+                    icon={`material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'}`}
+                    className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
                   />
                 </button>
               </Hoverable>
@@ -82,8 +84,9 @@ export const PlayerController = ({ episode }: Props) => {
                 className="block rounded-[4px]"
                 type="button"
               >
-                <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                <Icon
+                  icon={`material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'}`}
+                  className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
                   onClick={() => {
                     toggleMuted();
                   }}

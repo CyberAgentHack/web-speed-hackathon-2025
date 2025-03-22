@@ -59,15 +59,6 @@ const configs = [
       eqeqeq: ['error', 'always', { null: 'never' }],
       'import/no-named-as-default': ['off'],
       'import/no-named-as-default-member': ['off'],
-      'import/order': [
-        'error',
-        {
-          alphabetize: {
-            order: 'asc',
-          },
-          'newlines-between': 'always',
-        },
-      ],
       'react/jsx-sort-props': [
         'error',
         {
