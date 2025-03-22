@@ -10,7 +10,6 @@ const formatTime = (seconds: number): string => {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
@@ -58,10 +57,9 @@ export const PlayerController = ({ episode }: Props) => {
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
                 <button
                   aria-label={playing ? '一時停止する' : '再生する'}
-                  className="block rounded-[4px]"
+                  className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F] cursor-pointer"
                   type="button"
                   onClick={() => {
                     togglePlaying();
@@ -71,7 +69,6 @@ export const PlayerController = ({ episode }: Props) => {
                     className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
                   />
                 </button>
-              </Hoverable>
 
               <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
                 {formatTime(currentTime)}
@@ -82,10 +79,9 @@ export const PlayerController = ({ episode }: Props) => {
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
               <button
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
-                className="block rounded-[4px]"
+                className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F] cursor-pointer"
                 type="button"
               >
                 <span
@@ -95,7 +91,6 @@ export const PlayerController = ({ episode }: Props) => {
                   }}
                 />
               </button>
-            </Hoverable>
           </div>
         </div>
       </div>

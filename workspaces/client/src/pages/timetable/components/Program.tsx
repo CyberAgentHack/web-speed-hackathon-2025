@@ -4,7 +4,6 @@ import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
@@ -46,9 +45,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
 
   return (
     <>
-      <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
         <button
-          className="w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left"
+          className={`w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left cursor-pointer ${isArchived ? 'hover:brightness-200' : 'hover:brightness-125'}`}
           style={{
             backgroundColor: isBroadcasting ? '#FCF6E5' : '#212121',
             height: `${height}px`,
@@ -84,7 +82,6 @@ export const Program = ({ height, program }: Props): ReactElement => {
             </div>
           </div>
         </button>
-      </Hoverable>
       <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />
     </>
   );

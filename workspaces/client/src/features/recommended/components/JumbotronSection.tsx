@@ -10,8 +10,6 @@ import { ArrayValues } from 'type-fest';
 import { Player } from '../../player/components/Player';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
-
 interface Props {
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;
 }
@@ -23,10 +21,9 @@ export const JumbotronSection = ({ module }: Props) => {
   invariant(episode);
 
   return (
-    <Hoverable classNames={{ hovered: 'opacity-50' }}>
       <NavLink
         viewTransition
-        className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
+        className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717] hover:opacity-50 cursor-pointer"
         to={`/episodes/${episode.id}`}
       >
         {({ isTransitioning }) => {
@@ -55,6 +52,5 @@ export const JumbotronSection = ({ module }: Props) => {
           );
         }}
       </NavLink>
-    </Hoverable>
   );
 };
