@@ -13,11 +13,8 @@ async function main() {
 
   const app = fastify();
 
-  // 圧縮プラグインを登録
-  // app.register(fastifyCompress);
-
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    reply.header('Cache-Control', 'public, max-age=3600'); // 1時間キャッシュ
   });
 
   app.register(cors, {
@@ -25,6 +22,9 @@ async function main() {
   });
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
+  app.register(fastifyCompress, { 
+    global: true ,
+  });
   app.register(registerSsr);
 
   await app.ready();
