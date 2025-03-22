@@ -18,6 +18,7 @@
     "@fastify/swagger": "9.4.0",
     "@fastify/swagger-ui": "5.1.0",
     "@libsql/client": "0.14.0",
+    "htmlescape": "1.1.1",
     "@wsh-2025/client": "workspace:*",
     "@wsh-2025/schema": "workspace:*",
     "@wsh-2025/server": "workspace:*",
