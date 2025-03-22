@@ -88,7 +88,7 @@ export const EpisodePage = () => {
                   <Player
                     className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.HlsJS}
+                    playerType={PlayerType.ShakaPlayer}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
 
