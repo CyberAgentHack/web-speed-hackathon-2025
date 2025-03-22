@@ -41,7 +41,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
       }
       assignRef(playerRef, null);
     };
-  }, [playerType, playlistUrl, loop]);
+  }, []);
 
   return (
     <div className={className}>
