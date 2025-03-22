@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-// @ts-ignore型定義の問題を無視
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 // 基本プラグイン
@@ -10,11 +9,9 @@ const basePlugins = [
 ];
 
 // 条件付きでアナライザープラグインを追加
-// @ts-ignore型エラーを無視
 const plugins = process.env['ANALYZE'] === 'true'
   ? [
     ...basePlugins,
-    // @ts-ignore型エラーを無視
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: 'bundle-report.html',
@@ -25,9 +22,9 @@ const plugins = process.env['ANALYZE'] === 'true'
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: process.env['NODE_ENV'] === 'production' ? false : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
   module: {
     rules: [
       {
