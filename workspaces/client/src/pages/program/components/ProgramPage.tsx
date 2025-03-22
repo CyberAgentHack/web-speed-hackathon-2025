@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
-import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -49,48 +48,63 @@ export const ProgramPage = () => {
 
   const playerRef = usePlayerRef();
 
-  const forceUpdate = useUpdate();
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+
+  const [currentPhase, setCurrentPhase] = useState(() => {
+    const now = DateTime.now();
+    if (now < DateTime.fromISO(program.startAt)) {
+      return 'upcoming';
+    } else if (now < DateTime.fromISO(program.endAt)) {
+      return 'live';
+    } else {
+      return 'archived';
+    }
+  });
   useEffect(() => {
-    if (isArchivedRef.current) {
-      return;
-    }
+    let timeout: NodeJS.Timeout | null = null;
 
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
-    if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
-        forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-    let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
-        return;
-      }
-
-      if (nextProgram?.id) {
-        void navigate(`/programs/${nextProgram.id}`, {
-          preventScrollReset: true,
-          replace: true,
-          state: { loading: 'none' },
-        });
+    if (currentPhase === 'upcoming') {
+      const timeUntilStart = DateTime.fromISO(program.startAt).diffNow('milliseconds').toMillis();
+      if (timeUntilStart > 0) {
+        timeout = setTimeout(() => {
+          setCurrentPhase('live');
+        }, timeUntilStart);
       } else {
-        isArchivedRef.current = true;
-        forceUpdate();
+        setCurrentPhase('live');
       }
-    }, 250);
+    } else if (currentPhase === 'live') {
+      const timeUntilEnd = DateTime.fromISO(program.endAt).diffNow('milliseconds').toMillis();
+      if (timeUntilEnd > 0) {
+        timeout = setTimeout(() => {
+          if (nextProgram?.id) {
+            navigate(`/programs/${nextProgram.id}`, {
+              preventScrollReset: true,
+              replace: true,
+              state: { loading: 'none' },
+            });
+          } else {
+            setCurrentPhase('archived');
+          }
+        }, timeUntilEnd);
+      } else {
+        if (nextProgram?.id) {
+          navigate(`/programs/${nextProgram.id}`, {
+            preventScrollReset: true,
+            replace: true,
+            state: { loading: 'none' },
+          });
+        } else {
+          setCurrentPhase('archived');
+        }
+      }
+    }
+
     return () => {
-      clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
     };
-  }, [isBroadcastStarted, nextProgram?.id]);
+  }, [currentPhase, program.startAt, program.endAt, nextProgram?.id, navigate]);
 
   return (
     <>
