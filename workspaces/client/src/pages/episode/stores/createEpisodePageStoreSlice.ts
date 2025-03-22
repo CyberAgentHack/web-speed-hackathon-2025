@@ -53,16 +53,16 @@ export const createEpisodePageStoreSlice = () => {
           },
           { signal: abortController.signal },
         );
-
-        const interval = setInterval(function tick() {
-          set(() => ({
-            currentTime: player.currentTime,
-            duration: player.duration,
-          }));
-        }, 250);
-        abortController.signal.addEventListener('abort', () => {
-          clearInterval(interval);
-        });
+        player.videoElement.addEventListener(
+          'timeupdate',
+          () => {
+            set(() => ({
+              currentTime: player.currentTime,
+              duration: player.duration,
+            }));
+          },
+          { signal: abortController.signal },
+        );
 
         set(() => ({
           abortController,

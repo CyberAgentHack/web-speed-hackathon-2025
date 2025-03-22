@@ -11,14 +11,14 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
-import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
+//import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 
 interface Props {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  useSubscribePointer();
+  //useSubscribePointer();
 
   const navigation = useNavigation();
   const isLoading =
