@@ -468,7 +468,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
-      console.time(req.url);
 
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
@@ -513,7 +512,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      console.timeEnd(req.url);
       reply.code(200).send(modules);
     },
   });

@@ -12,6 +12,8 @@ const SQLITE_PATH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 
 let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
+const debug = env['DEBUG']?.split(',').includes('drizzle');
+
 export function getDatabase() {
   if (database == null) {
     throw new Error('database is initializing.');
@@ -20,6 +22,8 @@ export function getDatabase() {
 }
 
 export async function initializeDatabase(): Promise<void> {
+  if (debug) console.debug('initializeDatabase');
+
   database?.$client.close();
   database = null;
 
@@ -31,7 +35,7 @@ export async function initializeDatabase(): Promise<void> {
       syncInterval: 1000,
       url: `file:${TEMP_PATH}`,
     }),
-    logger: env['DEBUG']?.split(',').includes('drizzle') ? true : undefined,
+    logger: debug ? true : undefined,
     schema,
   });
 }

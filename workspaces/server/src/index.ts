@@ -1,5 +1,7 @@
 import '@wsh-2025/server/src/setups/luxon';
 
+import { env } from 'node:process';
+
 import cors from '@fastify/cors';
 import fastify from 'fastify';
 
@@ -11,7 +13,9 @@ import { registerStreams } from '@wsh-2025/server/src/streams';
 async function main() {
   await initializeDatabase();
 
-  const app = fastify();
+  const app = fastify({
+    logger: env['DEBUG']?.split(',').includes('fastify') ? true : undefined,
+  });
 
   app.addHook('onSend', async (_req, reply) => {
     reply.header('cache-control', 'no-store');
