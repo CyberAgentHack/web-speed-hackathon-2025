@@ -1,12 +1,14 @@
 import path from 'node:path';
-
 import webpack from 'webpack';
 import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
-  entry: './src/main.tsx',
+  entry: {
+    main: './src/main.tsx',
+    //notfound: '.src/notfound.tsx',
+  },
   mode: 'production',
   module: {
     rules: [
