@@ -4,11 +4,17 @@ import webpack from 'webpack';
 
 import TerserPlugin from 'terser-webpack-plugin';
 
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+import CompressionPlugin from 'compression-webpack-plugin';
+
+const isDev = process.env['NODE_ENV'] === 'development';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: process.env['NODE_ENV'] === 'development' ? 'eval-cheap-module-source-map' : 'source-map',
+  devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
   entry: './src/main.tsx',
-  mode: 'production',
+  mode: isDev ? 'development' : 'production',
   module: {
     rules: [
       {
@@ -61,8 +67,16 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // Gzip圧縮を追加
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 10240, // 10KB以上のファイルのみ圧縮
+      minRatio: 0.8,
+    }),
   ],
   cache: {
     type: 'filesystem',
@@ -77,6 +91,8 @@ const config = {
     usedExports: true,
     // 未使用のコードを削除
     sideEffects: true,
+
+    providedExports: true,
 
     // コード分割設定を追加
     splitChunks: {
@@ -104,7 +120,7 @@ const config = {
     },
 
     // コード最小化設定
-    minimize: true,
+    minimize: !isDev,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
