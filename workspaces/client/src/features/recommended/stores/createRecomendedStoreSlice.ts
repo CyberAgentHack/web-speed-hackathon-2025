@@ -1,7 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
-import { produce } from 'immer';
 import { ArrayValues } from 'type-fest';
 
 import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
@@ -28,12 +27,18 @@ export const createRecommendedStoreSlice = () => {
     fetchRecommendedModulesByReferenceId: async ({ referenceId }) => {
       const modules = await recommendedService.fetchRecommendedModulesByReferenceId({ referenceId });
       set((state) => {
-        return produce(state, (draft) => {
-          draft.references[referenceId] = modules.map((module) => module.id);
-          for (const module of modules) {
-            draft.recommendedModules[module.id] = module;
+        const updatedRecommendedModules = { ...state.recommendedModules };
+        for (const module of modules) {
+          updatedRecommendedModules[module.id] = module;
+        }
+        return {
+          ...state,
+          recommendedModules: updatedRecommendedModules,
+          references: {
+            ...state.references,
+            [referenceId]: modules.map((module) => module.id)
           }
-        });
+        };
       });
       return modules;
     },

@@ -6,7 +6,7 @@ import { reset } from 'drizzle-seed';
 
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
-import * as bcrypt from 'bcrypt';
+import { hashSync } from 'bcrypt';
 import path from 'node:path';
 import { readdirSync } from 'node:fs';
 
@@ -296,7 +296,7 @@ async function main() {
     await database.insert(schema.user).values([
       {
         email: 'test@example.com',
-        password: bcrypt.hashSync('test', 10),
+        password: hashSync('test', 10),
       },
     ]);
   } finally {

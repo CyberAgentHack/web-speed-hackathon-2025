@@ -6,7 +6,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
-import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
+import { user as userTable } from '@wsh-2025/schema/src/database/schema';
 import {
   getChannelByIdRequestParams,
   getChannelByIdResponse,
@@ -34,7 +34,7 @@ import {
   signUpRequestBody,
   signUpResponse,
 } from '@wsh-2025/schema/src/openapi/schema';
-import * as bcrypt from 'bcrypt';
+import { compareSync, hashSync } from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import {
   fastifyZodOpenApiPlugin,
@@ -562,7 +562,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return eq(user.email, req.body.email);
         },
       });
-      if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+      if (!user || !compareSync(req.body.password, user.password)) {
         return reply.code(401).send();
       }
 
@@ -602,10 +602,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       }
 
       const users = await database
-        .insert(databaseSchema.user)
+        .insert(userTable)
         .values({
           email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
+          password: hashSync(req.body.password, 10),
         })
         .returning();
 

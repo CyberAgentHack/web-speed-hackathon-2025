@@ -27,7 +27,7 @@ importers:
         version: 1.1.15
       '@dhmk/zustand-lens':
         specifier: 5.0.0
-        version: 5.0.0(zustand@5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))
+        version: 5.0.0(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))
       '@epic-web/restore-scroll':
         specifier: 1.1.1
         version: 1.1.1(react-router-dom@7.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
@@ -61,9 +61,6 @@ importers:
       final-form:
         specifier: 4.20.10
         version: 4.20.10
-      immer:
-        specifier: 10.1.1
-        version: 10.1.1
       m3u8-parser:
         specifier: 7.2.0
         version: 7.2.0
@@ -111,10 +108,10 @@ importers:
         version: 3.24.1
       zustand:
         specifier: 5.0.3
-        version: 5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
+        version: 5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
       zustand-di:
         specifier: 0.0.16
-        version: 0.0.16(react@19.0.0)(zustand@5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))
+        version: 0.0.16(react@19.0.0)(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))
     devDependencies:
       '@ffmpeg/core':
         specifier: 0.12.10
@@ -3300,9 +3297,6 @@ packages:
   immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
 
-  immer@10.1.1:
-    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
-
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -5298,10 +5292,10 @@ snapshots:
 
   '@dhmk/utils@4.4.1': {}
 
-  '@dhmk/zustand-lens@5.0.0(zustand@5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))':
+  '@dhmk/zustand-lens@5.0.0(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))':
     dependencies:
       '@dhmk/utils': 4.4.1
-      zustand: 5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
+      zustand: 5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -8111,8 +8105,6 @@ snapshots:
 
   immediate@3.0.6: {}
 
-  immer@10.1.1: {}
-
   import-fresh@3.3.0:
     dependencies:
       parent-module: 1.0.1
@@ -10010,14 +10002,13 @@ snapshots:
 
   zod@3.24.1: {}
 
-  zustand-di@0.0.16(react@19.0.0)(zustand@5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))):
+  zustand-di@0.0.16(react@19.0.0)(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))):
     dependencies:
       react: 19.0.0
-      zustand: 5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
+      zustand: 5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
 
-  zustand@5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)):
+  zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)):
     optionalDependencies:
       '@types/react': 19.0.1
-      immer: 10.1.1
       react: 19.0.0
       use-sync-external-store: 1.4.0(react@19.0.0)

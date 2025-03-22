@@ -1,5 +1,5 @@
 import eslint from '@eslint/js';
-import * as eslintConfigPrettier from 'eslint-config-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginReact from 'eslint-plugin-react';
 import eslintPluginSort from 'eslint-plugin-sort';

@@ -4,7 +4,15 @@ import 'zod-openapi/extend';
 import { createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
-import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
+import {
+  channel as databaseSchemaChannel,
+  episode as databaseSchemaEpisode,
+  program as databaseSchemaProgram,
+  recommendedItem as databaseSchemaRecommendedItem,
+  recommendedModule as databaseSchemaRecommendedModule,
+  series as databaseSchemaSeries,
+  user as databaseSchemaUser,
+} from '@wsh-2025/schema/src/database/schema';
 
 function assertSchema<T>(_actual: z.ZodType<NoInfer<T>>, _expected: z.ZodType<T>): void {}
 
@@ -13,7 +21,7 @@ const channel = z.object({
   logoUrl: z.string().openapi({ example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png' }),
   name: z.string().openapi({ example: 'AREMA NEWS' }),
 });
-assertSchema(channel, createSelectSchema(databaseSchema.channel));
+assertSchema(channel, createSelectSchema(databaseSchemaChannel));
 
 const episode = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -30,7 +38,7 @@ const episode = z.object({
   }),
   premium: z.boolean().openapi({ example: false }),
 });
-assertSchema(episode, createSelectSchema(databaseSchema.episode));
+assertSchema(episode, createSelectSchema(databaseSchemaEpisode));
 
 const series = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -43,7 +51,7 @@ const series = z.object({
     example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
   }),
 });
-assertSchema(series, createSelectSchema(databaseSchema.series));
+assertSchema(series, createSelectSchema(databaseSchemaSeries));
 
 const program = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -60,7 +68,7 @@ const program = z.object({
   channelId: z.string().openapi({ format: 'uuid' }),
   episodeId: z.string().openapi({ format: 'uuid' }),
 });
-assertSchema(program, createSelectSchema(databaseSchema.program));
+assertSchema(program, createSelectSchema(databaseSchemaProgram));
 
 const recommendedModule = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -69,7 +77,7 @@ const recommendedModule = z.object({
   referenceId: z.string().openapi({ format: 'uuid' }),
   type: z.enum(['carousel', 'jumbotron']).openapi({ example: 'carousel' }),
 });
-assertSchema(recommendedModule, createSelectSchema(databaseSchema.recommendedModule));
+assertSchema(recommendedModule, createSelectSchema(databaseSchemaRecommendedModule));
 
 const recommendedItem = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -78,14 +86,14 @@ const recommendedItem = z.object({
   episodeId: z.string().nullable().openapi({ format: 'uuid' }),
   moduleId: z.string().openapi({ format: 'uuid' }),
 });
-assertSchema(recommendedItem, createSelectSchema(databaseSchema.recommendedItem));
+assertSchema(recommendedItem, createSelectSchema(databaseSchemaRecommendedItem));
 
 const user = z.object({
   id: z.number().openapi({ format: '0' }),
   email: z.string().openapi({ example: 'user123' }),
   password: z.string().openapi({ example: 'password123' }),
 });
-assertSchema(user, createSelectSchema(databaseSchema.user));
+assertSchema(user, createSelectSchema(databaseSchemaUser));
 
 // GET /channels
 export const getChannelsRequestQuery = z.object({

@@ -1,7 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getProgramByIdResponse, getProgramsResponse } from '@wsh-2025/schema/src/openapi/schema';
-import { produce } from 'immer';
 
 import { programService } from '@wsh-2025/client/src/features/program/services/programService';
 
@@ -23,20 +22,27 @@ export const createProgramStoreSlice = () => {
     fetchProgramById: async ({ programId }) => {
       const program = await programService.fetchProgramById({ programId });
       set((state) => {
-        return produce(state, (draft) => {
-          draft.programs[program.id] = program;
-        });
+        return {
+          ...state,
+          programs: {
+            ...state.programs,
+            [program.id]: program
+          }
+        };
       });
       return program;
     },
     fetchPrograms: async () => {
       const programs = await programService.fetchPrograms();
       set((state) => {
-        return produce(state, (draft) => {
-          for (const program of programs) {
-            draft.programs[program.id] = program;
-          }
-        });
+        const updatedPrograms = { ...state.programs };
+        for (const program of programs) {
+          updatedPrograms[program.id] = program;
+        }
+        return {
+          ...state,
+          programs: updatedPrograms
+        };
       });
       return programs;
     },

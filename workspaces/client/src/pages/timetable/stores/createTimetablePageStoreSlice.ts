@@ -1,7 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
-import { produce } from 'immer';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
@@ -43,10 +42,14 @@ export const createTimetablePageStoreSlice = () => {
   return lens<TimetablePageState & TimetablePageActions>((set, _get) => ({
     changeColumnWidth: (params: { channelId: string; delta: number }) => {
       set((state) => {
-        return produce(state, (draft) => {
-          const current = draft.columnWidthRecord[params.channelId] ?? DEFAULT_WIDTH;
-          draft.columnWidthRecord[params.channelId] = Math.max(current + params.delta, 100);
-        });
+        const current = state.columnWidthRecord[params.channelId] ?? DEFAULT_WIDTH;
+        return {
+          ...state,
+          columnWidthRecord: {
+            ...state.columnWidthRecord,
+            [params.channelId]: Math.max(current + params.delta, 100)
+          }
+        };
       });
     },
     closeNewFeatureDialog: () => {
