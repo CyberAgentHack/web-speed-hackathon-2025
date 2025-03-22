@@ -2,6 +2,7 @@
   "private": true,
   "license": "MPL-2.0",
   "scripts": {
+    "analyze": "wireit",
     "build": "wireit",
     "heroku-build": "wireit",
     "heroku-cleanup": "wireit",
@@ -29,6 +30,11 @@
     }
   },
   "wireit": {
+    "analyze": {
+      "dependencies": [
+        "./workspaces/client:analyze"
+      ]
+    },
     "start": {
       "dependencies": [
         "./workspaces/server:start"

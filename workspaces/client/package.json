@@ -2,6 +2,7 @@
   "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
+    "analyze": "wireit",
     "build": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
@@ -78,6 +79,9 @@
     "wireit": "0.14.9"
   },
   "wireit": {
+    "analyze": {
+      "command": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+    },
     "build": {
       "command": "webpack",
       "files": [
