@@ -8,20 +8,17 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { AuthDialogType } from '../constants/auth_dialog_type';
+import { useAuthDialogType } from '../hooks/useAuthDialogType';
 
 interface SignInFormValues {
   email: string;
   password: string;
 }
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  onOpenSignIn: () => void;
-}
-
-export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
+export const SignUpDialog = () => {
   const authActions = useAuthActions();
+  const authDialogType = useAuthDialogType();
   const emailId = useId();
   const passwordId = useId();
 
@@ -33,7 +30,7 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
       });
 
       alert('新規会員登録に成功しました');
-      onClose();
+      authActions.closeDialog();
       return;
     } catch (e) {
       if (e instanceof BetterFetchError && e.status === 400) {
@@ -44,7 +41,7 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
   };
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
+    <Dialog isOpen={authDialogType === AuthDialogType.SignUp} onClose={authActions.closeDialog}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
           <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
@@ -143,7 +140,7 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
           <button
             className="block bg-transparent text-[14px] text-[#999999] underline"
             type="button"
-            onClick={onOpenSignIn}
+            onClick={authActions.openSignInDialog}
           >
             既にあるアカウントにログインする
           </button>
