@@ -1,17 +1,17 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'source-map',
+  devtool: false,
   entry: './src/main.tsx',
   mode: 'production',
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        exclude: ["node_modules/"],
+        include: path.resolve(__dirname, 'src'),
         resolve: {
           fullySpecified: false,
         },
@@ -60,8 +60,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-    new BundleAnalyzerPlugin()
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' })
   ],
   resolve: {
     alias: {
