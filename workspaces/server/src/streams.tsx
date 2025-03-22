@@ -1,6 +1,6 @@
-import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { v4 as uuidv4 } from 'uuid';
 
 import fastifyStatic from '@fastify/static';
 import dedent from 'dedent';
@@ -21,6 +21,8 @@ export function registerStreams(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/streams/',
     root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../streams'),
+    cacheControl: true,
+    maxAge: '1d',
   });
 
   app.get<{
@@ -78,32 +80,34 @@ export function registerStreams(app: FastifyInstance): void {
       `,
     ];
 
+    const programs = await database.query.program.findMany({
+      orderBy(program, { asc }) {
+        return asc(program.startAt);
+      },
+      where(program, { eq }) {
+        return eq(program.channelId, req.params.channelId);
+      },
+      with: {
+        episode: {
+          with: {
+            stream: true,
+          },
+        },
+      },
+    });
+
+    const randomData = uuidv4();
+
     for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
       const sequence = firstSequence + idx;
       const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
 
-      const program = await database.query.program.findFirst({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { and, eq, lt, lte, sql }) {
-          // 競技のため、時刻のみで比較する
-          return and(
-            lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
-            lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
-            eq(program.channelId, req.params.channelId),
-          );
-        },
-        with: {
-          episode: {
-            with: {
-              stream: true,
-            },
-          },
-        },
+      const program = programs.find((p) => {
+        const startAt = new Date(p.startAt);
+        const endAt = new Date(p.endAt);
+        return startAt <= sequenceStartAt && sequenceStartAt < endAt;
       });
-
-      if (program == null) {
+      if (!program) {
         break;
       }
 
@@ -122,7 +126,7 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${randomData}"`,
           ].join(',')}
         `,
       );
