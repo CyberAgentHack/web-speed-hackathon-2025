@@ -24,7 +24,7 @@ const batcher = batshit.create({
   async fetcher(queries: { seriesId: string }[]) {
     const data = await $fetch('/series', {
       query: {
-        seriesIds: queries[0]?.seriesId ?? '',
+        seriesIds: queries.map((q) => q.seriesId).join(','),
       },
     });
     return data;
