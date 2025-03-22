@@ -2,7 +2,7 @@ import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
 import { useId } from 'react';
 import { Field, Form } from 'react-final-form';
-// import { Image } from '@unpic/react';
+import { Image } from '@unpic/react';
 import { z } from 'zod';
 
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
@@ -48,12 +48,12 @@ export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          {/* <Image
+          <Image
             src="/public/arema.svg"
             layout="constrained"
             height={36}
             width={98}
-          /> */}
+          />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">ログイン</h2>
