@@ -4,11 +4,8 @@ import { RouteObject } from 'react-router';
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 
-// TODO: そもそも最小の遅延時間設定いる？
-// TODO: そもそも遅延いる？
-// TODO: そもそも最小の遅延時間設定いる？
-// TODO: そもそも遅延いる？
-const minLazyDelay = 200;
+// 最小限の遅延を設定（1msは実質的に即時実行に近い）
+const minLazyDelay = 10;
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
