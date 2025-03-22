@@ -30,13 +30,10 @@ export function registerSsr(app: FastifyInstance): void {
     prefix: '/public/',
     root: [
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/assets'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
-  });
-
-  app.get('/favicon.ico', (_, reply) => {
-    reply.status(404).send();
+    cacheControl: true,
+    maxAge: '1d',
   });
 
   app.get('/*', async (req, reply) => {
@@ -62,7 +59,7 @@ export function registerSsr(app: FastifyInstance): void {
 
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
-      getFilePaths('workspaces/client/dist/assets/images', rootDir),
+      getFilePaths('public/images', rootDir),
       getFilePaths('public/animations', rootDir),
       getFilePaths('public/logos', rootDir),
     ].flat();
