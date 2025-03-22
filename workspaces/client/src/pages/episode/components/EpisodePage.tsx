@@ -16,6 +16,8 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
+import { Icon } from '@iconify/react';
+import loadingTwotoneLoop from '@iconify/icons-line-md/loading-twotone-loop';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
@@ -77,7 +79,9 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <div className="absolute inset-0 z-[-10] grid place-content-center">
+                        <Icon icon={loadingTwotoneLoop} width="48px" height="48px" className="text-[#ffffff]" />
+                      </div>
                     </div>
                   </AspectRatio>
                 }

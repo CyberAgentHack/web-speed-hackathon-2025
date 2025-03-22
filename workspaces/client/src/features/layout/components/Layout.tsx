@@ -2,6 +2,10 @@ import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
+import { Icon } from '@iconify/react';
+import houseFill from '@iconify/icons-bi/house-fill';  
+import signOutAlt from '@iconify/icons-fa-solid/sign-out-alt';
+import calendar from '@iconify/icons-fa-solid/calendar';
 
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
@@ -75,9 +79,7 @@ export const Layout = ({ children }: Props) => {
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
-              />
+              <Icon icon={signOutAlt} width="20px" height="20px" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
@@ -87,7 +89,9 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/"
             >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
+              <div className="m-[4px] shrink-0 grow-0">
+                <Icon icon={houseFill} width="20px" height="20px" />
+              </div>
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
             </Link>
 
@@ -95,7 +99,9 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/timetable"
             >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
+              <div className="m-[4px] shrink-0 grow-0">
+                <Icon icon={calendar} width="20px" height="20px" />
+              </div>
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
             </Link>
           </nav>
