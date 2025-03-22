@@ -1,15 +1,21 @@
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useAuthActions() {
-  const state = useStore((s) => s);
+  const closeDialog = useStore((s) => s.features.auth.closeDialog);
+  const openSignInDialog = useStore((s) => s.features.auth.openSignInDialog);
+  const openSignOutDialog = useStore((s) => s.features.auth.openSignOutDialog);
+  const openSignUpDialog = useStore((s) => s.features.auth.openSignUpDialog);
+  const signIn = useStore((s) => s.features.auth.signIn);
+  const signOut = useStore((s) => s.features.auth.signOut);
+  const signUp = useStore((s) => s.features.auth.signUp);
 
   return {
-    closeDialog: state.features.auth.closeDialog,
-    openSignInDialog: state.features.auth.openSignInDialog,
-    openSignOutDialog: state.features.auth.openSignOutDialog,
-    openSignUpDialog: state.features.auth.openSignUpDialog,
-    signIn: state.features.auth.signIn,
-    signOut: state.features.auth.signOut,
-    signUp: state.features.auth.signUp,
+    closeDialog,
+    openSignInDialog,
+    openSignOutDialog,
+    openSignUpDialog,
+    signIn,
+    signOut,
+    signUp,
   };
 }
