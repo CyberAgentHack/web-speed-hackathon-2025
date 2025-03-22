@@ -62,8 +62,8 @@ export const ProgramPage = () => {
     if (!isBroadcastStarted) {
       let timeout = setTimeout(function tick() {
         forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
+        timeout = setTimeout(tick, 2000);
+      }, 2000);
       return () => {
         clearTimeout(timeout);
       };
@@ -72,7 +72,7 @@ export const ProgramPage = () => {
     // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
+        timeout = setTimeout(tick, 2000);
         return;
       }
 
@@ -86,7 +86,7 @@ export const ProgramPage = () => {
         isArchivedRef.current = true;
         forceUpdate();
       }
-    }, 250);
+    }, 2000);
     return () => {
       clearTimeout(timeout);
     };
