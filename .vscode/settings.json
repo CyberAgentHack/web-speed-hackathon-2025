@@ -1,12 +1,3 @@
 {
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": "explicit",
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "explicit",
-  },
-  "eslint.workingDirectories": [{
-    "mode": "auto"
-  }],
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }
