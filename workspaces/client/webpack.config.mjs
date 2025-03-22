@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 // import CompressionPlugin from 'compression-webpack-plugin';
-import TerserPlugin from 'terser-webpack-plugin';
+// import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -57,7 +57,7 @@ const config = {
 
   optimization: {
     minimize: true,
-    minimizer: [
+    /* minimizer: [
       new TerserPlugin({
         terserOptions: {
           compress: {
@@ -66,9 +66,9 @@ const config = {
           },
         },
       }),
-    ], // 最小化を有効
-    runtimeChunk: 'single', // ランタイム分割でキャッシュ効率UP
-    sideEffects: true, // 未使用のexportを削除 (tree shaking)
+    ], // 最小化を有効 */
+    // runtimeChunk: 'single', // ランタイム分割でキャッシュ効率UP
+    // sideEffects: true, // 未使用のexportを削除 (tree shaking)
 
     // splitChunks: {
     //   automaticNameDelimiter: '-',
@@ -86,8 +86,8 @@ const config = {
     //   minSize: 20 * 1024,
     // },
 
-    // 副作用のないモジュールを削除
-    usedExports: true,
+    // // 副作用のないモジュールを削除
+    // usedExports: true,
   },
 
   output: {
