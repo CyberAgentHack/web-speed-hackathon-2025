@@ -14,6 +14,7 @@
 ## 提出方法
 
 
+
 評価対象となる環境 (URL) を作成し、次のリンクから参加登録してください。
 
 https://github.com/CyberAgentHack/web-speed-hackathon-2025-scoring-tool/issues/new/choose
