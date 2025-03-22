@@ -1,5 +1,25 @@
 {
   "name": "@wsh-2025/client",
+  "scripts": {
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "webpack --config webpack.config.mjs",
+      "files": [
+        "src/**/*",
+        "webpack.config.mjs",
+        "../../pnpm-lock.yaml"
+      ],
+      "output": [
+        "dist/**"
+      ]
+    }
+  }
+}
+
+{
+  "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
     "build": "wireit",
