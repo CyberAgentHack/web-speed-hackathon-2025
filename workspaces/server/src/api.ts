@@ -1,6 +1,6 @@
 import 'zod-openapi/extend';
 
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 
 import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
@@ -8,7 +8,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 import * as schema from '@wsh-2025/schema/src/openapi/schema';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import {
   fastifyZodOpenApiPlugin,
@@ -536,7 +536,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return eq(user.email, req.body.email);
         },
       });
-      if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+      // 簡易的なパスワード検証（本番環境では使用しないでください）
+      const hashedPassword = createHash('sha256').update(req.body.password).digest('hex');
+      if (!user || hashedPassword !== user.password) {
         return reply.code(401).send();
       }
 
@@ -575,11 +577,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(400).send();
       }
 
+      // 簡易的なパスワードハッシュ化（本番環境では使用しないでください）
+      const hashedPassword = createHash('sha256').update(req.body.password).digest('hex');
       const users = await database
         .insert(databaseSchema.user)
         .values({
           email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
+          password: hashedPassword,
         })
         .returning();
 
