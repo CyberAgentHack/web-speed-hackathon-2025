@@ -1,8 +1,8 @@
+import '@unocss/reset/tailwind.css';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/polyfills';
-import './index.css';
 import 'virtual:uno.css';
-import '@unocss/reset/tailwind.css';
+import './index.css';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -18,7 +18,7 @@ declare global {
 }
 
 function main() {
-  const store = createStore({});
+  const store = createStore(window.__zustandHydrationData, {});
   const router = createBrowserRouter(createRoutes(store), {});
 
   hydrateRoot(
@@ -31,4 +31,8 @@ function main() {
   );
 }
 
-document.addEventListener('DOMContentLoaded', main);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', main);
+} else {
+  main();
+}

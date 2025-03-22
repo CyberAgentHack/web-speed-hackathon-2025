@@ -13,6 +13,9 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             const { HomePage, prefetch } = await import('@wsh-2025/client/src/pages/home/components/HomePage');
             return {
               Component: HomePage,
+              HydrateFallback: () => {
+                return <div className="h-screen w-screen animate-pulse bg-[#000000]">loading</div>;
+              },
               async loader() {
                 return await prefetch(store);
               },

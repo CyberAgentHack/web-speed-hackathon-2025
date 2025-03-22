@@ -6,10 +6,10 @@ import fastifyStatic from '@fastify/static';
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Layout } from '@wsh-2025/client/src/features/layout/components/Layout';
 import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
-import htmlescape from 'htmlescape';
-import { StrictMode } from 'react';
+import { StrictMode, Suspense } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
@@ -45,7 +45,11 @@ export function registerSsr(app: FastifyInstance): void {
     const renderd = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
+          <Suspense>
+            <Layout>
+              <StaticRouterProvider context={context} hydrate={true} router={router} />
+            </Layout>
+          </Suspense>
         </StoreProvider>
       </StrictMode>,
     );
@@ -53,7 +57,12 @@ export function registerSsr(app: FastifyInstance): void {
     const clientHTML = path.resolve(__dirname, '../../client/dist/index.html');
     const clientHTMLContent = await promises.readFile(clientHTML, 'utf-8');
 
-    const replaced = clientHTMLContent.replace('<!-- __REACT_APP_HTML__ -->', renderd);
+    const replaced = clientHTMLContent
+      .replace('<!-- __REACT_APP_HTML__ -->', renderd)
+      .replace(
+        '<!-- ZUSTAND -->',
+        `<script>window.__zustandHydrationData = ${JSON.stringify(store.getState())}</script>`,
+      );
     reply.type('text/html').send(replaced);
   });
 }
