@@ -68,7 +68,6 @@
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
     "hls.js": "1.5.17",
-    "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "video.js": "8.21.0",
     "webpack": "5.96.1",
