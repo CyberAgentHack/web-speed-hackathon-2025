@@ -61,8 +61,8 @@ export function registerSsr(app: FastifyInstance): void {
 
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
+      getFilePaths('public/optimized/images', rootDir),
+      getFilePaths('public/optimized/animations', rootDir),
       getFilePaths('public/logos', rootDir),
     ].flat();
 
