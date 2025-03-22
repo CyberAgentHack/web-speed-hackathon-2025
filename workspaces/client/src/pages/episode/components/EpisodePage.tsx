@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -16,16 +16,24 @@ import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/componen
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
-export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
+// export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
+//   invariant(episodeId);
+//   const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
+//   const modules = await store
+//     .getState()
+//     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+//   return { episode, modules };
+// };
+
+const fetchEpisodeDatas = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
-  const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
-  const modules = await store
+  await store.getState().features.episode.fetchEpisodeById({ episodeId });
+  await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
-  return { episode, modules };
 };
 
-export const EpisodePage = () => {
+export const EpisodePage = (store: ReturnType<typeof createStore>) => {
   const authActions = useAuthActions();
   const user = useAuthUser();
 
@@ -40,6 +48,14 @@ export const EpisodePage = () => {
   const playerRef = usePlayerRef();
 
   const isSignInRequired = episode.premium && user == null;
+
+  useMemo(() => {
+    fetchEpisodeDatas(store, { episodeId });
+  }, [episodeId]);
+
+  if (episode == null) {
+    return <div></div>
+  }
 
   return (
     <>

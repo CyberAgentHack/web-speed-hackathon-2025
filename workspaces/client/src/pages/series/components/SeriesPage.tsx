@@ -8,17 +8,26 @@ import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/co
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
+import { useMemo } from 'react';
 
-export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
+// export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
+//   invariant(seriesId);
+//   const series = await store.getState().features.series.fetchSeriesById({ seriesId });
+//   const modules = await store
+//     .getState()
+//     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+//   return { modules, series };
+// };
+
+const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
+  await store.getState().features.series.fetchSeriesById({ seriesId });
+  await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
-};
+}
 
-export const SeriesPage = () => {
+export const SeriesPage = (store: ReturnType<typeof createStore>) => {
   const { seriesId } = useParams();
   invariant(seriesId);
 
@@ -26,6 +35,14 @@ export const SeriesPage = () => {
   invariant(series);
 
   const modules = useRecommended({ referenceId: seriesId });
+
+  useMemo(() => {
+    fetchSeriesDatas(store, { seriesId });
+  }, [seriesId]);
+
+  if (series == null) {
+    return <div></div>
+  }
 
   return (
     <>

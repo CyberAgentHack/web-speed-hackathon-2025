@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
@@ -17,23 +17,38 @@ import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useT
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
-export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
+// export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
+//   invariant(programId);
+
+//   const now = DateTime.now();
+//   const since = now.startOf('day').toISO();
+//   const until = now.endOf('day').toISO();
+
+//   const program = await store.getState().features.program.fetchProgramById({ programId });
+//   const channels = await store.getState().features.channel.fetchChannels();
+//   const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
+//   const modules = await store
+//     .getState()
+//     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+//   return { channels, modules, program, timetable };
+// };
+
+const fetchProgramDatas = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
   const now = DateTime.now();
   const since = now.startOf('day').toISO();
   const until = now.endOf('day').toISO();
 
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
+  await store.getState().features.program.fetchProgramById({ programId });
+  await store.getState().features.channel.fetchChannels();
+  await store.getState().features.timetable.fetchTimetable({ since, until });
+  await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
-  return { channels, modules, program, timetable };
-};
+}
 
-export const ProgramPage = () => {
+export const ProgramPage = (store: ReturnType<typeof createStore>) => {
   const { programId } = useParams();
   invariant(programId);
 
@@ -91,6 +106,14 @@ export const ProgramPage = () => {
       clearTimeout(timeout);
     };
   }, [isBroadcastStarted, nextProgram?.id]);
+
+  useMemo(() => {
+    fetchProgramDatas(store, { programId });
+  }, [programId]);
+
+  if (program == null) {
+    return <div></div>;
+  }
 
   return (
     <>

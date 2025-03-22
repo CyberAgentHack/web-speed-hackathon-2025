@@ -11,59 +11,51 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         {
           index: true,
           async lazy() {
-            const { HomePage, prefetch } = await lazy(
+            const { HomePage } = await lazy(
               import('@wsh-2025/client/src/pages/home/components/HomePage'),
               0,
             );
+            const Component = () => HomePage(store);
             return {
-              Component: HomePage,
-              async loader() {
-                return await prefetch(store);
-              },
+              Component,
             };
           },
         },
         {
           async lazy() {
-            const { EpisodePage, prefetch } = await lazy(
+            const { EpisodePage } = await lazy(
               import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
               0,
             );
+            const Component = () => EpisodePage(store);
             return {
-              Component: EpisodePage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
+              Component,
             };
           },
           path: '/episodes/:episodeId',
         },
         {
           async lazy() {
-            const { prefetch, ProgramPage } = await lazy(
+            const { ProgramPage } = await lazy(
               import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
               0,
             );
+            const Component = () => ProgramPage(store);
             return {
-              Component: ProgramPage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
+              Component,
             };
           },
           path: '/programs/:programId',
         },
         {
           async lazy() {
-            const { prefetch, SeriesPage } = await lazy(
+            const { SeriesPage } = await lazy(
               import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
               0,
             );
+            const Component = () => SeriesPage(store);
             return {
-              Component: SeriesPage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
+              Component,
             };
           },
           path: '/series/:seriesId',
@@ -83,15 +75,13 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           async lazy() {
-            const { NotFoundPage, prefetch } = await lazy(
+            const { NotFoundPage } = await lazy(
               import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
               0,
             );
+            const Component = () => NotFoundPage(store);
             return {
-              Component: NotFoundPage,
-              async loader() {
-                return await prefetch(store);
-              },
+              Component,
             };
           },
           path: '*',
