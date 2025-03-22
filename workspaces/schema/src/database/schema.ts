@@ -118,7 +118,11 @@ export const channel = table(
     name: t.text().notNull(),
     logoUrl: t.text().notNull(),
   },
-  () => [],
+  (table) => {
+    return {
+      nameIndex: index('name_index').on(table.name),
+    };
+  },
 );
 
 export const program = table(
@@ -139,7 +143,13 @@ export const program = table(
       .notNull()
       .references(() => episode.id),
   },
-  () => [],
+  (table) => {
+    return {
+      channelIdIndex: index('channelId_index').on(table.channelId),
+      startTimeIndex: index('startTime_index').on(table.startTime),
+      endTimeIndex: index('endTime_index').on(table.endTime),
+    };
+  },
 );
 export const programRelation = relations(program, ({ one }) => ({
   channel: one(channel, {
@@ -164,7 +174,13 @@ export const recommendedItem = table(
     seriesId: t.text().references(() => series.id),
     episodeId: t.text().references(() => episode.id),
   },
-  () => [],
+  (table) => {
+    return {
+      oduleIdIndex: index('moduleId_index').on(table.moduleId),
+      seriesIdIndex: index('seriesId_index').on(table.seriesId),
+      episodeIdIndex: index('episodeId_index').on(table.episodeId),
+    };
+  },
 );
 export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
   module: one(recommendedModule, {
@@ -190,7 +206,11 @@ export const recommendedModule = table(
     referenceId: t.text().notNull(),
     type: t.text().notNull(),
   },
-  () => [],
+  (table) => {
+    return {
+      referenceIdIndex: index('referenceId_index').on(table.referenceId),
+    };
+  },
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
   items: many(recommendedItem),
