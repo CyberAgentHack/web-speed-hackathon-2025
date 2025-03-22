@@ -196,6 +196,11 @@ async function main() {
 
     // Create recommended modules
     console.log('Creating recommended modules...');
+    // すべてのモジュールを一括で作成するための配列
+    const allModules: (typeof schema.recommendedModule.$inferInsert)[] = [];
+    // すべてのアイテムを一括で作成するための配列
+    const allItems: (typeof schema.recommendedItem.$inferInsert)[] = [];
+
     for (const reference of [
       ...seriesList.map((s) => ({ id: s.id, type: 'series', series: s }) as const),
       ...episodeList.map((e) => ({ id: e.id, type: 'episode', episode: e }) as const),
@@ -203,14 +208,12 @@ async function main() {
       { id: 'entrance', type: 'entrance' } as const,
       { id: 'error', type: 'error' } as const,
     ]) {
-      const seriesIds = faker.helpers.shuffle(
-        seriesList
-          .filter((target) => {
-            return target.id !== reference.id;
-          })
-          .map((s) => s.id),
-      );
+      // シリーズIDの配列を事前に構築
+      const seriesIds = seriesList
+        .filter((target) => target.id !== reference.id)
+        .map((s) => s.id);
 
+      // エピソードIDの配列を事前に構築
       const episodeIds = faker.helpers.shuffle(
         episodeList
           .filter((target) => {
@@ -238,59 +241,70 @@ async function main() {
           .map((e) => e.id),
       );
 
-      const moduleList = await database
-        .insert(schema.recommendedModule)
-        .values(
-          Array.from({ length: 20 }, (_, moduleOrder) => {
-            const moduleType = reference.id === 'entrance' && moduleOrder % 4 === 0 ? 'jumbotron' : 'carousel';
+      // 現在の参照用のモジュールを作成
+      const moduleIds: string[] = [];
+      for (let moduleOrder = 0; moduleOrder < 20; moduleOrder++) {
+        const moduleId = faker.string.uuid();
+        moduleIds.push(moduleId);
+        const moduleType = reference.id === 'entrance' && moduleOrder % 4 === 0 ? 'jumbotron' : 'carousel';
 
-            return {
-              id: faker.string.uuid(),
-              order: moduleOrder + 1,
-              referenceId: reference.id,
-              title:
-                moduleType === 'jumbotron'
-                  ? ''
-                  : `『${faker.helpers.arrayElement(seriesTitleList)}』を見ているあなたにオススメ`,
-              type: moduleType,
-            };
-          }),
-        )
-        .returning();
+        allModules.push({
+          id: moduleId,
+          order: moduleOrder + 1,
+          referenceId: reference.id,
+          title: moduleType === 'jumbotron'
+            ? ''
+            : `『${faker.helpers.arrayElement(seriesTitleList)}』を見ているあなたにオススメ`,
+          type: moduleType,
+        });
 
-      for (const module of moduleList) {
-        if (module.type === 'jumbotron') {
-          await database.insert(schema.recommendedItem).values([
-            {
-              episodeId: episodeIds.shift()!,
-              id: faker.string.uuid(),
-              moduleId: module.id,
-              order: 1,
-              seriesId: null,
-            },
-          ]);
-        } else if (module.order === 2) {
-          await database.insert(schema.recommendedItem).values(
-            Array.from({ length: faker.number.int({ max: 20, min: 15 }) }, (_, itemOrder) => ({
+        // モジュールに対するアイテムを準備
+        if (moduleType === 'jumbotron') {
+          allItems.push({
+            episodeId: episodeIds.shift()!,
+            id: faker.string.uuid(),
+            moduleId: moduleId,
+            order: 1,
+            seriesId: null,
+          });
+        } else if (moduleOrder === 1) { // 2番目のモジュール
+          for (let itemOrder = 0; itemOrder < faker.number.int({ max: 20, min: 15 }); itemOrder++) {
+            allItems.push({
               episodeId: null,
               id: faker.string.uuid(),
-              moduleId: module.id,
+              moduleId: moduleId,
               order: itemOrder + 1,
-              seriesId: seriesIds.shift()!,
-            })),
-          );
+              seriesId: seriesIds[itemOrder % seriesIds.length],
+            });
+          }
         } else {
-          await database.insert(schema.recommendedItem).values(
-            Array.from({ length: faker.number.int({ max: 20, min: 15 }) }, (_, itemOrder) => ({
-              episodeId: episodeIds.shift()!,
-              id: faker.string.uuid(),
-              moduleId: module.id,
-              order: itemOrder + 1,
-              seriesId: null,
-            })),
-          );
+          for (let itemOrder = 0; itemOrder < faker.number.int({ max: 20, min: 15 }); itemOrder++) {
+            const episodeId = episodeIds[itemOrder % episodeIds.length];
+            if (episodeId) {
+              allItems.push({
+                episodeId: episodeId,
+                id: faker.string.uuid(),
+                moduleId: moduleId,
+                order: itemOrder + 1,
+                seriesId: null,
+              });
+            }
+          }
         }
       }
+    }
+
+    // データベースに一括挿入
+    // console.log(`Inserting ${allModules.length} modules...`);
+    // await database.insert(schema.recommendedModule).values(allModules);
+
+    console.log(`Inserting ${allItems.length} items...`);
+    // 一度にすべて挿入するとメモリ不足や制限に達する可能性があるので、
+    // 分割して挿入することも検討
+    const BATCH_SIZE = 1000;
+    for (let i = 0; i < allItems.length; i += BATCH_SIZE) {
+      const batch = allItems.slice(i, i + BATCH_SIZE);
+      await database.insert(schema.recommendedItem).values(batch);
     }
 
     // Create test users
