@@ -65,6 +65,28 @@ const config = {
           priority: -10,
           name: 'vendors',
         },
+        // Iconifyのファイルを個別のチャンクに分割
+        iconify: {
+          test: /[\\/]node_modules[\\/]@iconify[\\/]json[\\/]json[\\/]/,
+          priority: 10, // vendorsより優先度を高くする
+          name(/** @type {{ context: string }} */ module) {
+            // iconify/json/json/xxxx.jsonからxxxxを抽出
+            const match = module.context.match(/@iconify\/json\/json\/([^.]+)\.json/);
+            return match ? `iconify-${match[1]}` : 'iconify';
+          },
+          enforce: true,
+        },
+        // FFMPEGのファイルを個別のチャンクに分割
+        ffmpeg: {
+          test: /[\\/]node_modules[\\/]@ffmpeg[\\/]/,
+          priority: 10, // vendorsと同じ優先度
+          name(/** @type {{ context: string }} */ module) {
+            // @ffmpeg/xxx からxxxを抽出
+            const match = module.context.match(/@ffmpeg\/([-\w]+)/);
+            return match ? `ffmpeg-${match[1]}` : 'ffmpeg';
+          },
+          enforce: true,
+        },
       },
     },
     runtimeChunk: {

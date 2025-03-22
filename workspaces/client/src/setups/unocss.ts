@@ -1,29 +1,9 @@
-import resetCSS from '@unocss/reset/tailwind-compat.css?raw';
 import { IconifyJSON } from '@iconify/types';
 import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
-// 使用頻度の高いアイコンセットのみを事前に読み込み
-// その他のアイコンセットは必要に応じて遅延ロード
-const commonIcons = ['material-symbols', 'bi'];
-
-async function loadIconCollection(collection: string): Promise<IconifyJSON> {
-  const module = await import(`@iconify/json/json/${collection}.json`);
-  return module.default as IconifyJSON;
-}
-
 async function init() {
-  // 使用頻度の高いアイコンを事前読み込み
-  const preloadedIcons: Record<string, IconifyJSON> = {};
-  
-  // 並列で読み込み処理を実行
-  await Promise.all(
-    commonIcons.map(async (collection) => {
-      preloadedIcons[collection] = await loadIconCollection(collection);
-    })
-  );
-
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -34,7 +14,7 @@ async function init() {
       },
       preflights: [
         {
-          getCSS: () => resetCSS, // リセットCSSをインライン化
+          getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
           layer: 'reset',
         },
         {
@@ -69,14 +49,17 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            // 事前に読み込んだアイコン
-            ...preloadedIcons,
-            // 残りは遅延ロード
-            bx: () => loadIconCollection('bx'),
-            'fa-regular': () => loadIconCollection('fa-regular'),
-            'fa-solid': () => loadIconCollection('fa-solid'),
-            fluent: () => loadIconCollection('fluent'),
-            'line-md': () => loadIconCollection('line-md'),
+            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            'fa-regular': () =>
+              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            'fa-solid': () =>
+              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            'line-md': () =>
+              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            'material-symbols': () =>
+              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
           },
         }),
       ],
