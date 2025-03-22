@@ -1,6 +1,6 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getSeriesByIdResponse, getSeriesRequestQuery, getSeriesResponse } from '@wsh-2025/schema/src/openapi/schema';
 import * as batshit from '@yornaath/batshit';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
@@ -10,11 +10,11 @@ const $fetch = createFetch({
   plugins: [schedulePlugin],
   schema: createSchema({
     '/series': {
-      output: schema.getSeriesResponse,
-      query: schema.getSeriesRequestQuery,
+      output: getSeriesResponse,
+      query: getSeriesRequestQuery,
     },
     '/series/:seriesId': {
-      output: schema.getSeriesByIdResponse,
+      output: getSeriesByIdResponse,
     },
   }),
   throw: true,
@@ -43,10 +43,10 @@ const batcher = batshit.create({
 });
 
 interface SeriesService {
-  fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesResponse>>;
+  fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof getSeriesResponse>>;
   fetchSeriesById: (params: {
     seriesId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse>>;
 }
 
 export const seriesService: SeriesService = {

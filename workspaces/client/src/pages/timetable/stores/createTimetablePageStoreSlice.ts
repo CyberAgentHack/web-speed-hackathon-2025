@@ -1,6 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { produce } from 'immer';
 import { ArrayValues } from 'type-fest';
 
@@ -23,7 +23,7 @@ function debounce<T extends (...args: unknown[]) => unknown>(func: T, wait: numb
 }
 
 type ChannelId = string;
-type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 
 interface TimetablePageState {
   columnWidthRecord: Record<ChannelId, number>;

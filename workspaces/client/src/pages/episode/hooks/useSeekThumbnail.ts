@@ -1,11 +1,11 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getEpisodeByIdResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
 
 interface Params {
-  episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+  episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
 }
 
 async function getSeekThumbnail({ episode }: Params) {

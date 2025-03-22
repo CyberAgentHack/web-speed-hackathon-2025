@@ -7,7 +7,33 @@ import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
-import * as schema from '@wsh-2025/schema/src/openapi/schema';
+import {
+  getChannelByIdRequestParams,
+  getChannelByIdResponse,
+  getChannelsRequestQuery,
+  getChannelsResponse,
+  getEpisodeByIdRequestParams,
+  getEpisodeByIdResponse,
+  getEpisodesRequestQuery,
+  getEpisodesResponse,
+  getProgramByIdRequestParams,
+  getProgramByIdResponse,
+  getProgramsRequestQuery,
+  getProgramsResponse,
+  getRecommendedModulesRequestParams,
+  getRecommendedModulesResponse,
+  getSeriesByIdRequestParams,
+  getSeriesByIdResponse,
+  getSeriesRequestQuery,
+  getSeriesResponse,
+  getTimetableRequestQuery,
+  getTimetableResponse,
+  getUserResponse,
+  signInRequestBody,
+  signInResponse,
+  signUpRequestBody,
+  signUpResponse,
+} from '@wsh-2025/schema/src/openapi/schema';
 import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import {
@@ -81,12 +107,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/channels',
     schema: {
       tags: ['チャンネル'],
-      querystring: schema.getChannelsRequestQuery,
+      querystring: getChannelsRequestQuery,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getChannelsResponse,
+              schema: getChannelsResponse,
             },
           },
         },
@@ -116,12 +142,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/channels/:channelId',
     schema: {
       tags: ['チャンネル'],
-      params: schema.getChannelByIdRequestParams,
+      params: getChannelByIdRequestParams,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getChannelByIdResponse,
+              schema: getChannelByIdResponse,
             },
           },
         },
@@ -147,12 +173,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/episodes',
     schema: {
       tags: ['エピソード'],
-      querystring: schema.getEpisodesRequestQuery,
+      querystring: getEpisodesRequestQuery,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getEpisodesResponse,
+              schema: getEpisodesResponse,
             },
           },
         },
@@ -193,12 +219,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/episodes/:episodeId',
     schema: {
       tags: ['エピソード'],
-      params: schema.getEpisodeByIdRequestParams,
+      params: getEpisodeByIdRequestParams,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getEpisodeByIdResponse,
+              schema: getEpisodeByIdResponse,
             },
           },
         },
@@ -235,12 +261,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/series',
     schema: {
       tags: ['シリーズ'],
-      querystring: schema.getSeriesRequestQuery,
+      querystring: getSeriesRequestQuery,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getSeriesResponse,
+              schema: getSeriesResponse,
             },
           },
         },
@@ -280,12 +306,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/series/:seriesId',
     schema: {
       tags: ['シリーズ'],
-      params: schema.getSeriesByIdRequestParams,
+      params: getSeriesByIdRequestParams,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getSeriesByIdResponse,
+              schema: getSeriesByIdResponse,
             },
           },
         },
@@ -321,12 +347,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/timetable',
     schema: {
       tags: ['番組表'],
-      querystring: schema.getTimetableRequestQuery,
+      querystring: getTimetableRequestQuery,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getTimetableResponse,
+              schema: getTimetableResponse,
             },
           },
         },
@@ -357,12 +383,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/programs',
     schema: {
       tags: ['番組'],
-      querystring: schema.getProgramsRequestQuery,
+      querystring: getProgramsRequestQuery,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getProgramsResponse,
+              schema: getProgramsResponse,
             },
           },
         },
@@ -408,12 +434,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/programs/:programId',
     schema: {
       tags: ['番組'],
-      params: schema.getProgramByIdRequestParams,
+      params: getProgramByIdRequestParams,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getProgramByIdResponse,
+              schema: getProgramByIdResponse,
             },
           },
         },
@@ -455,12 +481,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/recommended/:referenceId',
     schema: {
       tags: ['レコメンド'],
-      params: schema.getRecommendedModulesRequestParams,
+      params: getRecommendedModulesRequestParams,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.getRecommendedModulesResponse,
+              schema: getRecommendedModulesResponse,
             },
           },
         },
@@ -517,12 +543,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/signIn',
     schema: {
       tags: ['認証'],
-      body: schema.signInRequestBody,
+      body: signInRequestBody,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.signInResponse,
+              schema: signInResponse,
             },
           },
         },
@@ -540,7 +566,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(401).send();
       }
 
-      const ret = schema.signInResponse.parse({ id: user.id, email: user.email });
+      const ret = signInResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
       reply.code(200).send(user);
@@ -552,12 +578,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     url: '/signUp',
     schema: {
       tags: ['認証'],
-      body: schema.signUpRequestBody,
+      body: signUpRequestBody,
       response: {
         200: {
           content: {
             'application/json': {
-              schema: schema.signUpResponse,
+              schema: signUpResponse,
             },
           },
         },
@@ -588,7 +614,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(500).send();
       }
 
-      const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
+      const ret = signUpResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
       reply.code(200).send(ret);
@@ -604,7 +630,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         200: {
           content: {
             'application/json': {
-              schema: schema.getUserResponse,
+              schema: getUserResponse,
             },
           },
         },

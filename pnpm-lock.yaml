@@ -106,9 +106,6 @@ importers:
       use-sync-external-store:
         specifier: 1.4.0
         version: 1.4.0(react@19.0.0)
-      valibot:
-        specifier: 1.0.0-rc.3
-        version: 1.0.0-rc.3(typescript@5.7.2)
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -237,21 +234,12 @@ importers:
 
   workspaces/schema:
     dependencies:
-      '@sinclair/typebox':
-        specifier: 0.34.30
-        version: 0.34.30
-      '@sinclair/typemap':
-        specifier: 0.8.18
-        version: 0.8.18(@sinclair/typebox@0.34.30)(valibot@1.0.0-rc.3(typescript@5.7.2))(zod@3.24.1)
       drizzle-orm:
         specifier: 0.38.2
         version: 0.38.2(@libsql/client@0.14.0)(@types/react@19.0.1)(react@19.0.0)
       drizzle-zod:
         specifier: 0.6.0
         version: 0.6.0(drizzle-orm@0.38.2(@libsql/client@0.14.0)(@types/react@19.0.1)(react@19.0.0))(zod@3.24.1)
-      valibot:
-        specifier: 1.0.0-rc.3
-        version: 1.0.0-rc.3(typescript@5.7.2)
       zod:
         specifier: 3.24.1
         version: 3.24.1
@@ -1651,16 +1639,6 @@ packages:
   '@seriousme/openapi-schema-validator@2.3.0':
     resolution: {integrity: sha512-qn8tZzfb1nCIxxfLQfjvIYumuz6YoHJMoWFtCR3dey1lKkY/1obv3NvfAy1WRSztXAQqa/vZUDOXJ1M5LHfMvg==}
     hasBin: true
-
-  '@sinclair/typebox@0.34.30':
-    resolution: {integrity: sha512-gFB3BiqjDxEoadW0zn+xyMVb7cLxPCoblVn2C/BKpI41WPYi2d6fwHAlynPNZ5O/Q4WEiujdnJzVtvG/Jc2CBQ==}
-
-  '@sinclair/typemap@0.8.18':
-    resolution: {integrity: sha512-DHv4pnTjMrQFqfMXQDfH8UYcgJxh1pBRCROzhiyGs5lFssyxAXqi+k8V0oI+To+Ut+N1zjqpK90AsnJXtzsKqg==}
-    peerDependencies:
-      '@sinclair/typebox': ^0.34.24
-      valibot: ^1.0.0-rc.0
-      zod: ^3.24.1
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
@@ -4930,14 +4908,6 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
 
-  valibot@1.0.0-rc.3:
-    resolution: {integrity: sha512-LT0REa7Iqx4QGcaHLiTiTkcmJqJ9QdpOy89HALFFBJgejTS64GQFRIbDF7e4f6pauQbo/myfKGmWXCLhMeM6+g==}
-    peerDependencies:
-      typescript: '>=5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -6180,14 +6150,6 @@ snapshots:
       ajv-formats: 3.0.1
       js-yaml: 4.1.0
       minimist: 1.2.8
-
-  '@sinclair/typebox@0.34.30': {}
-
-  '@sinclair/typemap@0.8.18(@sinclair/typebox@0.34.30)(valibot@1.0.0-rc.3(typescript@5.7.2))(zod@3.24.1)':
-    dependencies:
-      '@sinclair/typebox': 0.34.30
-      valibot: 1.0.0-rc.3(typescript@5.7.2)
-      zod: 3.24.1
 
   '@standard-schema/spec@1.0.0': {}
 
@@ -9786,10 +9748,6 @@ snapshots:
   utils-merge@1.0.1: {}
 
   uuid@8.3.2: {}
-
-  valibot@1.0.0-rc.3(typescript@5.7.2):
-    optionalDependencies:
-      typescript: 5.7.2
 
   vary@1.1.2: {}
 

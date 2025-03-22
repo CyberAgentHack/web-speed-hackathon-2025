@@ -1,6 +1,11 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import {
+  getProgramByIdRequestParams,
+  getProgramByIdResponse,
+  getProgramsRequestQuery,
+  getProgramsResponse,
+} from '@wsh-2025/schema/src/openapi/schema';
 import * as batshit from '@yornaath/batshit';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
@@ -10,12 +15,12 @@ const $fetch = createFetch({
   plugins: [schedulePlugin],
   schema: createSchema({
     '/programs': {
-      output: schema.getProgramsResponse,
-      query: schema.getProgramsRequestQuery,
+      output: getProgramsResponse,
+      query: getProgramsRequestQuery,
     },
     '/programs/:episodeId': {
-      output: schema.getProgramByIdResponse,
-      params: schema.getProgramByIdRequestParams,
+      output: getProgramByIdResponse,
+      params: getProgramByIdRequestParams,
     },
   }),
   throw: true,
@@ -46,8 +51,8 @@ const batcher = batshit.create({
 interface ProgramService {
   fetchProgramById: (query: {
     programId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramByIdResponse>>;
-  fetchPrograms: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramsResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getProgramByIdResponse>>;
+  fetchPrograms: () => Promise<StandardSchemaV1.InferOutput<typeof getProgramsResponse>>;
 }
 
 export const programService: ProgramService = {

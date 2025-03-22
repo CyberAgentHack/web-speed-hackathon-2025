@@ -1,6 +1,6 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getTimetableRequestQuery, getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
 
@@ -9,8 +9,8 @@ const $fetch = createFetch({
   plugins: [schedulePlugin],
   schema: createSchema({
     '/timetable': {
-      output: schema.getTimetableResponse,
-      query: schema.getTimetableRequestQuery,
+      output: getTimetableResponse,
+      query: getTimetableRequestQuery,
     },
   }),
   throw: true,
@@ -18,8 +18,8 @@ const $fetch = createFetch({
 
 interface TimetableService {
   fetchTimetable: (
-    params: StandardSchemaV1.InferOutput<typeof schema.getTimetableRequestQuery>,
-  ) => Promise<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+    params: StandardSchemaV1.InferOutput<typeof getTimetableRequestQuery>,
+  ) => Promise<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 }
 
 export const timetableService: TimetableService = {

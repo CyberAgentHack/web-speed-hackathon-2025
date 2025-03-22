@@ -1,6 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getChannelByIdResponse, getChannelsResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { produce } from 'immer';
 
 import { channelService } from '@wsh-2025/client/src/features/channel/services/channelService';
@@ -8,14 +8,14 @@ import { channelService } from '@wsh-2025/client/src/features/channel/services/c
 type ChannelId = string;
 
 interface ChannelState {
-  channels: Record<ChannelId, StandardSchemaV1.InferOutput<typeof schema.getChannelByIdResponse>>;
+  channels: Record<ChannelId, StandardSchemaV1.InferOutput<typeof getChannelByIdResponse>>;
 }
 
 interface ChannelActions {
   fetchChannelById: (params: {
     channelId: ChannelId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getChannelByIdResponse>>;
-  fetchChannels: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getChannelsResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getChannelByIdResponse>>;
+  fetchChannels: () => Promise<StandardSchemaV1.InferOutput<typeof getChannelsResponse>>;
 }
 
 export const createChannelStoreSlice = () => {
