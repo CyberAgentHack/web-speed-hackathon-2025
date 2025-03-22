@@ -35,12 +35,6 @@ export default defineConfig({
     },
     sourcemap: false,
   },
-  resolve: {
-    alias: {
-      '@ffmpeg/core$': './node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js',
-      '@ffmpeg/core/wasm$': './node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm?url',
-    },
-  },
   define: {
     'process.env.API_BASE_URL': JSON.stringify('/api'),
     'process.env.NODE_ENV': JSON.stringify('production'),
