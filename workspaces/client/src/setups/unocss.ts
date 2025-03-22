@@ -1,5 +1,3 @@
-import { IconifyJSON } from '@iconify/types';
-import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
@@ -53,15 +51,7 @@ async function init() {
         `,
         },
       ],
-      presets: [
-        presetWind3(),
-        presetIcons({
-          collections: {
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-          },
-        }),
-      ],
+      presets: [presetWind3()],
     }),
   });
 }
