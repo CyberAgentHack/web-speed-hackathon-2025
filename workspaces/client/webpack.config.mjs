@@ -9,10 +9,18 @@ const plugins = [
   // new BundleAnalyzerPlugin(),
 ];
 
+const ffmpegConfig = {
+  '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+  '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+};
+
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: false,
   entry: './src/main.tsx',
+  externals: {
+    ...ffmpegConfig,
+  },
   mode: 'production',
   module: {
     rules: [
@@ -27,12 +35,12 @@ const config = {
           options: {
             cacheDirectory: true,
             presets: [
-              // [
-              //   '@babel/preset-env',
-              //   {
-              //     targets: 'last 1 versions, not dead',
-              //   },
-              // ],
+              [
+                '@babel/preset-env',
+                {
+                  targets: 'last 1 versions, not dead',
+                },
+              ],
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
@@ -66,8 +74,7 @@ const config = {
   plugins,
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      ...ffmpegConfig,
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },

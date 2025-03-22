@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "wireit",
+    "copy-ffmpeg": "cp node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.* dist/",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit"
@@ -81,7 +82,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "webpack && npm run copy-ffmpeg",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
