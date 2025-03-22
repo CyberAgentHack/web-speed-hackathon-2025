@@ -9,7 +9,7 @@ import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
 import htmlescape from 'htmlescape';
 import { StrictMode } from 'react';
-import { renderToPipeableStream } from 'react-dom/server';
+import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
 export function registerSsr(app: FastifyInstance): void {
@@ -38,60 +38,31 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
+    renderToString(
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <StaticRouterProvider context={context} hydrate={false} router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
 
-    // ハイドレーションデータをJSON文字列化
-    const hydrationData = htmlescape({
-      actionData: context.actionData,
-      loaderData: context.loaderData,
-    });
-
-    // ヘッダー部分を先に送信
-    reply.type('text/html');
-    reply.raw.write(`
-      <!DOCTYPE html>
+    reply.type('text/html').send(/* html */ `
+			 <!DOCTYPE html>
       <html lang="ja">
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <link rel="preload" href="/public/main.js" as="script" />
-          <script>
-            // グローバルスコープでハイドレーションデータを定義
-            window.__staticRouterHydrationData = ${hydrationData};
-          </script>
-        </head>
-        <body>
+      		<link rel="preload" href="/public/main.js" as="script" />
+					<script>
+						window.__staticRouterHydrationData = ${htmlescape({
+              actionData: context.actionData,
+              loaderData: context.loaderData,
+            })};
+					</script>
+					<body>
+					<script src="/public/main.js" defer></script>
+				</body>
+				 </html>
     `);
-
-    // ストリーミングレンダリングを使用
-    const { pipe } = renderToPipeableStream(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={true} router={router} />
-        </StoreProvider>
-      </StrictMode>,
-      {
-        onShellReady() {
-          // シェルが準備できたらストリーミング開始
-          pipe(reply.raw);
-        },
-        onAllReady() {
-          // すべてのコンテンツがレンダリングされたら終了タグを追加
-          reply.raw.write(`
-          <script src="/public/main.js" defer></script>
-        </body>
-      </html>
-    `);
-          reply.raw.end();
-        },
-        onError(error) {
-          console.error('ストリーミングレンダリングエラー:', error);
-          reply.raw.end(`
-          <script src="/public/main.js" defer></script>
-        </body>
-      </html>
-    `);
-        },
-      },
-    );
   });
 }
