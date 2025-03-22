@@ -129,10 +129,9 @@ export const getEpisodeByIdRequestParams = z.object({
 //   }),
 // });
 // --AfterChange
-export const getEpisodeByIdResponse = z.array(
-  // episodes のネストを除去（シリーズの基本情報のみ返す）
-  series
-);
+export const getEpisodeByIdResponse = episode.extend({
+  series: series, // episodesを除去し、シリーズの基本情報のみを返す
+});
 
 // GET /series
 export const getSeriesRequestQuery = z.object({
@@ -154,9 +153,13 @@ export const getSeriesResponse = z.array(
 export const getSeriesByIdRequestParams = z.object({
   seriesId: z.string(),
 });
-export const getSeriesByIdResponse = series.extend({
-  episodes: z.array(episode.extend({})),
-});
+// --backup
+// export const getSeriesByIdResponse = series.extend({
+//   episodes: z.array(episode.extend({})),
+// });
+// --AfterChange
+export const getSeriesByIdResponse = series;
+
 
 // GET /timetable
 export const getTimetableRequestQuery = z.object({
@@ -212,26 +215,45 @@ export const getProgramByIdResponse = program.extend({
 export const getRecommendedModulesRequestParams = z.object({
   referenceId: z.string(),
 });
+// --backup
+// export const getRecommendedModulesResponse = z.array(
+//   recommendedModule.extend({
+//     items: z.array(
+//       recommendedItem.extend({
+//         series: series
+//           .extend({
+//             episodes: z.array(episode.extend({})),
+//           })
+//           .nullable(),
+//         episode: episode
+//           .extend({
+//             series: series.extend({
+//               episodes: z.array(episode.extend({})),
+//             }),
+//           })
+//           .nullable(),
+//       }),
+//     ),
+//   }),
+// );
+//
+// --AfterChange
 export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
-          .nullable(),
-        episode: episode
-          .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
-          })
-          .nullable(),
+        // series の episodes を除去
+        series: series.nullable(),
+        // episode の中の series も episodes を除去
+        episode: episode.extend({
+          series: series,
+        }).nullable(),
       }),
     ),
   }),
 );
+
+
 
 // POST /signIn
 export const signInRequestBody = z.object({
