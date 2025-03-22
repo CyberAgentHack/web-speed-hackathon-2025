@@ -16,6 +16,7 @@
     "@headlessui/react": "2.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@standard-schema/spec": "1.0.0",
+    "@unpic/react": "1.0.1",
     "@wsh-2025/client": "workspace:*",
     "@wsh-2025/schema": "workspace:*",
     "@yornaath/batshit": "0.10.1",
