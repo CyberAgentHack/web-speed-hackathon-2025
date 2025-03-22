@@ -10,21 +10,30 @@ interface Params {
 }
 
 const USE_SEGMENT_NUM = 30;
-const ffmpegCache: { instance: FFmpeg | null } = { instance: null };
+// const ffmpegCache: { instance: FFmpeg | null } = { instance: null };
 
 async function getSeekThumbnail({ episode }: Params) {
-  if (ffmpegCache.instance == null) {
-    const ffmpeg = new FFmpeg();
-    await ffmpeg.load({
-      coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-        return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-      }),
-      wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-        return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-      }),
-    });
-    ffmpegCache.instance = ffmpeg;
-  }
+  // if (ffmpeg == null) {
+  //   const ffmpeg = new FFmpeg();
+  //   await ffmpeg.load({
+  //     coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
+  //       return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
+  //     }),
+  //     wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+  //       return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
+  //     }),
+  //   });
+  //   ffmpeg = ffmpeg;
+  // }
+  const ffmpeg = new FFmpeg();
+  await ffmpeg.load({
+    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
+      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
+    }),
+    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
+    }),
+  });
 
   // HLS のプレイリストを取得
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
@@ -49,11 +58,11 @@ async function getSeekThumbnail({ episode }: Params) {
   // TODO: serverでthumbnail生成 or ここでせめて効率化
   // FFmpeg にセグメントファイルを追加
   for (const file of segmentFiles) {
-    await ffmpegCache.instance.writeFile(file.id, new Uint8Array(file.binary));
+    await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
   }
 
   // セグメントファイルをひとつの mp4 動画に結合
-  await ffmpegCache.instance.exec(
+  await ffmpeg.exec(
     [
       ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
       ['-c:v', 'copy'],
@@ -64,7 +73,7 @@ async function getSeekThumbnail({ episode }: Params) {
   );
 
   // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
-  await ffmpegCache.instance.exec(
+  await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
       ['-vf', "fps=10,select='not(mod(n\\,10))',scale=160:90,tile=250x1"],
@@ -73,8 +82,8 @@ async function getSeekThumbnail({ episode }: Params) {
     ].flat(),
   );
 
-  const output = await ffmpegCache.instance.readFile('preview.jpg');
-  ffmpegCache.instance.terminate();
+  const output = await ffmpeg.readFile('preview.jpg');
+  ffmpeg.terminate();
 
   return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
 }
