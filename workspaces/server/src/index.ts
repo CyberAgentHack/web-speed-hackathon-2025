@@ -17,6 +17,13 @@ async function main() {
     // reply.header('cache-control', 'no-store');
     reply.header('cache-control', 'public');
   });
+  //add --------------------------
+  import compress from '@fastify/compress'; // 追加：圧縮プラグインの読み込み
+  app.register(compress, {
+    // デフォルトで最適な圧縮が有効になります
+    global: true,
+  });
+  //-------------------------------
   app.register(cors, {
     origin: true,
   });
