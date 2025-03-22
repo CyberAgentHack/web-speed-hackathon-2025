@@ -4,9 +4,8 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -22,10 +21,11 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  corejs: false,
+                  targets: {
+                    chrome: '134',
+                  },
+                  useBuiltIns: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -52,10 +52,10 @@ const config = {
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
+    // chunkFilename: 'chunk-[contenthash].js',
+    // chunkFormat: false,
     filename: 'main.js',
-    path: path.resolve(import.meta.dirname, './dist'),
+    path: path.resolve(process.cwd(), 'dist'),
     publicPath: 'auto',
   },
   plugins: [
