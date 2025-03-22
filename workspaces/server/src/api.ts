@@ -530,33 +530,39 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(_req, reply) {
       const database = getDatabase();
 
-      const modules = await database.query.recommendedModule.findMany({
-        orderBy(module, { asc }) {
-          return asc(module.order);
-        },
-        where(module, { eq }) {
-          return eq(module.referenceId, 'entrance');
-        },
-        with: {
-          items: {
-            limit: 5,
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
+      try {
+        const modules = await database.query.recommendedModule.findMany({
+          orderBy(module, { asc }) {
+            return asc(module.order);
+          },
+          where(module, { eq }) {
+            return eq(module.referenceId, 'entrance');
+          },
+          with: {
+            items: {
+              orderBy(item, { asc }) {
+                return asc(item.order);
+              },
+              with: {
+                series: {
+                  with: {
+                    episodes: {
+                      limit: 1,
+                      orderBy(episode, { asc }) {
+                        return asc(episode.order);
+                      },
                     },
                   },
                 },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
+                episode: {
+                  with: {
+                    series: {
+                      with: {
+                        episodes: {
+                          limit: 1,
+                          orderBy(episode, { asc }) {
+                            return asc(episode.order);
+                          },
                         },
                       },
                     },
@@ -565,9 +571,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               },
             },
           },
-        },
-      });
-      reply.code(200).send(modules);
+        });
+        reply.code(200).send(modules);
+      } catch (error) {
+        console.error(error);
+
+      }
     },
   });
 
