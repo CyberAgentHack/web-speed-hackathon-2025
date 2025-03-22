@@ -13,8 +13,8 @@ const plugins = process.env['ANALYZE'] === 'true'
     ...basePlugins,
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
-      reportFilename: 'bundle-report.html',
       openAnalyzer: true,
+      reportFilename: 'bundle-report.html',
     })
   ]
   : basePlugins;
