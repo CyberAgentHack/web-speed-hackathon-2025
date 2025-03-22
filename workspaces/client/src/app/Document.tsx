@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Outlet, ScrollRestoration } from 'react-router';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -18,11 +17,9 @@ export const Document = () => {
         <script src="/public/main.js"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
-        <Suspense>
           <Layout>
             <Outlet />
           </Layout>
-        </Suspense>
         <ScrollRestoration />
       </body>
     </html>
