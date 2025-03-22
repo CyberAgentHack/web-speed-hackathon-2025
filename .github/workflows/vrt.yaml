@@ -27,5 +27,16 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
 
+      - name: Build
+        run: pnpm build
+
+      - name: Start server
+        run: pnpm start & 
+        # バックグラウンドでサーバーを起動
+
+      - name: Wait for server to start
+        run: sleep 10
+        # サーバーが起動するのを待つ
+
       - name: Run tests
         run: pnpm test
