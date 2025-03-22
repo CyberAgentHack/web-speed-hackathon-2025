@@ -13,6 +13,7 @@ async function main() {
 
   const app = fastify();
 
+  await app.register(import("@fastify/compress"));
   app.addHook("onSend", async (_req, reply) => {
     reply.header("cache-control", "no-store");
   });

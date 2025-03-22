@@ -1,4 +1,3 @@
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,10 +26,6 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/*', async (_req, reply) => {
-    const html = await fs.readFile(
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/index.html'),
-      'utf-8',
-    );
-    reply.type('text/html').send(html);
+    reply.sendFile('index.html', path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'));
   });
 }
