@@ -1,6 +1,6 @@
 import { lens } from "@dhmk/zustand-lens";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type * as schema from "@wsh-2025/schema/src/api/schema";
+import type { getRecommendedModulesResponse } from "@wsh-2025/schema/src/api/schema";
 import { produce } from "immer";
 import type { ArrayValues } from "type-fest";
 
@@ -13,7 +13,7 @@ interface RecommendedState {
 	recommendedModules: Record<
 		RecommendedModuleId,
 		ArrayValues<
-			StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>
+			StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>
 		>
 	>;
 	references: Record<ReferenceId, RecommendedModuleId[]>;
@@ -23,7 +23,7 @@ interface RecommendedActions {
 	fetchRecommendedModulesByReferenceId: (params: {
 		referenceId: ReferenceId;
 	}) => Promise<
-		StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>
+		StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>
 	>;
 }
 

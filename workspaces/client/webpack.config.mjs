@@ -2,6 +2,7 @@ import path from "node:path";
 
 import UnoCSS from "@unocss/postcss";
 import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -20,9 +21,7 @@ const config = {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							[
-								"@babel/preset-env",
-							],
+							["@babel/preset-env"],
 							["@babel/preset-react", { runtime: "automatic" }],
 							["@babel/preset-typescript"],
 						],
@@ -72,7 +71,15 @@ const config = {
 	},
 	plugins: [
 		new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-		new webpack.EnvironmentPlugin({ API_BASE_URL: "/api", NODE_ENV: "" }),
+		new webpack.EnvironmentPlugin({
+			API_BASE_URL: "/api",
+			NODE_ENV: "production",
+		}),
+		new BundleAnalyzerPlugin({
+			analyzerMode: "static",
+			openAnalyzer: false,
+			reportFilename: "bundle-report.html",
+		}),
 	],
 	resolve: {
 		alias: {

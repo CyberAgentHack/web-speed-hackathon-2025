@@ -1,5 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
-import type * as schema from '@wsh-2025/schema/src/api/schema';
+import type { getTimetableResponse } from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import type { ReactElement } from 'react';
 import type { ArrayValues } from 'type-fest';
@@ -10,7 +10,7 @@ import { Program } from '@wsh-2025/client/src/pages/timetable/components/Program
 
 interface Props {
   channelId: string;
-  programList: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>[];
+  programList: ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>[];
 }
 
 export const ProgramList = ({ channelId, programList }: Props): ReactElement => {

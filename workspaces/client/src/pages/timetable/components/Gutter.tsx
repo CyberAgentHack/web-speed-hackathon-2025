@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { type PointerEvent, type ReactElement, useState } from 'react';
 
 import { useChangeColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useChangeColumnWidth';
 
@@ -9,12 +9,12 @@ interface Props {
 export const Gutter = ({ channelId }: Props): ReactElement => {
   const changeColumnWidth = useChangeColumnWidth();
 
-  const [lastScreenX, setLastScreenX] = React.useState<number | null>(null);
-  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+  const [lastScreenX, setLastScreenX] = useState<number | null>(null);
+  const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
     setLastScreenX(event.screenX);
   };
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (lastScreenX == null) {
       return;
     }
@@ -22,7 +22,7 @@ export const Gutter = ({ channelId }: Props): ReactElement => {
     changeColumnWidth({ channelId, delta: Math.ceil(delta) });
     setLastScreenX(event.screenX);
   };
-  const onPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
     if (lastScreenX == null) {
       return;
     }

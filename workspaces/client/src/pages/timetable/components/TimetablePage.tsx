@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import invariant from 'tiny-invariant';
 
-import { createStore } from '@wsh-2025/client/src/app/createStore';
+import type { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { ChannelTitle } from '@wsh-2025/client/src/pages/timetable/components/ChannelTitle';
 import { NewTimetableFeatureDialog } from '@wsh-2025/client/src/pages/timetable/components/NewTimetableFeatureDialog';

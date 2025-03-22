@@ -1,11 +1,11 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { StandardSchemaV1 } from "@standard-schema/spec";
-import * as schema from "@wsh-2025/schema/src/api/schema";
+import { toBlobURL } from "@ffmpeg/util";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
+import type { getEpisodeByIdResponse } from "@wsh-2025/schema/src/api/schema";
 import { Parser } from "m3u8-parser";
 import { use } from "react";
-
 interface Params {
-	episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+	episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
 }
 
 async function getSeekThumbnail({ episode }: Params) {
@@ -16,15 +16,17 @@ async function getSeekThumbnail({ episode }: Params) {
 	parser.end();
 
 	// FFmpeg の初期化
+	const coreURL = "https://unpkg.com/@ffmpeg/core@0.12.0/dist";
+
 	const ffmpeg = new FFmpeg();
 	await ffmpeg.load({
-		coreURL: await import("@ffmpeg/core?arraybuffer").then(({ default: b }) => {
-			return URL.createObjectURL(new Blob([b], { type: "text/javascript" }));
-		}),
-		wasmURL: await import("@ffmpeg/core/wasm?arraybuffer").then(
-			({ default: b }) => {
-				return URL.createObjectURL(new Blob([b], { type: "application/wasm" }));
-			},
+		coreURL: await toBlobURL(
+			`${coreURL}/esm/ffmpeg-core.min.js`,
+			"text/javascript",
+		),
+		wasmURL: await toBlobURL(
+			`${coreURL}/umd/ffmpeg-core.wasm`,
+			"application/wasm",
 		),
 	});
 

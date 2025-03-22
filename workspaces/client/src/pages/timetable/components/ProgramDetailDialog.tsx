@@ -1,8 +1,8 @@
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { ReactElement } from 'react';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import type { getTimetableResponse } from '@wsh-2025/schema/src/api/schema';
+import type { ReactElement } from 'react';
 import { Link } from 'react-router';
-import { ArrayValues } from 'type-fest';
+import type { ArrayValues } from 'type-fest';
 
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
@@ -10,7 +10,7 @@ import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks
 
 interface Props {
   isOpen: boolean;
-  program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+  program: ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 }
 
 export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement => {

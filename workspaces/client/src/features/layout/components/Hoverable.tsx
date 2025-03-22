@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { Children, cloneElement, ReactElement, Ref, useRef } from 'react';
+import type { ReactElement, Ref } from 'react';
+import { Children, cloneElement, useRef } from 'react';
 import { useMergeRefs } from 'use-callback-ref';
 
 import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';

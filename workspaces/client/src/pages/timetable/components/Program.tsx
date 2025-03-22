@@ -1,5 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
-import type * as schema from '@wsh-2025/schema/src/api/schema';
+import type { getTimetableResponse } from '@wsh-2025/schema/src/api/schema';
 import classNames from 'classnames';
 import { DateTime } from 'luxon';
 import { type ReactElement, useEffect, useRef, useState } from 'react';
@@ -14,7 +14,7 @@ import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks
 
 interface Props {
   height: number;
-  program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+  program: ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 }
 
 export const Program = ({ height, program }: Props): ReactElement => {
@@ -78,7 +78,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
-            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+            <div className={classNames(shouldImageBeVisible ? 'opacity-100' : 'opacity-0', 'w-full')}>
               <img
                 ref={imageRef}
                 alt=""

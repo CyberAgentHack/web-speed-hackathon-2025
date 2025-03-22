@@ -1,9 +1,9 @@
-import { Ref, useEffect, useRef } from 'react';
+import { type Ref, useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
 import { assignRef } from 'use-callback-ref';
 
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
-import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
+import type { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
+import type { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
 
 interface Props {
   className?: string;

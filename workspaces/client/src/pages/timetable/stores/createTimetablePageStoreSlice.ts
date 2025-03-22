@@ -1,6 +1,6 @@
 import { lens } from "@dhmk/zustand-lens";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type * as schema from "@wsh-2025/schema/src/api/schema";
+import type { getTimetableResponse } from "@wsh-2025/schema/src/api/schema";
 import { produce } from "immer";
 import debounce from "lodash/debounce";
 import type { ArrayValues } from "type-fest";
@@ -9,7 +9,7 @@ import { DEFAULT_WIDTH } from "@wsh-2025/client/src/features/timetable/constants
 
 type ChannelId = string;
 type Program = ArrayValues<
-	StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>
+	StandardSchemaV1.InferOutput<typeof getTimetableResponse>
 >;
 
 interface TimetablePageState {
