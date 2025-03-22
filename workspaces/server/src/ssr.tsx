@@ -31,7 +31,7 @@ export function registerSsr(app: FastifyInstance): void {
     root: [
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
-    ],
+    ]
   });
 
   app.get('/favicon.ico', (_, reply) => {
@@ -73,7 +73,11 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          ${imagePaths.map((imagePath) => {
+            const extension = path.extname(imagePath).toLowerCase();
+            const asValue = extension === '.webp' ? 'image' : 'image';
+            return `<link as="${asValue}" href="${imagePath}" rel="preload" type="${extension === '.webp' ? 'image/webp' : ''}" />`;
+          }).join('\n')}
         </head>
         <body></body>
       </html>

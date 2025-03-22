@@ -39,6 +39,10 @@ const config = {
         type: 'asset/inline',
       },
       {
+        test: /\.webp$/,
+        type: 'asset/resource',
+      },
+      {
         resourceQuery: /raw/,
         type: 'asset/source',
       },
