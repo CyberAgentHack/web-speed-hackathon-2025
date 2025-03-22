@@ -1,16 +1,15 @@
-name: Review App
+name: Destroy Review App
 on:
   pull_request_target:
-    types: [opened]
+    types: [closed]
 
 jobs:
-  create-review-app:
+  destroy-review-app:
     runs-on: ubuntu-latest
     steps:
-      - uses: kqito/manage-heroku-review-app@55e434ad5ac86f21cf2f7654de1566973fbc7046
+      - uses: kqito/manage-heroku-review-app@main
         with:
-          action: create
+          action: destroy
         env:
           HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
           HEROKU_PIPELINE_ID: ${{ secrets.HEROKU_PIPELINE_ID }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
