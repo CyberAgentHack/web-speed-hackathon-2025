@@ -1,39 +1,31 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  // 本番ビルド向け設定
-  mode: 'production',
-  devtool: false,  // ソースマップ不要なら false。デバッグ用に 'source-map' にしてもよい。
-  
+  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  
+  mode: 'none',
   module: {
     rules: [
       {
-        test: /\.(?:js|mjs|cjs|jsx|ts|tsx)$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        resolve: {
+          fullySpecified: false,
+        },
+        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
           loader: 'babel-loader',
           options: {
-            // 使用しているプリセット類
             presets: [
               [
                 '@babel/preset-env',
                 {
-                  // ここは実際にサポートしたい環境に合せて設定
-                  targets: {
-                    chrome: '134',
-                    },
-                  useBuiltIns: false,
-                  forceAllTransforms: false,
-                  corejs: false,
+                  corejs: '3.41',
+                  forceAllTransforms: true,
+                  targets: 'defaults',
+                  useBuiltIns: 'entry',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -59,50 +51,21 @@ const config = {
       },
     ],
   },
-  
-  optimization: {
-    // コード分割 (splitChunks) を有効にして、キャッシュや読み込みを最適化
-    splitChunks: {
-      chunks: 'all',  // すべてのチャンクから分割
-    },
-  },
-  // --------------------
-
   output: {
-    // バンドルやチャンクの命名ルールを指定
-    filename: '[name].[contenthash].js',
-    chunkFilename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, './dist'),
+    chunkFilename: 'chunk-[contenthash].js',
+    chunkFormat: false,
+    filename: 'main.js',
+    path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-
   plugins: [
-    // LimitChunkCountPlugin は削除して、デフォルトのコード分割に任せる
-    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }), ← 削除
-
-    new webpack.EnvironmentPlugin({
-      API_BASE_URL: '/api',
-      NODE_ENV: 'production',
-    }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',  
-      openAnalyzer: false,
-      reportFilename: 'bundle-report.html',
-    }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
-
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(
-        __dirname,
-        'node_modules',
-        '@ffmpeg/core/dist/umd/ffmpeg-core.js'
-      ),
-      '@ffmpeg/core/wasm$': path.resolve(
-        __dirname,
-        'node_modules',
-        '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'
-      ),
+      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
