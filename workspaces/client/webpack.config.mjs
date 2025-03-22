@@ -1,66 +1,39 @@
-import path from 'node:path';
-import webpack from 'webpack';
+const path = require('path');
 
-export default {
-  entry: './src/main.tsx',
-  mode: 'production',
-  devtool: false,
+module.exports = {
+  entry: './src/index.js', // 必要に応じてエントリーポイントを変更してください
   output: {
-    path: path.resolve(import.meta.dirname, './dist'),
-    filename: '[name].[contenthash].js',
-    chunkFilename: '[name].[contenthash].js',
-    publicPath: 'auto',
-    clean: true
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
   },
+  mode: 'production',
   module: {
     rules: [
       {
-        test: /\.(js|mjs|cjs|jsx|ts|tsx)$/,
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: {
-          fullySpecified: false
-        },
+        test: /\.js$/,
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: 'swc-loader',
           options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  useBuiltIns: 'entry',
-                  targets: 'defaults'
+            jsc: {
+              parser: {
+                syntax: 'ecmascript',
+                jsx: true // React を利用している場合は true に設定
+              },
+              transform: {
+                react: {
+                  runtime: 'automatic'
                 }
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript']
-            ]
+              }
+            }
           }
         }
-      },
-      // 画像・フォントなどのアセット処理
-      {
-        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf)$/,
-        type: 'asset/resource'
       }
     ]
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    },
-    runtimeChunk: 'single'
-  },
-  plugins: [
-    new webpack.EnvironmentPlugin({
-      API_BASE_URL: '/api',
-      NODE_ENV: 'production'
-    })
-  ],
-  resolve: {
-    alias: {
-      // FFmpegなどのaliasがある場合
-    },
-    extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx']
+  // Webpack のファイルシステムキャッシュを有効化
+  cache: {
+    type: 'filesystem',
+    cacheDirectory: path.resolve(__dirname, '.webpack_cache')
   }
 };
