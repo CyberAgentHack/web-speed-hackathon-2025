@@ -1,3 +1,4 @@
+// src/components/VideoLazy.tsx
 import React, { useRef, useEffect, useState } from 'react';
 
 export default function VideoLazy({ src }: { src: string }) {
@@ -18,11 +19,6 @@ export default function VideoLazy({ src }: { src: string }) {
   }, [VideoJS, src]);
 
   return (
-    <video
-      ref={videoRef}
-      className="video-js vjs-big-play-centered"
-      style={{ width: '100%', height: 'auto' }}
-      controls
-    />
+    <video ref={videoRef} className="video-js" controls style={{ width: '100%' }} />
   );
 }
