@@ -11,7 +11,7 @@ export function useRecommended({ referenceId }: Params) {
 
   const modules = (moduleIds ?? [])
     .map((moduleId) => state.features.recommended.recommendedModules[moduleId])
-    .filter(<T>(m: T): m is NonNullable<T> => m != null);
+    .filter(((m) => m != null) as <T>(m: T) => m is NonNullable<T>);
 
   return modules;
 }

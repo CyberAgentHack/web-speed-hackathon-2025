@@ -30,7 +30,7 @@ export const EpisodeItem = ({ episode }: Props) => {
                   className="h-auto w-full"
                   decoding="async"
                   height={675}
-                  loading="eager"
+                  loading="lazy"
                   src={episode.thumbnailUrl}
                   width={1200} />
                   <span className="i-material-symbols:play-arrow-rounded absolute bottom-[4px] left-[4px] m-[4px] block size-[20px] text-[#ffffff]" />

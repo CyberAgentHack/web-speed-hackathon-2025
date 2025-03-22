@@ -4,7 +4,7 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: process.env['NODE_ENV'] === 'production' ? false : 'inline-source-map',
+  devtool: process.env['NODE_ENV'] === 'production' ? false : 'source-map',
   entry: './src/main.tsx',
   mode: 'production',
   module: {
@@ -16,22 +16,12 @@ const config = {
         },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'esbuild-loader',
           options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
-          },
+            loader: 'tsx',
+            sourcemap: true,
+            target: 'es2015',
+          }
         },
       },
       {
