@@ -13,6 +13,7 @@ import { PlayerType } from '@wsh-2025/client/src/features/player/constants/playe
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
+import { toLargeThumbnailUrl } from '@wsh-2025/client/src/features/thumbnail/resize';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
@@ -50,7 +51,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={toLargeThumbnailUrl(episode.thumbnailUrl)} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -74,7 +75,7 @@ export const EpisodePage = () => {
                       <img
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
-                        src={episode.thumbnailUrl}
+                        src={toLargeThumbnailUrl(episode.thumbnailUrl)}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
                       <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />

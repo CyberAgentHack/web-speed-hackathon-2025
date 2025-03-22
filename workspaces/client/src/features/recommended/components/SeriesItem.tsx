@@ -2,6 +2,8 @@ import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
+import { toSmallThumbnailUrl } from '@wsh-2025/client/src/features/thumbnail/resize';
+
 interface Props {
   series: {
     id: string;
@@ -22,7 +24,7 @@ export const SeriesItem = ({ series }: Props) => {
           <>
             <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
               <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
-                <img alt="" className="h-auto w-full" src={series.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={toSmallThumbnailUrl(series.thumbnailUrl)} />
               </Flipped>
             </div>
             <div className="p-[8px]">

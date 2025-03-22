@@ -8,6 +8,7 @@ import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/co
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
+import { toSmallThumbnailUrl } from '@wsh-2025/client/src/features/thumbnail/resize';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
@@ -37,7 +38,7 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={series.thumbnailUrl}
+              src={toSmallThumbnailUrl(series.thumbnailUrl)}
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
