@@ -476,7 +476,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(module.order);
         },
         where(module, { eq }) {
-          // @ts-expect-error
+          // @ts-expect-error FIXME: 応急処置
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           return eq(module.referenceId, req.params.referenceId);
         },
         with: {
@@ -485,32 +486,20 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
               episode: {
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      title: true,
                     },
                   },
                 },
               },
+              series: true,
             },
           },
         },
-        // @ts-expect-error
+        // @ts-expect-error FIXME: 応急処置
         limit: Number(req.query.limit),
       });
       reply.code(200).send(modules);
