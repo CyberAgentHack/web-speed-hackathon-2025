@@ -99,10 +99,7 @@ export const Layout = ({ children }: Props) => {
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
-                className="m-[4px] size-[20px] shrink-0 grow-0"
-                style={{ content: isSignedIn ? '"\f2f5"' : '"\f007"', fontFamily: 'Font Awesome 5 Free' }}
-              />
+              <div className={`m-[4px] size-[20px] shrink-0 grow-0 ${isSignedIn ? 'i-fa:sign-out' : 'i-fa:user'}`} />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
