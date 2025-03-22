@@ -13,17 +13,17 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
+// function getFiles(parent: string): string[] {
+//   const dirents = readdirSync(parent, { withFileTypes: true });
+//   return dirents
+//     .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
+//     .map((dirent) => path.join(parent, dirent.name));
+// }
 
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
+// function getFilePaths(relativePath: string, rootDir: string): string[] {
+//   const files = getFiles(path.resolve(rootDir, relativePath));
+//   return files.map((file) => path.join('/', path.relative(rootDir, file)));
+// }
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
@@ -59,12 +59,13 @@ export function registerSsr(app: FastifyInstance): void {
       </StrictMode>,
     );
 
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
+    // const rootDir = path.resolve(__dirname, '../../../');
+    // const imagePaths = [
+    //   getFilePaths('public/images', rootDir),
+    //   getFilePaths('public/animations', rootDir),
+    //   getFilePaths('public/logos', rootDir),
+    // ].flat();
+    const imagePaths = [];
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
