@@ -107,8 +107,8 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
     };
   }, [isBroadcastStarted, nextProgram?.id]);
 
-  useMemo(() => {
-    fetchProgramDatas(store, { programId });
+  useMemo(async () => {
+    await fetchProgramDatas(store, { programId });
   }, [programId]);
 
   if (program == null) {

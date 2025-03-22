@@ -36,8 +36,8 @@ export const SeriesPage = (store: ReturnType<typeof createStore>) => {
 
   const modules = useRecommended({ referenceId: seriesId });
 
-  useMemo(() => {
-    fetchSeriesDatas(store, { seriesId });
+  useMemo(async () => {
+    await fetchSeriesDatas(store, { seriesId });
   }, [seriesId]);
 
   if (series == null) {

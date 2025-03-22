@@ -20,8 +20,8 @@ export const NotFoundPage = (store: ReturnType<typeof createStore>) => {
   const modules = useRecommended({ referenceId: 'error' });
   const module = modules.at(0);
 
-  useMemo(() => {
-    fetchRecommends(store);
+  useMemo(async () => {
+    await fetchRecommends(store);
   }, []);
 
   if (module == null) {

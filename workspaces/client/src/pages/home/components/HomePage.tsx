@@ -17,8 +17,8 @@ export const fetchRecommends = async (store: ReturnType<typeof createStore>) => 
 export const HomePage = (store: ReturnType<typeof createStore>) => {
   const modules = useRecommended({ referenceId: 'entrance' });
 
-  useMemo(() => {
-    fetchRecommends(store);
+  useMemo(async () => {
+    await fetchRecommends(store);
   }, []);
 
   if (modules == null) {

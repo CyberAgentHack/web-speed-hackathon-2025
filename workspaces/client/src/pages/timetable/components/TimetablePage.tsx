@@ -38,7 +38,7 @@ export const TimetablePage = (store: ReturnType<typeof createStore>) => {
   const programLists = Object.values(record);    
 
   useMemo(async () => {
-    fetchTimeTableDatas(store);
+    await fetchTimeTableDatas(store);
   }, []);
 
   if (!channelIds.length) {

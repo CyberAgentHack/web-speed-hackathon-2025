@@ -49,8 +49,8 @@ export const EpisodePage = (store: ReturnType<typeof createStore>) => {
 
   const isSignInRequired = episode.premium && user == null;
 
-  useMemo(() => {
-    fetchEpisodeDatas(store, { episodeId });
+  useMemo(async () => {
+    await fetchEpisodeDatas(store, { episodeId });
   }, [episodeId]);
 
   if (episode == null) {
