@@ -7,7 +7,7 @@ jobs:
   destroy-review-app:
     runs-on: ubuntu-latest
     steps:
-      - uses: kqito/manage-heroku-review-app@bd802202dcc426578871d210d8f0106ecae70068
+      - uses: kqito/manage-heroku-review-app@main
         with:
           action: destroy
         env:
