@@ -11,7 +11,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 
 export const HomePage = () => {
   const modules = useRecommended({ referenceId: 'entrance' });
-  console.log("deploy test")
+  
   return (
     <>
       <title>Home - AremaTV</title>
