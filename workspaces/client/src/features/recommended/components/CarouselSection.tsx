@@ -4,8 +4,8 @@ import * as schema from '@wsh-2025/schema/src/api/schema';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
-import { EpisodeItem } from '@wsh-2025/client/src/features/recommended/components/EpisodeItem';
-import { SeriesItem } from '@wsh-2025/client/src/features/recommended/components/SeriesItem';
+import EpisodeItem from '@wsh-2025/client/src/features/recommended/components/EpisodeItem';
+import SeriesItem from '@wsh-2025/client/src/features/recommended/components/SeriesItem';
 import { useCarouselItemWidth } from '@wsh-2025/client/src/features/recommended/hooks/useCarouselItemWidth';
 import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/useScrollSnap';
 

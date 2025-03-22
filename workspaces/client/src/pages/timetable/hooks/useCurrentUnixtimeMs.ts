@@ -7,7 +7,7 @@ export function useCurrentUnixtimeMs(): number {
   useEffect(() => {
     const interval = setInterval(() => {
       state.pages.timetable.refreshCurrentUnixtimeMs();
-    }, 250);
+    }, 5000);
     return () => {
       clearInterval(interval);
     };

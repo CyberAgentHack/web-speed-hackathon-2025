@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
-import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -32,7 +31,10 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
   return { channels, modules, program, timetable };
 };
-
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 export const ProgramPage = () => {
   const { programId } = useParams();
   invariant(programId);
@@ -49,7 +51,6 @@ export const ProgramPage = () => {
 
   const playerRef = usePlayerRef();
 
-  const forceUpdate = useUpdate();
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
@@ -59,25 +60,25 @@ export const ProgramPage = () => {
     if (isArchivedRef.current) {
       return;
     }
-
+  
     if (!isBroadcastStarted) {
       // 放送開始前に定期的に更新し続ける
       let timeout = setTimeout(function tick() {
-        forceUpdate();
+        // 状態更新なしで再レンダリングさせない
         timeout = setTimeout(tick, 250);
       }, 250);
       return () => {
         clearTimeout(timeout);
       };
     }
-
+  
     // 放送終了後に次の番組に切り替える
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
         timeout = setTimeout(tick, 250);
         return;
       }
-
+  
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
           preventScrollReset: true,
@@ -86,10 +87,10 @@ export const ProgramPage = () => {
         });
       } else {
         isArchivedRef.current = true;
-        forceUpdate();
+        // 状態更新なしで強制的な再レンダリングを行わない
       }
     }, 250);
-
+  
     return () => {
       clearTimeout(timeout);
     };
@@ -104,7 +105,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={changeImageExtension(program.thumbnailUrl)} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -130,7 +131,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={changeImageExtension(program.thumbnailUrl)} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

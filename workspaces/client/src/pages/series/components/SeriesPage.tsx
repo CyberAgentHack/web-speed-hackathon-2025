@@ -17,7 +17,10 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
   return { modules, series };
 };
-
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 export const SeriesPage = () => {
   const { seriesId } = useParams();
   invariant(seriesId);
@@ -37,7 +40,7 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={series.thumbnailUrl}
+              src={changeImageExtension(series.thumbnailUrl)}
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
