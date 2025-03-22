@@ -4,6 +4,7 @@ import { assignRef } from 'use-callback-ref';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
+import { createPlayer } from '@wsh-2025/client/src/features/player/logics/create_player';
 
 interface Props {
   className?: string;
@@ -23,22 +24,18 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
-      if (abortController.signal.aborted) {
-        return;
-      }
-      player = createPlayer(playerType);
-      player.load(playlistUrl, { loop: loop ?? false });
-      mountElement.appendChild(player.videoElement);
-      assignRef(playerRef, player);
-    });
+    if (abortController.signal.aborted) {
+      return;
+    }
+    player = createPlayer(playerType);
+    player.load(playlistUrl, { loop: loop ?? false });
+    mountElement.appendChild(player.videoElement);
+    assignRef(playerRef, player);
 
     return () => {
       abortController.abort();
-      if (player != null) {
-        mountElement.removeChild(player.videoElement);
-        player.destory();
-      }
+      mountElement.removeChild(player.videoElement);
+      player.destory();
       assignRef(playerRef, null);
     };
   }, [playerType, playlistUrl, loop]);
