@@ -1,9 +1,9 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
-
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
@@ -14,16 +14,12 @@ async function getSeekThumbnail({ episode }: Params) {
   const parser = new Parser();
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
-
+  const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
+    coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+    wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
   });
 
   // 動画のセグメントファイルを取得

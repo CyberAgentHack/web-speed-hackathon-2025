@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { promises, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,7 +29,7 @@ export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/public/',
     root: [
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/public'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
   });
@@ -66,22 +66,15 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/logos', rootDir),
     ].flat();
 
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-        </head>
-        <body></body>
-      </html>
-      <script>
+    const clientHTML = path.resolve(__dirname, '../../client/dist/index.html');
+    const clientHTMLContent = await promises.readFile(clientHTML, 'utf-8');
+    const dataFetchHTML = `<script>
         window.__staticRouterHydrationData = ${htmlescape({
           actionData: context.actionData,
           loaderData: context.loaderData,
         })};
-      </script>
-    `);
+      </script>`;
+    clientHTMLContent.replace('<!-- DATA_FETCH_HYDRATION -->', dataFetchHTML);
+    reply.type('text/html').send(clientHTMLContent);
   });
 }
