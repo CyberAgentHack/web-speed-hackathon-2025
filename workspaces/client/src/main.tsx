@@ -4,7 +4,8 @@ import '@unocss/reset/tailwind-compat.css';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
