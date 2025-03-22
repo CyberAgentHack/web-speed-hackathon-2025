@@ -49,7 +49,6 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
             'fa-solid': () =>
               import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
             fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
