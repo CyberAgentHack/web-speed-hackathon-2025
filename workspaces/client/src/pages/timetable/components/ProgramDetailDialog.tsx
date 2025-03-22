@@ -7,6 +7,7 @@ import { ArrayValues } from 'type-fest';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
+import { JpegToWebp } from '@wsh-2025/client/src/util-tmp/jpegToWebp';
 
 interface Props {
   isOpen: boolean;
@@ -33,7 +34,8 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
         <img
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-          src={program.thumbnailUrl}
+          loading='lazy'
+          src={JpegToWebp(program.thumbnailUrl)}
         />
 
         {episode != null ? (
@@ -47,7 +49,8 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
             <img
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={episode.thumbnailUrl}
+              loading='lazy'
+              src={JpegToWebp(episode.thumbnailUrl)}
             />
           </>
         ) : null}
