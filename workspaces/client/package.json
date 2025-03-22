@@ -51,7 +51,6 @@
     "@babel/preset-env": "7.26.0",
     "@babel/preset-react": "7.25.9",
     "@babel/preset-typescript": "7.26.0",
-    "@ffmpeg/core": "0.12.10",
     "@ffmpeg/util": "0.12.2",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
