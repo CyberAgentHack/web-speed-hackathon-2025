@@ -1,10 +1,11 @@
 import path from 'node:path';
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  entry: './src/main.tsx',
   mode: 'production',
+  entry: './src/main.tsx',
   module: {
     rules: [
       {
@@ -53,10 +54,10 @@ const config = {
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
+    clean: true,
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 100 }),
