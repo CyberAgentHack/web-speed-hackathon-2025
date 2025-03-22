@@ -1,4 +1,5 @@
 import { readdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,6 +24,12 @@ function getFiles(parent: string): string[] {
 function getFilePaths(relativePath: string, rootDir: string): string[] {
   const files = getFiles(path.resolve(rootDir, relativePath));
   return files.map((file) => path.join('/', path.relative(rootDir, file)));
+}
+
+function optimizeGif(filePath: string, outputDir: string) {
+  const gifsiclePath = path.resolve('node_modules/.bin/gifsicle');
+  const optimizedFilePath = path.join(outputDir, path.basename(filePath));
+  execSync(`${gifsiclePath} -O2 --colors 128 --resize-width 640 --delay=10 -o ${optimizedFilePath} ${filePath}`);
 }
 
 export function registerSsr(app: FastifyInstance): void {
@@ -65,6 +72,16 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/animations', rootDir),
       getFilePaths('public/logos', rootDir),
     ].flat();
+
+    // GIF ファイルの圧縮処理
+    const animationsDir = path.resolve(rootDir, 'public/animations');
+    const optimizedDir = path.resolve(animationsDir, 'optimized');
+    readdirSync(animationsDir).forEach((file) => {
+      if (path.extname(file) === '.gif') {
+        const filePath = path.join(animationsDir, file);
+        optimizeGif(filePath, optimizedDir);
+      }
+    });
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
