@@ -6,7 +6,7 @@ import webpack from 'webpack';
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: ['development', 'production'].includes(process.env.NODE_ENV) ? process.env.NODE_ENV : 'development',
   module: {
     rules: [
       {

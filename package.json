@@ -41,12 +41,18 @@
     },
     "heroku-build": {
       "dependencies": [
-        "build"
+        "./workspaces/client:production-build"
       ]
     },
     "heroku-cleanup": {
       "//": "Heroku の buildpacks サイズ削減のため、サーバー起動に必要ないものを削除します",
-      "command": "rm -rf ./node_modules ./workspaces/*/.wireit ./workspaces/test && pnpm install --prod"
+      "command": "rm -rf ./node_modules ./workspaces/*/.wireit ./workspaces/test && pnpm install --prod --frozen-lockfile",
+      "env": {
+        "NODE_ENV": {
+          "default": "production",
+          "external": true
+        }
+      }
     },
     "heroku-start": {
       "dependencies": [

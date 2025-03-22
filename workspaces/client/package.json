@@ -91,6 +91,24 @@
         "./dist/**/*"
       ]
     },
+    "production-build": {
+      "command": "webpack",
+      "env": {
+        "NODE_ENV": {
+          "default": "production",
+          "external": true
+        }
+      },
+      "files": [
+        "../../pnpm-lock.yaml",
+        "../schema/src/**/*",
+        "./src/**/*",
+        "./webpack.config.mjs"
+      ],
+      "output": [
+        "./dist/**/*"
+      ]
+    },
     "format": {
       "command": "pnpm run format:eslint && pnpm run format:prettier"
     },
