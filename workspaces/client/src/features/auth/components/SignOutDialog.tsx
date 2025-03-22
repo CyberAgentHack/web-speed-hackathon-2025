@@ -28,7 +28,7 @@ export const SignOutDialog = ({ isOpen, onClose }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
+          <img alt="Arema" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">ログアウト</h2>
@@ -37,13 +37,23 @@ export const SignOutDialog = ({ isOpen, onClose }: Props) => {
           {({ handleSubmit, submitError }) => (
             <form className="mb-[16px]" onSubmit={(ev) => void handleSubmit(ev)}>
               <div className="mb-[24px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#DDAA00] bg-[#fffcee] p-[8px] text-[14px] font-bold text-[#DDAA00]">
-                <img alt="警告" className="m-[4px] size-[20px]" src="/public/icons/warning-outline.svg" />
+                <img
+                  alt="警告"
+                  className="m-[4px] size-[20px]"
+                  loading="lazy"
+                  src="/public/icons/warning-outline.svg"
+                />
                 <span>プレミアムエピソードが視聴できなくなります。</span>
               </div>
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <img alt="エラー" className="m-[4px] size-[20px]" src="/public/icons/error-outline.svg" />
+                  <img
+                    alt="エラー"
+                    className="m-[4px] size-[20px]"
+                    loading="lazy"
+                    src="/public/icons/error-outline.svg"
+                  />
                   <span>{submitError}</span>
                 </div>
               ) : null}
