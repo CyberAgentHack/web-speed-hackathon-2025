@@ -17,6 +17,7 @@ interface Props {
   children: ReactNode;
 }
 
+
 export const Layout = ({ children }: Props) => {
   useSubscribePointer();
 
