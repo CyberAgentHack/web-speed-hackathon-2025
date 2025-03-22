@@ -1,3 +1,5 @@
+This is forked repository.
+
 # Web Speed Hackathon 2025 AREMA
 
 ## 概要
