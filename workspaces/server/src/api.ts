@@ -54,7 +54,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
-  /* eslint-disable sort/object-properties */
   api.route({
     method: 'POST',
     url: '/initialize',
@@ -481,6 +480,48 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(item, { asc }) {
               return asc(item.order);
             },
+          },
+        },
+      });
+
+      const seriesIds = new Set<string>();
+      const episodeIds = new Set<string>();
+
+      for (const module of modules) {
+        for (const item of module.items) {
+          if (item.seriesId) seriesIds.add(item.seriesId);
+          if (item.episodeId) episodeIds.add(item.episodeId);
+        }
+      }
+
+      const [seriesMap, episodeMap] = await Promise.all([
+        (async () => {
+          if (seriesIds.size === 0) return new Map();
+
+          const seriesArray = await database.query.series.findMany({
+            where(series, { inArray }) {
+              return inArray(series.id, [...seriesIds]);
+            },
+            with: {
+              episodes: {
+                orderBy(episode, { asc }) {
+                  return asc(episode.order);
+                },
+              },
+            },
+          });
+
+          return new Map(seriesArray.map((series) => [series.id, series]));
+        })(),
+
+        // エピソードデータを取得
+        (async () => {
+          if (episodeIds.size === 0) return new Map();
+
+          const episodeArray = await database.query.episode.findMany({
+            where(episode, { inArray }) {
+              return inArray(episode.id, [...episodeIds]);
+            },
             with: {
               series: {
                 with: {
@@ -491,24 +532,23 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                   },
                 },
               },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
             },
-          },
-        },
-      });
-      reply.code(200).send(modules);
+          });
+
+          return new Map(episodeArray.map((episode) => [episode.id, episode]));
+        })(),
+      ]);
+
+      const result = modules.map((module) => ({
+        ...module,
+        items: module.items.map((item) => ({
+          ...item,
+          series: item.seriesId ? seriesMap.get(item.seriesId) || null : null,
+          episode: item.episodeId ? episodeMap.get(item.episodeId) || null : null,
+        })),
+      }));
+
+      reply.code(200).send(result);
     },
   });
 
@@ -645,6 +685,4 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send();
     },
   });
-
-  /* eslint-enable sort/object-properties */
 }
