@@ -1,21 +1,21 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
 
 import { seriesService } from '@wsh-2025/client/src/features/series/services/seriesService';
+import { getSeriesByIdResponse, getSeriesResponse } from '@wsh-2025/schema/src/api/schema';
 
 type SeriesId = string;
 
 interface SeriesState {
-  series: Record<SeriesId, StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>>;
+  series: Record<SeriesId, StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse>>;
 }
 
 interface SeriesActions {
-  fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesResponse>>;
+  fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof getSeriesResponse>>;
   fetchSeriesById: (params: {
     seriesId: SeriesId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse>>;
 }
 
 export const createSeriesStoreSlice = () => {

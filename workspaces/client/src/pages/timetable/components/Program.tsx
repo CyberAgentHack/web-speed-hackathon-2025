@@ -1,5 +1,4 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
@@ -10,10 +9,11 @@ import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/compon
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
+import { getTimetableResponse } from '@wsh-2025/schema/src/api/schema';
 
 interface Props {
   height: number;
-  program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+  program: ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 }
 
 export const Program = ({ height, program }: Props): ReactElement => {

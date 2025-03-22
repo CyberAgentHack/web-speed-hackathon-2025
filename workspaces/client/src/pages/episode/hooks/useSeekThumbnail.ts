@@ -1,12 +1,13 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getEpisodeByIdResponse } from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
 
 interface Params {
-  episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+  episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
 }
+// TODO サムネイル関連は怪しい
 
 async function getSeekThumbnail({ episode }: Params) {
   // HLS のプレイリストを取得
@@ -52,10 +53,11 @@ async function getSeekThumbnail({ episode }: Params) {
   );
 
   // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
+  // 毎秒は不要であるため、30秒ごとにサムネイルを生成
   await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
+      ['-vf', "fps=30,select='not(mod(n\\,900))',scale=160:90,tile=250x1"],
       ['-frames:v', '1'],
       'preview.jpg',
     ].flat(),
