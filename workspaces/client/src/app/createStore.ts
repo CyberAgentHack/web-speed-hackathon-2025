@@ -1,5 +1,5 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -39,7 +39,8 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  // lodashを使わない実装に
+  store.setState((s) => Object.assign(s, hydrationData));
 
   return store;
 };
