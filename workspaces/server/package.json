@@ -8,7 +8,8 @@
     "format:eslint": "wireit",
     "format:prettier": "wireit",
     "heroku-start": "wireit",
-    "start": "wireit"
+    "start": "wireit",
+    "dev": "wireit"
   },
   "dependencies": {
     "@fastify/cookie": "11.0.2",
@@ -57,6 +58,25 @@
     "type-fest": "4.29.1"
   },
   "wireit": {
+    "dev": {
+      "command": "tsx --watch -r ./loaders/png.cjs ./src/index.ts",
+      "service": true,
+      "env": {
+        "API_BASE_URL": {
+          "external": true,
+          "default": "http://localhost:8000/api"
+        },
+        "PORT": {
+          "external": true,
+          "default": "8000"
+        }
+      },
+      "files": [
+        "../../pnpm-lock.yaml",
+        "../schema/src/**/*",
+        "./src/**/*"
+      ]
+    },
     "database:migrate": {
       "command": "drizzle-kit generate && drizzle-kit push"
     },
@@ -64,7 +84,7 @@
       "command": "tsx ./tools/seed.ts"
     },
     "start": {
-      "command": "tsx --watch -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
       "service": true,
       "env": {
         "API_BASE_URL": {
