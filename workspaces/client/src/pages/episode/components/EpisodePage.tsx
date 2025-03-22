@@ -26,11 +26,10 @@ import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayer
 // };
 
 const fetchEpisodeDatas = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
-  invariant(episodeId);
-  await store.getState().features.episode.fetchEpisodeById({ episodeId });
+  await store.getState().features.episode.fetchEpisodeById({ episodeId: episodeId ?? '' });
   await store
     .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId ?? '' });
 };
 
 export const EpisodePage = (store: ReturnType<typeof createStore>) => {

@@ -10,21 +10,11 @@ import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/componen
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 import { useMemo } from 'react';
 
-// export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
-//   invariant(seriesId);
-//   const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-//   const modules = await store
-//     .getState()
-//     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-//   return { modules, series };
-// };
-
 const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
-  invariant(seriesId);
-  await store.getState().features.series.fetchSeriesById({ seriesId });
+  await store.getState().features.series.fetchSeriesById({ seriesId: seriesId ?? '' });
   await store
     .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId ?? '' });
 }
 
 export const SeriesPage = (store: ReturnType<typeof createStore>) => {

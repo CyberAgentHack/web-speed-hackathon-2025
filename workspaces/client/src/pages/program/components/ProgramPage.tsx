@@ -34,18 +34,16 @@ import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayer
 // };
 
 const fetchProgramDatas = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
-  invariant(programId);
-
   const now = DateTime.now();
   const since = now.startOf('day').toISO();
   const until = now.endOf('day').toISO();
 
-  await store.getState().features.program.fetchProgramById({ programId });
+  await store.getState().features.program.fetchProgramById({ programId: programId ?? '' });
   await store.getState().features.channel.fetchChannels();
   await store.getState().features.timetable.fetchTimetable({ since, until });
   await store
     .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId ?? ''});
 }
 
 export const ProgramPage = (store: ReturnType<typeof createStore>) => {
@@ -76,45 +74,6 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
   if (program == null) {
     return <div></div>;
   }
-
-  // useEffect(() => {
-  //   if (isArchivedRef.current) {
-  //     return;
-  //   }
-
-  //   // 放送前であれば、放送開始になるまで画面を更新し続ける
-  //   if (!isBroadcastStarted) {
-  //     let timeout = setTimeout(function tick() {
-  //       forceUpdate();
-  //       timeout = setTimeout(tick, 250);
-  //     }, 250);
-  //     return () => {
-  //       clearTimeout(timeout);
-  //     };
-  //   }
-
-  //   // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-  //   let timeout = setTimeout(function tick() {
-  //     if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-  //       timeout = setTimeout(tick, 250);
-  //       return;
-  //     }
-
-  //     if (nextProgram?.id) {
-  //       void navigate(`/programs/${nextProgram.id}`, {
-  //         preventScrollReset: true,
-  //         replace: true,
-  //         state: { loading: 'none' },
-  //       });
-  //     } else {
-  //       isArchivedRef.current = true;
-  //       forceUpdate();
-  //     }
-  //   }, 250);
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, [isBroadcastStarted, nextProgram?.id]);
 
   useEffect(() => {
     if (isArchivedRef.current) return;
