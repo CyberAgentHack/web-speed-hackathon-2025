@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -18,6 +19,7 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            compact: true,
             presets: [
               [
                 '@babel/preset-env',
@@ -61,6 +63,7 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: true }),
   ],
   resolve: {
     alias: {
