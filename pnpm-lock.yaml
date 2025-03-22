@@ -17,6 +17,9 @@ importers:
 
   .:
     dependencies:
+      '@types/webpack-bundle-analyzer':
+        specifier: 4.7.0
+        version: 4.7.0
       wireit:
         specifier: 0.14.9
         version: 0.14.9
@@ -442,9 +445,6 @@ importers:
       jszip:
         specifier: 3.10.1
         version: 3.10.1
-      mikanjs:
-        specifier: 1.0.14
-        version: 1.0.14
       type-fest:
         specifier: 4.29.1
         version: 4.29.1
@@ -1502,6 +1502,7 @@ packages:
   '@faker-js/faker@9.2.0':
     resolution: {integrity: sha512-ulqQu4KMr1/sTFIYvqSdegHT8NIkt66tFAkugGnHA+1WAfEn6hMzNR+svjXGFRVLnapxvej67Z/LwchFrnLBUg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/accept-negotiator@2.0.0':
     resolution: {integrity: sha512-/Sce/kBzuTxIq5tJh85nVNOq9wKD8s+viIgX0fFMDBdw95gnpf53qmF1oBgJym3cPFliWUuSloVg/1w/rH0FcQ==}
@@ -2046,6 +2047,9 @@ packages:
 
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
+
+  '@types/webpack-bundle-analyzer@4.7.0':
+    resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
 
   '@types/wicg-task-scheduling@2024.1.0':
     resolution: {integrity: sha512-9g5QVDU8Na3P6rPMbyYx5pS8UpGDfzys8T7Xq5HMTbI7elSq/YioGbBVAh2u67JGNTThZ3o9PK0/qBvaVOYPYQ==}
@@ -3921,9 +3925,6 @@ packages:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
-  mikanjs@1.0.14:
-    resolution: {integrity: sha512-PdTkPUIPhTfumBRHaXmbU9b7TIjDS/6rAK7yrFjOJnW89SEUpxQv5KRp1iaU39frq8nHBYiu4EympS2X3idIlQ==}
-
   mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
@@ -4722,6 +4723,7 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
+    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -6959,6 +6961,17 @@ snapshots:
     dependencies:
       '@types/node': 22.10.0
 
+  '@types/webpack-bundle-analyzer@4.7.0':
+    dependencies:
+      '@types/node': 22.10.0
+      tapable: 2.2.1
+      webpack: 5.96.1(webpack-cli@5.1.4)
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+      - webpack-cli
+
   '@types/wicg-task-scheduling@2024.1.0': {}
 
   '@types/ws@8.5.13':
@@ -9040,8 +9053,6 @@ snapshots:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
-
-  mikanjs@1.0.14: {}
 
   mime-db@1.52.0: {}
 

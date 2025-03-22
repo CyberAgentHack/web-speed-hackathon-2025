@@ -10,6 +10,7 @@
     "test": "wireit"
   },
   "dependencies": {
+    "@types/webpack-bundle-analyzer": "4.7.0",
     "wireit": "0.14.9"
   },
   "devDependencies": {
