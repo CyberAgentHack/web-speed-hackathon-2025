@@ -5,6 +5,9 @@ import { drizzle } from 'drizzle-orm/libsql';
 import { reset } from 'drizzle-seed';
 import { DateTime } from 'luxon';
 
+import { optimize } from 'svgo';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
 import * as bcrypt from 'bcrypt';
@@ -74,6 +77,75 @@ const CHANNEL_NAME_LIST: Channel[] = [
   },
 ];
 
+async function optimizeSvg(filePath: string, outputDir: string) {
+  const svgString = readFileSync(filePath, 'utf8');
+  const fileName = path.basename(filePath);
+  const optimizedFilePath = path.join(outputDir, fileName);
+
+  if (!existsSync(outputDir)) {
+    mkdirSync(outputDir, { recursive: true });
+  }
+
+  const result = optimize(svgString, {
+    path: filePath,
+    multipass: true, // 複数回の最適化を実行
+    plugins: [
+      {
+        name: 'preset-default',
+        params: {
+          overrides: {
+            removeViewBox: false, // viewBox属性を保持
+            removeHiddenElems: false,
+            removeEmptyAttrs: false,
+            removeEmptyText: {       // オブジェクト形式で設定
+              text: true,
+              tspan: true,
+              tref: true
+            },
+            removeEmptyContainers: false,
+            removeUselessDefs: false,
+            removeTitle: false,
+            removeDesc: false,
+          },
+        },
+      },
+      'removeXMLNS', // xmlns属性を削除
+      'sortAttrs', // 属性を整列
+      {
+        name: 'removeDimensions',
+      },
+      {
+        name: 'removeAttrs',
+        params: {
+          attrs: '((data-name|data-old-color))',
+        },
+      }
+    ],
+  });
+
+  if ('data' in result) {
+    writeFileSync(optimizedFilePath, result.data);
+    console.log(`Optimized SVG: ${fileName}`);
+  }
+}
+
+// SVGファイルの最適化処理を追加
+async function optimizeSvgFiles() {
+  console.log('Optimizing SVG files...');
+  const rootDir = path.resolve(__dirname, '../../../');
+  const logosDir = path.resolve(rootDir, 'public/logos');
+  const optimizedDir = path.resolve(logosDir, 'optimized');
+
+  const svgFiles = readdirSync(logosDir)
+    .filter(file => file.endsWith('.svg'))
+    .map(file => path.join(logosDir, file));
+
+  for (const file of svgFiles) {
+    await optimizeSvg(file, optimizedDir);
+  }
+}
+
+
 async function main() {
   const faker = new Faker({
     locale: [{ lorem: { word: await fetchLoremIpsumWordList() } }, ja, en],
@@ -111,13 +183,13 @@ async function main() {
       ])
       .returning();
 
-    // Create channels
-    console.log('Creating channels...');
+    await optimizeSvgFiles();
+    // channelデータの作成時にoptimizedディレクトリのSVGを使用
     const channelList: (typeof schema.channel.$inferSelect)[] = [];
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
         id: faker.string.uuid(),
-        logoUrl: `/public/logos/${id}.svg`,
+        logoUrl: `/public/logos/optimized/${id}.svg`, // 最適化されたSVGを使用
         name,
       }));
       const result = await database.insert(schema.channel).values(data).returning();
