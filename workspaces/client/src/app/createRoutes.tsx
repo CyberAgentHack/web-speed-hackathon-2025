@@ -24,26 +24,28 @@ type AppStore = ReturnType<typeof createStore> & {
   };
 };
 
-function createLazyRoute<TPrefetch extends (...args: any[]) => Promise<any>>(
-  importFn: () => Promise<{
-    prefetch: TPrefetch;
-    [key: string]: any;
-  }>,
-  componentName: string,
-  prefetchFn: (store: AppStore, params: Record<string, string>) => Promise<any>
-) {
-  return async () => {
-    const module = await lazy(importFn(), MIN_LAZY_DELAY);
-    return {
-      Component: module[componentName],
-      loader: (args: any) => prefetchFn(store as AppStore, args.params || {}),
-    };
-  };
-}
-
-
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   const commonLoader = () => docPrefetch(store);
+
+  const createLazyRoute = <TParams extends Record<string, string>>(
+    importFn: () => Promise<{
+      prefetch: (store: AppStore, params: TParams) => Promise<any>;
+      [key: string]: any;
+    }>,
+    componentName: string,
+    prefetchFn: (store: AppStore, params: TParams) => Promise<any>
+  ) => {
+    return async () => {
+      const module = await lazy(importFn(), MIN_LAZY_DELAY);
+      return {
+        Component: module[componentName],
+        loader: (args: { params?: Partial<TParams> }) => {
+          const params = (args.params ?? {}) as TParams;
+          return prefetchFn(store as AppStore, params);
+        },
+      };
+    };
+  };
 
   return [
     {
@@ -53,7 +55,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
       children: [
         {
           index: true,
-          lazy: createLazyRoute(
+          lazy: createLazyRoute<{}>(
             () => import('@wsh-2025/client/src/pages/home/components/HomePage'),
             'HomePage',
             (s, params) => Promise.resolve()
@@ -61,34 +63,34 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           path: '/episodes/:episodeId',
-          lazy: createLazyRoute(
+          lazy: createLazyRoute<{ episodeId: string }>(
             () => import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
             'EpisodePage',
-            (s, { episodeId }) => s.episodePrefetcher.prefetch(episodeId)
+            (s, params) => s.episodePrefetcher.prefetch(params.episodeId)
           ),
         },
         {
           path: '/programs/:programId',
-          lazy: createLazyRoute(
+          lazy: createLazyRoute<{ programId: string }>(
             () => import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
             'ProgramPage',
-            (s, { programId }) => Promise.all([
-              s.programPrefetcher.prefetch(programId),
-              s.episodeListPrefetcher.prefetchByProgram(programId),
+            (s, params) => Promise.all([
+              s.programPrefetcher.prefetch(params.programId),
+              s.episodeListPrefetcher.prefetchByProgram(params.programId),
             ])
           ),
         },
         {
           path: '/series/:seriesId',
-          lazy: createLazyRoute(
+          lazy: createLazyRoute<{ seriesId: string }>(
             () => import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
             'SeriesPage',
-            (s, { seriesId }) => s.seriesPrefetcher.prefetch(seriesId)
+            (s, params) => s.seriesPrefetcher.prefetch(params.seriesId)
           ),
         },
         {
           path: '/timetable',
-          lazy: createLazyRoute(
+          lazy: createLazyRoute<{}>(
             () => import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
             'TimetablePage',
             (s) => s.timetablePrefetcher.prefetch()
@@ -96,7 +98,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           path: '*',
-          lazy: createLazyRoute(
+          lazy: createLazyRoute<{}>(
             () => import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
             'NotFoundPage',
             () => Promise.resolve()
