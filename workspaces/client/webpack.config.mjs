@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -64,6 +65,11 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',  // ビルド後にHTMLレポートを生成
+      openAnalyzer: false,     // ビルド完了後自動でブラウザを開くかどうか
+      reportFilename: 'bundle-report.html', // レポートの出力先ファイル
+    }),
   ],
   resolve: {
     alias: {
