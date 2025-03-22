@@ -53,6 +53,7 @@ const _ProgramDetailDialog = ({ program, onClose }: Omit<Props, 'isOpen'> & {onC
           className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
           to={`/programs/${program.id}`}
           onClick={onClose}
+          aria-label='番組をみる'
         >
           番組をみる
         </Link>
