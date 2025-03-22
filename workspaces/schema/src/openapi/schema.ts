@@ -103,13 +103,20 @@ export const getChannelByIdResponse = channel.extend({});
 export const getEpisodesRequestQuery = z.object({
   episodeIds: z.string().optional(),
 });
+// AfterChange
 export const getEpisodesResponse = z.array(
   episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
+    series: series,  // 「episodes」のネストを除去
   }),
 );
+// --backup
+// export const getEpisodesResponse = z.array(
+//   episode.extend({
+//     series: series.extend({
+//       episodes: z.array(episode.extend({})),
+//     }),
+//   }),
+// );
 
 // GET /episodes/:episodeId
 export const getEpisodeByIdRequestParams = z.object({
