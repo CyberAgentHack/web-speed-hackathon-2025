@@ -59,13 +59,6 @@ export function registerSsr(app: FastifyInstance): void {
       </StrictMode>,
     );
 
-    // const rootDir = path.resolve(__dirname, '../../../');
-    // const imagePaths = [
-    //   getFilePaths('public/images', rootDir),
-    //   getFilePaths('public/animations', rootDir),
-    //   getFilePaths('public/logos', rootDir),
-    // ].flat();
-
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
       <html lang="ja">
@@ -77,7 +70,7 @@ export function registerSsr(app: FastifyInstance): void {
         <body></body>
       </html>
       <script>
-        window.__staticRouterHydrationData = ${htmlescape({
+        window.__staticRouterHydrationData = ${JSON.stringify({
           actionData: context.actionData,
           loaderData: context.loaderData,
         })};
