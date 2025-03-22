@@ -13,6 +13,9 @@ interface Props {
 }
 
 export const SeriesItem = ({ series }: Props) => {
+  // thumbnailUrl の拡張子を .webp に変更
+  const thumbnailUrlWithWebp = series.thumbnailUrl.replace(/\.[a-zA-Z0-9]+$/, '_400w.webp');
+
   return (
     <Hoverable classNames={{ hovered: 'opacity-75' }}>
       <NavLink viewTransition className="block w-full overflow-hidden" to={`/series/${series.id}`}>
@@ -21,7 +24,7 @@ export const SeriesItem = ({ series }: Props) => {
             <>
               <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
                 <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
-                  <img alt="" className="h-auto w-full" src={series.thumbnailUrl} />
+                  <img alt="" className="h-auto w-full" src={thumbnailUrlWithWebp} />
                 </Flipped>
               </div>
               <div className="p-[8px]">
