@@ -6,7 +6,6 @@ async function init() {
     defaults: defineConfig({
       layers: {
         default: 1,
-        icons: 0,
         preflights: 0,
         reset: -1,
       },
