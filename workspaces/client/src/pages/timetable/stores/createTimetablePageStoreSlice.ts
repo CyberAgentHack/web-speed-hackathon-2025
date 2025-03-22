@@ -6,16 +6,14 @@ import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 
-function debounce<T extends (...args: any[]) => void>(fn: T, wait = 50): T {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  return function debounced(this: any, ...args: Parameters<T>) {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      fn.apply(this, args);
+function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(...args);
     }, wait);
-  } as T;
+  };
 }
 
 type ChannelId = string;
@@ -50,13 +48,15 @@ export const createTimetablePageStoreSlice = () => {
         shownNewFeatureDialog: false,
       }));
     },
-    columnWidthRecord: {},
-    currentUnixtimeMs: 0,
     refreshCurrentUnixtimeMs: debounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
     }, 50),
+
+    // state
+    columnWidthRecord: {},
+    currentUnixtimeMs: 0,
     selectedProgramId: null,
     selectProgram: (program: Program | null) => {
       set(() => ({

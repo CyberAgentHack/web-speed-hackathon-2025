@@ -38,12 +38,15 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  if (hydrationData) {
-    store.setState((s) => ({
+  store.setState((s) => {
+    if (!hydrationData || typeof hydrationData !== 'object') {
+      return s;
+    }
+    return {
       ...s,
-      ...(hydrationData as Record<string, unknown>),
-    }));
-  }
+      ...hydrationData,
+    };
+  });
 
   return store;
 };
