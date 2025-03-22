@@ -9,6 +9,7 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
+import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
@@ -25,8 +26,10 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
   return { episode, modules };
 };
-
 export const EpisodePage = () => {
+  // ポインター位置の追跡を開始（SeekThumbnailで使用）
+  useSubscribePointer();
+
   const authActions = useAuthActions();
   const user = useAuthUser();
 
@@ -38,6 +41,7 @@ export const EpisodePage = () => {
 
   const modules = useRecommended({ referenceId: episodeId });
 
+  const playerRef = usePlayerRef();
   const playerRef = usePlayerRef();
 
   const isSignInRequired = episode.premium && user == null;

@@ -1,30 +1,23 @@
 import { useEffect } from 'react';
 
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import { debounce } from '@wsh-2025/client/src/utils/debounce';
 
 export function useSubscribePointer(): void {
-  const s = useStore((s) => s);
+  const updatePointer = useStore((s) => s.features.layout.updatePointer);
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    const current = { x: 0, y: 0 };
-    const handlePointerMove = (ev: MouseEvent) => {
-      current.x = ev.clientX;
-      current.y = ev.clientY;
-    };
-    window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
+    // 位置が変わったときだけ更新するように最適化
+    const handlePointerMove = debounce((ev: MouseEvent) => {
+      updatePointer({ x: ev.clientX, y: ev.clientY });
+    }, 16); // 約60FPSに制限
 
-    let immediate = setImmediate(function tick() {
-      s.features.layout.updatePointer({ ...current });
-      immediate = setImmediate(tick);
-    });
-    abortController.signal.addEventListener('abort', () => {
-      clearImmediate(immediate);
-    });
+    window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
 
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [updatePointer]);
 }

@@ -1,25 +1,25 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { lazy, ReactNode, Suspense, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
-import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
-import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
-import { SignUpDialog } from '@wsh-2025/client/src/features/auth/components/SignUpDialog';
 import { AuthDialogType } from '@wsh-2025/client/src/features/auth/constants/auth_dialog_type';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
-import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
+import { debounce } from '@wsh-2025/client/src/utils/debounce';
+
+// ダイアログコンポーネントを遅延ロード
+const SignInDialog = lazy(() => import('@wsh-2025/client/src/features/auth/components/SignInDialog').then(module => ({ default: module.SignInDialog })));
+const SignUpDialog = lazy(() => import('@wsh-2025/client/src/features/auth/components/SignUpDialog').then(module => ({ default: module.SignUpDialog })));
+const SignOutDialog = lazy(() => import('@wsh-2025/client/src/features/auth/components/SignOutDialog').then(module => ({ default: module.SignOutDialog })));
 
 interface Props {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  useSubscribePointer();
-
   const navigation = useNavigation();
   const isLoading =
     navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
@@ -35,14 +35,16 @@ export const Layout = ({ children }: Props) => {
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    // スクロールイベントにdebounceを適用
+    const handleScroll = debounce(() => {
       setScrollTopOffset(window.scrollY);
-    };
+    }, 16); // 約60FPSに制限
 
     window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      handleScroll.cancel(); // メモリリークを防止
     };
   }, []);
 
@@ -114,17 +116,26 @@ export const Layout = ({ children }: Props) => {
         ) : null}
       </div>
 
-      <SignInDialog
-        isOpen={authDialogType === AuthDialogType.SignIn}
-        onClose={authActions.closeDialog}
-        onOpenSignUp={authActions.openSignUpDialog}
-      />
-      <SignUpDialog
-        isOpen={authDialogType === AuthDialogType.SignUp}
-        onClose={authActions.closeDialog}
-        onOpenSignIn={authActions.openSignInDialog}
-      />
-      <SignOutDialog isOpen={authDialogType === AuthDialogType.SignOut} onClose={authActions.closeDialog} />
+      {/* 必要なときだけダイアログをレンダリング */}
+      <Suspense fallback={null}>
+        {authDialogType === AuthDialogType.SignIn && (
+          <SignInDialog
+            isOpen={true}
+            onClose={authActions.closeDialog}
+            onOpenSignUp={authActions.openSignUpDialog}
+          />
+        )}
+        {authDialogType === AuthDialogType.SignUp && (
+          <SignUpDialog
+            isOpen={true}
+            onClose={authActions.closeDialog}
+            onOpenSignIn={authActions.openSignInDialog}
+          />
+        )}
+        {authDialogType === AuthDialogType.SignOut && (
+          <SignOutDialog isOpen={true} onClose={authActions.closeDialog} />
+        )}
+      </Suspense>
     </>
   );
 };
