@@ -19,6 +19,9 @@
   "engines": {
     "node": "22.14.0"
   },
+  "volta": {
+    "node": "22.14.0"
+  },
   "pnpm": {
     "overrides": {
       "es-abstract": "~1.23.9",
@@ -58,8 +61,5 @@
         "./workspaces/test:test"
       ]
     }
-  },
-  "volta": {
-    "node": "22.14.0"
   }
 }
