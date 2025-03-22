@@ -10,10 +10,11 @@ import { useCarouselItemWidth } from '@wsh-2025/client/src/features/recommended/
 import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/useScrollSnap';
 
 interface Props {
+  lazy?: boolean;
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
 }
 
-export const CarouselSection = ({ module }: Props) => {
+export const CarouselSection = ({ lazy = true, module }: Props) => {
   const containerRefForScrollSnap = useScrollSnap({ scrollPadding: 24 });
   const { ref: containerRefForItemWidth, width: itemWidth } = useCarouselItemWidth();
   const mergedRef = useMergeRefs([containerRefForItemWidth, containerRefForScrollSnap]);
@@ -30,8 +31,8 @@ export const CarouselSection = ({ module }: Props) => {
         >
           {module.items.map((item) => (
             <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
-              {item.series != null ? <SeriesItem series={item.series} /> : null}
-              {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
+              {item.series != null ? <SeriesItem lazy={lazy} series={item.series} /> : null}
+              {item.episode != null ? <EpisodeItem episode={item.episode} lazy={lazy} /> : null}
             </div>
           ))}
         </div>

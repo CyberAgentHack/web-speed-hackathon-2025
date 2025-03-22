@@ -5,6 +5,7 @@ import { NavLink } from 'react-router';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
+  lazy?: boolean;
   series: {
     id: string;
     thumbnailUrl: string;
@@ -12,7 +13,7 @@ interface Props {
   };
 }
 
-export const SeriesItem = ({ series }: Props) => {
+export const SeriesItem = ({ lazy = true, series }: Props) => {
   return (
     <Hoverable classNames={{ hovered: 'opacity-75' }}>
       <NavLink viewTransition className="block w-full overflow-hidden" to={`/series/${series.id}`}>
@@ -21,7 +22,13 @@ export const SeriesItem = ({ series }: Props) => {
             <>
               <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
                 <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
-                  <img alt="" className="h-auto w-full" src={series.thumbnailUrl} />
+                  <img
+                    alt=""
+                    className="h-auto w-full"
+                    decoding="async"
+                    loading={lazy ? 'lazy' : 'eager'}
+                    src={series.thumbnailUrl}
+                  />
                 </Flipped>
               </div>
               <div className="p-[8px]">
