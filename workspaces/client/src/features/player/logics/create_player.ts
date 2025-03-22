@@ -9,6 +9,7 @@ class ShakaPlayerWrapper implements PlayerWrapper {
     controls: false,
     muted: true,
     volume: 0.25,
+    preload: "metadata",
   });
   private _player = new shaka.Player();
   readonly playerType: PlayerType.ShakaPlayer;
