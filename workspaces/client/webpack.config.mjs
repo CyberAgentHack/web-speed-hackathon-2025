@@ -97,10 +97,8 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }), new BundleAnalyzerPlugin()],
-
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
