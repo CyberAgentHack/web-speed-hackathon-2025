@@ -4,7 +4,8 @@ import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+import type { HydrationState } from 'react-router';
 
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
@@ -18,11 +19,12 @@ declare global {
 function main() {
   // ストアとルーターの作成を先に行う
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const router = createBrowserRouter(createRoutes(store), {
+    hydrationData: window.__staticRouterHydrationData,
+  });
 
-  // requestIdleCallbackを使用して優先度の低いタイミングでハイドレーションを実行
-  const idleCallback = (cb) => setTimeout(cb, 1);
-  idleCallback(() => {
+  // Progressive Hydrationのために、コンテンツが表示された後にハイドレーションを実行
+  const startHydration = () => {
     hydrateRoot(
       document,
       <StrictMode>
@@ -31,7 +33,9 @@ function main() {
         </StoreProvider>
       </StrictMode>,
     );
-  });
+  };
+
+  window.requestIdleCallback(startHydration, { timeout: 2000 });
 }
 
 // DOMの準備ができたら実行
