@@ -1,4 +1,4 @@
-import '@wsh-2025/client/src/setups/polyfills';
+import 'setimmediate';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
