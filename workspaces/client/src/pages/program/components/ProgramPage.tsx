@@ -1,8 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
-import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
 
 // Helper function to format date in Japanese style (L月d日 H:mm)
@@ -56,33 +55,35 @@ export const ProgramPage = () => {
 
   const playerRef = usePlayerRef();
 
-  const forceUpdate = useUpdate();
   const navigate = useNavigate();
-  const isArchivedRef = useRef(new Date(program.endAt) <= new Date());
-  const isBroadcastStarted = new Date(program.startAt) <= new Date();
+  const [isArchived, setIsArchived] = useState(new Date(program.endAt) <= new Date());
+  const [isBroadcastStarted, setIsBroadcastStarted] = useState(new Date(program.startAt) <= new Date());
   useEffect(() => {
-    if (isArchivedRef.current) {
+    if (isArchived) {
       return;
     }
 
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
+    // 放送前であれば、放送開始時刻に一度だけ更新する
     if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
-        forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
+      const startTime = new Date(program.startAt).getTime();
+      const now = new Date().getTime();
+      const timeUntilStart = Math.max(0, startTime - now);
+      
+      const timeout = setTimeout(() => {
+        setIsBroadcastStarted(true);
+      }, timeUntilStart);
+      
       return () => {
         clearTimeout(timeout);
       };
     }
 
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-    let timeout = setTimeout(function tick() {
-      if (new Date() < new Date(program.endAt)) {
-        timeout = setTimeout(tick, 250);
-        return;
-      }
-
+    // 放送中の場合、終了時刻に一度だけ更新する
+    const endTime = new Date(program.endAt).getTime();
+    const now = new Date().getTime();
+    const timeUntilEnd = Math.max(0, endTime - now);
+    
+    const timeout = setTimeout(() => {
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
           preventScrollReset: true,
@@ -90,14 +91,14 @@ export const ProgramPage = () => {
           state: { loading: 'none' },
         });
       } else {
-        isArchivedRef.current = true;
-        forceUpdate();
+        setIsArchived(true);
       }
-    }, 250);
+    }, timeUntilEnd);
+    
     return () => {
       clearTimeout(timeout);
     };
-  }, [isBroadcastStarted, nextProgram?.id]);
+  }, [isArchived, isBroadcastStarted, nextProgram?.id, program.startAt, program.endAt, navigate]);
 
   return (
     <>
@@ -106,7 +107,7 @@ export const ProgramPage = () => {
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
-            {isArchivedRef.current ? (
+            {isArchived ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
