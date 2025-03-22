@@ -79,6 +79,9 @@
     "webpack-dev-server": "5.1.0",
     "wireit": "0.14.9"
   },
+  "browserslist": [
+    "last 1 version"
+  ],
   "wireit": {
     "build": {
       "command": "webpack",

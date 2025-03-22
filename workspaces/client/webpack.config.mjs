@@ -71,6 +71,7 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
+  target: 'browserslist', // 追加
 };
 
 export default config;
