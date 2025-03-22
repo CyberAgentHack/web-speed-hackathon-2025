@@ -1,3 +1,5 @@
 {
+  "deno.enable": true,
+  "deno.enablePaths": ["./public"],
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }
