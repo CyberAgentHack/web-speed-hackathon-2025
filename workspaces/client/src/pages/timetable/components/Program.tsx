@@ -1,7 +1,7 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState, useMemo } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
@@ -16,7 +16,7 @@ interface Props {
   program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
 }
 
-export const Program = ({ height, program }: Props): ReactElement => {
+const Program = ({ height, program }: Props): ReactElement => {
   const width = useColumnWidth(program.channelId);
 
   const [selectedProgramId, setProgram] = useSelectedProgramId();
@@ -26,10 +26,14 @@ export const Program = ({ height, program }: Props): ReactElement => {
   };
 
   const currentUnixtimeMs = useCurrentUnixtimeMs();
-  const isBroadcasting =
-    DateTime.fromISO(program.startAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis() &&
-    DateTime.fromMillis(currentUnixtimeMs).toMillis() < DateTime.fromISO(program.endAt).toMillis();
-  const isArchived = DateTime.fromISO(program.endAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis();
+  const isBroadcasting = useMemo(() => {
+    return DateTime.fromISO(program.startAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis() &&
+      DateTime.fromMillis(currentUnixtimeMs).toMillis() < DateTime.fromISO(program.endAt).toMillis();
+  }, [program.startAt, program.endAt, currentUnixtimeMs]);
+
+  const isArchived = useMemo(() => {
+    return DateTime.fromISO(program.endAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis();
+  }, [program.endAt, currentUnixtimeMs]);
 
   const titleRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -83,3 +87,5 @@ export const Program = ({ height, program }: Props): ReactElement => {
     </>
   );
 };
+
+export default Program;

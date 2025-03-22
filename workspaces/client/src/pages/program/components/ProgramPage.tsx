@@ -53,13 +53,15 @@ export const ProgramPage = () => {
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+  
+  // 放送開始前は画面を更新し続ける
   useEffect(() => {
     if (isArchivedRef.current) {
       return;
     }
 
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
     if (!isBroadcastStarted) {
+      // 放送開始前に定期的に更新し続ける
       let timeout = setTimeout(function tick() {
         forceUpdate();
         timeout = setTimeout(tick, 250);
@@ -69,7 +71,7 @@ export const ProgramPage = () => {
       };
     }
 
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
+    // 放送終了後に次の番組に切り替える
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
         timeout = setTimeout(tick, 250);
@@ -87,6 +89,7 @@ export const ProgramPage = () => {
         forceUpdate();
       }
     }, 250);
+
     return () => {
       clearTimeout(timeout);
     };
