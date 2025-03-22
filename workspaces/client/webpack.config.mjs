@@ -53,10 +53,14 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: 'async',
+    },
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: '[name]-[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
