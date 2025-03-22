@@ -5,9 +5,9 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'; // 追加
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -72,6 +72,12 @@ const config = {
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
   target: 'browserslist', // 追加
+  optimization: { // 追加: 最適化オプション
+    minimize: true,
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 };
 
 export default config;
