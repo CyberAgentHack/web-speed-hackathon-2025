@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
-    "exactOptionalPropertyTypes": false,
+    "exactOptionalPropertyypes": false,
     "experimentalDecorators": true,
     "jsx": "react-jsx",
     "module": "ESNext",
@@ -12,7 +11,7 @@
       "@wsh-2025/schema/*": ["./*"]
     },
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "target": "ESNext"
   },
   "exclude": ["dist"],
