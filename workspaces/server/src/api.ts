@@ -483,24 +483,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+                columns: {
+                  description: false,
                 },
               },
               episode: {
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
+                    columns: {
+                      title: true,
+                    }
                   },
                 },
               },
@@ -508,7 +500,23 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(modules);
+
+      // Process episodes descriptions based on module type
+      const processedModules = modules.map(module => ({
+        ...module,
+        items: module.items.map(item => ({
+          ...item,
+          episode: item.episode ? {
+            ...item.episode,
+            // Only include truncated description for jumbotron module type
+            description: module.type === 'jumbotron' && item.episode.description
+              ? item.episode.description.substring(0, 300)
+              : undefined,
+          } : null
+        }))
+      }));
+
+      reply.code(200).send(processedModules);
     },
   });
 
