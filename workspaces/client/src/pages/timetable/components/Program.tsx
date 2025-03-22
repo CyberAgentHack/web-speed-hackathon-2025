@@ -2,9 +2,9 @@ import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import { ReactElement, useEffect, useRef, useState } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
+import { Ellipsis } from '@wsh-2025/client/src/features/layout/components/Ellipsis';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';

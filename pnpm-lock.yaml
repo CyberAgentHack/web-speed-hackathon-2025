@@ -87,9 +87,6 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
-      react-ellipsis-component:
-        specifier: 1.1.11
-        version: 1.1.11(react@19.0.0)
       react-final-form:
         specifier: 6.5.9
         version: 6.5.9(final-form@4.20.10)(react@19.0.0)
@@ -4488,12 +4485,6 @@ packages:
     peerDependencies:
       react: ^19.0.0
 
-  react-ellipsis-component@1.1.11:
-    resolution: {integrity: sha512-7qPeHrqgS241sdIOoNNMQWqWLI04ae7myiau8XvMOFJVWWVVs61FjImht2TViu27PAGaVrejV6x18cLoVIX29w==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>=16'
-
   react-final-form@6.5.9:
     resolution: {integrity: sha512-x3XYvozolECp3nIjly+4QqxdjSSWfcnpGEL5K8OBT6xmGrq5kBqbA6+/tOqoom9NwqIPPbxPNsOViFlbKgowbA==}
     peerDependencies:
@@ -4778,7 +4769,6 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
-    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -9584,11 +9574,6 @@ snapshots:
     dependencies:
       react: 19.0.0
       scheduler: 0.25.0
-
-  react-ellipsis-component@1.1.11(react@19.0.0):
-    dependencies:
-      react: 19.0.0
-      resize-observer-polyfill: 1.5.1
 
   react-final-form@6.5.9(final-form@4.20.10)(react@19.0.0):
     dependencies:
