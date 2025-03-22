@@ -15,7 +15,12 @@ export const Document = () => {
       <head>
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link as="script" href="/public/runtime.js" rel="preload" />
+        <link as="script" href="/public/main.js" rel="preload" />
+        <link as="script" href="/public/vendors.js" rel="preload" />
+        <script src="/public/runtime.js"></script>
         <script src="/public/main.js"></script>
+        <script src="/public/vendors.js"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
         <Suspense>

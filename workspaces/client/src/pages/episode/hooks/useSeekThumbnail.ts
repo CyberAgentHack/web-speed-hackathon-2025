@@ -1,76 +1,91 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Parser } from 'm3u8-parser';
-import { use } from 'react';
+import { fetchSegment } from '@wsh-2025/client/src/pages/episode/hooks/utils';
+import { useCallback, useRef } from 'react';
 
-interface Params {
-  episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+import { createFFmpeg } from '@wsh-2025/client/src/app/FFmpeg';
+
+export interface UseSeekThumbnailProps {
+  audioTrackId: number;
+  media: MediaSource;
+  sourceBuffers: [SourceBuffer, SourceBuffer];
+  videoTrackId: number;
 }
 
-async function getSeekThumbnail({ episode }: Params) {
-  // HLS のプレイリストを取得
-  const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
-  const parser = new Parser();
-  parser.push(await fetch(playlistUrl).then((res) => res.text()));
-  parser.end();
+export const useSeekThumbnail = (props: UseSeekThumbnailProps) => {
+  const previewUrlRef = useRef<Record<number, string>>({});
 
-  // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  const generatePreview = useCallback(
+    async (time: number): Promise<string> => {
+      if (previewUrlRef.current[time]) {
+        return previewUrlRef.current[time];
+      }
 
-  // 動画のセグメントファイルを取得
-  const segmentFiles = await Promise.all(
-    parser.manifest.segments.map((s) => {
-      return fetch(s.uri).then(async (res) => {
-        const binary = await res.arrayBuffer();
-        return { binary, id: Math.random().toString(36).slice(2) };
-      });
-    }),
+      try {
+        // セグメントをダウンロード
+        const file = await fetchSegment(time, props.videoTrackId);
+
+        // FFmpeg の初期化
+        const ffmpeg = createFFmpeg();
+        await ffmpeg.load();
+
+        // FFmpeg にセグメントファイルを追加
+        try {
+          await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
+        } catch (error) {
+          console.error('Failed to write file to FFmpeg:', error);
+          return '';
+        }
+
+        // セグメントからフレームを抽出
+        try {
+          await ffmpeg.exec(
+            '-i',
+            file.id,
+            '-ss',
+            '0',
+            '-vframes',
+            '1',
+            '-vf',
+            'scale=320:-1',
+            'preview.png',
+          );
+        } catch (error) {
+          console.error('Failed to extract frame:', error);
+          return '';
+        }
+
+        // 抽出したフレームをWebPに変換
+        try {
+          await ffmpeg.exec('-i', 'preview.png', '-q:v', '50', 'preview.webp');
+        } catch (error) {
+          console.error('Failed to convert to WebP:', error);
+          return '';
+        }
+
+        // WebPファイルを読み込む
+        try {
+          const output = await ffmpeg.readFile('preview.webp');
+          if (typeof ffmpeg.terminate === 'function') {
+            ffmpeg.terminate();
+          }
+
+          const url = URL.createObjectURL(
+            new Blob([output], { type: 'image/webp' }),
+          );
+          previewUrlRef.current[time] = url;
+          return url;
+        } catch (error) {
+          console.error('Failed to read WebP file:', error);
+          return '';
+        }
+      } catch (error) {
+        console.error('Failed to generate preview:', error);
+        return '';
+      }
+    },
+    [props.videoTrackId],
   );
-  // FFmpeg にセグメントファイルを追加
-  for (const file of segmentFiles) {
-    await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
-  }
 
-  // セグメントファイルをひとつの mp4 動画に結合
-  await ffmpeg.exec(
-    [
-      ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
-      ['-c:v', 'copy'],
-      ['-map', '0:v:0'],
-      ['-f', 'mp4'],
-      'concat.mp4',
-    ].flat(),
-  );
-
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
-  await ffmpeg.exec(
-    [
-      ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
-      ['-frames:v', '1'],
-      'preview.jpg',
-    ].flat(),
-  );
-
-  const output = await ffmpeg.readFile('preview.jpg');
-  ffmpeg.terminate();
-
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
-}
-
-const weakMap = new WeakMap<object, Promise<string>>();
-
-export const useSeekThumbnail = ({ episode }: Params): string => {
-  const promise = weakMap.get(episode) ?? getSeekThumbnail({ episode });
-  weakMap.set(episode, promise);
-  return use(promise);
+  return {
+    generatePreview,
+  };
 };

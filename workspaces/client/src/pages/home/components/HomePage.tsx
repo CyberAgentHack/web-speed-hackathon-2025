@@ -1,3 +1,7 @@
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import * as schema from '@wsh-2025/schema/src/api/schema';
+import { ArrayValues } from 'type-fest';
+
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
@@ -17,7 +21,7 @@ export const HomePage = () => {
       <title>Home - AremaTV</title>
 
       <div className="w-full py-[48px]">
-        {modules.map((module) => {
+        {modules.map((module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>) => {
           return (
             <div key={module.id} className="mb-[24px] px-[24px]">
               <RecommendedSection module={module} />
@@ -28,3 +32,5 @@ export const HomePage = () => {
     </>
   );
 };
+
+export default HomePage;

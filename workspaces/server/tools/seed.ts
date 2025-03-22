@@ -90,7 +90,11 @@ async function main() {
 
   const rootDir = path.resolve(__dirname, '../../..');
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
-  const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
+  const imagePaths = files.map((file) => {
+    const relativePath = path.relative(rootDir, file);
+    console.log(`Found image: ${relativePath}`);
+    return path.join('/', relativePath);
+  });
 
   try {
     const animeList = await fetchAnimeList();

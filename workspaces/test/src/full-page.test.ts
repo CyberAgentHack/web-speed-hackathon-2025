@@ -95,7 +95,8 @@ const PAGES = [
     name: '404',
     path: '/404',
     wait: async (page: Page) => {
-      await waitForImageToLoad(page.locator('main img').first());
+      // videoタグが読み込まれるまで待機するように変更
+      await page.waitForSelector('main video');
     },
   },
 ];
@@ -128,7 +129,8 @@ test.describe('全画面', () => {
       await scrollEntire(page);
       await expect(page).toHaveScreenshot(`vrt-${name}.png`, {
         fullPage: true,
-        mask: [page.locator('video'), page.locator("//img[contains(@src, '.gif')]")],
+        // todo: videoでも通っているか確認する
+        mask: [page.locator('video'), page.locator("//img[contains(@src, '.webm')]")],
       });
     });
   }
