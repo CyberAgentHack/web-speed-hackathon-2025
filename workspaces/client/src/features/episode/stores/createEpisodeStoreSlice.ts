@@ -1,7 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { produce } from 'immer';
 
 import { episodeService } from '@wsh-2025/client/src/features/episode/services/episodeService';
 
@@ -19,25 +18,32 @@ interface EpisodeActions {
 }
 
 export const createEpisodeStoreSlice = () => {
-  return lens<EpisodeState & EpisodeActions>((set) => ({
+  return lens<EpisodeState & EpisodeActions>((set, get) => ({
     episodes: {},
     fetchEpisodeById: async ({ episodeId }) => {
+      const state = get();
+      if (state.episodes[episodeId]) {
+        return state.episodes[episodeId];
+      }
+
       const episode = await episodeService.fetchEpisodeById({ episodeId });
-      set((state) => {
-        return produce(state, (draft) => {
-          draft.episodes[episode.id] = episode;
-        });
-      });
+      set((state) => ({
+        ...state,
+        episodes: {
+          ...state.episodes,
+          [episode.id]: episode,
+        },
+      }));
       return episode;
     },
     fetchEpisodes: async () => {
       const episodes = await episodeService.fetchEpisodes();
       set((state) => {
-        return produce(state, (draft) => {
-          for (const episode of episodes) {
-            draft.episodes[episode.id] = episode;
-          }
-        });
+        const newEpisodes = { ...state.episodes };
+        for (const episode of episodes) {
+          newEpisodes[episode.id] = episode;
+        }
+        return { ...state, episodes: newEpisodes };
       });
       return episodes;
     },

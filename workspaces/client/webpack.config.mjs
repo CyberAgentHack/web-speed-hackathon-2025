@@ -1,4 +1,5 @@
 import path from 'node:path';
+import os from 'node:os'; // Added import for 'os'
 
 import webpack from 'webpack';
 import webpackBundleAnalyzer from 'webpack-bundle-analyzer';
@@ -16,24 +17,33 @@ const config = {
           fullySpecified: false,
         },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
+        use: [
+          {
+            loader: 'thread-loader',
+            options: {
+              workers: os.cpus().length - 1,
+            },
           },
-        },
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    corejs: '3.41',
+                    forceAllTransforms: true,
+                    targets: 'defaults',
+                    useBuiltIns: 'entry',
+                  },
+                ],
+                ['@babel/preset-react', { runtime: 'automatic' }],
+                ['@babel/preset-typescript'],
+              ],
+            },
+          },
+        ],
       },
       {
         test: /\.png$/,

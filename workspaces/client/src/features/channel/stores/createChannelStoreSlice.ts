@@ -1,7 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { produce } from 'immer';
 
 import { channelService } from '@wsh-2025/client/src/features/channel/services/channelService';
 
@@ -19,25 +18,32 @@ interface ChannelActions {
 }
 
 export const createChannelStoreSlice = () => {
-  return lens<ChannelState & ChannelActions>((set) => ({
+  return lens<ChannelState & ChannelActions>((set, get) => ({
     channels: {},
     fetchChannelById: async ({ channelId }) => {
+      const state = get();
+      if (state.channels[channelId]) {
+        return state.channels[channelId];
+      }
+
       const channel = await channelService.fetchChannelById({ channelId });
-      set((state) => {
-        return produce(state, (draft) => {
-          draft.channels[channel.id] = channel;
-        });
-      });
+      set((state) => ({
+        ...state,
+        channels: {
+          ...state.channels,
+          [channel.id]: channel,
+        },
+      }));
       return channel;
     },
     fetchChannels: async () => {
       const channels = await channelService.fetchChannels();
       set((state) => {
-        return produce(state, (draft) => {
-          for (const channel of channels) {
-            draft.channels[channel.id] = channel;
-          }
-        });
+        const newChannels = { ...state.channels };
+        for (const channel of channels) {
+          newChannels[channel.id] = channel;
+        }
+        return { ...state, channels: newChannels };
       });
       return channels;
     },
