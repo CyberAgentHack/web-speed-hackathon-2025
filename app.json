@@ -10,6 +10,9 @@
     },
     "WIREIT_CACHE": {
       "value": "none"
+    },
+    "NODE_ENV": {
+      "value": "production"
     }
   },
   "formation": {
