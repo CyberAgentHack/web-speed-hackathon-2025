@@ -1,78 +1,56 @@
 import path from 'node:path';
 
-import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: false,
-  entry: './src/main.tsx', 
+  devtool: process.env['NODE_ENV'] === 'production' ? false : 'source-map',
+  entry: './src/main.tsx',
   mode: 'production',
   module: {
     rules: [
       {
         exclude: /node_modules/,
-        resolve: { fullySpecified: false },
+        resolve: {
+          fullySpecified: false,
+        },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'esbuild-loader',
           options: {
-            cacheDirectory: true,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  modules: false,
-                  targets: '>0.25%, not dead',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript', { allExtensions: true, isTSX: true }],
-            ],
-          },
+            loader: 'tsx',
+            sourcemap: true,
+            target: 'es2015',
+          }
         },
       },
-      { test: /\.png$/, type: 'asset/inline' },
-      { resourceQuery: /raw/, type: 'asset/source' },
+      {
+        test: /\.png$/,
+        type: 'asset/inline',
+      },
+      {
+        resourceQuery: /raw/,
+        type: 'asset/source',
+      },
       {
         resourceQuery: /arraybuffer/,
         type: 'javascript/auto',
-        use: { loader: 'arraybuffer-loader' },
+        use: {
+          loader: 'arraybuffer-loader',
+        },
       },
     ],
   },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        extractComments: false,
-        terserOptions: {
-          compress: {
-            drop_console: true,
-          },
-          format: {
-            comments: false,
-          },
-        },
-      }),
-    ],
-    sideEffects: true, splitChunks: false,
-    usedExports: true,
-  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    clean: true,
+    chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto', 
+    publicPath: 'auto',
   },
   plugins: [
-    new webpack.EnvironmentPlugin({
-      API_BASE_URL: '/api',
-      NODE_ENV: 'production',
-    }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
   resolve: {
     alias: {
