@@ -7,8 +7,6 @@
     "format:prettier": "wireit"
   },
   "dependencies": {
-    "@sinclair/typebox": "0.34.30",
-    "@sinclair/typemap": "0.8.18",
     "drizzle-orm": "0.38.2",
     "drizzle-zod": "0.6.0",
     "luxon": "3.5.0",

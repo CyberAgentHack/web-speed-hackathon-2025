@@ -215,12 +215,6 @@ importers:
 
   workspaces/schema:
     dependencies:
-      '@sinclair/typebox':
-        specifier: 0.34.30
-        version: 0.34.30
-      '@sinclair/typemap':
-        specifier: 0.8.18
-        version: 0.8.18(@sinclair/typebox@0.34.30)(valibot@1.0.0-rc.3(typescript@5.7.2))(zod@3.24.1)
       drizzle-orm:
         specifier: 0.38.2
         version: 0.38.2(@libsql/client@0.14.0)(@types/react@19.0.1)(react@19.0.0)
@@ -1562,16 +1556,6 @@ packages:
   '@seriousme/openapi-schema-validator@2.3.0':
     resolution: {integrity: sha512-qn8tZzfb1nCIxxfLQfjvIYumuz6YoHJMoWFtCR3dey1lKkY/1obv3NvfAy1WRSztXAQqa/vZUDOXJ1M5LHfMvg==}
     hasBin: true
-
-  '@sinclair/typebox@0.34.30':
-    resolution: {integrity: sha512-gFB3BiqjDxEoadW0zn+xyMVb7cLxPCoblVn2C/BKpI41WPYi2d6fwHAlynPNZ5O/Q4WEiujdnJzVtvG/Jc2CBQ==}
-
-  '@sinclair/typemap@0.8.18':
-    resolution: {integrity: sha512-DHv4pnTjMrQFqfMXQDfH8UYcgJxh1pBRCROzhiyGs5lFssyxAXqi+k8V0oI+To+Ut+N1zjqpK90AsnJXtzsKqg==}
-    peerDependencies:
-      '@sinclair/typebox': ^0.34.24
-      valibot: ^1.0.0-rc.0
-      zod: ^3.24.1
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
@@ -2929,7 +2913,6 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lie@3.3.0:
@@ -3555,7 +3538,6 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
-    engines: {node: '>=14'}
 
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -4942,14 +4924,6 @@ snapshots:
       ajv-formats: 3.0.1
       js-yaml: 4.1.0
       minimist: 1.2.8
-
-  '@sinclair/typebox@0.34.30': {}
-
-  '@sinclair/typemap@0.8.18(@sinclair/typebox@0.34.30)(valibot@1.0.0-rc.3(typescript@5.7.2))(zod@3.24.1)':
-    dependencies:
-      '@sinclair/typebox': 0.34.30
-      valibot: 1.0.0-rc.3(typescript@5.7.2)
-      zod: 3.24.1
 
   '@standard-schema/spec@1.0.0': {}
 
