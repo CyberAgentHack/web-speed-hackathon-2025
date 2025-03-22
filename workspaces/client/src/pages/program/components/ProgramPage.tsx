@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
-import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
@@ -96,47 +95,45 @@ export const ProgramPage = () => {
       <title>{`${program.title} - ${program.episode.series.title} - AremaTV`}</title>
 
       <div className="px-[24px] py-[48px]">
-        <Flipped stagger flipId={`program-${program.id}`}>
-          <div className="m-auto mb-[16px] aspect-video max-w-[1280px] outline outline-[1px] outline-[#212121]">
-            {isArchivedRef.current ? (
-              <div className="relative size-full">
-                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
+        <div className="m-auto mb-[16px] aspect-video max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          {isArchivedRef.current ? (
+            <div className="relative size-full">
+              <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
-                  <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
-                  <Link
-                    className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
-                    to={`/episodes/${program.episode.id}`}
-                  >
-                    見逃し視聴する
-                  </Link>
-                </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
+                <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
+                <Link
+                  className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+                  to={`/episodes/${program.episode.id}`}
+                >
+                  見逃し視聴する
+                </Link>
               </div>
-            ) : isBroadcastStarted ? (
-              <div className="relative size-full">
-                <Player
-                  className="size-full"
-                  playerRef={playerRef}
-                  playerType={PlayerType.VideoJS}
-                  playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
-                />
-                <div className="absolute inset-x-0 bottom-0">
-                  <PlayerController />
-                </div>
+            </div>
+          ) : isBroadcastStarted ? (
+            <div className="relative size-full">
+              <Player
+                className="size-full"
+                playerRef={playerRef}
+                playerType={PlayerType.VideoJS}
+                playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
+              />
+              <div className="absolute inset-x-0 bottom-0">
+                <PlayerController />
               </div>
-            ) : (
-              <div className="relative size-full">
-                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
+            </div>
+          ) : (
+            <div className="relative size-full">
+              <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
-                  <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
-                    この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
-                  </p>
-                </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
+                <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
+                  この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
+                </p>
               </div>
-            )}
-          </div>
-        </Flipped>
+            </div>
+          )}
+        </div>
 
         <div className="mb-[24px]">
           <div className="line-clamp-1 text-[16px] text-[#ffffff]">{program.episode.series.title}</div>
