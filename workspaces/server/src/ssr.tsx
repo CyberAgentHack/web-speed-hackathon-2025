@@ -1,7 +1,7 @@
+// ssr.tsx（修正版）
 import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 import fastifyStatic from '@fastify/static';
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
@@ -26,12 +26,18 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
 }
 
 export function registerSsr(app: FastifyInstance): void {
+  // 静的資産配信用にキャッシュヘッダーを設定
   app.register(fastifyStatic, {
     prefix: '/public/',
     root: [
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
+    setHeaders: (res, pathName) => {
+      if (/\.(js|css|woff2)$/.test(pathName)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    },
   });
 
   app.get('/favicon.ico', (_, reply) => {
@@ -39,9 +45,7 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/*', async (req, reply) => {
-    // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
-
     const store = createStore({});
     const handler = createStaticHandler(createRoutes(store));
     const context = await handler.query(request);
@@ -51,7 +55,7 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+    const appHtml = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
@@ -66,23 +70,39 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/logos', rootDir),
     ].flat();
 
-    reply.type('text/html').send(/* html */ `
+
+    let criticalCss = '';
+    try {
+      const cssPath = path.resolve(rootDir, 'public/critical.css');
+      criticalCss = `<style>${require('fs').readFileSync(cssPath, 'utf8')}</style>`;
+    } catch(e) {
+
+    }
+
+    const html = `
       <!DOCTYPE html>
       <html lang="ja">
         <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link rel="preload" as="script" href="/public/main.js" />
+          ${criticalCss}
+          ${imagePaths.map((imagePath) => `<link rel="preload" as="image" href="${imagePath}" />`).join('\n')}
         </head>
-        <body></body>
+        <body>
+          <div id="root">${appHtml}</div>
+          <script>
+            window.__staticRouterHydrationData = ${htmlescape({
+              actionData: context.actionData,
+              loaderData: context.loaderData,
+            })};
+          </script>
+          <script src="/public/main.js" defer></script>
+        </body>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
-    `);
+    `;
+    reply.type('text/html').send(html);
   });
 }
