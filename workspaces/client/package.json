@@ -33,6 +33,7 @@
     "luxon": "3.5.0",
     "m3u8-parser": "7.2.0",
     "p-min-delay": "4.0.2",
+    "plyr": "3.7.8",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-ellipsis-component": "1.1.11",

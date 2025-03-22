@@ -104,7 +104,7 @@ const config = {
     reasons: true, // 依存関係の理由を表示
     children: true, // 子チャンクの詳細を表示
     chunkModules: true, // チャンク内のモジュールの詳細を表示
-    modulesSpace: 15, // 最大表示モジュール数を制限
+    modulesSpace: 100, // 最大表示モジュール数を制限
   },
 };
 
