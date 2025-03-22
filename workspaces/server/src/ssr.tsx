@@ -60,11 +60,44 @@ export function registerSsr(app: FastifyInstance): void {
     );
 
     const rootDir = path.resolve(__dirname, '../../../');
+
+    // --backup
+    // const imagePaths = [
+    //   getFilePaths('public/images', rootDir),
+    //   getFilePaths('public/animations', rootDir),
+    //   getFilePaths('public/logos', rootDir),
+    // ].flat();
+
+    // reply.type('text/html').send(/* html */ `
+    //   <!DOCTYPE html>
+    //   <html lang="ja">
+    //     <head>
+    //       <meta charSet="UTF-8" />
+    //       <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    //       <script src="/public/main.js"></script>
+    //       ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+    //     </head>
+    //     <body></body>
+    //   </html>
+    //   <script>
+    //     window.__staticRouterHydrationData = ${htmlescape({
+    //       actionData: context.actionData,
+    //       loaderData: context.loaderData,
+    //     })};
+    //   </script>
+    // `);
+
     const imagePaths = [
       getFilePaths('public/images', rootDir),
       getFilePaths('public/animations', rootDir),
       getFilePaths('public/logos', rootDir),
     ].flat();
+
+    // 画像パスの拡張子を .jpg や .jpeg から .webp に変換する
+    const convertedImagePaths = imagePaths.map((imagePath) => {
+      // 例: "/public/images/001.jpg" → "/public/images/001.webp"
+      return imagePath.replace(/\.(jpg|jpeg)$/i, '.webp');
+    });
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
@@ -73,7 +106,7 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          ${convertedImagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body></body>
       </html>
@@ -84,5 +117,10 @@ export function registerSsr(app: FastifyInstance): void {
         })};
       </script>
     `);
+
+
+
+
+
   });
 }
