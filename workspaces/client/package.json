@@ -59,18 +59,23 @@
     "@types/m3u8-parser": "7.2.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
+    "@types/webpack-bundle-analyzer": "4.7.0",
     "@types/wicg-task-scheduling": "2024.1.0",
-    "@unocss/preset-icons": "66.1.0-beta.5",
-    "@unocss/preset-wind3": "66.1.0-beta.5",
+    "@unocss/postcss": "66.1.0-beta.6",
     "@unocss/reset": "66.1.0-beta.5",
-    "@unocss/runtime": "66.1.0-beta.5",
+    "@unocss/webpack": "66.1.0-beta.6",
     "@wsh-2025/configs": "workspace:*",
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
+    "css-loader": "7.1.2",
     "hls.js": "1.5.17",
+    "postcss": "8.5.3",
+    "postcss-loader": "8.1.1",
     "shaka-player": "4.12.5",
+    "style-loader": "4.0.0",
     "typescript": "5.7.2",
+    "unocss": "66.1.0-beta.6",
     "video.js": "8.21.0",
     "webpack": "5.96.1",
     "webpack-bundle-analyzer": "4.10.2",
@@ -100,5 +105,8 @@
     "format:prettier": {
       "command": "prettier --write ."
     }
-  }
+  },
+  "browserslist": [
+    "last 1 chrome version"
+  ]
 }
