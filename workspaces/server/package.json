@@ -29,6 +29,7 @@
     "fastify-openapi-glue": "4.7.4",
     "fastify-standard-request-reply": "0.1.3",
     "fastify-zod-openapi": "4.0.0",
+    "htmlescape": "1.1.1",
     "luxon": "3.5.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
