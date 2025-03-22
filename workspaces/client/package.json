@@ -2,6 +2,7 @@
   "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
+    "dev": "wireit",
     "build": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
@@ -79,6 +80,18 @@
     "wireit": "0.14.9"
   },
   "wireit": {
+    "dev": {
+      "command": "webpack --watch",
+      "files": [
+        "../../pnpm-lock.yaml",
+        "../schema/src/**/*",
+        "./src/**/*",
+        "./webpack.config.mjs"
+      ],
+      "output": [
+        "./dist/**/*"
+      ]
+    },
     "build": {
       "command": "webpack",
       "files": [
