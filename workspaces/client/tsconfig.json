@@ -11,5 +11,5 @@
   },
   "exclude": ["dist"],
   "extends": "@wsh-2025/configs/tsconfig.json",
-  "include": ["**/*", "**/*.mjs"]
+  "include": ["**/*", "**/.server/**/*", "**/.client/**/*", ".react-router/types/**/*"]
 }

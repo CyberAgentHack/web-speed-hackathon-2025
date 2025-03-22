@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
-
-export function useSubscribePointer(): void {
-  const s = useStore((s) => s);
+export function useSubscribePointer(): { x: number; y: number } {
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -16,7 +14,7 @@ export function useSubscribePointer(): void {
     window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
 
     let timeoutId = setTimeout(function tick() {
-      s.features.layout.updatePointer({ ...current });
+      setPointer({ ...current });
       timeoutId = setTimeout(tick);
     });
     abortController.signal.addEventListener('abort', () => {
@@ -27,4 +25,6 @@ export function useSubscribePointer(): void {
       abortController.abort();
     };
   }, []);
+
+  return pointer;
 }

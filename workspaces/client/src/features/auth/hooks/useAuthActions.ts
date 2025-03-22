@@ -1,15 +1,15 @@
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useAuthActions() {
-  const state = useStore((s) => s);
+  const state = useStore((s) => s.features.auth);
 
   return {
-    closeDialog: state.features.auth.closeDialog,
-    openSignInDialog: state.features.auth.openSignInDialog,
-    openSignOutDialog: state.features.auth.openSignOutDialog,
-    openSignUpDialog: state.features.auth.openSignUpDialog,
-    signIn: state.features.auth.signIn,
-    signOut: state.features.auth.signOut,
-    signUp: state.features.auth.signUp,
+    closeDialog: state.closeDialog,
+    openSignInDialog: state.openSignInDialog,
+    openSignOutDialog: state.openSignOutDialog,
+    openSignUpDialog: state.openSignUpDialog,
+    signIn: state.signIn,
+    signOut: state.signOut,
+    signUp: state.signUp,
   };
 }

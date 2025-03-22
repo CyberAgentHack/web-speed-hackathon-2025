@@ -1,9 +1,10 @@
 import path from 'node:path';
 
-import react from '@vitejs/plugin-react';
+import { reactRouter } from '@react-router/dev/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -25,7 +26,7 @@ export default defineConfig(({ mode }) => ({
     'process.env.API_BASE_URL': JSON.stringify('/api'),
     'process.env.NODE_ENV': JSON.stringify(process.env['NODE_ENV'] || 'production'),
   },
-  plugins: [react(), UnoCSS()],
+  plugins: [reactRouter(), UnoCSS(), tsconfigPaths()],
   resolve: {
     alias: {
       // CI環境でも動作するように修正

@@ -35,7 +35,7 @@ interface AuthService {
   fetchSignUp: (
     body: StandardSchemaV1.InferOutput<typeof signUpRequestBody>,
   ) => Promise<StandardSchemaV1.InferOutput<typeof signUpResponse>>;
-  fetchUser: () => Promise<StandardSchemaV1.InferOutput<typeof getUserResponse>>;
+  fetchUser: () => Promise<StandardSchemaV1.InferOutput<typeof getUserResponse> | null>;
 }
 
 export const authService: AuthService = {
@@ -51,7 +51,11 @@ export const authService: AuthService = {
     return data;
   },
   async fetchUser() {
-    const data = await $fetch('/users/me');
-    return data;
+    try {
+      const data = await $fetch('/users/me');
+      return data;
+    } catch {
+      return null;
+    }
   },
 };

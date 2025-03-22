@@ -1,6 +1,6 @@
 import { withLenses } from '@dhmk/zustand-lens';
 import deepmerge from 'deepmerge';
-import { createStore as createZustandStore } from 'zustand/vanilla';
+import { createStore as createZustandStore, type StoreApi } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
 import { createChannelStoreSlice } from '@wsh-2025/client/src/features/channel/stores/createChannelStoreSlice';
@@ -13,6 +13,26 @@ import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetab
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+
+export type StoreState = {
+  features: {
+    auth: ReturnType<typeof createAuthStoreSlice>;
+    channel: ReturnType<typeof createChannelStoreSlice>;
+    episode: ReturnType<typeof createEpisodeStoreSlice>;
+    layout: ReturnType<typeof createLayoutStoreSlice>;
+    program: ReturnType<typeof createProgramStoreSlice>;
+    recommended: ReturnType<typeof createRecommendedStoreSlice>;
+    series: ReturnType<typeof createSeriesStoreSlice>;
+    timetable: ReturnType<typeof createTimetableStoreSlice>;
+  };
+  pages: {
+    episode: ReturnType<typeof createEpisodePageStoreSlice>;
+    program: ReturnType<typeof createProgramPageStoreSlice>;
+    timetable: ReturnType<typeof createTimetablePageStoreSlice>;
+  };
+};
+
+export type Store = StoreApi<StoreState>;
 
 interface Props {
   hydrationData?: unknown;
