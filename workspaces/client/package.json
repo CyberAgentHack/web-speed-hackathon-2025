@@ -2,15 +2,12 @@
   "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
-    // 既存の build, format 等は残す
     "build": "wireit",
     "format": "wireit",
 
-    // ★ Webpack Dev Server でのローカル開発用スクリプト (任意)
     "dev": "webpack serve --config ./webpack.config.mjs --mode development --hot --port 3000"
   },
   "dependencies": {
-    // - 似た用途の動画プレイヤーをまとめる 等の検討余地あり
     "@babel/runtime": "7.26.10",
     "react": "19.0.0",
     "react-dom": "19.0.0",
