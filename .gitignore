@@ -181,8 +181,8 @@ dist
 .pnp.*
 
 ### Node Patch ###
-# Serverless Webpack directories
-.webpack/
+# Serverless rspack directories
+.rspack/
 
 # Optional stylelint cache
 

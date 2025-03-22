@@ -54,6 +54,8 @@
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
     "@iconify/types": "2.0.0",
+    "@rspack/cli": "1.2.8",
+    "@rspack/core": "1.2.8",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
     "@types/m3u8-parser": "7.2.0",
@@ -72,20 +74,17 @@
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "video.js": "8.21.0",
-    "webpack": "5.96.1",
-    "webpack-bundle-analyzer": "4.10.2",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.1.0",
+    "rspack-bundle-analyzer": "4.10.2",
     "wireit": "0.14.9"
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "rspack",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*",
-        "./webpack.config.mjs"
+        "./rspack.config.mjs"
       ],
       "output": [
         "./dist/**/*"
