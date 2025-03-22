@@ -52,6 +52,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     routePrefix: '/docs',
   });
 
+
+  const trimString = (text: string | null | undefined, maxLength: number) =>
+    text ? text.substring(0, maxLength) : text;
+
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
@@ -184,7 +188,22 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(episodes);
+
+      // 加工
+      // seriesに関して、episodeは不要なので、空配列にする
+      const trimmedEpisodes = episodes.map(episode => ({
+        ...episode,
+        description: trimString(episode.description, 512),
+        series: episode.series
+          ? {
+              ...episode.series,
+              description: trimString(episode.series.description, 512),
+              episodes: [],
+            }
+          : null,
+      }));
+
+      reply.code(200).send(trimmedEpisodes);
     },
   });
 
@@ -508,11 +527,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-
-      
-      // `description` を 256 文字に制限する関数
-      const trimDescription = (text: string | null | undefined, maxLength: number) =>
-        text ? text.substring(0, maxLength) : text;
     
       // 取得したデータを加工
       const trimmedModules = modules.map(module => ({
@@ -522,14 +536,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           episode: item.episode
             ? {
                 ...item.episode,
-                description: trimDescription(item.episode.description, 512),
+                description: trimString(item.episode.description, 512),
                 series: item.episode.series
                   ? {
                       ...item.episode.series,
-                      description: trimDescription(item.episode.series.description, 64),
+                      description: trimString(item.episode.series.description, 64),
                       episodes: item.episode.series.episodes.map(episode => ({
                         ...episode,
-                        description: trimDescription(episode.description, 64),
+                        description: trimString(episode.description, 512),
                       })),
                     }
                   : null,
@@ -538,10 +552,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           series: item.series
             ? {
                 ...item.series,
-                description: trimDescription(item.series.description, 512),
+                description: trimString(item.series.description, 512),
                 episodes: item.series.episodes.map(episode => ({
                   ...episode,
-                  description: trimDescription(episode.description, 64),
+                  description: trimString(episode.description, 64),
                 })),
               }
             : null,

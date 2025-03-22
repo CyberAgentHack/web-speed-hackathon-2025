@@ -37,7 +37,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
   const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
   useEffect(() => {
     const interval = setInterval(() => {
-      const imageHeight = imageRef.current?.clientHeight ?? 0;
+      const estimatedHeight = (titleRef.current?.clientWidth ?? 0) / 1.8;
+      const imageHeight = imageRef.current?.clientHeight ?? estimatedHeight;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
     }, 250);
@@ -68,14 +69,27 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
-            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+            {/* <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
               <img
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 src={program.thumbnailUrl}
               />
-            </div>
+            </div> */}
+            {
+              shouldImageBeVisible && (
+                <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+                  <img
+                    ref={imageRef}
+                    alt=""
+                    className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+                    src={program.thumbnailUrl}
+                    loading="lazy"
+                  />
+                </div>
+              )
+            }
           </div>
         </button>
       </Hoverable>
