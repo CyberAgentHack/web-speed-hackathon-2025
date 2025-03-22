@@ -2,11 +2,8 @@ import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getTimetableRequestQuery, getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
   schema: createSchema({
     '/timetable': {
       output: getTimetableResponse,

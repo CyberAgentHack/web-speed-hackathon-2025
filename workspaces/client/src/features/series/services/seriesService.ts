@@ -3,11 +3,8 @@ import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getSeriesByIdResponse, getSeriesRequestQuery, getSeriesResponse } from '@wsh-2025/schema/src/openapi/schema';
 import * as batshit from '@yornaath/batshit';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
   schema: createSchema({
     '/series': {
       output: getSeriesResponse,
