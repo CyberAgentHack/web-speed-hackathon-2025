@@ -19,7 +19,7 @@ interface Props {
 
 export const JumbotronSection = ({ module }: Props) => {
   const playerRef = useRef<PlayerWrapper>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLAnchorElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
 
@@ -32,7 +32,7 @@ export const JumbotronSection = ({ module }: Props) => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0]?.isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
         }
