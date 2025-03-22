@@ -34,7 +34,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
           loading="lazy"
-          src={program.thumbnailUrl}
+          src={`${program.thumbnailUrl.replace(/\.(jpe?g)$/i, '')}.webp`}
         />
 
         {episode != null ? (
@@ -49,7 +49,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
               loading="lazy"
-              src={episode.thumbnailUrl}
+              src={`${episode.thumbnailUrl.replace(/\.(jpe?g)$/i, '')}.webp`}
             />
           </>
         ) : null}
