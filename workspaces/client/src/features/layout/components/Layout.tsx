@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
+import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
@@ -122,7 +123,11 @@ export const Layout = ({ children }: Props) => {
           </nav>
         </aside>
 
-        <main className={isTimetablePage ? '[grid-area:b2]' : '[grid-area:b2/b2/b3/b3]'}>{children}</main>
+        <main className={isTimetablePage ? '[grid-area:b2]' : '[grid-area:b2/b2/b3/b3]'}>
+          <Flipper className="size-full" flipKey={location.key} spring="noWobble">
+            {children}
+          </Flipper>
+        </main>
 
         {isLoading ? (
           <div className="sticky top-[80px] z-50 [grid-area:b2]">

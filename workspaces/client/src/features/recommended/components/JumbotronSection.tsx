@@ -1,6 +1,7 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
+import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 import invariant from 'tiny-invariant';
 import { ArrayValues } from 'type-fest';
@@ -25,23 +26,32 @@ export const JumbotronSection = ({ module }: Props) => {
       className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717] hover:opacity-50"
       to={`/episodes/${episode.id}`}
     >
-      <div className="grow-1 shrink-1 p-[24px]">
-        <div className="mb-[16px] line-clamp-2 w-full text-center text-[22px] font-bold text-[#ffffff]">
-          {episode.title}
-        </div>
-        <div className="line-clamp-3 w-full text-center text-[14px] font-bold text-[#ffffff]">
-          {episode.description}
-        </div>
-      </div>
-      <div className="h-full w-auto shrink-0 grow-0">
-        <Player
-          loop
-          className="h-[260px] w-[462px]"
-          playerRef={playerRef}
-          playerType={PlayerType.ShakaPlayer}
-          playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
-        />
-      </div>
+      {({ isTransitioning }) => {
+        return (
+          <>
+            <div className="grow-1 shrink-1 p-[24px]">
+              <div className="mb-[16px] line-clamp-2 w-full text-center text-[22px] font-bold text-[#ffffff]">
+                {episode.title}
+              </div>
+              <div className="line-clamp-3 w-full text-center text-[14px] font-bold text-[#ffffff]">
+                {episode.description}
+              </div>
+            </div>
+
+            <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
+              <div className="h-full w-auto shrink-0 grow-0">
+                <Player
+                  loop
+                  className="h-[260px] w-[462px]"
+                  playerRef={playerRef}
+                  playerType={PlayerType.ShakaPlayer}
+                  playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
+                />
+              </div>
+            </Flipped>
+          </>
+        );
+      }}
     </NavLink>
   );
 };

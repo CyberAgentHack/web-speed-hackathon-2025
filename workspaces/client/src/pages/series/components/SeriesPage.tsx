@@ -1,3 +1,4 @@
+import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
@@ -31,12 +32,14 @@ export const SeriesPage = () => {
 
       <div className="m-auto px-[24px] py-[48px]">
         <header className="mb-[24px] flex w-full flex-row items-start justify-between gap-[24px]">
-          <img
-            alt=""
-            className="aspect-video w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-            loading="lazy"
-            src={series.thumbnailUrl}
-          />
+          <Flipped stagger flipId={`series-${series.id}`}>
+            <img
+              alt=""
+              className="aspect-video w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
+              src={series.thumbnailUrl}
+            />
+          </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
             <h1 className="mb-[16px] line-clamp-2 text-[32px] font-bold text-[#ffffff]">{series.title}</h1>
             <div className="line-clamp-3 text-[14px] text-[#999999]">{series.description}</div>
