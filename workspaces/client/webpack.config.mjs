@@ -33,7 +33,16 @@ const config = {
 				},
 			},
 			{
-				test: /\.png$/,
+				test: /\.(png|jpeg|jpg|gif|svg)$/i,
+				type: "asset",
+				parser: {
+					dataUrlCondition: {
+						maxSize: 8 * 1024, // 8KB以下の画像はインライン化
+					},
+				},
+			},
+			{
+				test: /\.(?:jpe?g|png|svg|gif|webp|ico|mp4|mp3|wav|ogg|wasm|json|csv|xml|yaml|toml|htm|html)$/,
 				type: "asset/inline",
 			},
 			{
