@@ -2,7 +2,7 @@
 import '@wsh-2025/schema/src/setups/luxon';
 
 import { relations } from 'drizzle-orm';
-import { sqliteTable as table } from 'drizzle-orm/sqlite-core';
+import { index, sqliteTable as table } from 'drizzle-orm/sqlite-core';
 import * as t from 'drizzle-orm/sqlite-core';
 import { DateTime } from 'luxon';
 
@@ -190,7 +190,9 @@ export const recommendedModule = table(
     referenceId: t.text().notNull(),
     type: t.text().notNull(),
   },
-  () => [],
+  (table) => [
+    index('reference_id_idx').on(table.referenceId),
+  ],
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
   items: many(recommendedItem),
