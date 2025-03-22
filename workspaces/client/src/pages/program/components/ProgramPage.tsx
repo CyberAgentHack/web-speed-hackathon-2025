@@ -62,7 +62,7 @@ export const ProgramPage = () => {
       let timeout = setTimeout(function tick() {
         forceUpdate();
         timeout = setTimeout(tick, 250);
-      }, 250);
+      }, 1000);
       return () => {
         clearTimeout(timeout);
       };
@@ -85,11 +85,11 @@ export const ProgramPage = () => {
         isArchivedRef.current = true;
         forceUpdate();
       }
-    }, 250);
+    }, 1000);
     return () => {
       clearTimeout(timeout);
     };
-  }, [isBroadcastStarted, nextProgram?.id]);
+  }, []);
 
   return (
     <>
@@ -97,7 +97,7 @@ export const ProgramPage = () => {
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>
-          <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          <div className="m-auto mb-[16px] aspect-video max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
