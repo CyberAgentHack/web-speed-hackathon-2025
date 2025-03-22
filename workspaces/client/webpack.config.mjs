@@ -40,6 +40,10 @@ const config = {
         type: 'asset/inline',
       },
       {
+        test: /\.avif$/, // 追加: AVIF ファイルの処理
+        type: 'asset/resource',
+      },
+      {
         resourceQuery: /raw/,
         type: 'asset/source',
       },
