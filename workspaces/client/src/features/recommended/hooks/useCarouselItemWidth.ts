@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import useUpdate from 'react-use/lib/useUpdate';
 
 const MIN_WIDTH = 276;
 const GAP = 12;

@@ -1,10 +1,10 @@
 import '@videojs/http-streaming';
 import HlsJs from 'hls.js';
-import shaka from 'shaka-player';
 import videojs from 'video.js';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
+import { loadShaka } from '@wsh-2025/client/src/features/player/utils/shaka-loader';
 
 class ShakaPlayerWrapper implements PlayerWrapper {
   readonly videoElement = Object.assign(document.createElement('video'), {
@@ -13,16 +13,29 @@ class ShakaPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
-  private _player = new shaka.Player();
+  private _player: any = null;
   readonly playerType: PlayerType.ShakaPlayer;
 
   constructor(playerType: PlayerType.ShakaPlayer) {
     this.playerType = playerType;
-    this._player.configure({
-      streaming: {
-        bufferingGoal: 50,
-      },
-    });
+    // 初期化は非同期で行いますが、コンストラクタは同期的に実行する必要があります
+    this.initPlayer().catch(console.error);
+  }
+
+  private async initPlayer() {
+    if (this._player) return;
+
+    try {
+      const shaka = await loadShaka();
+      this._player = new shaka.Player();
+      this._player.configure({
+        streaming: {
+          bufferingGoal: 50,
+        },
+      });
+    } catch (error) {
+      console.error('Failed to initialize Shaka Player:', error);
+    }
   }
 
   get currentTime(): number {
@@ -40,13 +53,22 @@ class ShakaPlayerWrapper implements PlayerWrapper {
     return this.videoElement.muted;
   }
 
-  load(playlistUrl: string, options: { loop: boolean }): void {
-    void (async () => {
+  async load(playlistUrl: string, options: { loop: boolean }): Promise<void> {
+    await this.initPlayer();
+    if (!this._player) {
+      console.error('Shaka Player is not initialized');
+      return;
+    }
+
+    try {
       await this._player.attach(this.videoElement);
       this.videoElement.loop = options.loop;
       await this._player.load(playlistUrl);
-    })();
+    } catch (error) {
+      console.error('Failed to load media in Shaka Player:', error);
+    }
   }
+
   play(): void {
     void this.videoElement.play();
   }
@@ -60,7 +82,10 @@ class ShakaPlayerWrapper implements PlayerWrapper {
     this.videoElement.muted = muted;
   }
   destory(): void {
-    void this._player.destroy();
+    if (this._player) {
+      void this._player.destroy();
+      this._player = null;
+    }
   }
 }
 

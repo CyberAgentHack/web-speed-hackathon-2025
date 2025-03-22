@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
-import { useUpdate } from 'react-use';
+import useUpdate from 'react-use/lib/useUpdate';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';

@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import useUpdate from 'react-use/lib/useUpdate';
 
 interface Props {
   children: ReactNode;
