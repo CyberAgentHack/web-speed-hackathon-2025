@@ -52,15 +52,28 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: 'async',
+      minSize: 20000,
+      maxSize: 244000,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto',
+    publicPath: '/public/',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: process.env['NODE_ENV'] ?? 'development' }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
