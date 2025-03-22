@@ -1,7 +1,5 @@
-import { readdirSync } from 'node:fs';
 import { PassThrough } from 'stream';
 import path from 'node:path';
-import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
@@ -64,25 +62,6 @@ async function cacheSSRResultInR2(key: string, html: string): Promise<void> {
 }
 
 /**
- * public ディレクトリ配下のファイル一覧取得ユーティリティ
- */
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-
-/**
- * public以下の relativePath ディレクトリのファイルを取得し、
- * サーバールートに合わせた形で返すユーティリティ
- */
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
-
-/**
  * SSR を登録する関数
  */
 export function registerSsr(app: FastifyInstance): void {
@@ -93,6 +72,9 @@ export function registerSsr(app: FastifyInstance): void {
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
+    setHeaders: (res) => {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
   });
 
   // favicon は存在しないので 404
@@ -124,14 +106,6 @@ export function registerSsr(app: FastifyInstance): void {
       return reply.send(context);
     }
     const router = createStaticRouter(handler.dataRoutes, context);
-
-    // 1) head部分 (shell) を先に返す
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
 
     const shellHTML = `
       <!DOCTYPE html>
