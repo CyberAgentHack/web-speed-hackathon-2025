@@ -1,6 +1,7 @@
 import { FORM_ERROR } from 'final-form';
 import { Form } from 'react-final-form';
 
+import { ErrorIcon } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 
@@ -43,7 +44,7 @@ export const SignOutDialog = ({ isOpen, onClose }: Props) => {
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
+                  <ErrorIcon className="m-[4px]" size={20} />
                   <span>{submitError}</span>
                 </div>
               ) : null}

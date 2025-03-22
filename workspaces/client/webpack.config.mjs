@@ -3,7 +3,7 @@ import path from 'node:path';
 // import CompressionPlugin from 'compression-webpack-plugin';
 // import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -99,23 +99,7 @@ const config = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  plugins: [
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-    // Gzip圧縮で配信サイズを削減
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    // new CompressionPlugin({
-    //   algorithm: 'gzip',
-    //   // 10KB以上のファイルに適用
-    //   minRatio: 0.8,
-    //   test: /\.(js|css|html|svg)$/,
-    //   threshold: 10 * 1024,
-    // }),
-    // // バンドルサイズを可視化
-    // new BundleAnalyzerPlugin({
-    //   analyzerMode: 'static', // ローカルHTMLに結果を出力
-    //   reportFilename: 'report.html',
-    // }),
-  ],
+  plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }), new BundleAnalyzerPlugin()],
 
   resolve: {
     alias: {
