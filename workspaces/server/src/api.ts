@@ -539,6 +539,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           items: {
+            limit: 5,
             with: {
               series: {
                 with: {
