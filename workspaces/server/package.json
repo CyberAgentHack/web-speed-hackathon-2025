@@ -22,6 +22,7 @@
     "@wsh-2025/schema": "workspace:*",
     "@wsh-2025/server": "workspace:*",
     "bcrypt": "5.1.1",
+    "bcryptjs": "3.0.2",
     "dedent": "1.5.3",
     "drizzle-orm": "0.38.2",
     "drizzle-seed": "0.1.3",
