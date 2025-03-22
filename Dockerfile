@@ -13,6 +13,8 @@ COPY . .
 RUN corepack enable pnpm
 RUN pnpm install
 
+ENV NODE_ENV production
+
 ENV PORT 8000
 EXPOSE 8000
 
