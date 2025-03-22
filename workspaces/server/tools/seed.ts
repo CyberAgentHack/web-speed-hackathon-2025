@@ -3,7 +3,6 @@ import { createClient } from '@libsql/client';
 import * as schema from '@wsh-2025/schema/src/database/schema';
 import { drizzle } from 'drizzle-orm/libsql';
 import { reset } from 'drizzle-seed';
-import { DateTime } from 'luxon';
 
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
@@ -165,7 +164,7 @@ async function main() {
     const episodeListGroupedByStreamId = Object.values(Object.groupBy(episodeList, (episode) => episode.streamId));
     for (const channel of channelList) {
       let remainingMinutes = 24 * 60;
-      let startAt = DateTime.now().startOf('day').toMillis();
+      let startAt = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
       while (remainingMinutes > 0) {
         const durationCandidate =

@@ -1,6 +1,3 @@
-import '@wsh-2025/client/src/setups/luxon';
-// UnoCSS設定はViteプラグインで自動的に適用されるため、インポート不要
-
 // eslint-disable-next-line import/no-unresolved
 import 'virtual:uno.css';
 import '@unocss/reset/tailwind-compat.css';
