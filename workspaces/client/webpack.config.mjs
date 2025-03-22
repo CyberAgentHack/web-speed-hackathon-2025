@@ -38,20 +38,10 @@ export default {
           }
         }
       },
+      // 画像・フォントなどのアセット処理
       {
-        test: /\.png$/,
-        type: 'asset/inline'
-      },
-      {
-        resourceQuery: /raw/,
-        type: 'asset/source'
-      },
-      {
-        resourceQuery: /arraybuffer/,
-        type: 'javascript/auto',
-        use: {
-          loader: 'arraybuffer-loader'
-        }
+        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf)$/,
+        type: 'asset/resource'
       }
     ]
   },
@@ -69,8 +59,7 @@ export default {
   ],
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm')
+      // FFmpegなどのaliasがある場合
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx']
   }
