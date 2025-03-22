@@ -10,8 +10,7 @@ const config = {
   module: {
     rules: [
       {
-        exclude: ["node_modules/"],
-        include: path.resolve(__dirname, 'src'),
+        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
         resolve: {
           fullySpecified: false,
         },
