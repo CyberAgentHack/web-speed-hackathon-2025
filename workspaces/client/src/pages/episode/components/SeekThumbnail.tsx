@@ -1,5 +1,5 @@
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import type * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
 
 import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
@@ -31,8 +31,9 @@ export const SeekThumbnail = ({ episode }: Props) => {
   return (
     <div
       ref={ref}
-      className={`absolute h-[90px] w-[160px] bg-[size:auto_100%] bg-[url(${seekThumbnail})] bottom-0 translate-x-[-50%]`}
+      className="absolute bottom-0 h-[90px] w-[160px] translate-x-[-50%] bg-[size:auto_100%]"
       style={{
+        backgroundImage: `url(${seekThumbnail})`,
         backgroundPositionX: -1 * SEEK_THUMBNAIL_WIDTH * Math.floor(pointedTime),
         left: Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT)),
       }}

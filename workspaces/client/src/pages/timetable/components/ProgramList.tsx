@@ -1,8 +1,8 @@
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import type * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
-import { ReactElement } from 'react';
-import { ArrayValues } from 'type-fest';
+import type { ReactElement } from 'react';
+import type { ArrayValues } from 'type-fest';
 
 import { HEIGHT_ONE_HOUR } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 import { Gutter } from '@wsh-2025/client/src/pages/timetable/components/Gutter';

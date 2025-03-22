@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { useUpdate } from 'react-use';
 
 interface Props {
@@ -24,7 +24,7 @@ export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const height = (width * ratioHeight) / ratioWidth;
 
   return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
+    <div ref={containerRef} className="relative w-full" style={{ height: `${height}px` }}>
       {children}
     </div>
   );

@@ -1,12 +1,13 @@
 import path from "node:path";
 
+import UnoCSS from "@unocss/postcss";
 import webpack from "webpack";
 
 /** @type {import('webpack').Configuration} */
 const config = {
-	devtool: "inline-source-map",
+	// devtool: "inline-source-map",
 	entry: "./src/main.tsx",
-	mode: "none",
+	mode: "production",
 	module: {
 		rules: [
 			{
@@ -43,7 +44,25 @@ const config = {
 					loader: "arraybuffer-loader",
 				},
 			},
+			{
+				test: /\.css$/,
+				use: [
+					"style-loader",
+					"css-loader",
+					{
+						loader: "postcss-loader",
+						options: {
+							postcssOptions: {
+								plugins: ["postcss-preset-env", UnoCSS()],
+							},
+						},
+					},
+				],
+			},
 		],
+	},
+	optimization: {
+		realContentHash: true,
 	},
 	output: {
 		chunkFilename: "chunk-[contenthash].js",
