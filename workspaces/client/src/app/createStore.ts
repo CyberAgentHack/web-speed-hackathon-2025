@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -13,6 +12,31 @@ import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetab
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+
+// 深層マージユーティリティ関数
+function deepMerge(target: Record<string, any>, source: Record<string, any>): Record<string, any> {
+  const output = { ...target };
+
+  if (isObject(source) && isObject(target)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) {
+          output[key] = source[key];
+        } else {
+          output[key] = deepMerge(target[key], source[key]);
+        }
+      } else {
+        output[key] = source[key];
+      }
+    });
+  }
+
+  return output;
+}
+
+function isObject(item: any): boolean {
+  return item && typeof item === 'object' && !Array.isArray(item);
+}
 
 interface Props {
   hydrationData?: unknown;
@@ -39,7 +63,9 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  if (hydrationData && typeof hydrationData === 'object') {
+    store.setState((s) => deepMerge(s, hydrationData as Record<string, any>));
+  }
 
   return store;
 };
