@@ -18,12 +18,14 @@ export const Document = () => {
         <script src="/public/main.js" type="module"></script>
       </head>
       <body>
-        <Suspense>
-          <Layout>
-            <Outlet />
-          </Layout>
-        </Suspense>
-        <ScrollRestoration />
+        <div id="root">
+          <Suspense>
+            <Layout>
+              <Outlet />
+            </Layout>
+          </Suspense>
+          <ScrollRestoration />
+        </div>
       </body>
     </html>
   );

@@ -20,7 +20,8 @@ function main() {
   const router = createBrowserRouter(createRoutes(store), {});
 
   hydrateRoot(
-    document,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    document.getElementById('root')!,
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
