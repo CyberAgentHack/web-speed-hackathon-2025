@@ -4,7 +4,6 @@ import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
@@ -52,31 +51,28 @@ export const PlayerController = ({ episode }: Props) => {
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
-                <button
-                  aria-label={playing ? '一時停止する' : '再生する'}
-                  className="block rounded-[4px]"
-                  type="button"
-                  onClick={() => {
-                    togglePlaying();
-                  }}
-                >
-                  {playing ? (
-                    <img
-                      className="m-[14px] block size-[20px] shrink-0 grow-0"
-                      loading="lazy"
-                      src="/public/icons/material-symbols--pause-rounded.svg"
-                    />
-                  ) : (
-                    <img
-                      className="m-[14px] block size-[20px] shrink-0 grow-0"
-                      loading="lazy"
-                      src="/public/icons/material-symbols--play-arrow-rounded.svg"
-                    />
-                  )}
-                </button>
-              </Hoverable>
-
+              <button
+                aria-label={playing ? '一時停止する' : '再生する'}
+                className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F]"
+                type="button"
+                onClick={() => {
+                  togglePlaying();
+                }}
+              >
+                {playing ? (
+                  <img
+                    className="m-[14px] block size-[20px] shrink-0 grow-0"
+                    loading="lazy"
+                    src="/public/icons/material-symbols--pause-rounded.svg"
+                  />
+                ) : (
+                  <img
+                    className="m-[14px] block size-[20px] shrink-0 grow-0"
+                    loading="lazy"
+                    src="/public/icons/material-symbols--play-arrow-rounded.svg"
+                  />
+                )}
+              </button>
               <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
                 {Duration.fromObject({ seconds: currentTime }).toFormat('mm:ss')}
                 {' / '}
@@ -86,30 +82,28 @@ export const PlayerController = ({ episode }: Props) => {
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
-              <button
-                aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
-                className="block rounded-[4px]"
-                type="button"
-                onClick={() => {
-                  toggleMuted();
-                }}
-              >
-                {muted ? (
-                  <img
-                    className="m-[14px] block size-[20px] shrink-0 grow-0"
-                    loading="lazy"
-                    src="/public/icons/material-symbols--volume-off-rounded.svg"
-                  />
-                ) : (
-                  <img
-                    className="m-[14px] block size-[20px] shrink-0 grow-0"
-                    loading="lazy"
-                    src="/public/icons/material-symbols--volume-up-rounded.svg"
-                  />
-                )}
-              </button>
-            </Hoverable>
+            <button
+              aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
+              className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F]"
+              type="button"
+              onClick={() => {
+                toggleMuted();
+              }}
+            >
+              {muted ? (
+                <img
+                  className="m-[14px] block size-[20px] shrink-0 grow-0"
+                  loading="lazy"
+                  src="/public/icons/material-symbols--volume-off-rounded.svg"
+                />
+              ) : (
+                <img
+                  className="m-[14px] block size-[20px] shrink-0 grow-0"
+                  loading="lazy"
+                  src="/public/icons/material-symbols--volume-up-rounded.svg"
+                />
+              )}
+            </button>
           </div>
         </div>
       </div>

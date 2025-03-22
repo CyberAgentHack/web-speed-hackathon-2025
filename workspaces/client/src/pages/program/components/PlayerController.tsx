@@ -1,4 +1,3 @@
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { useMuted } from '@wsh-2025/client/src/pages/program/hooks/useMuted';
 
 export const PlayerController = () => {
@@ -16,30 +15,28 @@ export const PlayerController = () => {
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
-              <button
-                aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
-                className="block rounded-[4px]"
-                type="button"
-                onClick={() => {
-                  toggleMuted();
-                }}
-              >
-                {muted ? (
-                  <img
-                    className="m-[14px] block size-[20px] shrink-0 grow-0"
-                    loading="lazy"
-                    src="/public/icons/material-symbols--volume-off-rounded.svg"
-                  />
-                ) : (
-                  <img
-                    className="m-[14px] block size-[20px] shrink-0 grow-0"
-                    loading="lazy"
-                    src="/public/icons/material-symbols--volume-up-rounded.svg"
-                  />
-                )}
-              </button>
-            </Hoverable>
+            <button
+              aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
+              className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F]"
+              type="button"
+              onClick={() => {
+                toggleMuted();
+              }}
+            >
+              {muted ? (
+                <img
+                  className="m-[14px] block size-[20px] shrink-0 grow-0"
+                  loading="lazy"
+                  src="/public/icons/material-symbols--volume-off-rounded.svg"
+                />
+              ) : (
+                <img
+                  className="m-[14px] block size-[20px] shrink-0 grow-0"
+                  loading="lazy"
+                  src="/public/icons/material-symbols--volume-up-rounded.svg"
+                />
+              )}
+            </button>
           </div>
         </div>
       </div>
