@@ -1,12 +1,13 @@
 import path from 'node:path';
 
+import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -31,6 +32,8 @@ const config = {
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
+            cacheDirectory: true,
+            cacheCompression: true,
           },
         },
       },
@@ -57,10 +60,16 @@ const config = {
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
+    clean: true,
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 10 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      reportFilename: "../analyze.html",
+      openAnalyzer: false
+    }),
   ],
   resolve: {
     alias: {
