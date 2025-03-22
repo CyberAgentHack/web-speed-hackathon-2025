@@ -10,7 +10,7 @@ overrides:
 
 patchedDependencies:
   shaka-player:
-    hash: cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c
+    hash: ztcamgtqc3a62la4l6p3d6w4ae
     path: patches/shaka-player.patch
 
 importers:
@@ -207,7 +207,7 @@ importers:
         version: 1.5.17
       shaka-player:
         specifier: 4.12.5
-        version: 4.12.5(patch_hash=cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c)
+        version: 4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae)
       typescript:
         specifier: 5.7.2
         version: 5.7.2
@@ -3822,6 +3822,7 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
+    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lie@3.3.0:
@@ -4722,6 +4723,7 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
+    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -9813,7 +9815,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  shaka-player@4.12.5(patch_hash=cf783c59ad29e5efd7af6f6200527ede2fa7d67950876972a6127d280b3dad0c):
+  shaka-player@4.12.5(patch_hash=ztcamgtqc3a62la4l6p3d6w4ae):
     dependencies:
       eme-encryption-scheme-polyfill: 2.1.6
 
