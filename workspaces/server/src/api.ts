@@ -28,7 +28,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  const now = new Date();
+  console.log('1', new Date().getTime() - now.getTime());
   await app.register(fastifyCookie);
+  console.log('2', new Date().getTime() - now.getTime());
   await app.register(fastifySession, {
     cookie: {
       path: '/',
@@ -36,7 +39,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     cookieName: 'wsh-2025-session',
     secret: randomBytes(32).toString('base64'),
   });
+  console.log('3', new Date().getTime() - now.getTime());
   await app.register(fastifyZodOpenApiPlugin);
+  console.log('4', new Date().getTime() - now.getTime());
   await app.register(fastifySwagger, {
     openapi: {
       info: {
@@ -48,10 +53,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     transform: fastifyZodOpenApiTransform,
     transformObject: fastifyZodOpenApiTransformObject,
   });
+  console.log('5', new Date().getTime() - now.getTime());
   await app.register(fastifySwaggerUi, {
     routePrefix: '/docs',
   });
 
+  console.log('6', new Date().getTime() - now.getTime());
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
