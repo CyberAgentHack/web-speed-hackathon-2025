@@ -20,7 +20,14 @@ const config = {
           options: {
             cacheDirectory: true,
             presets: [
-              ['@babel/preset-env', { modules: false }],
+              [
+                '@babel/preset-env',
+                {
+                  corejs: '3.41',
+                  targets: 'defaults',
+                  useBuiltIns: 'entry',
+                },
+              ],
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
