@@ -131,6 +131,7 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
                 className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
                 disabled={submitting || hasValidationErrors}
                 type="submit"
+                aria-label='アカウント作成'
               >
                 アカウント作成
               </button>
