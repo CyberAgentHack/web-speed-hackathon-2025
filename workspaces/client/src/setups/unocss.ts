@@ -1,9 +1,24 @@
-import { IconifyJSON } from '@iconify/types';
-import presetIcons from '@unocss/preset-icons/browser';
-import presetWind3 from '@unocss/preset-wind3';
-import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
+import { IconifyJSON } from "@iconify/types";
+import presetIcons from "@unocss/preset-icons/browser";
+import presetWind3 from "@unocss/preset-wind3";
+import initUnocssRuntime, { defineConfig } from "@unocss/runtime";
+
+const pickIcons = (json: IconifyJSON, icons: string[]) =>
+  ({
+    ...json,
+    icons: Object.fromEntries(icons.map((icon) => [icon, json.icons[icon]])),
+  }) as IconifyJSON;
 
 async function init() {
+  const bi = (await import("@iconify/json/json/bi.json")).default;
+  const fluent = (await import("@iconify/json/json/fluent.json"))
+    .default as IconifyJSON;
+  const lineMd = (await import("@iconify/json/json/line-md.json")).default;
+  const faSolid = (await import("@iconify/json/json/fa-solid.json")).default;
+  const materialSymbols =
+    (await import("@iconify/json/json/material-symbols.json"))
+      .default as IconifyJSON;
+
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -14,8 +29,11 @@ async function init() {
       },
       preflights: [
         {
-          getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
-          layer: 'reset',
+          getCSS: () =>
+            import("@unocss/reset/tailwind-compat.css?raw").then((
+              { default: css },
+            ) => css),
+          layer: "reset",
         },
         {
           getCSS: () => /* css */ `
@@ -49,17 +67,31 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // 'fa-regular': () =>
+            //   import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // 'fa-solid': () =>
+            //   import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // 'line-md': () =>
+            //   import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // 'material-symbols': () =>
+            //   import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            bi: () => pickIcons(bi, ["house-fill"]),
+            "fa-solid": () =>
+              pickIcons(faSolid, ["sign-out-alt", "user", "calendar"]),
+            fluent: () => pickIcons(fluent, ["live-24-filled"]),
+            "line-md": () => pickIcons(lineMd, ["loading-twotone-loop"]),
+            "material-symbols": () =>
+              pickIcons(materialSymbols, [
+                "error-outline",
+                "warning-outline-rounded",
+                "play-arrow-rounded",
+                "pause-rounded",
+                "volume-off-rounded",
+                "volume-up-rounded",
+              ]),
           },
         }),
       ],
