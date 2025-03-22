@@ -1,7 +1,3 @@
-import '@wsh-2025/client/src/setups/polyfills';
-import '@wsh-2025/client/src/setups/luxon';
-import '@wsh-2025/client/src/setups/unocss';
-
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
@@ -16,6 +12,13 @@ declare global {
 }
 
 function main() {
+  // setup
+  void Promise.all([
+    import('@wsh-2025/client/src/setups/polyfills'),
+    import('@wsh-2025/client/src/setups/luxon'),
+    import('@wsh-2025/client/src/setups/unocss'),
+  ]);
+
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
