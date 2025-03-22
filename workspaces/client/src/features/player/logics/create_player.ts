@@ -14,9 +14,9 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     enableWorker: false,
     maxBufferLength: 50,
   });
-  readonly playerType: PlayerType.HlsJS;
+  readonly playerType: PlayerType;
 
-  constructor(playerType: PlayerType.HlsJS) {
+  constructor(playerType: PlayerType) {
     this.playerType = playerType;
   }
 

@@ -1,3 +1,1 @@
-export enum PlayerType {
-  HlsJS = 'hls.js',
-}
+export type PlayerType = 'hls.js';
