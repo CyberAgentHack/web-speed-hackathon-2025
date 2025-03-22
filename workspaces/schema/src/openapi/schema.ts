@@ -186,7 +186,7 @@ export const getRecommendedModulesResponse = z.array(
           .nullable(),
         episode: episode
           .extend({
-            series: series
+            series: series.pick({ title: true })
           })
           .nullable(),
       }),
