@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 
 import { getDatabase } from '@wsh-2025/server/src/drizzle/database';
 
-const SEQUENCE_DURATION_MS = 2 * 1000;
+const SEQUENCE_DURATION_MS = 1000;
 const SEQUENCE_COUNT_PER_PLAYLIST = 10;
 
 // 競技のため、時刻のみを返す
@@ -87,7 +87,7 @@ export function registerStreams(app: FastifyInstance): void {
           return asc(program.startAt);
         },
         where(program, { and, eq, lt, lte, sql }) {
-          // 競技のため、時刻のみで比較する
+    
           return and(
             lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
             lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
