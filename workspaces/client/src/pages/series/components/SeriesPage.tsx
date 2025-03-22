@@ -11,10 +11,11 @@ import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+
+  const [series, modules] = await Promise.all([
+    store.getState().features.series.fetchSeriesById({ seriesId }),
+    store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId }),
+  ]);
   return { modules, series };
 };
 
