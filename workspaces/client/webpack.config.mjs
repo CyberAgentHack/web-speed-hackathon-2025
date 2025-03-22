@@ -1,12 +1,15 @@
 import path from 'node:path';
-
+import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -55,7 +58,7 @@ const config = {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
     filename: 'main.js',
-    path: path.resolve(import.meta.dirname, './dist'),
+    path: path.resolve(__dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
@@ -64,8 +67,8 @@ const config = {
   ],
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      '@ffmpeg/core$': path.resolve(__dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      '@ffmpeg/core/wasm$': path.resolve(__dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
