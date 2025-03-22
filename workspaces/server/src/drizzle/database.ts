@@ -57,4 +57,8 @@ export async function initializeDatabase(): Promise<void> {
   });
 
   await addSeriesIdToPrograms();
+
+  // index貼る
+  await database.$client.execute('CREATE INDEX IF NOT EXISTS episode_series_id ON episode (seriesId)');
+  await database.$client.execute('CREATE INDEX IF NOT EXISTS program_series_id ON program (seriesId)');
 }

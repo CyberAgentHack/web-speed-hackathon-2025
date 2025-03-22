@@ -68,29 +68,71 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+
+  useMemo(async () => {
+    await fetchProgramDatas(store, { programId });
+  }, [programId]);
+
+  if (program == null) {
+    return <div></div>;
+  }
+
+  // useEffect(() => {
+  //   if (isArchivedRef.current) {
+  //     return;
+  //   }
+
+  //   // 放送前であれば、放送開始になるまで画面を更新し続ける
+  //   if (!isBroadcastStarted) {
+  //     let timeout = setTimeout(function tick() {
+  //       forceUpdate();
+  //       timeout = setTimeout(tick, 250);
+  //     }, 250);
+  //     return () => {
+  //       clearTimeout(timeout);
+  //     };
+  //   }
+
+  //   // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
+  //   let timeout = setTimeout(function tick() {
+  //     if (DateTime.now() < DateTime.fromISO(program.endAt)) {
+  //       timeout = setTimeout(tick, 250);
+  //       return;
+  //     }
+
+  //     if (nextProgram?.id) {
+  //       void navigate(`/programs/${nextProgram.id}`, {
+  //         preventScrollReset: true,
+  //         replace: true,
+  //         state: { loading: 'none' },
+  //       });
+  //     } else {
+  //       isArchivedRef.current = true;
+  //       forceUpdate();
+  //     }
+  //   }, 250);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, [isBroadcastStarted, nextProgram?.id]);
+
   useEffect(() => {
-    if (isArchivedRef.current) {
-      return;
-    }
-
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
-    if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
+    if (isArchivedRef.current) return;
+  
+    const intervalId = setInterval(() => {
+      // 放送前の場合は定期的に更新
+      if (!isBroadcastStarted) {
         forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-    let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
         return;
       }
-
+  
+      // 放送中の場合、番組終了まで待つ
+      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
+        return;
+      }
+  
+      // 番組終了後の処理
+      clearInterval(intervalId);
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
           preventScrollReset: true,
@@ -102,18 +144,9 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
         forceUpdate();
       }
     }, 250);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [isBroadcastStarted, nextProgram?.id]);
-
-  useMemo(async () => {
-    await fetchProgramDatas(store, { programId });
-  }, [programId]);
-
-  if (program == null) {
-    return <div></div>;
-  }
+  
+    return () => clearInterval(intervalId);
+  }, [isBroadcastStarted, nextProgram?.id, program, program.endAt]);
 
   return (
     <>
