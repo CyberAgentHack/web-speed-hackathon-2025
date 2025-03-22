@@ -21,7 +21,6 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 
 export const TimetablePage = () => {
   const record = useTimetable();
-  const shownNewFeatureDialog = useShownNewFeatureDialog();
 
   const channelIds = Object.keys(record);
   const programLists = Object.values(record);
@@ -55,7 +54,7 @@ export const TimetablePage = () => {
         </div>
       </div>
 
-      <NewTimetableFeatureDialog isOpen={shownNewFeatureDialog} />
+      <NewTimetableFeatureDialog/>
     </>
   );
 };

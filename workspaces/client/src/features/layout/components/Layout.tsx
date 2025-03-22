@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
-import { Link, useLocation, useNavigation } from 'react-router';
+import { Link, useLocation, useNavigate, useNavigation } from 'react-router';
 
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
@@ -20,6 +20,7 @@ interface Props {
 export const Layout = ({ children }: Props) => {
   useSubscribePointer();
 
+  const navigate = useNavigate();
   const navigation = useNavigation();
   const isLoading =
     navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
@@ -83,21 +84,23 @@ export const Layout = ({ children }: Props) => {
               </span>
             </button>
 
-            <Link
+            <button
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              to="/"
+              onClick={() => navigate('/')}
+              type="button"
             >
               <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
-            </Link>
+            </button>
 
-            <Link
+            <button
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              to="/timetable"
+              onClick={() => navigate('/timetable')}
+              type="button"
             >
               <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
-            </Link>
+            </button>
           </nav>
         </aside>
 

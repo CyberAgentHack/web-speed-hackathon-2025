@@ -1,16 +1,18 @@
 import FeatureExplainImageUrl from '@wsh-2025/client/assets/timetable/feature-explain.png';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useCloseNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useCloseNewFeatureDialog';
+import { useShownNewFeatureDialog } from '../hooks/useShownNewFeatureDialog';
 
 interface Props {
   isOpen: boolean;
 }
 
-export const NewTimetableFeatureDialog = ({ isOpen }: Props) => {
+export const NewTimetableFeatureDialog = () => {
   const onClose = useCloseNewFeatureDialog();
+  const shownNewFeatureDialog = useShownNewFeatureDialog();
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
+    <Dialog isOpen={shownNewFeatureDialog} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
           <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
