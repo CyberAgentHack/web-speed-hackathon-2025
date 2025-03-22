@@ -189,7 +189,7 @@ async function main() {
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
         id: faker.string.uuid(),
-        logoUrl: `/public/logos/optimized/${id}.svg`, // 最適化されたSVGを使用
+        logoUrl: `/public/logos/${id}.svg`, // 最適化されたSVGを使用
         name,
       }));
       const result = await database.insert(schema.channel).values(data).returning();
