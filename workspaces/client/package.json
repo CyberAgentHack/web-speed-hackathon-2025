@@ -5,13 +5,13 @@
     "build": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
-    "format:prettier": "wireit"
+    "format:prettier": "wireit",
+    "analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
   },
   "dependencies": {
     "@babel/runtime": "7.26.10",
     "@better-fetch/fetch": "1.1.15",
     "@dhmk/zustand-lens": "5.0.0",
-    "@epic-web/restore-scroll": "1.1.1",
     "@ffmpeg/ffmpeg": "0.12.15",
     "@headlessui/react": "2.2.0",
     "@radix-ui/react-slider": "1.2.3",
@@ -22,7 +22,6 @@
     "classnames": "2.5.1",
     "final-form": "4.20.10",
     "immer": "10.1.1",
-    "lodash": "4.17.21",
     "luxon": "3.5.0",
     "m3u8-parser": "7.2.0",
     "p-min-delay": "4.0.2",
@@ -54,7 +53,6 @@
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
     "@iconify/types": "2.0.0",
-    "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
     "@types/m3u8-parser": "7.2.0",
     "@types/react": "19.0.1",

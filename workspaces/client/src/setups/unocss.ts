@@ -3,6 +3,18 @@ import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
+// 実際に使用するアイコンのみをロードする
+const loadIconOnDemand = (name: string, iconName: string) => {
+  if (typeof window === 'undefined') return;
+  const iconModule = `@iconify/json/icons/${name}/${iconName}.json`;
+  return import(/* webpackIgnore: true */ iconModule).then(
+    (m): IconifyJSON => m.default as IconifyJSON
+  ).catch(() => {
+    console.warn(`Icon ${name}:${iconName} could not be loaded`);
+    return { icons: {}, width: 16, height: 16 } as IconifyJSON;
+  });
+};
+
 async function init() {
   await initUnocssRuntime({
     defaults: defineConfig({
@@ -48,19 +60,28 @@ async function init() {
       presets: [
         presetWind3(),
         presetIcons({
-          collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+          // 必要なアイコンだけを動的にロードするカスタムリゾルバー
+          customizations: {
+            iconCustomizer(collection, icon, props) {
+              props.width = '1.2em';
+              props.height = '1.2em';
+              return props;
+            },
           },
+          // 遅延ロード方式
+          collections: {
+            // 必要な時だけ個別のアイコンをロード
+            custom: async (iconName) => {
+              // アイコン名をコレクションと名前に分割
+              // 例: "bi:alarm" => { collection: "bi", name: "alarm" }
+              const [collection, name] = iconName.split(':');
+              if (!collection || !name) {
+                return { icons: {}, width: 16, height: 16 } as IconifyJSON;
+              }
+              return loadIconOnDemand(collection, name);
+            },
+          },
+          scale: 1.2,
         }),
       ],
     }),
