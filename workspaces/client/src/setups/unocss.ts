@@ -1,4 +1,4 @@
-import { IconifyJSON } from '@iconify/types';
+// import { IconifyJSON } from '@iconify/types';
 import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
