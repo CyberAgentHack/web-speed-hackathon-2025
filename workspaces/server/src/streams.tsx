@@ -1,4 +1,3 @@
-import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -81,6 +80,7 @@ export function registerStreams(app: FastifyInstance): void {
     for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
       const sequence = firstSequence + idx;
       const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
+      console.log(sequenceStartAt);
 
       const program = await database.query.program.findFirst({
         orderBy(program, { asc }) {
@@ -122,7 +122,6 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
           ].join(',')}
         `,
       );
