@@ -28,7 +28,6 @@ const LoadingFallback = () => (
 
 type Module = {
   id: string;
-
 };
 
 const ModuleBlock = memo(({ module }: { module: Module }) => (
@@ -48,7 +47,6 @@ export const HomePage = () => {
 
   if (isLoading) return <LoadingFallback />;
   if (isError) return <div>エラーが発生しました。</div>;
-
   return (
     <>
       <main className="w-full py-[48px]" aria-label="おすすめセクション">
