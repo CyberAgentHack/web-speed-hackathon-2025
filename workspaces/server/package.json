@@ -96,6 +96,10 @@
         "PORT": {
           "external": true,
           "default": "8000"
+        },
+        "STREAM_BASE_URL": {
+          "external": true,
+          "default": "https://deqdfv99n42lf.cloudfront.net/streams/"
         }
       }
     },
