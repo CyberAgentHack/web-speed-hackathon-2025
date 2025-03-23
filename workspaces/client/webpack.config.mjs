@@ -2,11 +2,18 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+import CompressionPlugin from 'compression-webpack-plugin';
+
+import BundleAnalyzerPlugin from 'webpack-bundle-analyzer';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
+  optimization: {
+    minimize: true, // コード最小化
+  },
   module: {
     rules: [
       {
@@ -60,7 +67,18 @@ const config = {
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // new CompressionPlugin({
+    //     algorithm: 'gzip',
+    //     compressionOptions: { level: 9 },
+    //     filename: '[path][base].gz',
+    //     minRatio: 0.8,
+    //     test: /\.(js|css|html|svg)$/,
+    // }),
+    // new BundleAnalyzerPlugin.BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   openAnalyzer: false,
+    // }),
   ],
   resolve: {
     alias: {
