@@ -503,15 +503,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           where(module, { eq }) {
             return eq(module.referenceId, req.params.referenceId);
           },
-          // モジュール数を20つに制限
-          limit: 20,
+          // モジュール数を15つに制限
+          limit: 15,
           with: {
             items: {
               orderBy(item, { asc }) {
                 return asc(item.order);
               },
-              // 各アイテムの最初の12件だけを取得
-              limit: 12,
+              // 各アイテムの最初の20件だけを取得
+              limit: 20,
               with: {
                 // シリーズの場合は必要最小限のデータだけを取得
                 series: {

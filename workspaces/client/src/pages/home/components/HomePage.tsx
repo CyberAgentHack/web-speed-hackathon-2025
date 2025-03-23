@@ -59,7 +59,7 @@ export const HomePage = () => {
     <>
       <title>Home - AremaTV</title>
 
-      <div className="min-h-[6000px] w-full py-[48px]">
+      <div className="w-full py-[48px]">
         {modules.map((module) => {
           if (!module) return null;
           return (
@@ -68,9 +68,6 @@ export const HomePage = () => {
             </div>
           );
         })}
-
-        {/* テスト用に十分なスクロール領域を確保 */}
-        <div className="h-[3000px]" aria-hidden="true" />
       </div>
     </>
   );
