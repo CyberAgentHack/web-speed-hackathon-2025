@@ -537,6 +537,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               },
             },
           },
+          // entranceの場合は全て取得し、それ以外の場合は最初の1つだけを取得
+          ...(req.params.referenceId !== 'entrance' ? { limit: 1 } : {}),
         });
 
         const seriesIds = new Set<string>();
