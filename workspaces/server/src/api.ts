@@ -392,7 +392,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         }),
       );
-      reply.code(200).send(programs);
+      reply.code(200).send(
+        programs.map((program) => ({
+          ...program,
+          description: program.description?.length > 400 ? program.description.substring(0, 400) : program.description,
+        })),
+      );
     },
   });
 

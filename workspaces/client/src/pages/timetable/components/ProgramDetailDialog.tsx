@@ -13,16 +13,18 @@ interface Props {
   program: ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 }
 
-export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement => {
+export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement | null => {
+  return isOpen ? <Content program={program} /> : null;
+};
+
+const Content = ({ program }: { program: Props['program'] }) => {
   const episode = useEpisode(program.episodeId);
   const [, setProgram] = useSelectedProgramId();
-
   const onClose = () => {
     setProgram(null);
   };
-
   return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
+    <Dialog isOpen={true} onClose={onClose}>
       <div className="h-75vh size-full overflow-auto">
         <h2 className="mb-[24px] text-center text-[24px] font-bold">番組詳細</h2>
 
