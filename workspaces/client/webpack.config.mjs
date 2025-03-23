@@ -1,12 +1,21 @@
 import path from 'node:path';
 
+import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  cache: {
+    buildDependencies: {
+      config: [__filename],
+    },
+    type: 'filesystem',
+  },
+  devtool: isProduction ? 'source-map' : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       {
@@ -18,6 +27,7 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
             presets: [
               [
                 '@babel/preset-env',
@@ -25,7 +35,7 @@ const config = {
                   corejs: '3.41',
                   forceAllTransforms: true,
                   targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  useBuiltIns: 'usage',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -35,8 +45,16 @@ const config = {
         },
       },
       {
-        test: /\.png$/,
-        type: 'asset/inline',
+        generator: {
+          filename: 'images/[hash][ext][query]',
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 4 * 1024, // 4KB
+          },
+        },
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: 'asset',
       },
       {
         resourceQuery: /raw/,
@@ -51,16 +69,60 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: isProduction,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: isProduction,
+            drop_debugger: isProduction,
+          },
+        },
+      }),
+    ],
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        common: {
+          minChunks: 2,
+          name: 'common',
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+        vendor: {
+          name(module) {
+            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+            return `vendor.${packageName.replace('@', '')}`;
+          },
+          priority: 10,
+          test: /[\\/]node_modules[\\/]/,
+        },
+      },
+      chunks: 'all',
+      maxInitialRequests: 25,
+      minSize: 20000,
+    },
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].chunk.js',
+    clean: true,
+    filename: isProduction ? '[name].[contenthash].js' : '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
+  performance: {
+    hints: isProduction ? 'warning' : false,
+    maxAssetSize: 512000,
+    maxEntrypointSize: 512000,
+  },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({
+      API_BASE_URL: '/api',
+      NODE_ENV: isProduction ? 'production' : 'development',
+    }),
+    new webpack.ids.DeterministicChunkIdsPlugin(),
   ],
   resolve: {
     alias: {
