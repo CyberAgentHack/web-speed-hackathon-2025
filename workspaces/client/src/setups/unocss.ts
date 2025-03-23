@@ -1,8 +1,9 @@
 import presetWind3 from '@unocss/preset-wind3';
+import presetUno from '@unocss/preset-uno';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
 async function init() {
-  await initUnocssRuntime({
+  initUnocssRuntime({
     defaults: defineConfig({
       layers: {
         default: 1,
@@ -11,40 +12,44 @@ async function init() {
         reset: -1,
       },
       preflights: [
-        {
-          getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
-          layer: 'reset',
-        },
-        {
-          getCSS: () => /* css */ `
-          @view-transition {
-            navigation: auto;
-          }
-          html,
-          :host {
-            font-family: 'Noto Sans JP', sans-serif !important;
-          }
-          video {
-            max-height: 100%;
-            max-width: 100%;
-          }
-        `,
-        },
-        {
-          getCSS: () => /* css */ `
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-        `,
-        },
+        
+        // {
+        //   getCSS: () => import('@unocss/reset/tailwind-compat.css?raw').then(({ default: css }) => css),
+        //   layer: 'reset',
+        // },
+        // 
+        // {
+        //   getCSS: () => /* css */ `
+        //   @view-transition {
+        //     navigation: auto;
+        //   }
+        //   html,
+        //   :host {
+        //     font-family: 'Noto Sans JP', sans-serif !important;
+        //   }
+        //   video {
+        //     max-height: 100%;
+        //     max-width: 100%;
+        //   }
+        // `,
+        // },
+        // {
+        //   getCSS: () => /* css */ `
+        //   @keyframes fade-in {
+        //     from {
+        //       opacity: 0;
+        //     }
+        //     to {
+        //       opacity: 1;
+        //     }
+        //   }
+        // `,
+        // },
+        
       ],
       presets: [
-        presetWind3(),
+        // presetWind3(),
+        presetUno(),
       ],
     }),
   });
