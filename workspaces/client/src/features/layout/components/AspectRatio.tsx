@@ -12,11 +12,18 @@ export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(function tick() {
+    const resizeObserver = new ResizeObserver(() => {
       forceUpdate();
-    }, 1000);
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
     return () => {
-      clearInterval(interval);
+      if (containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
     };
   }, []);
 
