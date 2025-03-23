@@ -55,6 +55,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
         <div className="flex flex-row justify-center">
           <Link
             className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+            rel="preload"
             to={`/programs/${program.id}`}
             onClick={onClose}
           >

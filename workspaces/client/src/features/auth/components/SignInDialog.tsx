@@ -14,6 +14,17 @@ interface SignInFormValues {
   password: string;
 }
 
+export const ErrorOutlineIcon = () => {
+  return (
+    <svg height={24} viewBox="0 0 24 24" width={24} xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 18a8 8 0 0 1-8-8a8 8 0 0 1 8-8a8 8 0 0 1 8 8a8 8 0 0 1-8 8"
+        fill="currentColor"
+      ></path>
+    </svg>
+  );
+};
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -121,7 +132,7 @@ export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
+                  <ErrorOutlineIcon />
                   <span>{submitError}</span>
                 </div>
               ) : null}

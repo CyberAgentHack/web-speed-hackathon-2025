@@ -107,6 +107,7 @@ export const ProgramPage = () => {
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
                   <Link
                     className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+                    rel="preload"
                     to={`/episodes/${program.episode.id}`}
                   >
                     見逃し視聴する

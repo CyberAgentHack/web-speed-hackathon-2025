@@ -8,8 +8,8 @@ import { DateTime } from 'luxon';
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
 import * as bcrypt from 'bcrypt';
-import path from 'node:path';
 import { readdirSync } from 'node:fs';
+import path from 'node:path';
 
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
@@ -129,7 +129,7 @@ async function main() {
     const seriesList: (typeof schema.series.$inferSelect)[] = [];
     {
       const data: (typeof schema.series.$inferInsert)[] = Array.from({ length: 30 }, () => ({
-        description: faker.lorem.paragraph({ max: 200, min: 100 }).replace(/\s/g, '').replace(/\./g, '。'),
+        description: faker.lorem.paragraph({ max: 1, min: 1 }).replace(/\s/g, '').replace(/\./g, '。'),
         id: faker.string.uuid(),
         thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
         title: faker.helpers.arrayElement(seriesTitleList),
@@ -145,7 +145,7 @@ async function main() {
       const data: (typeof schema.episode.$inferInsert)[] = Array.from(
         { length: faker.number.int({ max: 20, min: 10 }) },
         (_, idx) => ({
-          description: faker.lorem.paragraph({ max: 200, min: 100 }).replace(/\s/g, '').replace(/\./g, '。'),
+          description: faker.lorem.paragraph({ max: 1, min: 1 }).replace(/\s/g, '').replace(/\./g, '。'),
           id: faker.string.uuid(),
           order: idx + 1,
           seriesId: series.id,
@@ -162,7 +162,17 @@ async function main() {
     // Create programs
     console.log('Creating programs...');
     const programList: (typeof schema.program.$inferInsert)[] = [];
-    const episodeListGroupedByStreamId = Object.values(Object.groupBy(episodeList, (episode) => episode.streamId));
+    function groupBy<T>(array: T[], key: (item: T) => string): Record<string, T[]> {
+      return array.reduce((result, item) => {
+        const groupKey = key(item);
+        if (!result[groupKey]) {
+          result[groupKey] = [];
+        }
+        result[groupKey].push(item);
+        return result;
+      }, {} as Record<string, T[]>);
+    }
+    const episodeListGroupedByStreamId = Object.values(groupBy(episodeList, (episode) => episode.streamId));
     for (const channel of channelList) {
       let remainingMinutes = 24 * 60;
       let startAt = DateTime.now().startOf('day').toMillis();
@@ -178,7 +188,7 @@ async function main() {
         const series = seriesList.find((s) => s.id === episode.seriesId);
         const program: typeof schema.program.$inferInsert = {
           channelId: channel.id,
-          description: faker.lorem.paragraph({ max: 200, min: 100 }).replace(/\s/g, '').replace(/\./g, '。'),
+          description: faker.lorem.paragraph({ max: 1, min: 1 }).replace(/\s/g, '').replace(/\./g, '。'),
           endAt: new Date(endAt).toISOString(),
           episodeId: episode.id,
           id: faker.string.uuid(),
