@@ -42,9 +42,8 @@ export function registerSsr(app: FastifyInstance): void {
     // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
 
-    const store = createStore({ hydrationData: {} });
-    const routes = createRoutes(store);
-    const handler = createStaticHandler(routes);
+    const store = createStore({});
+    const handler = createStaticHandler(createRoutes(store));
     const context = await handler.query(request);
 
     if (context instanceof Response) {

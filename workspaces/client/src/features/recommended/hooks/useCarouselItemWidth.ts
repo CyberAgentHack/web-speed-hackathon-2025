@@ -1,44 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useUpdate } from 'react-use';
 
 const MIN_WIDTH = 276;
 const GAP = 12;
 
 // repeat(auto-fill, minmax(276px, 1fr)) を計算で求める
 export function useCarouselItemWidth() {
-  const [itemWidth, setItemWidth] = useState(MIN_WIDTH);
+  const forceUpdate = useUpdate();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const calculateWidth = () => {
-      if (containerRef.current == null) return;
-
-      const styles = window.getComputedStyle(containerRef.current);
-      const innerWidth =
-        containerRef.current.clientWidth - parseInt(styles.paddingLeft) - parseInt(styles.paddingRight);
-      const itemCount = Math.max(1, Math.floor((innerWidth + GAP) / (MIN_WIDTH + GAP)));
-      const newItemWidth = Math.floor((innerWidth + GAP) / itemCount - GAP);
-
-      if (newItemWidth !== itemWidth) {
-        setItemWidth(newItemWidth);
-      }
-    };
-
-    // 初回計算
-    calculateWidth();
-
-    // ResizeObserverを使用してサイズ変更時のみ再計算
-    const resizeObserver = new ResizeObserver(calculateWidth);
-    resizeObserver.observe(containerRef.current);
-
+    const interval = setInterval(function tick() {
+      forceUpdate();
+    }, 250);
     return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
-      }
-      resizeObserver.disconnect();
+      clearInterval(interval);
     };
-  }, [itemWidth]);
+  }, []);
+
+  if (containerRef.current == null) {
+    return { ref: containerRef, width: MIN_WIDTH };
+  }
+
+  const styles = window.getComputedStyle(containerRef.current);
+  const innerWidth = containerRef.current.clientWidth - parseInt(styles.paddingLeft) - parseInt(styles.paddingRight);
+  const itemCount = Math.max(0, Math.floor((innerWidth + GAP) / (MIN_WIDTH + GAP)));
+  const itemWidth = Math.floor((innerWidth + GAP) / itemCount - GAP);
 
   return { ref: containerRef, width: itemWidth };
 }
