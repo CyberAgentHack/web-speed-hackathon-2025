@@ -83,27 +83,27 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           },
           path: '/timetable',
         },
-        {
-          async lazy() {
-            const { NotFoundPage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
-              1000,
-            );
-            return {
-              Component: NotFoundPage,
-              async loader() {
-                return await prefetch(store);
-              },
-            };
-          },
-          path: '*',
-        },
       ],
       Component: Document,
       async loader() {
         return await prefetch(store);
       },
       path: '/',
+    },
+    {
+      async lazy() {
+        const { NotFoundPage, prefetch } = await lazy(
+          import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
+          1000,
+        );
+        return {
+          Component: NotFoundPage,
+          async loader() {
+            return await prefetch(store);
+          },
+        };
+      },
+      path: '*',
     },
   ];
 }
