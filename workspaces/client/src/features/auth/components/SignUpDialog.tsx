@@ -1,4 +1,3 @@
-import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
 import { useId } from 'react';
 import { Field, Form } from 'react-final-form';
@@ -8,6 +7,7 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { ApiError } from '@wsh-2025/client/src/features/requests/fetchApi';
 
 interface SignInFormValues {
   email: string;
@@ -36,7 +36,7 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
       onClose();
       return;
     } catch (e) {
-      if (e instanceof BetterFetchError && e.status === 400) {
+      if (e instanceof ApiError && e.status === 400) {
         return { [FORM_ERROR]: '入力した情報が正しくありません' };
       }
       return { [FORM_ERROR]: '不明なエラーが発生しました' };
@@ -47,7 +47,7 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
+          <img className="object-contain" height={36} loading="lazy" src="/public/arema.webp" width={98} />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">会員登録</h2>

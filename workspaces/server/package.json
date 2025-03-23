@@ -79,6 +79,7 @@
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
+        "../client/dist/**/*",
         "./src/**/*"
       ],
       "dependencies": [
@@ -89,6 +90,10 @@
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
       "service": true,
       "env": {
+        "NODE_ENV": {
+          "default": "production",
+          "external": true
+        },
         "API_BASE_URL": {
           "external": true,
           "default": "http://localhost:8000/api"
