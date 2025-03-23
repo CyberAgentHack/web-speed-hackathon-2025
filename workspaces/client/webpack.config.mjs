@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'; // 追加
 import TerserPlugin from 'terser-webpack-plugin';
 
 // __dirnameの代わりにimport.meta.urlを使用
@@ -87,7 +86,6 @@ const config = {
       minChunkSize: 10000
     }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-    new BundleAnalyzerPlugin(), // 追加
   ],
   resolve: {
     alias: {
@@ -123,42 +121,24 @@ const config = {
     ],
     splitChunks: {
       chunks: 'all',
-      maxInitialRequests: 10,
+      maxInitialRequests: 5, // 初期リクエスト数を制限
       minSize: 20000,
       cacheGroups: {
         react: {
           test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
           name: 'vendor.react',
-          chunks: 'all',
+          chunks: 'initial', // 初期ロードのみ
+          priority: 40,
         },
-        videojs: {
-          test: /[\\/]node_modules[\\/](video\.js|@videojs)[\\/]/,
-          name: 'vendor.videojs',
-          chunks: 'all',
-        },
-        ffmpeg: {
-          test: /[\\/]node_modules[\\/]@ffmpeg[\\/]/,
-          name: 'vendor.ffmpeg',
-          chunks: 'all',
-          priority: 10,
-        },
-        vendor: {
+        defaultVendors: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           chunks: 'all',
           priority: -10,
-          reuseExistingChunk: true,
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
-        },
+        }
       },
     },
     runtimeChunk: 'single',
-    usedExports: true,
-    moduleIds: 'deterministic',
   },
 
   performance: {
