@@ -20,12 +20,18 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId
 
 export const SeriesPage = () => {
   const { seriesId } = useParams();
-  if (!seriesId) return null;
 
-  const series = useSeriesById({ seriesId });
-  if (!series) return null;
+  const series = useSeriesById({ seriesId: seriesId || '' });
+  const modules = useRecommended({ referenceId: seriesId || '' });
 
-  const modules = useRecommended({ referenceId: seriesId });
+  if (!seriesId || !series) {
+    return (
+      <div>
+        <title>Loading Series - AremaTV</title>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -51,11 +57,11 @@ export const SeriesPage = () => {
           <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} />
         </div>
 
-        {modules[0] != null ? (
+        {modules[0] && (
           <div>
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
+        )}
       </div>
     </>
   );
