@@ -7,16 +7,31 @@ interface Props {
   ratioWidth: number;
 }
 
+const throttle = (callback: () => void, limit: number) => {
+  let waiting = false;
+  return () => {
+    if (!waiting) {
+      callback();
+      waiting = true;
+      setTimeout(() => {
+        waiting = false;
+      }, limit);
+    }
+  };
+};
+
 export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const forceUpdate = useUpdate();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(function tick() {
+    if (!containerRef.current) return;
+    const onResize = throttle(() => {
       forceUpdate();
-    }, 1000);
+    }, 400);
+    containerRef.current.addEventListener('resize', onResize);
     return () => {
-      clearInterval(interval);
+      containerRef.current?.removeEventListener('resize', onResize);
     };
   }, []);
 
