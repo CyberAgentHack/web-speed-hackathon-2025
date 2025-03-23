@@ -6,7 +6,6 @@
   "assets": {},
   "vars": {
     "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare",
-    "API_BASE_URL": "https://wsh-2025-cyberagent2-pr-151.herokuapp.com/api",
     "VITE_API_BASE_URL": "https://wsh-2025-server.onrender.com/api",
     "VITE_STREAM_BASE_URL": "https://wsh-2025-server.onrender.com",
   },
