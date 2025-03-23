@@ -1,13 +1,40 @@
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import * as schema from '@wsh-2025/schema/src/api/schema';
+import { useEffect, useState } from 'react';
+import { episodeService } from '@wsh-2025/client/src/features/episode/services/episodeService';
 
-interface Params {
-  episodeId: string;
-}
+type Episode = StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 
-export function useEpisodeById({ episodeId }: Params) {
-  const state = useStore((s) => s);
+export function useEpisode(episodeId: string) {
+  const [episode, setEpisode] = useState<Episode | null>(null);
 
-  const episode = state.features.episode.episodes[episodeId];
+  useEffect(() => {
+
+    if (!episodeId) {
+      setEpisode(null);
+      return;
+    }
+
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const data = await episodeService.fetchEpisodeById({ episodeId });
+        if (isMounted) {
+          setEpisode(data);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setEpisode(null);
+        }
+      }
+    })();
+
+
+    return () => {
+      isMounted = false;
+    };
+  }, [episodeId]);
 
   return episode;
 }
