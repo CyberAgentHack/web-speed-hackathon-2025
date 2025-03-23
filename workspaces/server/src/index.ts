@@ -1,28 +1,31 @@
-import Fastify from 'fastify';
-import fastifyStatic from '@fastify/static';
-import fastifyCompress from '@fastify/compress';
-import path from 'path';
-import userRoutes from './routes/users';
+import '@wsh-2025/server/src/setups/luxon';
 
-await app.register(userRoutes);
+import cors from '@fastify/cors';
+import fastify from 'fastify';
 
-const app = Fastify({ logger: true });
-app.register(fastifyCompress);
-app.register(fastifyStatic, {
-  root: path.join(__dirname, '../../client/dist'),
-  prefix: '/',
-  maxAge: '365d',
-  immutable: true
-});
+import { registerApi } from '@wsh-2025/server/src/api';
+import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+import { registerSsr } from '@wsh-2025/server/src/ssr';
+import { registerStreams } from '@wsh-2025/server/src/streams';
 
-app.get('/api/hello', async () => {
-  return { message: 'Hello World' };
-});
+async function main() {
+  await initializeDatabase();
 
-app.listen({ port: 8000, host: '0.0.0.0' }, (err, address) => {
-  if (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
-  app.log.info(`Server listening on ${address}`);
-});
+  const app = fastify();
+
+  app.addHook('onSend', async (_req, reply) => {
+    reply.header('cache-control', 'no-store');
+  });
+  app.register(cors, {
+    origin: true,
+  });
+  app.register(registerApi, { prefix: '/api' });
+  app.register(registerStreams);
+  app.register(registerSsr);
+
+  await app.ready();
+  const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });
+  console.log(`Server listening at ${address}`);
+}
+
+void main();
