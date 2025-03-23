@@ -1,6 +1,39 @@
-*.test.js
-*.spec.js
-tests/
-__tests__/
-docs/
+# テスト関連ファイル
+workspaces/test/
+**/*.test.ts
+**/*.spec.ts
+
+# 開発ツール
+node_modules/.pnpm/esbuild*
+
+# CDNで代替されたモジュール
+node_modules/.pnpm/@iconify+json@*
+node_modules/.pnpm/@ffmpeg+core@*
+
+# ビルドキャッシュ
+.cache/
+.wireit/
+dist/
+**/.turbo/
+
+# TypeScriptソースマップ
+**/*.map
+
+# Git関連
+.git/
 .github/
+
+# テストデータ
+**/streams/
+workspaces/server/database.sqlite
+
+# 開発用ファイル
+.vscode/
+.idea/
+**/.DS_Store
+
+# ドキュメント
+README.md
+CHANGELOG.md
+LICENSE
+docs/

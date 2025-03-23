@@ -72,6 +72,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function initialize(_req, reply) {
       await initializeDatabase();
+
+      // サーバー側の処理ではなく、画像の配置変更とフロントエンドの参照を変更
+      // データベースの更新は必要なし - WebPとJPEG/PNGファイルは両方配置されている
+
       reply.code(200).send({});
     },
   });
