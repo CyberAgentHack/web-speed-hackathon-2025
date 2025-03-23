@@ -29,18 +29,23 @@ interface EpisodeService {
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getEpisodesResponse>>;
 }
 
-// バッチ処理用のキューとキャッシュ
+// キャッシュの設定
+const CACHE_TTL = 5 * 60 * 1000; // キャッシュの有効期限を5分に設定
+const episodeCache = new Map<string, StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>>();
+const cacheTimestamps = new Map<string, number>();
+
+// バッチ処理用のキュー
 let batchQueue: string[] = [];
 let batchTimeout: NodeJS.Timeout | null = null;
-const episodeCache = new Map<string, StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>>();
-const BATCH_WINDOW = 5; // バッチウィンドウを5msに短縮
-const MAX_BATCH_SIZE = 50; // 最大バッチサイズを制限
+const BATCH_WINDOW = 1; // バッチウィンドウを1msに短縮
+const MAX_BATCH_SIZE = 10; // 最大バッチサイズを制限
 
 export const episodeService: EpisodeService = {
   async fetchEpisodeById({ episodeId }) {
     // キャッシュをチェック
     const cachedEpisode = episodeCache.get(episodeId);
-    if (cachedEpisode) {
+    const timestamp = cacheTimestamps.get(episodeId);
+    if (cachedEpisode && timestamp && Date.now() - timestamp < CACHE_TTL) {
       return cachedEpisode;
     }
 
@@ -62,8 +67,10 @@ export const episodeService: EpisodeService = {
           const episodes = await this.fetchEpisodes({ episodeIds: uniqueIds });
           
           // キャッシュを更新
+          const now = Date.now();
           episodes.forEach(episode => {
             episodeCache.set(episode.id, episode);
+            cacheTimestamps.set(episode.id, now);
           });
 
           const episode = episodes.find(e => e.id === episodeId);

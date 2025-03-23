@@ -21,6 +21,14 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
     setProgram(null);
   }, [setProgram]);
 
+  // プログラムデータをメモ化
+  const programData = useMemo(() => ({
+    title: program.title,
+    description: program.description,
+    thumbnailUrl: program.thumbnailUrl,
+    id: program.id,
+  }), [program.title, program.description, program.thumbnailUrl, program.id]);
+
   // エピソードデータをメモ化
   const episodeData = useMemo(() => {
     if (!episode) return null;
@@ -36,14 +44,15 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
     <div className="h-75vh size-full overflow-auto">
       <h2 className="mb-[24px] text-center text-[24px] font-bold">番組詳細</h2>
 
-      <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{program.title}</p>
+      <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{programData.title}</p>
       <div className="mb-[16px] text-[14px] text-[#999999]">
-        <div className="line-clamp-5">{program.description}</div>
+        <div className="line-clamp-5">{programData.description}</div>
       </div>
       <img
         alt=""
         className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-        src={program.thumbnailUrl}
+        src={programData.thumbnailUrl}
+        loading="lazy"
       />
 
       {episodeData != null ? (
@@ -58,6 +67,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
             alt=""
             className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
             src={episodeData.thumbnailUrl}
+            loading="lazy"
           />
         </>
       ) : null}
@@ -65,14 +75,14 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
       <div className="flex flex-row justify-center">
         <Link
           className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
-          to={`/programs/${program.id}`}
+          to={`/programs/${programData.id}`}
           onClick={onClose}
         >
           番組をみる
         </Link>
       </div>
     </div>
-  ), [program, episodeData, onClose]);
+  ), [programData, episodeData, onClose]);
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
