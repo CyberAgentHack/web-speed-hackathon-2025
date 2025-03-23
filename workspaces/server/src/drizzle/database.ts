@@ -10,6 +10,7 @@ import { drizzle } from 'drizzle-orm/libsql';
 const SQLITE_PATH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../database.sqlite');
 
 let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
+let tempDbPath: string | null = null; // 一時ファイルのパスをキャッシュする変数
 
 export function getDatabase() {
   if (database == null) {
@@ -22,14 +23,19 @@ export async function initializeDatabase(): Promise<void> {
   database?.$client.close();
   database = null;
 
-  const TEMP_PATH = path.resolve(await fsp.mkdtemp(path.resolve(os.tmpdir(), './wsh-')), './database.sqlite');
-  await fsp.copyFile(SQLITE_PATH, TEMP_PATH);
+  if (!tempDbPath) {
+    // 一時ディレクトリを作成し、その中にデータベースファイルをコピーしてキャッシュする
+    const tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'wsh-'));
+    tempDbPath = path.resolve(tmpDir, 'database.sqlite');
+    await fsp.copyFile(SQLITE_PATH, tempDbPath);
+  }
 
   database = drizzle({
     client: createClient({
       syncInterval: 1000,
-      url: `file:${TEMP_PATH}`,
+      url: `file:${tempDbPath}`,
     }),
     schema,
   });
 }
+

@@ -30,9 +30,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   await app.register(fastifyCookie);
   await app.register(fastifySession, {
-    cookie: {
-      path: '/',
-    },
+    cookie: { path: '/' },
     cookieName: 'wsh-2025-session',
     secret: randomBytes(32).toString('base64'),
   });
@@ -52,6 +50,18 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     routePrefix: '/docs',
   });
 
+  // ヘルパー関数：カンマ区切りの ID を配列に変換する
+  const parseIds = (ids?: string): string[] | undefined => ids ? ids.split(',') : undefined;
+
+  // ヘルパー関数：メールアドレスからユーザーを取得する
+  const findUserByEmail = (database: any, email: string) => {
+    return database.query.user.findFirst({
+      where(user, { eq }) {
+        return eq(user.email, email);
+      },
+    });
+  };
+
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
@@ -63,9 +73,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: z.object({}),
-            },
+            'application/json': { schema: z.object({}) },
           },
         },
       },
@@ -85,9 +93,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getChannelsResponse,
-            },
+            'application/json': { schema: schema.getChannelsResponse },
           },
         },
       },
@@ -100,8 +106,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(channel.id);
         },
         where(channel, { inArray }) {
-          if (req.query.channelIds != null) {
-            const channelIds = req.query.channelIds.split(',');
+          const channelIds = parseIds(req.query.channelIds);
+          if (channelIds) {
             return inArray(channel.id, channelIds);
           }
           return void 0;
@@ -120,9 +126,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getChannelByIdResponse,
-            },
+            'application/json': { schema: schema.getChannelByIdResponse },
           },
         },
       },
@@ -151,9 +155,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getEpisodesResponse,
-            },
+            'application/json': { schema: schema.getEpisodesResponse },
           },
         },
       },
@@ -166,8 +168,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(episode.id);
         },
         where(episode, { inArray }) {
-          if (req.query.episodeIds != null) {
-            const episodeIds = req.query.episodeIds.split(',');
+          const episodeIds = parseIds(req.query.episodeIds);
+          if (episodeIds) {
             return inArray(episode.id, episodeIds);
           }
           return void 0;
@@ -197,9 +199,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getEpisodeByIdResponse,
-            },
+            'application/json': { schema: schema.getEpisodeByIdResponse },
           },
         },
       },
@@ -239,9 +239,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getSeriesResponse,
-            },
+            'application/json': { schema: schema.getSeriesResponse },
           },
         },
       },
@@ -254,8 +252,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(series.id);
         },
         where(series, { inArray }) {
-          if (req.query.seriesIds != null) {
-            const seriesIds = req.query.seriesIds.split(',');
+          const seriesIds = parseIds(req.query.seriesIds);
+          if (seriesIds) {
             return inArray(series.id, seriesIds);
           }
           return void 0;
@@ -265,9 +263,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(episode, { asc }) {
               return asc(episode.order);
             },
-            with: {
-              series: true,
-            },
+            with: { series: true },
           },
         },
       });
@@ -284,9 +280,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getSeriesByIdResponse,
-            },
+            'application/json': { schema: schema.getSeriesByIdResponse },
           },
         },
       },
@@ -303,9 +297,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(episode, { asc }) {
               return asc(episode.order);
             },
-            with: {
-              series: true,
-            },
+            with: { series: true },
           },
         },
       });
@@ -325,9 +317,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getTimetableResponse,
-            },
+            'application/json': { schema: schema.getTimetableResponse },
           },
         },
       },
@@ -344,7 +334,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return between(
             program.startAt,
             sql`time(${req.query.since}, '+9 hours')`,
-            sql`time(${req.query.until}, '+9 hours')`,
+            sql`time(${req.query.until}, '+9 hours')`
           );
         },
       });
@@ -361,9 +351,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getProgramsResponse,
-            },
+            'application/json': { schema: schema.getProgramsResponse },
           },
         },
       },
@@ -376,8 +364,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(program.startAt);
         },
         where(program, { inArray }) {
-          if (req.query.programIds != null) {
-            const programIds = req.query.programIds.split(',');
+          const programIds = parseIds(req.query.programIds);
+          if (programIds) {
             return inArray(program.id, programIds);
           }
           return void 0;
@@ -412,9 +400,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getProgramByIdResponse,
-            },
+            'application/json': { schema: schema.getProgramByIdResponse },
           },
         },
       },
@@ -459,9 +445,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getRecommendedModulesResponse,
-            },
+            'application/json': { schema: schema.getRecommendedModulesResponse },
           },
         },
       },
@@ -521,9 +505,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.signInResponse,
-            },
+            'application/json': { schema: schema.signInResponse },
           },
         },
       },
@@ -531,17 +513,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function signIn(req, reply) {
       const database = getDatabase();
 
-      const user = await database.query.user.findFirst({
-        where(user, { eq }) {
-          return eq(user.email, req.body.email);
-        },
-      });
-      if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+      const user = await findUserByEmail(database, req.body.email);
+      if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
         return reply.code(401).send();
       }
 
       const ret = schema.signInResponse.parse({ id: user.id, email: user.email });
-
       req.session.set('id', ret.id.toString());
       reply.code(200).send(user);
     },
@@ -556,9 +533,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.signUpResponse,
-            },
+            'application/json': { schema: schema.signUpResponse },
           },
         },
       },
@@ -566,20 +541,17 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function signUp(req, reply) {
       const database = getDatabase();
 
-      const hasAlreadyExists = await database.query.user.findFirst({
-        where(user, { eq }) {
-          return eq(user.email, req.body.email);
-        },
-      });
+      const hasAlreadyExists = await findUserByEmail(database, req.body.email);
       if (hasAlreadyExists) {
         return reply.code(400).send();
       }
 
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const users = await database
         .insert(databaseSchema.user)
         .values({
           email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
+          password: hashedPassword,
         })
         .returning();
 
@@ -589,7 +561,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       }
 
       const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
-
       req.session.set('id', ret.id.toString());
       reply.code(200).send(ret);
     },
@@ -603,9 +574,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       response: {
         200: {
           content: {
-            'application/json': {
-              schema: schema.getUserResponse,
-            },
+            'application/json': { schema: schema.getUserResponse },
           },
         },
       },
@@ -648,3 +617,4 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   /* eslint-enable sort/object-properties */
 }
+

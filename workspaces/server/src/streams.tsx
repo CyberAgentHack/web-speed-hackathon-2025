@@ -1,4 +1,4 @@
-import { randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,7 +12,7 @@ import { getDatabase } from '@wsh-2025/server/src/drizzle/database';
 const SEQUENCE_DURATION_MS = 2 * 1000;
 const SEQUENCE_COUNT_PER_PLAYLIST = 10;
 
-// 競技のため、時刻のみを返す
+// 競技のため、時刻のみを返す（1日の開始からの経過ミリ秒）
 function getTime(d: Date): number {
   return d.getTime() - DateTime.fromJSDate(d).startOf('day').toMillis();
 }
@@ -23,6 +23,7 @@ export function registerStreams(app: FastifyInstance): void {
     root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../streams'),
   });
 
+  // エピソード単体のプレイリスト生成エンドポイント
   app.get<{
     Params: { episodeId: string };
   }>('/streams/episode/:episodeId/playlist.m3u8', async (req, reply) => {
@@ -60,15 +61,44 @@ export function registerStreams(app: FastifyInstance): void {
     reply.type('application/vnd.apple.mpegurl').send(playlist);
   });
 
+  // チャンネル単位のプレイリスト生成エンドポイント（改善済）
   app.get<{
     Params: { channelId: string };
   }>('/streams/channel/:channelId/playlist.m3u8', async (req, reply) => {
     const database = getDatabase();
 
+    // シーケンス番号の算出
     const firstSequence = Math.floor(Date.now() / SEQUENCE_DURATION_MS) - SEQUENCE_COUNT_PER_PLAYLIST;
     const playlistStartAt = new Date(firstSequence * SEQUENCE_DURATION_MS);
+    const lastSequence = firstSequence + SEQUENCE_COUNT_PER_PLAYLIST - 1;
+    const lastSequenceStartAt = new Date(lastSequence * SEQUENCE_DURATION_MS);
 
-    const playlist = [
+    // SQLクエリで使用している時刻変換（+9時間）をJavaScript側で再現
+    const minAdjustedTime = new Date(playlistStartAt.getTime() + 9 * 3600 * 1000);
+    const maxAdjustedTime = new Date(lastSequenceStartAt.getTime() + 9 * 3600 * 1000);
+
+    // チャンネル内で、対象のシーケンス範囲に該当し得るプログラムを一括取得
+    const programs = await database.query.program.findMany({
+      where(program, { eq, lte, lt, and }) {
+        return and(
+          eq(program.channelId, req.params.channelId),
+          lte(program.startAt, maxAdjustedTime.toISOString()),
+          lt(minAdjustedTime.toISOString(), program.endAt)
+        );
+      },
+      orderBy(program, { asc }) {
+        return asc(program.startAt);
+      },
+      with: {
+        episode: {
+          with: {
+            stream: true,
+          },
+        },
+      },
+    });
+
+    const playlistLines = [
       dedent`
         #EXTM3U
         #EXT-X-TARGETDURATION:3
@@ -81,39 +111,29 @@ export function registerStreams(app: FastifyInstance): void {
     for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
       const sequence = firstSequence + idx;
       const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
+      const adjustedSequenceTime = new Date(sequenceStartAt.getTime() + 9 * 3600 * 1000);
 
-      const program = await database.query.program.findFirst({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { and, eq, lt, lte, sql }) {
-          // 競技のため、時刻のみで比較する
-          return and(
-            lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
-            lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
-            eq(program.channelId, req.params.channelId),
-          );
-        },
-        with: {
-          episode: {
-            with: {
-              stream: true,
-            },
-          },
-        },
+      // バッチで取得したプログラムから、調整済みシーケンス時刻が該当するプログラムを検索
+      const matchingProgram = programs.find((program: any) => {
+        const progStart = new Date(program.startAt);
+        const progEnd = new Date(program.endAt);
+        return progStart <= adjustedSequenceTime && adjustedSequenceTime < progEnd;
       });
 
-      if (program == null) {
+      if (!matchingProgram) {
         break;
       }
 
-      const stream = program.episode.stream;
+      const stream = matchingProgram.episode.stream;
       const sequenceInStream = Math.floor(
-        (getTime(sequenceStartAt) - getTime(new Date(program.startAt))) / SEQUENCE_DURATION_MS,
+        (getTime(sequenceStartAt) - getTime(new Date(matchingProgram.startAt))) / SEQUENCE_DURATION_MS,
       );
       const chunkIdx = sequenceInStream % stream.numberOfChunks;
 
-      playlist.push(
+      // 非同期で重いランダムデータを生成（3MB）
+      const randomData = await randomBytes(3 * 1024 * 1024);
+
+      playlistLines.push(
         dedent`
           ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
           #EXTINF:2.000000,
@@ -122,12 +142,13 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${randomData.toString('base64')}"`,
           ].join(',')}
         `,
       );
     }
 
-    reply.type('application/vnd.apple.mpegurl').send(playlist.join('\n'));
+    reply.type('application/vnd.apple.mpegurl').send(playlistLines.join('\n'));
   });
 }
+

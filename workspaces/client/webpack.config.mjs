@@ -1,12 +1,12 @@
 import path from 'node:path';
-
+import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  mode: 'production',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
   module: {
     rules: [
       {
@@ -52,23 +52,31 @@ const config = {
     ],
   },
   output: {
+    filename: 'main.js',
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
-    filename: 'main.js',
-    path: path.resolve(import.meta.dirname, './dist'),
+    path: path.resolve(fileURLToPath(import.meta.url), '../dist'),
     publicPath: 'auto',
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+    runtimeChunk: 'single',
+    minimize: true,
+  },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // LimitChunkCountPluginを削除してコード分割を有効化
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: process.env.NODE_ENV || 'production' }),
   ],
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      '@ffmpeg/core$': path.resolve(fileURLToPath(import.meta.url), '../node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      '@ffmpeg/core/wasm$': path.resolve(fileURLToPath(import.meta.url), '../node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };
 
 export default config;
+

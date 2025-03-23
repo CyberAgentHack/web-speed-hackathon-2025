@@ -72,7 +72,7 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     volume: 0.25,
   });
   private _player = new HlsJs({
-    enableWorker: false,
+    enableWorker: true, // enableWorker を true に変更
     maxBufferLength: 50,
   });
   readonly playerType: PlayerType.HlsJS;
@@ -194,3 +194,4 @@ export const createPlayer = (playerType: PlayerType): PlayerWrapper => {
     }
   }
 };
+

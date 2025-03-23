@@ -13,6 +13,15 @@ interface Props {
   playlistUrl: string;
 }
 
+// 動的インポートの結果をキャッシュする変数
+let createPlayerModulePromise: Promise<{ createPlayer: (playerType: PlayerType) => PlayerWrapper }> | null = null;
+function getCreatePlayerModule() {
+  if (!createPlayerModulePromise) {
+    createPlayerModulePromise = import('@wsh-2025/client/src/features/player/logics/create_player');
+  }
+  return createPlayerModulePromise;
+}
+
 export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -23,7 +32,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
+    void getCreatePlayerModule().then(({ createPlayer }) => {
       if (abortController.signal.aborted) {
         return;
       }
@@ -37,11 +46,11 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
       abortController.abort();
       if (player != null) {
         mountElement.removeChild(player.videoElement);
-        player.destory();
+        player.destory(); // "destory"のスペルが意図通りかご確認ください
       }
       assignRef(playerRef, null);
     };
-  }, [playerType, playlistUrl, loop]);
+  }, [playerType, playlistUrl, loop, playerRef]);
 
   return (
     <div className={className}>
@@ -55,3 +64,4 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     </div>
   );
 };
+
