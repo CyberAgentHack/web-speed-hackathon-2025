@@ -61,9 +61,34 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <span
+                  {/* <span
                     className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  />
+                  /> */}
+                  {playing ? (
+                    // 一時停止アイコン
+                    <svg
+                      className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M16 19q-.825 0-1.412-.587T14 17V7q0-.825.588-1.412T16 5t1.413.588T18 7v10q0 .825-.587 1.413T16 19m-8 0q-.825 0-1.412-.587T6 17V7q0-.825.588-1.412T8 5t1.413.588T10 7v10q0 .825-.587 1.413T8 19"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  ) : (
+                    // 再生アイコン
+                    <svg
+                      className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M8 17.175V6.825q0-.425.3-.713t.7-.287q.125 0 .263.037t.262.113l8.15 5.175q.225.15.338.375t.112.475t-.112.475t-.338.375l-8.15 5.175q-.125.075-.262.113T9 18.175q-.4 0-.7-.288t-.3-.712"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  )}
                 </button>
               </Hoverable>
 
