@@ -7,6 +7,7 @@ import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
+import { getChannelByIdRequestParams, getChannelByIdResponse, getChannelsRequestQuery, getChannelsResponse, getEpisodeByIdRequestParams, getEpisodeByIdResponse, getEpisodesRequestQuery, getEpisodesResponse, getProgramByIdRequestParams, getProgramByIdResponse, getProgramsRequestQuery, getProgramsResponse, getRecommendedModulesRequestParams, getRecommendedModulesResponse, getSeriesByIdRequestParams, getSeriesByIdResponse, getSeriesRequestQuery, getSeriesResponse, getTimetableRequestQuery, getTimetableResponse, getUserResponse, signInRequestBody, signInResponse, signUpRequestBody, signUpResponse } from '@wsh-2025/schema/src/openapi/schema';
 import * as bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import {
@@ -22,7 +23,7 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
-import { getChannelByIdRequestParams, getChannelByIdResponse, getChannelsRequestQuery, getChannelsResponse, getEpisodeByIdRequestParams, getEpisodeByIdResponse, getEpisodesRequestQuery, getEpisodesResponse, getProgramByIdRequestParams, getProgramByIdResponse, getProgramsRequestQuery, getProgramsResponse, getRecommendedModulesRequestParams, getRecommendedModulesResponse, getSeriesByIdRequestParams, getSeriesByIdResponse, getSeriesRequestQuery, getSeriesResponse, getTimetableRequestQuery, getTimetableResponse, getUserResponse, signInRequestBody, signInResponse, signUpRequestBody, signUpResponse } from '@wsh-2025/schema/src/openapi/schema';
+
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -508,6 +509,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+      // console.log(modules)
       reply.code(200).send(modules);
     },
   });
