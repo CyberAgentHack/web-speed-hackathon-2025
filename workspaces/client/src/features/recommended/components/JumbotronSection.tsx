@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
@@ -16,9 +16,33 @@ interface Props {
 
 export const JumbotronSection = ({ module }: Props) => {
   const playerRef = useRef<PlayerWrapper>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const episode = module.items[0]?.episode;
   invariant(episode);
+
+  // ビューポート内に入った時だけプレーヤーをロードする
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <NavLink
@@ -39,13 +63,15 @@ export const JumbotronSection = ({ module }: Props) => {
             </div>
 
             <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
-              <div className="h-full w-auto shrink-0 grow-0">
-                <Player
-                  loop
-                  className="size-full"
-                  playerRef={playerRef}
-                  playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
-                />
+              <div ref={containerRef} className="h-full w-auto shrink-0 grow-0">
+                {isVisible && (
+                  <Player
+                    loop
+                    className="size-full"
+                    playerRef={playerRef}
+                    playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
+                  />
+                )}
               </div>
             </Flipped>
           </>

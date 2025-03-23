@@ -30,7 +30,7 @@ importers:
         version: 5.0.0(zustand@5.0.3(@types/react@19.0.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)))
       '@epic-web/restore-scroll':
         specifier: 1.1.1
-        version: 1.1.1(react@19.0.0)
+        version: 1.1.1(react-router-dom@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       '@ffmpeg/ffmpeg':
         specifier: 0.12.15
         version: 0.12.15
@@ -86,6 +86,9 @@ importers:
         specifier: 7.2.4
         version: 7.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-router:
+        specifier: 7.4.0
+        version: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-router-dom:
         specifier: 7.4.0
         version: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tiny-invariant:
@@ -4116,6 +4119,7 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
+    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lie@3.3.0:
@@ -4794,6 +4798,13 @@ packages:
   react-refresh@0.14.2:
     resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
     engines: {node: '>=0.10.0'}
+
+  react-router-dom@7.4.0:
+    resolution: {integrity: sha512-VlksBPf3n2bijPvnA7nkTsXxMAKOj+bWp4R9c3i+bnwlSOFAGOkJkKhzy/OsRkWaBMICqcAl1JDzh9ZSOze9CA==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
 
   react-router@7.0.2:
     resolution: {integrity: sha512-m5AcPfTRUcjwmhBzOJGEl6Y7+Crqyju0+TgTQxoS4SO+BkWbhOrcfZNq6wSWdl2BBbJbsAoBUb8ZacOFT+/JlA==}
@@ -6097,9 +6108,10 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@epic-web/restore-scroll@1.1.1(react@19.0.0)':
+  '@epic-web/restore-scroll@1.1.1(react-router-dom@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
     dependencies:
       react: 19.0.0
+      react-router-dom: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
   '@esbuild-kit/core-utils@3.3.2':
     dependencies:
@@ -10151,6 +10163,12 @@ snapshots:
   react-is@16.13.1: {}
 
   react-refresh@0.14.2: {}
+
+  react-router-dom@7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-router: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
   react-router@7.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

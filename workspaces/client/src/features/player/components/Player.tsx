@@ -25,17 +25,32 @@ export const Player = ({ className, loop, playerRef, playlistUrl }: Props) => {
     if (abortController.signal.aborted) {
       return;
     }
-    player = createPlayer();
-    const url = import.meta.env['VITE_STREAM_BASE_URL'] + playlistUrl;
-    player.load(url, { loop: loop ?? false });
-    mountElement.appendChild(player.videoElement);
-    assignRef(playerRef, player);
+    
+    // Lazy initialization of player
+    const initializePlayer = () => {
+      if (player) return;
+      
+      player = createPlayer();
+      const url = import.meta.env['VITE_STREAM_BASE_URL'] + playlistUrl;
+      player.load(url, { loop: loop ?? false });
+      mountElement.appendChild(player.videoElement);
+      assignRef(playerRef, player);
+    };
+    
+    // Initialize immediately
+    initializePlayer();
 
     return () => {
       abortController.abort();
-      mountElement.removeChild(player.videoElement);
-      player.destory();
-      assignRef(playerRef, null);
+      if (player) {
+        try {
+          mountElement.removeChild(player.videoElement);
+        } catch (e) {
+          // 要素が既に削除されている場合は無視
+        }
+        player.destory();
+        assignRef(playerRef, null);
+      }
     };
   }, [playlistUrl, loop]);
 

@@ -9,11 +9,9 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
-  private _player = new HlsJs({
-    enableWorker: false,
-    maxBufferLength: 50,
-  });
+  private _player: HlsJs | null = null;
   private _observer: IntersectionObserver | null = null;
+  private _isPreview = false;
 
   get currentTime(): number {
     const currentTime = this.videoElement.currentTime;
@@ -23,7 +21,7 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     return this.videoElement.paused;
   }
   get duration(): number {
-    const duration = this._player.media?.duration ?? 0;
+    const duration = this._player?.media?.duration ?? 0;
     return Number.isNaN(duration) ? 0 : duration;
   }
   get muted(): boolean {
@@ -31,8 +29,33 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   }
 
   load(playlistUrl: string, options: { loop: boolean }): void {
+    // Check if this is likely a preview (from JumbotronSection)
+    this._isPreview = playlistUrl.includes('/episode/') && options.loop === true;
+    
+    // Create HLS player with appropriate buffer settings
+    this._player = new HlsJs({
+      enableWorker: false,
+      // Use smaller buffer for previews
+      maxBufferLength: this._isPreview ? 10 : 30,
+      maxMaxBufferLength: this._isPreview ? 10 : 30,
+      // Limit backbuffer for previews
+      backBufferLength: this._isPreview ? 5 : 10,
+    });
+    
     this._player.attachMedia(this.videoElement);
     this.videoElement.loop = options.loop;
+    
+    // For previews, stop loading after initial segments
+    if (this._isPreview) {
+      this._player.on(HlsJs.Events.FRAG_LOADED, () => {
+        if (this._player && this.videoElement.buffered.length > 0 && 
+            this.videoElement.buffered.end(0) > 10) {
+          // Stop loading more fragments after we have 10 seconds
+          this._player.stopLoad();
+        }
+      });
+    }
+    
     this._player.loadSource(playlistUrl);
     
     // IntersectionObserverの設定
@@ -43,6 +66,11 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
             void this.videoElement.play();
           } else {
             this.videoElement.pause();
+            
+            // For previews, also stop loading when out of view
+            if (this._isPreview && this._player) {
+              this._player.stopLoad();
+            }
           }
         });
       },
@@ -79,11 +107,14 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
       this._observer.disconnect();
       this._observer = null;
     }
-    this._player.destroy();
+    if (this._player) {
+      this._player.stopLoad();
+      this._player.destroy();
+      this._player = null;
+    }
   }
 }
 
 export const createPlayer = (): PlayerWrapper => {
-  // 常にHlsJSを使用
   return new HlsJSPlayerWrapper();
 };
