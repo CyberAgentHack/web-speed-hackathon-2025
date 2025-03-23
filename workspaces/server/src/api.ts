@@ -174,16 +174,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           series: {
-            with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
-                },
-              },
+            // 軽量版のシリーズ情報のみを取得（エピソードを含まない）
+            columns: {
+              id: true,
+              title: true,
+              thumbnailUrl: true,
             },
           },
         },
       });
+
       reply.code(200).send(episodes);
     },
   });

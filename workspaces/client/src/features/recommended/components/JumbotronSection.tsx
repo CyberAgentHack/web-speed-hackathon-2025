@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
@@ -22,29 +22,29 @@ export const JumbotronSection = ({ module }: Props) => {
   const playerRef = useRef<PlayerWrapper>(null);
   const store = useStore((s) => s);
   const episodeInfo = module.items[0]?.episodeInfo;
-  const [fullEpisodeData, setFullEpisodeData] = useState<any>(null);
+  const [descriptionVisible, setDescriptionVisible] = useState(false);
   const episodeId = episodeInfo?.id;
 
   invariant(episodeInfo);
 
-  // Fetch full episode data if it's not already available
-  useEffect(() => {
-    if (episodeId) {
-      const fetchFullEpisodeData = async () => {
-        try {
-          const data = await store.features.episode.fetchEpisodeById({ episodeId });
-          setFullEpisodeData(data);
-        } catch (error) {
-          console.error('Error fetching full episode data:', error);
-        }
-      };
+  // 完全なエピソードデータがストアに既に存在するかチェック
+  const fullEpisodeDataFromStore = episodeId ? store.features.episode.episodes[episodeId] : null;
 
-      fetchFullEpisodeData();
+  // 説明文を表示するための関数
+  const handleShowDescription = async () => {
+    if (!descriptionVisible && !fullEpisodeDataFromStore && episodeId) {
+      try {
+        // ユーザーが説明文を見たいときだけ完全なデータを取得
+        await store.features.episode.fetchEpisodeById({ episodeId });
+      } catch (error) {
+        console.error('Error fetching full episode data:', error);
+      }
     }
-  }, [episodeId, store.features.episode]);
+    setDescriptionVisible(true);
+  };
 
-  // Use the full episode data if available, otherwise use the lightweight version
-  const episode = fullEpisodeData || episodeInfo;
+  // 表示するためのエピソードデータ - ストアに完全データがあればそれを使用、なければ軽量バージョンを使用
+  const episode = fullEpisodeDataFromStore || episodeInfo;
 
   return (
     <Hoverable classNames={{ hovered: 'opacity-50' }}>
@@ -52,6 +52,7 @@ export const JumbotronSection = ({ module }: Props) => {
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
         to={`/episodes/${episodeInfo.id}`}
+        onMouseEnter={handleShowDescription}
       >
         {({ isTransitioning }) => {
           return (
@@ -60,9 +61,15 @@ export const JumbotronSection = ({ module }: Props) => {
                 <div className="mb-[16px] w-full text-center text-[22px] font-bold text-[#ffffff]">
                   <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
                 </div>
-                {fullEpisodeData && (
+                {descriptionVisible && fullEpisodeDataFromStore && (
                   <div className="w-full text-center text-[14px] font-bold text-[#ffffff]">
-                    <Ellipsis ellipsis reflowOnResize maxLine={3} text={fullEpisodeData.description} visibleLine={3} />
+                    <Ellipsis
+                      ellipsis
+                      reflowOnResize
+                      maxLine={3}
+                      text={fullEpisodeDataFromStore.description}
+                      visibleLine={3}
+                    />
                   </div>
                 )}
               </div>
