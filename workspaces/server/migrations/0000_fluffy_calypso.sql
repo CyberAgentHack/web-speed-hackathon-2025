@@ -58,3 +58,7 @@ CREATE TABLE `stream` (
 	`id` text PRIMARY KEY NOT NULL,
 	`numberOfChunks` integer NOT NULL
 );
+
+CREATE INDEX idx_recommended_module_reference_id ON recommended_module(reference_id);
+CREATE INDEX idx_recommended_module_order ON recommended_module(order);
+CREATE INDEX idx_recommended_item_order ON recommended_item(order);

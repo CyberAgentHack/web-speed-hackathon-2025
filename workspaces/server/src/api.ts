@@ -6,6 +6,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 import * as schema from '@wsh-2025/schema/src/openapi/schema';
 import * as bcrypt from 'bcrypt';
@@ -23,6 +24,14 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+
+// キャッシュの型定義
+type CacheEntry<T> = {
+  data: T;
+  timestamp: number;
+};
+const CACHE_TTL = 60 * 1000;
+const recommendedModulesCache = new Map<string, CacheEntry<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>>();
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -467,8 +476,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
-      const database = getDatabase();
+      console.log('getRecommendedModules', new Date().toISOString());
+      const cacheKey = req.params.referenceId;
+      const cachedData = recommendedModulesCache.get(cacheKey);
 
+      if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
+        console.log('getRecommendedModules end (cache hit)', new Date().toISOString());
+        return reply.code(200).send(cachedData.data);
+      }
+
+      const database = getDatabase();
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -481,34 +498,82 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(item, { asc }) {
               return asc(item.order);
             },
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
+            columns: {
+              id: true,
+              order: true,
+              seriesId: true,
+              episodeId: true,
+            }
           },
         },
       });
-      reply.code(200).send(modules);
+
+      const seriesIds = modules.flatMap(module =>
+        module.items
+          .map(item => item.seriesId)
+          .filter(id => id != null)
+      );
+      const episodeIds = modules.flatMap(module =>
+        module.items
+          .map(item => item.episodeId)
+          .filter(id => id != null)
+      );
+
+      const [seriesData, episodeData] = await Promise.all([
+        seriesIds.length > 0 ? database.query.series.findMany({
+          where(series, { inArray }) {
+            return inArray(series.id, seriesIds);
+          },
+          with: {
+            episodes: {
+              orderBy(episode, { asc }) {
+                return asc(episode.order);
+              }
+            }
+          }
+        }) : [],
+
+        episodeIds.length > 0 ? database.query.episode.findMany({
+          where(episode, { inArray }) {
+            return inArray(episode.id, episodeIds);
+          },
+          with: {
+            series: {
+              with: {
+                episodes: {
+                  orderBy(episode, { asc }) {
+                    return asc(episode.order);
+                  }
+                }
+              }
+            }
+          }
+        }) : []
+      ]);
+
+      const seriesMap = new Map(seriesData.map(series => [series.id, series]));
+      const episodeMap = new Map(episodeData.map(episode => [episode.id, episode]));
+
+      const result = modules.map(module => ({
+        ...module,
+        type: module.type as "carousel" | "jumbotron",
+        items: module.items.map(item => ({
+          ...item,
+          moduleId: module.id,
+          series: item.seriesId ? (seriesMap.get(item.seriesId) ?? null) : null,
+          episode: item.episodeId ? (episodeMap.get(item.episodeId) ?? null) : null
+        }))
+      })) satisfies StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>;
+      console.log('getRecommendedModules end', new Date().toISOString());
+      // console.log(result)
+
+      // キャッシュに保存
+      recommendedModulesCache.set(cacheKey, {
+        data: result,
+        timestamp: Date.now()
+      });
+
+      reply.code(200).send(result);
     },
   });
 
