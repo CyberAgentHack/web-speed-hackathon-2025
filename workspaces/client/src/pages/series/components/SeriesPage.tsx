@@ -1,20 +1,18 @@
+import { useEffect, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
+import { Helmet } from 'react-helmet';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
-import { useEffect, useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet';
 
 const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   await store.getState().features.series.fetchSeriesById({ seriesId: seriesId ?? '' });
-  await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId ?? '' });
+  await store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId ?? '' });
 }
 
 const SeriesPage = ({ store } : { store : ReturnType<typeof createStore>}) => {
@@ -22,19 +20,17 @@ const SeriesPage = ({ store } : { store : ReturnType<typeof createStore>}) => {
   const { seriesId } = useParams();
   // invariant(seriesId);
 
-  const { series, modules } = useMemo(() => {
-    const _series = useSeriesById({ seriesId: seriesId ?? '' });
-    const _modules = useRecommended({ referenceId: seriesId ?? '' });
-
-    return { series: _series, modules: _modules };
-  }, [seriesId, isLoading]);
+  // Hooks はトップレベルで呼び出す
+  const series = useSeriesById({ seriesId: seriesId ?? '' });
+  const modules = useRecommended({ referenceId: seriesId ?? '' });
 
   useEffect(() => {
-    (async () => await fetchSeriesDatas(store, { seriesId }))().finally(() => setIsLoading(false));
-  }, [seriesId]);
+    (async () => await fetchSeriesDatas(store, { seriesId }))()
+      .finally(() => setIsLoading(false));
+  }, [seriesId, store]);
 
   if (!series || isLoading) {
-    return <div></div>
+    return <div></div>;
   }
 
   return (
