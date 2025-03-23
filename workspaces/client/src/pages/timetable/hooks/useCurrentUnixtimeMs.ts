@@ -3,14 +3,14 @@ import { useEffect } from 'react';
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useCurrentUnixtimeMs(): number {
-  const state = useStore((s) => s);
+  const timetable = useStore((s) => s.pages.timetable);
   useEffect(() => {
     const interval = setInterval(() => {
-      state.pages.timetable.refreshCurrentUnixtimeMs();
+      timetable.refreshCurrentUnixtimeMs();
     }, 250);
     return () => {
       clearInterval(interval);
     };
   }, []);
-  return state.pages.timetable.currentUnixtimeMs;
+  return timetable.currentUnixtimeMs;
 }
