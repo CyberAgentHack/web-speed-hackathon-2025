@@ -17,6 +17,9 @@ importers:
 
   .:
     dependencies:
+      lodash-es:
+        specifier: 4.17.21
+        version: 4.17.21
       wireit:
         specifier: 0.14.9
         version: 0.14.9

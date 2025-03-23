@@ -11,6 +11,7 @@
     "test": "wireit"
   },
   "dependencies": {
+    "lodash-es": "4.17.21",
     "wireit": "0.14.9"
   },
   "devDependencies": {
