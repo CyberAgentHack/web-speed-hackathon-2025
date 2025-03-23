@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { rspack } from '@rspack/core';
 import { UnoCSSRspackPlugin } from '@unocss/webpack/rspack';
+import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -114,7 +115,12 @@ const config = {
     // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     // @ts-ignore ignore
     new rspack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
-  ],
+    // @ts-ignore
+    process.env.RSDOCTOR &&
+      new RsdoctorRspackPlugin({
+        // plugin options
+      }),
+  ].filter(Boolean),
   resolve: {
     // alias: {
     //   '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),

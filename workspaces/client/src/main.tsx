@@ -22,6 +22,20 @@ declare global {
   var __staticRouterHydrationData: HydrationState;
 }
 
+// debug
+// const originalFetch = fetch;
+// // @ts-ignore
+// globalThis.fetch = async (...args) => {
+//   const url = args[0];
+//   console.time(`fetch: ${url}`);
+//   const response = await originalFetch(...args);
+//   console.timeEnd(`fetch: ${url}`);
+//   if (!response.ok) {
+//     throw new Error(response.statusText);
+//   }
+//   return response;
+// };
+
 function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});

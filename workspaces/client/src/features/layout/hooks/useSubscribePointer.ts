@@ -17,6 +17,7 @@ export function useSubscribePointer(): void {
 
     let immediate = setImmediate(function tick() {
       s.features.layout.updatePointer({ ...current });
+      // console.log('tick');
       immediate = setImmediate(tick);
     });
     abortController.signal.addEventListener('abort', () => {
