@@ -5,13 +5,6 @@ import { expect, test } from '@playwright/test';
 
 import { scrollEntire, waitForImageToLoad, waitForVideoToLoad } from './utils';
 
-const SERIES_ID = 'a78d2740-2da9-49a8-8ec7-52d1f35af0bd';
-const FREE_EPISODE_ID = 'c324a466-ad6d-4bf1-aa5f-fab926f1f5d3';
-const PREMIUM_EPISODE_ID = 'c428247f-4ad0-43cd-8180-6e8756a4788d';
-const BEFORE_PROGRAM_ID = '672f8628-b007-4b8e-ba3a-5addd06b72d3';
-const ON_PROGRAM_ID = '8132c96f-d3f3-45c0-bf19-e70cf171a068'; // テストでは12:00が放送中
-const AFTER_PROGRAM_ID = '01bda631-53d0-4a34-8cbb-b6e592311ec6';
-
 const PAGES = [
   {
     name: 'トップページ',
@@ -23,14 +16,14 @@ const PAGES = [
   },
   {
     name: 'シリーズページ',
-    path: `/series/${SERIES_ID}`,
+    path: '/series/b44c9e84-2f62-4670-97c4-40f710489d66',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
     },
   },
   {
     name: 'エピソードページ (無料)',
-    path: `/episodes/${FREE_EPISODE_ID}`,
+    path: '/episodes/89895c59-0c51-42f4-abb6-53fa86bdc4a2',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
       await waitForVideoToLoad(page.locator('video').first());
@@ -38,14 +31,14 @@ const PAGES = [
   },
   {
     name: 'エピソードページ (プレミアム - 無料ユーザー)',
-    path: `/episodes/${PREMIUM_EPISODE_ID}`,
+    path: '/episodes/d16a4428-9c25-4ae2-8c5a-d841ab5998b0',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
     },
   },
   {
     name: 'エピソードページ (プレミアム - プレミアムユーザー)',
-    path: `/episodes/${PREMIUM_EPISODE_ID}`,
+    path: '/episodes/d16a4428-9c25-4ae2-8c5a-d841ab5998b0',
     wait: async (page: Page) => {
       // コンフリクトしないようにテスト用のメールアドレスを生成
       const email = `test.${Date.now()}@example.com`;
@@ -71,14 +64,14 @@ const PAGES = [
   },
   {
     name: 'プログラム（放送前）',
-    path: `/programs/${BEFORE_PROGRAM_ID}`,
+    path: '/programs/e34e75d8-e07f-4517-ba3d-9c09eba2bd3a',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
     },
   },
   {
     name: 'プログラム（放送中）',
-    path: `/programs/${ON_PROGRAM_ID}`,
+    path: '/programs/5f8521b0-1aaf-4949-a54d-e2da710dc972',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
       await waitForVideoToLoad(page.locator('video').first());
@@ -86,7 +79,7 @@ const PAGES = [
   },
   {
     name: 'プログラム（放送後）',
-    path: `/programs/${AFTER_PROGRAM_ID}`,
+    path: '/programs/d3c78d58-bf4f-4445-9577-af9759a4af78',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
     },
