@@ -1,6 +1,7 @@
 # Web Speed Hackathon 2025 AREMA
 
 ## 概要
+テスト
 
 **"Web Speed Hackathon 2025" は、非常に重たい Web アプリをチューニングして、いかに高速にするかを競う競技です。**
 
