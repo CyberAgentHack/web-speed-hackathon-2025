@@ -2,6 +2,8 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import UnoCSS from 'unocss/webpack'; // ← この行を修正
+
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
@@ -81,6 +83,11 @@ const config = {
     new webpack.IgnorePlugin({
       resourceRegExp: /^lodash$/,
     }),
+    // iconify/jsonの大きなJSONファイルを使用しないようにする設定
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^@iconify\/json\/json\//,
+    }),
+    UnoCSS(),
   ],
   optimization: {
     splitChunks: {
@@ -90,6 +97,12 @@ const config = {
           test: /[\\/]node_modules[\\/]@ffmpeg/,
           name: 'ffmpeg',
           priority: 10,
+          chunks: 'async',
+        },
+        iconify: {
+          test: /[\\/]node_modules[\\/]@iconify-icons/,
+          name: 'iconify',
+          priority: 9,
           chunks: 'async',
         },
         // 他の大きなライブラリも同様に設定可能
