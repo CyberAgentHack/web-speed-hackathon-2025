@@ -174,6 +174,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           series: {
+            columns: {
+              description: false,
+            },
             with: {
               episodes: {
                 orderBy(episode, { asc }) {
@@ -184,7 +187,18 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(episodes);
+      const processedEpisodes = episodes.map(episode => ({
+        ...episode,
+        description: episode.description.substring(0, 300),
+        series: {
+          ...episode.series,
+          episodes: episode.series.episodes.map(ep => ({
+            ...ep,
+            description: ep.description.substring(0, 300)
+          }))
+        }
+      }));
+      reply.code(200).send(processedEpisodes);
     },
   });
 
@@ -226,7 +240,19 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (episode == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(episode);
+      const processedEpisode = {
+        ...episode,
+        description: episode.description.substring(0, 300),
+        series: {
+          ...episode.series,
+          description: episode.series.description.substring(0, 300),
+          episodes: episode.series.episodes.map(ep => ({
+            ...ep,
+            description: ep.description.substring(0, 300)
+          }))
+        }
+      };
+      reply.code(200).send(processedEpisode);
     },
   });
 
@@ -271,7 +297,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(series);
+      const processedSeries = series.map(series => ({
+        ...series,
+        description: series.description.substring(0, 300),
+        episodes: series.episodes.map(episode => ({
+          ...episode,
+          description: episode.description.substring(0, 300)
+        }))
+      }));
+
+      reply.code(200).send(processedSeries);
     },
   });
 
@@ -312,7 +347,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (series == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(series);
+      const processedSeries = {
+        ...series,
+        description: series.description.substring(0, 300),
+        episodes: series.episodes.map(episode => ({
+          ...episode,
+          description: episode.description.substring(0, 300)
+        }))
+      };
+
+      reply.code(200).send(processedSeries);
     },
   });
 
@@ -389,6 +433,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         with: {
           channel: true,
           episode: {
+            columns: {
+              description: false,
+            },
             with: {
               series: {
                 with: {
@@ -403,7 +450,22 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(programs);
+      const processedPrograms = programs.map(program => ({
+        ...program,
+        description: program.description.substring(0, 300),
+        episode: program.episode ? {
+          ...program.episode,
+          series: {
+            ...program.episode.series,
+            description: program.episode.series.description.substring(0, 300),
+            episodes: program.episode.series.episodes.map(ep => ({
+              ...ep,
+              description: ep.description.substring(0, 300)
+            }))
+          }
+        } : null
+      }));
+      reply.code(200).send(processedPrograms);
     },
   });
 
@@ -450,7 +512,25 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (program == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(program);
+
+      const processedProgram = {
+        ...program,
+        description: program.description.substring(0, 300),
+        episode: program.episode ? {
+          ...program.episode,
+          description: program.episode.description.substring(0, 300),
+          series: {
+            ...program.episode.series,
+            description: program.episode.series.description.substring(0, 300),
+            episodes: program.episode.series.episodes.map(ep => ({
+              ...ep,
+              description: ep.description.substring(0, 300)
+            }))
+          }
+        } : null
+      };
+
+      reply.code(200).send(processedProgram);
     },
   });
 

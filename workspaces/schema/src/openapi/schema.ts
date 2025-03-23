@@ -107,7 +107,7 @@ export const getEpisodesResponse = z.array(
   episode.extend({
     series: series.extend({
       episodes: z.array(episode.extend({})),
-    }),
+    }).omit({ description: true }),
   }),
 );
 
@@ -157,7 +157,7 @@ export const getProgramsResponse = z.array(
       series: series.extend({
         episodes: z.array(episode.extend({})),
       }),
-    }),
+    }).omit({ description: true }),
   }),
 );
 
