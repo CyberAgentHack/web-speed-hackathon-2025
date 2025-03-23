@@ -1,7 +1,9 @@
+/* eslint-disable */
 import path from 'node:path';
 import os from 'node:os';
 
 import webpack from 'webpack';
+import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
@@ -71,22 +73,32 @@ const config = {
   //     chunks: 'all',
   //     minSize: 20000,
   //     maxSize: 500000,
+  //     cacheGroups: {
+  //       vendors: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendors',
+  //         chunks: 'all',
+  //       },
+  //     },
   //   },
+  //   minimizer: [new CssMinimizerPlugin()],
   // },
   optimization: {
-    // eslint-disable-next-line
     minimizer: [new CssMinimizerPlugin()],
   },
   output: {
-    chunkFilename: '[name]-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    filename: '[name].[contenthash].js', // エントリーポイントのファイル名
+    chunkFilename: 'chunks/[name].[contenthash].js', // 動的に生成されるチャンクのファイル名
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     new MiniCssExtractPlugin(),
+    new WebpackAssetsManifest({
+      output: 'manifest.json', // 出力されるmanifestファイル
+      publicPath: true, // ファイルパスをpublicPathに基づいて解決
+    }),
     // new webpackBundleAnalyzer.BundleAnalyzerPlugin(),
   ],
   resolve: {

@@ -190,6 +190,9 @@ importers:
       '@types/react-dom':
         specifier: 19.0.2
         version: 19.0.2(@types/react@19.0.1)
+      '@types/webpack-assets-manifest':
+        specifier: 5.1.4
+        version: 5.1.4(webpack-cli@5.1.4)
       '@types/wicg-task-scheduling':
         specifier: 2024.1.0
         version: 2024.1.0
@@ -235,6 +238,9 @@ importers:
       webpack:
         specifier: 5.96.1
         version: 5.96.1(webpack-cli@5.1.4)
+      webpack-assets-manifest:
+        specifier: 5.2.1
+        version: 5.2.1(webpack@5.96.1)
       webpack-bundle-analyzer:
         specifier: 4.10.2
         version: 4.10.2
@@ -2093,6 +2099,9 @@ packages:
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
 
+  '@types/webpack-assets-manifest@5.1.4':
+    resolution: {integrity: sha512-v+OXN5idAs3V6w/szEalQn7PyOV7XQBpngizl9ztmJaSvLjXhp5WyHC5WqvtPDe0lKYskEiZkm1rXH67F49boA==}
+
   '@types/webpack-bundle-analyzer@4.7.0':
     resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
 
@@ -2830,6 +2839,10 @@ packages:
 
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+
+  deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
+    engines: {node: '>=0.10.0'}
 
   default-browser-id@5.0.0:
     resolution: {integrity: sha512-A6p/pu/6fyBcA1TRz/GqWYPViplrftcW2gZC9q79ngNCKAeR/X3gcEdXQHl4KNXV+3wgIJ1CPkJQ3IHM6lcsyA==}
@@ -4025,8 +4038,18 @@ packages:
     resolution: {integrity: sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  lockfile@1.0.4:
+    resolution: {integrity: sha512-cvbTwETRfsFh4nHsL1eGWapU1XFi5Ot9E85sWAwia7Y7EgB7vfqcZhTKZ+l7hCGxSPoushMv5GKhT5PdLv03WA==}
+
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
+  lodash.get@4.4.2:
+    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
+
+  lodash.has@4.5.2:
+    resolution: {integrity: sha512-rnYUdIo6xRCJnQmbVFEwcxF144erlD+M3YcJUVesflU9paQaE8p+fJDcIQrlMYbxoANFL+AB9hZrzSBBk5PL+g==}
 
   lodash.memoize@4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
@@ -5550,6 +5573,12 @@ packages:
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+
+  webpack-assets-manifest@5.2.1:
+    resolution: {integrity: sha512-MsEcXVio1GY6R+b4dVfTHIDMB0RB90KajQG8neRbH92vE2S1ClGw9mNa9NPlratYBvZOhExmN0qqMNFTaCTuIg==}
+    engines: {node: '>=10.13.0'}
+    peerDependencies:
+      webpack: ^5.2.0
 
   webpack-bundle-analyzer@4.10.2:
     resolution: {integrity: sha512-vJptkMm9pk5si4Bv922ZbKLV8UTT4zib4FPgXMhgzUny0bfDDkLXAVQs3ly3fS4/TN9ROFtb0NFrm04UXFE/Vw==}
@@ -7389,6 +7418,17 @@ snapshots:
     dependencies:
       '@types/node': 22.10.0
 
+  '@types/webpack-assets-manifest@5.1.4(webpack-cli@5.1.4)':
+    dependencies:
+      '@types/node': 22.10.0
+      tapable: 2.2.1
+      webpack: 5.96.1(webpack-cli@5.1.4)
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+      - webpack-cli
+
   '@types/webpack-bundle-analyzer@4.7.0':
     dependencies:
       '@types/node': 22.10.0
@@ -8238,6 +8278,8 @@ snapshots:
   dedent@1.5.3: {}
 
   deep-is@0.1.4: {}
+
+  deepmerge@4.3.1: {}
 
   default-browser-id@5.0.0: {}
 
@@ -9566,7 +9608,15 @@ snapshots:
     dependencies:
       p-locate: 6.0.0
 
+  lockfile@1.0.4:
+    dependencies:
+      signal-exit: 3.0.7
+
   lodash.debounce@4.0.8: {}
+
+  lodash.get@4.4.2: {}
+
+  lodash.has@4.5.2: {}
 
   lodash.memoize@4.1.2: {}
 
@@ -11093,6 +11143,17 @@ snapshots:
   web-streams-polyfill@3.3.3: {}
 
   webidl-conversions@3.0.1: {}
+
+  webpack-assets-manifest@5.2.1(webpack@5.96.1):
+    dependencies:
+      chalk: 4.1.2
+      deepmerge: 4.3.1
+      lockfile: 1.0.4
+      lodash.get: 4.4.2
+      lodash.has: 4.5.2
+      schema-utils: 3.3.0
+      tapable: 2.2.1
+      webpack: 5.96.1(webpack-cli@5.1.4)
 
   webpack-bundle-analyzer@4.10.2:
     dependencies:
