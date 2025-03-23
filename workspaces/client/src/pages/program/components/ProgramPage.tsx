@@ -118,7 +118,7 @@ export const ProgramPage = () => {
                 <Player
                   className="size-full"
                   playerRef={playerRef}
-                  playerType={PlayerType.VideoJS}
+                  playerType={PlayerType.HlsJS}
                   playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
                 />
                 <div className="absolute inset-x-0 bottom-0">

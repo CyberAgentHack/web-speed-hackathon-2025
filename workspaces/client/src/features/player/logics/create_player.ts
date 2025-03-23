@@ -1,68 +1,7 @@
-import '@videojs/http-streaming';
 import HlsJs from 'hls.js';
-import shaka from 'shaka-player';
-import videojs from 'video.js';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
-
-class ShakaPlayerWrapper implements PlayerWrapper {
-  readonly videoElement = Object.assign(document.createElement('video'), {
-    autoplay: true,
-    controls: false,
-    muted: true,
-    volume: 0.25,
-  });
-  private _player = new shaka.Player();
-  readonly playerType: PlayerType.ShakaPlayer;
-
-  constructor(playerType: PlayerType.ShakaPlayer) {
-    this.playerType = playerType;
-    this._player.configure({
-      streaming: {
-        bufferingGoal: 50,
-      },
-    });
-  }
-
-  get currentTime(): number {
-    const currentTime = this.videoElement.currentTime;
-    return Number.isNaN(currentTime) ? 0 : currentTime;
-  }
-  get paused(): boolean {
-    return this.videoElement.paused;
-  }
-  get duration(): number {
-    const duration = this.videoElement.duration;
-    return Number.isNaN(duration) ? 0 : duration;
-  }
-  get muted(): boolean {
-    return this.videoElement.muted;
-  }
-
-  load(playlistUrl: string, options: { loop: boolean }): void {
-    void (async () => {
-      await this._player.attach(this.videoElement);
-      this.videoElement.loop = options.loop;
-      await this._player.load(playlistUrl);
-    })();
-  }
-  play(): void {
-    void this.videoElement.play();
-  }
-  pause(): void {
-    this.videoElement.pause();
-  }
-  seekTo(second: number): void {
-    this.videoElement.currentTime = second;
-  }
-  setMuted(muted: boolean): void {
-    this.videoElement.muted = muted;
-  }
-  destory(): void {
-    void this._player.destroy();
-  }
-}
 
 class HlsJSPlayerWrapper implements PlayerWrapper {
   readonly videoElement = Object.assign(document.createElement('video'), {
@@ -118,47 +57,50 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   }
 }
 
-interface VhsConfig {
-  GOAL_BUFFER_LENGTH: number;
-  MAX_GOAL_BUFFER_LENGTH: number;
-}
-
-class VideoJSPlayerWrapper implements PlayerWrapper {
+class ThumbnailPlayerWrapper implements PlayerWrapper {
   readonly videoElement = Object.assign(document.createElement('video'), {
-    autoplay: true,
+    autoplay: false,
     controls: false,
     muted: true,
-    volume: 0.25,
+    preload: 'metadata',
   });
-  private _player = videojs(this.videoElement);
-  readonly playerType: PlayerType.VideoJS;
+  private _player: HlsJs | null = null;
+  readonly playerType: PlayerType.ThumbnailPlayer;
 
-  constructor(playerType: PlayerType.VideoJS) {
-    const vhsConfig = (videojs as unknown as { Vhs: VhsConfig }).Vhs;
-    vhsConfig.GOAL_BUFFER_LENGTH = 50;
-    vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
+  constructor(playerType: PlayerType.ThumbnailPlayer) {
     this.playerType = playerType;
   }
 
   get currentTime(): number {
-    return this._player.currentTime() ?? 0;
+    const currentTime = this.videoElement.currentTime;
+    return Number.isNaN(currentTime) ? 0 : currentTime;
   }
   get paused(): boolean {
-    return this._player.paused();
+    return this.videoElement.paused;
   }
   get duration(): number {
-    return this._player.duration() ?? 0;
+    const duration = this.videoElement.duration;
+    return Number.isNaN(duration) ? 0 : duration;
   }
   get muted(): boolean {
-    return this._player.muted() ?? true;
+    return this.videoElement.muted;
   }
 
   load(playlistUrl: string, options: { loop: boolean }): void {
-    this.videoElement.loop = options.loop;
-    this._player.src({
-      src: playlistUrl,
-      type: 'application/x-mpegURL',
-    });
+    // ThumbnailPlayer は軽量化のため最小限の機能だけを使う
+    if (HlsJs.isSupported()) {
+      this._player = new HlsJs({
+        enableWorker: false,
+        maxBufferLength: 5,
+        maxMaxBufferLength: 10,
+      });
+      this._player.attachMedia(this.videoElement);
+      this.videoElement.loop = options.loop;
+      this._player.loadSource(playlistUrl);
+    } else {
+      // フォールバック
+      this.videoElement.src = playlistUrl;
+    }
   }
   play(): void {
     void this.videoElement.play();
@@ -170,23 +112,22 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
     this.videoElement.currentTime = second;
   }
   setMuted(muted: boolean): void {
-    this._player.muted(muted);
+    this.videoElement.muted = muted;
   }
   destory(): void {
-    this._player.dispose();
+    if (this._player) {
+      this._player.destroy();
+    }
   }
 }
 
 export const createPlayer = (playerType: PlayerType): PlayerWrapper => {
   switch (playerType) {
-    case PlayerType.ShakaPlayer: {
-      return new ShakaPlayerWrapper(playerType);
-    }
     case PlayerType.HlsJS: {
       return new HlsJSPlayerWrapper(playerType);
     }
-    case PlayerType.VideoJS: {
-      return new VideoJSPlayerWrapper(playerType);
+    case PlayerType.ThumbnailPlayer: {
+      return new ThumbnailPlayerWrapper(playerType);
     }
     default: {
       playerType satisfies never;
