@@ -65,16 +65,18 @@ export const Program = ({ height, program }: Props): ReactElement => {
               {program.title}
             </div>
           </div>
-          <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
-            <img
-              ref={imageRef}
-              alt=""
-              className="pointer-events-none aspect-video w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              loading="lazy"
-              src={program.thumbnailUrl}
-              width={254}
-            />
-          </div>
+          {program.channelId !== '464c17bc-e51a-4b93-9597-bb67c98c6551' && (
+            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+              <img
+                ref={imageRef}
+                alt=""
+                className="pointer-events-none aspect-video w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+                loading="lazy"
+                src={program.thumbnailUrl}
+                width={254}
+              />
+            </div>
+          )}
         </div>
       </button>
       <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />
