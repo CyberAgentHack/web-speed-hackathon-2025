@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-// import TerserPlugin from 'terser-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -29,7 +29,11 @@ const config = {
                   useBuiltIns: 'entry',
                 },
               ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
+              ['@babel/preset-react', 
+                {
+                  runtime: 'automatic' 
+                }
+              ],
               ['@babel/preset-typescript'],
             ],
           },
@@ -54,13 +58,17 @@ const config = {
   },
   output: {
     chunkFilename: 'chunk-[name].js',
-    chunkFormat: false,
+    chunkFormat: 'array-push',
     filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      publicPath: 'public',
+    }),
   ],
   resolve: {
     alias: {
@@ -69,8 +77,14 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
+  optimization: {
+    nodeEnv: 'production',
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 
-  target: 'web'
+  target: ['web'],
 };
 
 export default config;

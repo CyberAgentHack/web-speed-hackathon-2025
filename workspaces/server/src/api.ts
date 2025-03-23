@@ -365,6 +365,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           );
         },
       });
+
+      const trimmedPrograms = programs.map(program => ({
+        ...program,
+        description: trimString(program.description, 512)
+      }));
+
       reply.code(200).send(programs);
     },
   });

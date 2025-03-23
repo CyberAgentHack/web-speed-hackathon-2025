@@ -1,4 +1,4 @@
-import HlsJs from 'hls.js';
+// import HlsJs from 'hls.js';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
@@ -11,10 +11,7 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
-  private _player = new HlsJs({
-    enableWorker: false,
-    maxBufferLength: 50,
-  });
+  private _player: any;
   readonly playerType: PlayerType.HlsJS;
 
   constructor(playerType: PlayerType.HlsJS) {
@@ -34,6 +31,14 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   }
   get muted(): boolean {
     return this.videoElement.muted;
+  }
+
+  async initPlayer(): Promise<void> {
+    const {default: HlsJs } = await import('hls.js');
+    this._player = new HlsJs({
+      enableWorker: false,
+      maxBufferLength: 50,
+    });
   }
 
   load(playlistUrl: string, options: { loop: boolean }): void {

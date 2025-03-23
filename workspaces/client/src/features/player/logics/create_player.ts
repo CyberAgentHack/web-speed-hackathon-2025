@@ -25,7 +25,9 @@ export const createPlayer = async (playerType: PlayerType): Promise<PlayerWrappe
     }
     case PlayerType.HlsJS: {
       const { HlsJSPlayerWrapper } = await import('@wsh-2025/client/src/features/player/logics/HlsPlayer');
-      return new HlsJSPlayerWrapper(playerType);
+      let player = new HlsJSPlayerWrapper(playerType);
+      await player.initPlayer();
+      return player;
     }
     case PlayerType.VideoJS: {
       const { VideoJSPlayerWrapper } = await import('@wsh-2025/client/src/features/player/logics/VideoJsPlayer');

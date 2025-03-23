@@ -13,7 +13,7 @@ import { createStore } from '@wsh-2025/client/src/app/createStore';
 declare global {
   var __zustandHydrationData: unknown;
   var __staticRouterHydrationData: HydrationState;
-}
+};
 
 function main() {
   const store = createStore({});

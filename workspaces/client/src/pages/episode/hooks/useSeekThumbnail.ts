@@ -76,7 +76,7 @@
 // };
 
 // chatGPT
-import Hls from 'hls.js';
+// import Hls from 'hls.js';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { use } from 'react';
@@ -87,12 +87,15 @@ interface Params {
 
 // サムネイルを取得する関数
 async function getSeekThumbnail({ episode }: Params): Promise<string> {
+  const { default: Hls } = await import('hls.js');
+
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
     video.crossOrigin = 'anonymous';
     video.style.position = 'absolute';
     video.style.visibility = 'hidden';
     document.body.appendChild(video);
+
 
     if (Hls.isSupported()) {
       const hls = new Hls();
