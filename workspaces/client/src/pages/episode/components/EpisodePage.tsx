@@ -48,10 +48,10 @@ export const EpisodePage = () => {
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`episode-${episode.id}`}>
-          <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          <div className="m-auto mb-[16px] aspect-[16/9] w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative h-fit w-fit">
-                <img alt="" className="h-auto w-full" loading="lazy" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
