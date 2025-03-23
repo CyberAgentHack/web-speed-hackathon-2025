@@ -55,7 +55,7 @@ export const TimetablePage = () => {
   let channels_: Channel[] = []
   let programs_: Program[] = []
   
-  if (hydrationData.loaderData) {
+  if (hydrationData.loaderData && hydrationData.loaderData["0-4"] && hydrationData.loaderData["0-4"].channels && hydrationData.loaderData["0-4"].programs) {
     channels_ = hydrationData.loaderData["0-4"]?.channels ?? [];
     programs_ = hydrationData.loaderData["0-4"]?.programs ?? [];
   }
