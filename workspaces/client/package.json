@@ -13,6 +13,7 @@
     "@dhmk/zustand-lens": "5.0.0",
     "@epic-web/restore-scroll": "1.1.1",
     "@headlessui/react": "2.2.0",
+    "@iconify/react": "5.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@standard-schema/spec": "1.0.0",
     "@wsh-2025/client": "workspace:*",
@@ -42,8 +43,6 @@
     "zustand-di": "0.0.16"
   },
   "devDependencies": {
-    "@iconify/json": "2.2.317",
-    "@iconify/types": "2.0.0",
     "@types/luxon": "3.4.2",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
@@ -54,11 +53,11 @@
     "@unocss/reset": "66.1.0-beta.5",
     "@unocss/runtime": "66.1.0-beta.5",
     "@vitejs/plugin-react": "4.3.4",
-    "vite": "^6.2.0",
     "@wsh-2025/configs": "workspace:*",
     "compression-webpack-plugin": "11.1.0",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
+    "vite": "^6.2.0",
     "wireit": "0.14.9"
   },
   "wireit": {
