@@ -199,6 +199,45 @@ export const getRecommendedModulesResponse = z.array(
   }),
 );
 
+export const getRecommendedModulesErrorResponse = z.array(
+  z.object({
+    id: z.string().openapi({ format: 'uuid' }),
+    title: z.string().openapi({ example: '吾輩は猫である' }),
+    type: z.enum(['carousel', 'jumbotron']).openapi({ example: 'carousel' }),
+    items: z.array(
+      z.object({
+        id: z.string().openapi({ format: 'uuid' }),
+        order: z.number().openapi({ example: 1 }),
+        series: z
+          .object({
+            id: z.string().openapi({ format: 'uuid' }),
+            title: z.string().openapi({ example: '吾輩は猫である' }),
+          })
+          .nullable(),
+        episode: z
+          .object({
+            id: z.string().openapi({ format: 'uuid' }),
+            title: z.string().openapi({ example: '第1話 吾輩は猫である' }),
+            description: z.string().openapi({
+              example:
+                '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。',
+            }),
+            premium: z.boolean().openapi({ example: false }),
+            thumbnailUrl: z.string().openapi({
+              example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+            }),
+            series: z
+              .object({
+                title: z.string().openapi({ example: '吾輩は猫である' }),
+              })
+              .nullable(),
+          })
+          .nullable(),
+      }),
+    ),
+  }),
+);
+
 // POST /signIn
 export const signInRequestBody = z.object({
   email: z.string(),
