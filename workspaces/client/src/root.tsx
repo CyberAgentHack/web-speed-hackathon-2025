@@ -26,8 +26,9 @@ import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useA
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { authService } from '@wsh-2025/client/src/features/auth/services/authService';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
+import '@wsh-2025/client/src/uno.css';
 
-export const clientLoader = async () => {
+export const loader = async () => {
   const user = await authService.fetchUser();
   return { user };
 };

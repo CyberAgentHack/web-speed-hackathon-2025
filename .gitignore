@@ -221,3 +221,4 @@ $RECYCLE.BIN/
 
 .react-router/
 build
+.wrangler

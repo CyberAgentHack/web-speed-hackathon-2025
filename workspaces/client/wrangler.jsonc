@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "web-speed-hack",
+  "compatibility_date": "2025-02-24",
+  "main": "./workers/app.ts",
+  "assets": {},
+  "vars": {
+    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare",
+    "API_BASE_URL": "https://wsh-2025-cyberagent2-pr-151.herokuapp.com/api",
+    "VITE_API_BASE_URL": "https://wsh-2025-cyberagent2-pr-151.herokuapp.com/api",
+    "VITE_STREAM_BASE_URL": "https://wsh-2025-cyberagent2-pr-151.herokuapp.com/"
+  }
+}

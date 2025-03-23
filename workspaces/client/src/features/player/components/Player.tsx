@@ -26,7 +26,8 @@ export const Player = ({ className, loop, playerRef, playlistUrl }: Props) => {
       return;
     }
     player = createPlayer();
-    player.load(playlistUrl, { loop: loop ?? false });
+    const url = import.meta.env['VITE_STREAM_BASE_URL'] + playlistUrl;
+    player.load(url, { loop: loop ?? false });
     mountElement.appendChild(player.videoElement);
     assignRef(playerRef, player);
 

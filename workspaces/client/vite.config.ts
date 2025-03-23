@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import { cloudflare } from '@cloudflare/vite-plugin';
 import { reactRouter } from '@react-router/dev/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import UnoCSS from 'unocss/vite';
@@ -26,7 +27,7 @@ export default defineConfig(({ mode }) => ({
     'process.env.API_BASE_URL': JSON.stringify('/api'),
     'process.env.NODE_ENV': JSON.stringify(process.env['NODE_ENV'] || 'production'),
   },
-  plugins: [reactRouter(), UnoCSS(), tsconfigPaths()],
+  plugins: [cloudflare({ viteEnvironment: { name: 'ssr' } }), reactRouter(), UnoCSS(), tsconfigPaths()],
   resolve: {
     alias: {
       // CI環境でも動作するように修正
@@ -44,22 +45,22 @@ export default defineConfig(({ mode }) => ({
     open: true,
     port: 3000,
     proxy: {
-      '/api': {
-        changeOrigin: true,
-        target: 'http://localhost:8000',
-      },
+      // '/api': {
+      //   changeOrigin: true,
+      //   target: 'http://localhost:8000',
+      // },
       '/favicon.ico': {
         changeOrigin: true,
         target: 'http://localhost:8000',
       },
-      '/public': {
-        changeOrigin: true,
-        target: 'http://localhost:8000',
-      },
-      '/streams': {
-        changeOrigin: true,
-        target: 'http://localhost:8000',
-      },
+      // '/public': {
+      //   changeOrigin: true,
+      //   target: 'http://localhost:8000',
+      // },
+      // '/streams': {
+      //   changeOrigin: true,
+      //   target: 'http://localhost:8000',
+      // },
     },
   },
 }));

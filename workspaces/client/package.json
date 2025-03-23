@@ -1,14 +1,18 @@
 {
   "name": "@wsh-2025/client",
   "private": true,
+  "type": "module",
   "scripts": {
     "analyze": "vite build --mode analyze",
     "build": "wireit",
-    "dev": "lsof -i :3000 -t | xargs -r kill -9 && react-router dev",
+    "css": "unocss 'src/**/*.tsx' --out-file=src/uno.css",
+    "dep": "pnpm build && wrangler deploy",
+    "dev": "pnpm css && lsof -i :3000 -t | xargs -r kill -9 && react-router dev",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit",
-    "preview": "react-router-serve ./build/server/index.js"
+    "preview": "vite preview",
+    "start": "wrangler dev"
   },
   "dependencies": {
     "@better-fetch/fetch": "1.1.15",
@@ -18,7 +22,6 @@
     "@headlessui/react": "2.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@react-router/node": "7.4.0",
-    "@react-router/serve": "7.4.0",
     "@standard-schema/spec": "1.0.0",
     "@unocss/reset": "66.1.0-beta.6",
     "@wsh-2025/schema": "workspace:*",
@@ -42,6 +45,8 @@
     "zustand": "5.0.3"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "0.1.15",
+    "@cloudflare/workers-types": "4.20250321.0",
     "@ffmpeg/core": "0.12.10",
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
@@ -51,6 +56,8 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
     "@types/wicg-task-scheduling": "2024.1.0",
+    "@unocss/cli": "latest",
+    "@unocss/preset-wind3": "66.1.0-beta.6",
     "@vitejs/plugin-react": "4.3.4",
     "@wsh-2025/configs": "workspace:*",
     "arraybuffer-loader": "1.0.8",
@@ -68,6 +75,9 @@
   },
   "wireit": {
     "build": {
+      "dependencies": [
+        "css"
+      ],
       "command": "react-router build"
     },
     "format": {
