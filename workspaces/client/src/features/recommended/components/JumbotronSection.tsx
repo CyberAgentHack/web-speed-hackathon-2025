@@ -1,7 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -11,6 +10,7 @@ import { Player } from '../../player/components/Player';
 import { PlayerType } from '../../player/constants/player_type';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
+import { Ellipsis } from '@wsh-2025/client/src/features/ellipsis/components/Ellipsis';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
@@ -24,7 +24,7 @@ export const JumbotronSection = ({ module }: Props) => {
   invariant(episode);
 
   return (
-    <Hoverable classNames={{ hovered: 'opacity-50' }}>
+    <Hoverable classNames={{ hovered: 'hover:opacity-50' }}>
       <NavLink
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
@@ -43,7 +43,7 @@ export const JumbotronSection = ({ module }: Props) => {
               </div>
 
               <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
-                <div className="h-full w-auto shrink-0 grow-0">
+                <div className="h-full w-auto shrink-0 grow-0 aspect-16/9">
                   <Player
                     loop
                     className="size-full"

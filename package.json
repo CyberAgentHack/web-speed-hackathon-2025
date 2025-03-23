@@ -7,7 +7,8 @@
     "heroku-cleanup": "wireit",
     "heroku-start": "wireit",
     "start": "wireit",
-    "test": "wireit"
+    "test": "wireit",
+    "dev": "wireit"
   },
   "dependencies": {
     "wireit": "0.14.9"
@@ -30,6 +31,11 @@
   },
   "wireit": {
     "start": {
+      "dependencies": [
+        "./workspaces/server:start"
+      ]
+    },
+    "dev": {
       "dependencies": [
         "./workspaces/server:start"
       ]

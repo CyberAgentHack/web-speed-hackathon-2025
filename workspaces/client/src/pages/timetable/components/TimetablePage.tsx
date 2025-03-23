@@ -14,14 +14,18 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const since = now.startOf('day').toISO();
   const until = now.endOf('day').toISO();
 
-  const channels = await store.getState().features.channel.fetchChannels();
-  const programs = await store.getState().features.timetable.fetchTimetable({ since, until });
-  return { channels, programs };
+  await Promise.all([
+    store.getState().features.channel.fetchChannels(),
+    store.getState().features.timetable.fetchTimetable({ since, until }),
+  ])
+
+  const newState = store.getState()
+  return newState
 };
 
 export const TimetablePage = () => {
   const record = useTimetable();
-  const shownNewFeatureDialog = useShownNewFeatureDialog();
+  const { closeNewFeatureDialog, shownNewFeatureDialog } = useShownNewFeatureDialog();
 
   const channelIds = Object.keys(record);
   const programLists = Object.values(record);
@@ -55,7 +59,7 @@ export const TimetablePage = () => {
         </div>
       </div>
 
-      <NewTimetableFeatureDialog isOpen={shownNewFeatureDialog} />
+      <NewTimetableFeatureDialog isOpen={shownNewFeatureDialog} onClose={closeNewFeatureDialog} />
     </>
   );
 };

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useSubscribePointer(): void {
-  const s = useStore((s) => s);
+  const layout = useStore((s) => s.features.layout);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -12,15 +12,13 @@ export function useSubscribePointer(): void {
     const handlePointerMove = (ev: MouseEvent) => {
       current.x = ev.clientX;
       current.y = ev.clientY;
+      layout.updatePointer({ ...current });
     };
+
     window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
 
-    let immediate = setImmediate(function tick() {
-      s.features.layout.updatePointer({ ...current });
-      immediate = setImmediate(tick);
-    });
     abortController.signal.addEventListener('abort', () => {
-      clearImmediate(immediate);
+      window.removeEventListener('pointermove', handlePointerMove);
     });
 
     return () => {

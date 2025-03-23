@@ -19,7 +19,7 @@ interface ChannelActions {
 }
 
 export const createChannelStoreSlice = () => {
-  return lens<ChannelState & ChannelActions>((set) => ({
+  return lens<ChannelState & ChannelActions>((set, get) => ({
     channels: {},
     fetchChannelById: async ({ channelId }) => {
       const channel = await channelService.fetchChannelById({ channelId });

@@ -1,9 +1,9 @@
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Ellipsis } from '@wsh-2025/client/src/features/ellipsis/components/Ellipsis';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
@@ -11,11 +11,16 @@ import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
+
+  await Promise.all([
+    store.getState().features.series.fetchSeriesById({ seriesId }),
+    store
+      .getState()
+      .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId })
+  ]);
+
+  const newState = store.getState()
+  return newState
 };
 
 export const SeriesPage = () => {

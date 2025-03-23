@@ -9,6 +9,9 @@ interface Props {
 export const Gutter = ({ channelId }: Props): ReactElement => {
   const changeColumnWidth = useChangeColumnWidth();
 
+  // REVIEW: Set ref to reduce incorrect event dispatch.
+  const ref = React.useRef<HTMLDivElement>(null);
+  
   const [lastScreenX, setLastScreenX] = React.useState<number | null>(null);
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -34,6 +37,7 @@ export const Gutter = ({ channelId }: Props): ReactElement => {
 
   return (
     <div
+      ref={ref}
       className="size-full cursor-col-resize"
       role="slider"
       onPointerDown={onPointerDown}

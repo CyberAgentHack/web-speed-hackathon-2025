@@ -1,11 +1,13 @@
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import { useLoaderData } from 'react-router';
+
+import { StoreState } from '@wsh-2025/client/src/app/createStore';
 
 interface Params {
   programId: string;
 }
 
 export function useProgramById({ programId }: Params) {
-  const state = useStore((s) => s);
+  const state = useLoaderData<StoreState>();
 
   const program = state.features.program.programs[programId];
 

@@ -1,16 +1,24 @@
 import path from 'node:path';
 
+import UnoCss from '@unocss/webpack';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+const environment = process.env.NODE_ENV ?? 'production';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
-  entry: './src/main.tsx',
-  mode: 'none',
+  devtool: 'cheap-source-map',
+  entry: {
+    main: './src/main.tsx'
+  },
+  mode: environment,
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        // exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
         resolve: {
           fullySpecified: false,
         },
@@ -23,7 +31,7 @@ const config = {
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  forceAllTransforms: true,
+                  forceAllTransforms: false,
                   targets: 'defaults',
                   useBuiltIns: 'entry',
                 },
@@ -36,11 +44,7 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/inline',
-      },
-      {
-        resourceQuery: /raw/,
-        type: 'asset/source',
+        type: 'asset/resource',
       },
       {
         resourceQuery: /arraybuffer/,
@@ -49,24 +53,70 @@ const config = {
           loader: 'arraybuffer-loader',
         },
       },
+      // CSSファイル向けに特別なローダー設定
+      {
+        oneOf: [
+          // ?rawクエリ付きの場合
+          {
+            resourceQuery: /raw/,
+            type: 'asset/source',
+          },
+          // 通常のCSSファイル
+          {
+            use: [
+              MiniCssExtractPlugin.loader,
+              {
+                loader: "css-loader",
+                options: { url: false }
+              }
+            ]
+          }
+        ],
+        test: /\.css$/,
+      },
     ],
+  },
+  // optimization: {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       framework: {
+  //         chunks: 'all',
+  //         enforce: true,
+  //         name: 'framework',
+  //         priority: 30,
+  //         test: /[\\/]node_modules[\\/](react|react-dom|luxon)[\\/]/,
+  //       },
+  //       shared: {
+  //         chunks: 'all',
+  //         minChunks: 2,
+  //         priority: 10,
+  //         reuseExistingChunk: true,
+  //       },
+  //     },
+  //     chunks: 'all',
+  //     maxInitialRequests: 25,
+  //     minSize: 20000,
+  //   },
+  // },
+  optimization: {
+    minimizer: [
+      new CssMinimizerPlugin(),
+    ]
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: environment }),
+    UnoCss(),
+    new MiniCssExtractPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };

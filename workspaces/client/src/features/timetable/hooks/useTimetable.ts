@@ -1,15 +1,18 @@
 import { DateTime } from 'luxon';
+import { useLoaderData } from 'react-router';
 import { ArrayValues } from 'type-fest';
 
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import { StoreState } from '@wsh-2025/client/src/app/createStore';
 
 type ChannelId = string;
 
 export function useTimetable() {
-  const state = useStore((s) => s);
+  const state = useLoaderData<StoreState>();
+  const channelChannels = state.features.channel.channels;
+  const timetablePrograms = state.features.timetable.programs;
 
-  const channels = Object.values(state.features.channel.channels);
-  const programs = Object.values(state.features.timetable.programs);
+  const channels = Object.values(channelChannels);
+  const programs = Object.values(timetablePrograms);
 
   const record: Record<ChannelId, ArrayValues<typeof programs>[]> = {};
 

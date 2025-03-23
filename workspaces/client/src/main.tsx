@@ -1,6 +1,8 @@
 import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/luxon';
-import '@wsh-2025/client/src/setups/unocss';
+
+// eslint-disable-next-line import/no-unresolved
+import 'uno.css'
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -16,8 +18,10 @@ declare global {
 }
 
 function main() {
-  const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const store = createStore({ hydrationData: window.__zustandHydrationData });
+  const router = createBrowserRouter(createRoutes(store), {
+    hydrationData: window.__staticRouterHydrationData,
+  });
 
   hydrateRoot(
     document,

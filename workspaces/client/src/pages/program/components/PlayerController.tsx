@@ -16,7 +16,7 @@ export const PlayerController = () => {
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
+            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'hover:bg-[#FFFFFF1F]' }}>
               <button
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"
@@ -26,7 +26,7 @@ export const PlayerController = () => {
                 }}
               >
                 <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  className={`${muted ? 'i-material-symbols:volume-off-rounded' : 'i-material-symbols:volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
                 />
               </button>
             </Hoverable>

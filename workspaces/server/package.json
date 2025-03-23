@@ -11,6 +11,7 @@
     "start": "wireit"
   },
   "dependencies": {
+    "@fastify/compress": "8.0.1",
     "@fastify/cookie": "11.0.2",
     "@fastify/cors": "10.0.1",
     "@fastify/session": "11.1.0",
@@ -64,9 +65,13 @@
       "command": "tsx ./tools/seed.ts"
     },
     "start": {
-      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx ./src/index.ts",
       "service": true,
       "env": {
+        "NODE_ENV": {
+          "external": true,
+          "default": "production"
+        },
         "API_BASE_URL": {
           "external": true,
           "default": "http://localhost:8000/api"
@@ -86,9 +91,13 @@
       ]
     },
     "heroku-start": {
-      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx ./src/index.ts",
       "service": true,
       "env": {
+        "NODE_ENV": {
+          "external": true,
+          "default": "production"
+        },
         "API_BASE_URL": {
           "external": true,
           "default": "http://localhost:8000/api"

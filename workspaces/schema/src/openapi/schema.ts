@@ -182,16 +182,27 @@ export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
+        // https://github.com/nyawach/web-speed-hackathon-2025/blob/cf54d88447756b2264f6fc2ceaa7fb67ff353f35/workspaces/client/src/features/recommended/components/SeriesItem.tsx#L7
         series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
+          .pick({
+            id: true,
+            thumbnailUrl: true,
+            title: true,
           })
           .nullable(),
         episode: episode
+          // https://github.com/nyawach/web-speed-hackathon-2025/blob/cf54d88447756b2264f6fc2ceaa7fb67ff353f35/workspaces/client/src/features/recommended/components/EpisodeItem.tsx#L8
+          // https://github.com/nyawach/web-speed-hackathon-2025/blob/cf54d88447756b2264f6fc2ceaa7fb67ff353f35/workspaces/client/src/features/recommended/components/JumbotronSection.tsx#L41
+          .pick({
+            id: true,
+            description: true,
+            premium: true,
+            thumbnailUrl: true,
+            title: true,
+          })
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
+            series: series
+              .pick({ id: true, title: true })
           })
           .nullable(),
       }),

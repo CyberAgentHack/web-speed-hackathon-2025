@@ -1,17 +1,20 @@
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import { useLoaderData } from 'react-router';
+
+import { StoreState } from '@wsh-2025/client/src/app/createStore';
 
 interface Params {
   referenceId: string;
 }
 
 export function useRecommended({ referenceId }: Params) {
-  const state = useStore((s) => s);
+  const state = useLoaderData<StoreState>()
 
-  const moduleIds = state.features.recommended.references[referenceId];
+  const recommended = state.features.recommended
+
+  const moduleIds = recommended.references[referenceId];
 
   const modules = (moduleIds ?? [])
-    .map((moduleId) => state.features.recommended.recommendedModules[moduleId])
-    .filter(<T>(m: T): m is NonNullable<T> => m != null);
+    .flatMap((moduleId) => recommended.recommendedModules[moduleId] ? [recommended.recommendedModules[moduleId]] : [])
 
   return modules;
 }

@@ -482,24 +482,20 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
+              series: true,
               episode: {
+                columns: {
+                  id: true,
+                  description: true,
+                  premium: true,
+                  thumbnailUrl: true,
+                  title: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      id: true,
+                      title: true,
                     },
                   },
                 },
@@ -508,6 +504,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+      // NOTE: Insert empty string to reduce the response size, it's only used at JumbotronSection.
+      modules.map((module) => {
+        module.items.map((item) => {
+          if (module.type !== 'jumbotron' && item.episode) {
+            item.episode.description = ''
+          }
+        });
+      })
       reply.code(200).send(modules);
     },
   });
