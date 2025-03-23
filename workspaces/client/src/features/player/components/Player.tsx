@@ -16,32 +16,32 @@ interface Props {
 export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const mountElement = mountRef.current;
-    invariant(mountElement);
+  // useEffect(() => {
+  //   const mountElement = mountRef.current;
+  //   invariant(mountElement);
 
-    const abortController = new AbortController();
-    let player: PlayerWrapper | null = null;
+  //   const abortController = new AbortController();
+  //   let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
-      if (abortController.signal.aborted) {
-        return;
-      }
-      player = createPlayer(playerType);
-      player.load(playlistUrl, { loop: loop ?? false });
-      mountElement.appendChild(player.videoElement);
-      assignRef(playerRef, player);
-    });
+  //   void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
+  //     if (abortController.signal.aborted) {
+  //       return;
+  //     }
+  //     player = createPlayer(playerType);
+  //     player.load(playlistUrl, { loop: loop ?? false });
+  //     mountElement.appendChild(player.videoElement);
+  //     assignRef(playerRef, player);
+  //   });
 
-    return () => {
-      abortController.abort();
-      if (player != null) {
-        mountElement.removeChild(player.videoElement);
-        player.destory();
-      }
-      assignRef(playerRef, null);
-    };
-  }, [playerType, playlistUrl, loop]);
+  //   return () => {
+  //     abortController.abort();
+  //     if (player != null) {
+  //       mountElement.removeChild(player.videoElement);
+  //       player.destory();
+  //     }
+  //     assignRef(playerRef, null);
+  //   };
+  // }, [playerType, playlistUrl, loop]);
 
   return (
     <div className={className}>

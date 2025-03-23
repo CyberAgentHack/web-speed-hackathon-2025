@@ -1,16 +1,17 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/, /node_modules\/react-dom\/cjs\/react-dom-client\.development\.js|node_modules\/lodash\/lodash\.js/],
         resolve: {
           fullySpecified: false,
         },
@@ -26,6 +27,7 @@ const config = {
                   forceAllTransforms: true,
                   targets: 'defaults',
                   useBuiltIns: 'entry',
+                  // modules: false,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -52,15 +54,46 @@ const config = {
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: '[name]-[contenthash].js',
     chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
+  // optimization: {
+  //   // concatenateModules: false, // モジュール結合を無効化
+  //   splitChunks: {
+  //     chunks: 'all', // すべてのチャンクに適用
+  //     minSize: 20000, // 分割する最小サイズ（デフォルト: 20KB）
+  //     maxSize: 0, // 最大サイズ（0は無制限）
+  //     minChunks: 1, // モジュールがいくつのチャンクで共有されるか
+  //     automaticNameDelimiter: '-', // 名前の区切り文字
+  //     cacheGroups: {
+  //       vendors: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         priority: -10, // 優先度
+  //       },
+  //       default: {
+  //         minChunks: 2,
+  //         priority: -20,
+  //         reuseExistingChunk: true, // 既存のチャンクを再利用
+  //       },
+  //     },
+  //   },
+  //   // runtimeChunk: 'single', // ランタイムを1つのファイルに分離
+  // },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // ...(process.env.ANALYZE
+    //   ? [
+    //       new BundleAnalyzerPlugin({
+    //         analyzerMode: 'server', // サーバーモードでブラウザに出力
+    //         analyzerPort: 8888,    // ポート番号
+    //         openAnalyzer: true,    // 自動でブラウザを開く
+    //       }),
+    //     ]
+    //   : []),
   ],
   resolve: {
     alias: {
