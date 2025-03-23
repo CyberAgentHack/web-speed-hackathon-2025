@@ -34,6 +34,12 @@ export function registerSsr(app: FastifyInstance): void {
     ],
   });
 
+  if (process.env['NODE_ENV'] === 'development') {
+    app.get('/public/main.js', async (__, reply) => {
+      reply.redirect('http://localhost:8080/main.js');
+    });
+  }
+
   app.get('/favicon.ico', (_, reply) => {
     reply.status(404).send();
   });
@@ -72,8 +78,7 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <!-- <script src="/public/main.js"></script> -->
-          <script src="http://localhost:8080/main.js"></script>
+          <script src="/public/main.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body></body>
