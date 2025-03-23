@@ -295,7 +295,7 @@ export function registerStreams(app: FastifyInstance): void {
       );
       const chunkIdx = sequenceInStream % stream.numberOfChunks;
 
-      playlist.push(
+      reply.raw.write(
         dedent`
           ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
           #EXTINF:2.000000,
@@ -306,10 +306,12 @@ export function registerStreams(app: FastifyInstance): void {
             `DURATION=2.0`,
             `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
           ].join(',')}
-        `,
+        ` + '\n',
       );
     }
 
-    reply.type('application/vnd.apple.mpegurl').send(playlist.join('\n'));
+    // プレイリストの終了
+    reply.raw.write('#EXT-X-ENDLIST\n');
+    reply.raw.end();
   });
 }
