@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
 import type { FastifyInstance } from 'fastify';
-import { createStandardRequest } from 'fastify-standard-request-reply';
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
@@ -18,10 +17,7 @@ export function registerSsr(app: FastifyInstance): void {
     reply.status(404).send();
   });
 
-  app.get('/*', async (req, reply) => {
-    // @ts-expect-error ................
-    const request = createStandardRequest(req, reply);
-
+  app.get('/*', async (_, reply) => {
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
       <html lang="ja">
@@ -39,7 +35,9 @@ export function registerSsr(app: FastifyInstance): void {
             <link rel="stylesheet" href="/path/to/tailwind.css" />
           </noscript>
         </head>
-        <body></body>
+        <body>
+          <div id="root"></div>
+        </body>
       </html>
     `);
   });

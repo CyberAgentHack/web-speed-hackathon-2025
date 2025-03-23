@@ -16,7 +16,7 @@ const fetchRecommends = async (store: ReturnType<typeof createStore>) => {
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
 }
 
-export const NotFoundPage = (store: ReturnType<typeof createStore>) => {
+const NotFoundPage = ({ store } : { store : ReturnType<typeof createStore> }) => {
   const modules = useRecommended({ referenceId: 'error' });
   const module = modules.at(0);
 
@@ -43,3 +43,5 @@ export const NotFoundPage = (store: ReturnType<typeof createStore>) => {
     </>
   );
 };
+
+export default NotFoundPage;

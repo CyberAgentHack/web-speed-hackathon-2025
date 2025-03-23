@@ -14,7 +14,7 @@ export const fetchRecommends = async (store: ReturnType<typeof createStore>) => 
   await store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
 };
 
-export const HomePage = (store: ReturnType<typeof createStore>) => {
+const HomePage = ({ store } : { store: ReturnType<typeof createStore>}) => {
   const modules = useRecommended({ referenceId: 'entrance' });
 
   useEffect(() => {
@@ -41,3 +41,5 @@ export const HomePage = (store: ReturnType<typeof createStore>) => {
     </>
   );
 };
+
+export default HomePage;

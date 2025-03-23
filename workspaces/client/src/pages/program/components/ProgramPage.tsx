@@ -47,7 +47,7 @@ const fetchProgramDatas = async (store: ReturnType<typeof createStore>, { progra
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId ?? ''});
 }
 
-export const ProgramPage = (store: ReturnType<typeof createStore>) => {
+const ProgramPage = ({ store } : { store: ReturnType<typeof createStore> }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { programId } = useParams();
   invariant(programId);
@@ -209,3 +209,5 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
     </>
   );
 };
+
+export default ProgramPage;

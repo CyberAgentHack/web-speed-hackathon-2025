@@ -30,7 +30,7 @@ const fetchTimeTableDatas = async (store: ReturnType<typeof createStore>) => {
   return { channels, programs };
 }
 
-export const TimetablePage = (store: ReturnType<typeof createStore>) => {
+const TimetablePage = ({ store }: { store : ReturnType<typeof createStore> }) => {
   const record = useTimetable();
   const shownNewFeatureDialog = useShownNewFeatureDialog();
 
@@ -38,7 +38,7 @@ export const TimetablePage = (store: ReturnType<typeof createStore>) => {
   const programLists = Object.values(record);    
 
   useEffect(() => {
-    (async () => fetchTimeTableDatas(store))();
+    (async () => await fetchTimeTableDatas(store))();
   }, []);
 
   if (!channelIds.length) {
@@ -81,3 +81,5 @@ export const TimetablePage = (store: ReturnType<typeof createStore>) => {
     </>
   );
 };
+
+export default TimetablePage;

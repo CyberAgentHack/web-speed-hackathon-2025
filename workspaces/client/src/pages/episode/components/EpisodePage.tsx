@@ -32,7 +32,7 @@ const fetchEpisodeDatas = async (store: ReturnType<typeof createStore>, { episod
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId ?? '' });
 };
 
-export const EpisodePage = (store: ReturnType<typeof createStore>) => {
+const EpisodePage = ({ store } : { store: ReturnType<typeof createStore> }) => {
   const [isLoading, setIsLoading] = useState(true);
   const authActions = useAuthActions();
   const user = useAuthUser();
@@ -167,3 +167,5 @@ export const EpisodePage = (store: ReturnType<typeof createStore>) => {
     </>
   );
 };
+
+export default EpisodePage;

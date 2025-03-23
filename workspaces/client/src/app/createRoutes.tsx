@@ -16,7 +16,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               import('@wsh-2025/client/src/pages/home/components/HomePage'),
               0,
             );
-            const Component = () => HomePage(store);
+            const Component = () => HomePage({ store });
             return { Component };
           },
         },
@@ -26,7 +26,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
               0,
             );
-            const Component = () => EpisodePage(store);
+            const Component = () => EpisodePage({ store });
             return { Component };
           },
           path: '/episodes/:episodeId',
@@ -37,7 +37,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
               0,
             );
-            const Component = () => ProgramPage(store);
+            const Component = () => ProgramPage({ store });
             return { Component };
           },
           path: '/programs/:programId',
@@ -48,7 +48,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
               0,
             );
-            const Component = () => SeriesPage(store);
+            const Component = () => SeriesPage({ store });
             return { Component };
           },
           path: '/series/:seriesId',
@@ -59,7 +59,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
               0,
             );
-            const Component = () => TimetablePage(store);
+            const Component = () => TimetablePage({ store });
             return { Component };
           },
           path: '/timetable',
@@ -70,7 +70,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
               0,
             );
-            const Component = () => NotFoundPage(store);
+            const Component = () => NotFoundPage({ store });
             return { Component };
           },
           path: '*',

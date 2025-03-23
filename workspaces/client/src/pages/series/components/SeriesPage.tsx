@@ -17,7 +17,7 @@ const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesI
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId ?? '' });
 }
 
-export const SeriesPage = (store: ReturnType<typeof createStore>) => {
+const SeriesPage = ({ store } : { store : ReturnType<typeof createStore>}) => {
   const [isLoading, setIsLoading] = useState(true);
   const { seriesId } = useParams();
   // invariant(seriesId);
@@ -76,3 +76,5 @@ export const SeriesPage = (store: ReturnType<typeof createStore>) => {
     </>
   );
 };
+
+export default SeriesPage;
