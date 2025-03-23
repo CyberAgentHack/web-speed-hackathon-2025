@@ -503,6 +503,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                   title: true,
                   thumbnailUrl: true,
                   premium: true,
+                  description: true,
                 },
                 with: {
                   series: {
