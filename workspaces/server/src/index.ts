@@ -1,31 +1,36 @@
-import '@wsh-2025/server/src/setups/luxon';
+import "@wsh-2025/server/src/setups/luxon";
 
-import cors from '@fastify/cors';
-import fastify from 'fastify';
+import cors from "@fastify/cors";
+import fastify from "fastify";
 
-import { registerApi } from '@wsh-2025/server/src/api';
-import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
-import { registerSsr } from '@wsh-2025/server/src/ssr';
-import { registerStreams } from '@wsh-2025/server/src/streams';
+import { registerApi } from "@wsh-2025/server/src/api";
+import { initializeDatabase } from "@wsh-2025/server/src/drizzle/database";
+import { registerSsr } from "@wsh-2025/server/src/ssr";
+import { registerStreams } from "@wsh-2025/server/src/streams";
 
 async function main() {
-  await initializeDatabase();
+	await initializeDatabase();
 
-  const app = fastify();
+	const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
-  });
-  app.register(cors, {
-    origin: true,
-  });
-  app.register(registerApi, { prefix: '/api' });
-  app.register(registerStreams);
-  app.register(registerSsr);
+	app.addHook("onSend", async (_req, reply) => {
+		reply.header("cache-control", "no-store");
+		reply.header("Cross-Origin-Embedder-Policy", "require-corp");
+		reply.header("Cross-Origin-Opener-Policy", "same-origin");
+	});
+	app.register(cors, {
+		origin: true,
+	});
+	app.register(registerApi, { prefix: "/api" });
+	app.register(registerStreams);
+	app.register(registerSsr);
 
-  await app.ready();
-  const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });
-  console.log(`Server listening at ${address}`);
+	await app.ready();
+	const address = await app.listen({
+		host: "0.0.0.0",
+		port: Number(process.env["PORT"]),
+	});
+	console.log(`Server listening at ${address}`);
 }
 
 void main();

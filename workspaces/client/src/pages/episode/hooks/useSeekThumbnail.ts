@@ -1,5 +1,4 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-// import { toBlobURL } from "@ffmpeg/util";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { getEpisodeByIdResponse } from "@wsh-2025/schema/src/api/schema";
 import { Parser } from "m3u8-parser";
@@ -16,19 +15,18 @@ async function getSeekThumbnail({ episode }: Params) {
 	parser.end();
 
 	// FFmpeg の初期化
-	// const coreURL = "https://unpkg.com/@ffmpeg/core@0.10.0/dist";
-
 	const ffmpeg = new FFmpeg();
-	await ffmpeg.load({
-		coreURL: await import("@ffmpeg/core?arraybuffer").then(({ default: b }) => {
-			return URL.createObjectURL(new Blob([b], { type: "text/javascript" }));
-		}),
-		wasmURL: await import("@ffmpeg/core/wasm?arraybuffer").then(
-			({ default: b }) => {
-				return URL.createObjectURL(new Blob([b], { type: "application/wasm" }));
-			},
-		),
-	});
+
+	try {
+		await ffmpeg.load({
+			coreURL: "https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.js",
+			wasmURL: "https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.wasm",
+		});
+	} catch (error) {
+		console.error("FFmpeg loading failed:", error);
+		// SharedArrayBufferがサポートされていない場合は代替のサムネイル表示
+		return episode.thumbnailUrl;
+	}
 
 	// 動画のセグメントファイルを取得
 	const segmentFiles = await Promise.all(
