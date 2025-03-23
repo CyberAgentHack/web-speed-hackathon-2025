@@ -31,6 +31,14 @@ const episode = z.object({
   premium: z.boolean().openapi({ example: false }),
 });
 assertSchema(episode, createSelectSchema(databaseSchema.episode));
+const episodeSummary = z.object({
+  id: z.string().openapi({ format: 'uuid' }),
+  title: z.string().openapi({ example: '第1話 吾輩は猫である' }),
+  thumbnailUrl: z.string().openapi({
+    example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+  }),
+  premium: z.boolean().openapi({ example: false }),
+})
 
 const series = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -44,6 +52,13 @@ const series = z.object({
   }),
 });
 assertSchema(series, createSelectSchema(databaseSchema.series));
+const seriesSummary = z.object({
+  id: z.string().openapi({ format: 'uuid' }),
+  title: z.string().openapi({ example: '吾輩は猫である' }),
+  thumbnailUrl: z.string().openapi({
+    example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+  }),
+})
 
 const program = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -182,20 +197,16 @@ export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
+        series: seriesSummary
           .nullable(),
-        episode: episode
+        episode: episodeSummary
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
+            series: series.extend({}),
           })
           .nullable(),
       }),
     ),
+    headEpisode: episode.extend({}).nullable(),
   }),
 );
 

@@ -483,24 +483,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
               },
               episode: {
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
                   },
                 },
               },
@@ -508,7 +494,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(modules);
+      const resModules = modules.map((module) => {
+        return {
+          ...module,
+          headEpisode: module.items.length > 0 ? module.items[0]?.episode : undefined
+        }
+      })
+      reply.code(200).send(resModules);
     },
   });
 
