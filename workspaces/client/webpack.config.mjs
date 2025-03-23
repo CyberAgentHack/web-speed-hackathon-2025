@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import UnoCSS from '@unocss/postcss';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -50,10 +51,26 @@ const config = {
           loader: 'arraybuffer-loader',
         },
       },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: ['postcss-preset-env', UnoCSS()],
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   optimization: {
     minimize: true,
+    realContentHash: true,
     splitChunks: {
       cacheGroups: {
         ffmpeg: {
