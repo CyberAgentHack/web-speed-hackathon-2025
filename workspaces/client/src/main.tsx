@@ -2,7 +2,7 @@ import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
-import { StrictMode } from 'react';
+import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
 
@@ -15,7 +15,6 @@ declare global {
   var __staticRouterHydrationData: HydrationState;
 }
 
-function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
@@ -27,6 +26,3 @@ function main() {
       </StoreProvider>
     </StrictMode>,
   );
-}
-
-document.addEventListener('DOMContentLoaded', main);

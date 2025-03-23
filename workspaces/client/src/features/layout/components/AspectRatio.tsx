@@ -1,31 +1,15 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import { type ReactNode } from "react";
 
 interface Props {
-  children: ReactNode;
-  ratioHeight: number;
-  ratioWidth: number;
+	children: ReactNode;
+	ratioHeight: number;
+	ratioWidth: number;
 }
 
-export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
-  const forceUpdate = useUpdate();
-  const containerRef = useRef<HTMLDivElement>(null);
+export const AspectRatio = ({ children }: Props) => {
+	// const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+	// useEffect(() => {}, []);
 
-  const width = containerRef.current?.getBoundingClientRect().width ?? 0;
-  const height = (width * ratioHeight) / ratioWidth;
-
-  return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
-      {children}
-    </div>
-  );
+	return <div className={`aspect-16/9 relative w-full`}>{children}</div>;
 };
