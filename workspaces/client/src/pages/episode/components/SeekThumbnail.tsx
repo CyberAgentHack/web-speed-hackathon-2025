@@ -15,27 +15,34 @@ interface Props {
 export const SeekThumbnail = ({ episode }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const seekThumbnail = useSeekThumbnail({ episode });
-  const pointer = usePointer();
+  const { x: pointerX } = usePointer();
   const duration = useDuration();
 
-  const elementRect = ref.current?.parentElement?.getBoundingClientRect() ?? { left: 0, width: 0 };
-  const relativeX = pointer.x - elementRect.left;
+  const calculateThumbnailPosition = () => {
+    const parentElement = ref.current?.parentElement;
+    if (!parentElement) return { backgroundPositionX: 0, left: 0 };
 
-  const percentage = Math.max(0, Math.min(relativeX / elementRect.width, 1));
-  const pointedTime = duration * percentage;
+    const rect = parentElement.getBoundingClientRect();
+    const relativeX = pointerX - rect.left;
+    const percentage = Math.max(0, Math.min(relativeX / rect.width, 1));
+    const pointedTime = duration * percentage;
 
-  // サムネイルが画面からはみ出ないようにサムネイル中央を基準として left を計算する
-  const MIN_LEFT = SEEK_THUMBNAIL_WIDTH / 2;
-  const MAX_LEFT = elementRect.width - SEEK_THUMBNAIL_WIDTH / 2;
+    const MIN_LEFT = SEEK_THUMBNAIL_WIDTH / 2;
+    const MAX_LEFT = rect.width - SEEK_THUMBNAIL_WIDTH / 2;
+
+    return {
+      backgroundPositionX: -1 * SEEK_THUMBNAIL_WIDTH * Math.floor(pointedTime),
+      left: Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT)),
+    };
+  };
+
+  const thumbnailStyle = calculateThumbnailPosition();
 
   return (
     <div
       ref={ref}
       className={`absolute h-[90px] w-[160px] bg-[size:auto_100%] bg-[url(${seekThumbnail})] bottom-0 translate-x-[-50%]`}
-      style={{
-        backgroundPositionX: -1 * SEEK_THUMBNAIL_WIDTH * Math.floor(pointedTime),
-        left: Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT)),
-      }}
+      style={thumbnailStyle}
     />
   );
 };

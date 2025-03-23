@@ -37,7 +37,6 @@ export const PlayerController = ({ episode }: Props) => {
             orientation="horizontal"
             value={[currentTime]}
             onValueChange={([t]) => {
-              // null 및 undefined 체크
               if (t != null) {
                 updateCurrentTime(t);
               }

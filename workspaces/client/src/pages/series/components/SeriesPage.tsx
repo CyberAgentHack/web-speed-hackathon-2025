@@ -2,6 +2,7 @@ import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
@@ -25,12 +26,7 @@ export const SeriesPage = () => {
   const modules = useRecommended({ referenceId: seriesId || '' });
 
   if (!seriesId || !series) {
-    return (
-      <div>
-        <title>Loading Series - AremaTV</title>
-        <p>Loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

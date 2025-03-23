@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Params, useParams } from 'react-router';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -6,12 +6,8 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
-import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
-import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
-import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
@@ -23,6 +19,28 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
   return { episode, modules };
 };
+
+const Player = lazy(() =>
+  import('@wsh-2025/client/src/features/player/components/Player').then((module) => ({ default: module.Player })),
+);
+
+const PlayerController = lazy(() =>
+  import('@wsh-2025/client/src/pages/episode/components/PlayerController').then((module) => ({
+    default: module.PlayerController,
+  })),
+);
+
+const RecommendedSection = lazy(() =>
+  import('@wsh-2025/client/src/features/recommended/components/RecommendedSection').then((module) => ({
+    default: module.RecommendedSection,
+  })),
+);
+
+const SeriesEpisodeList = lazy(() =>
+  import('@wsh-2025/client/src/features/series/components/SeriesEpisodeList').then((module) => ({
+    default: module.SeriesEpisodeList,
+  })),
+);
 
 export const EpisodePage = () => {
   const authActions = useAuthActions();
@@ -48,7 +66,14 @@ export const EpisodePage = () => {
         <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
           {isSignInRequired ? (
             <div className="relative size-full">
-              <img alt="" className="h-auto w-full" height={176} src={episode.thumbnailUrl} width={313} />
+              <img
+                alt=""
+                className="h-auto w-full"
+                height={176}
+                loading="lazy"
+                src={episode.thumbnailUrl}
+                width={313}
+              />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                 <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -68,7 +93,12 @@ export const EpisodePage = () => {
               fallback={
                 <AspectRatio ratioHeight={9} ratioWidth={16}>
                   <div className="grid size-full">
-                    <img alt="" className="size-full place-self-stretch [grid-area:1/-1]" src={episode.thumbnailUrl} />
+                    <img
+                      alt=""
+                      className="size-full place-self-stretch [grid-area:1/-1]"
+                      loading="lazy"
+                      src={episode.thumbnailUrl}
+                    />
                     <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
                     <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
                   </div>
@@ -108,13 +138,17 @@ export const EpisodePage = () => {
 
         {modules[0] != null ? (
           <div className="mt-[24px]">
-            <RecommendedSection module={modules[0]} />
+            <Suspense fallback={null}>
+              <RecommendedSection module={modules[0]} />
+            </Suspense>
           </div>
         ) : null}
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
-          <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />
+          <Suspense fallback={null}>
+            <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />
+          </Suspense>
         </div>
       </div>
     </>
