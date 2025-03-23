@@ -69,7 +69,7 @@ export const EpisodePage = () => {
             ) : (
               <Suspense
                 fallback={
-                  <AspectRatio ratioHeight={9} ratioWidth={16}>
+                  <AspectRatio>
                     <div className="grid size-full">
                       <img
                         alt=""
