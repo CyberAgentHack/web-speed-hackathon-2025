@@ -61,7 +61,7 @@
       "command": "drizzle-kit generate && drizzle-kit push"
     },
     "database:reset": {
-      "command": "tsx ./tools/seed.ts"
+      "command": "tsx -r ./loaders/png.cjs ./tools/seed.ts"
     },
     "start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
