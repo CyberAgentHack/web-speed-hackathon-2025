@@ -11,7 +11,10 @@
     "outDir": "./dist",
     "paths": {
       "@wsh-2025/client/*": ["../client/*"],
-      "@wsh-2025/server/*": ["./*"]
+      "@wsh-2025/server/*": ["./*"],
+      "react": ["./node_modules/preact/compat"],
+      "react-dom": ["./node_modules/preact/compat"],
+      "react-dom/server": ["./node_modules/preact-render-to-string"],
     },
     "skipLibCheck": true,
     "sourceMap": true,

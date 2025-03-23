@@ -31,6 +31,8 @@
     "fastify-zod-openapi": "4.0.0",
     "htmlescape": "1.1.1",
     "luxon": "3.5.0",
+    "preact": "10.26.4",
+    "preact-render-to-string": "6.5.13",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "7.0.2",
