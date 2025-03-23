@@ -115,6 +115,9 @@ test.describe('全画面', () => {
     });
 
     await page.setViewportSize({ height: 1080, width: 1920 });
+    await page.addStyleTag({
+      url: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap',
+    });
     await context.clearCookies();
   });
 

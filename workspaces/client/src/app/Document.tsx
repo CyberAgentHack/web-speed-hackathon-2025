@@ -11,36 +11,13 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 
 export const Document = () => {
   return (
-    <html className="size-full font-sans" lang="ja">
+    <html className="size-full" lang="ja">
       <head>
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <script src="/public/main.js"></script>
-
-        {/* フォントのプリロード */}
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/noto-sans-jp/noto-sans-jp-regular.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/noto-sans-jp/noto-sans-jp-medium.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/noto-sans-jp/noto-sans-jp-bold.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
       </head>
-      <body className="size-full bg-[#000000] font-sans text-[#ffffff]">
+      <body className="size-full bg-[#000000] text-[#ffffff]">
         <Suspense>
           <Layout>
             <Outlet />
