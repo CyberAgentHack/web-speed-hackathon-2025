@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import CompressionPlugin from 'compression-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -61,6 +62,16 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new CompressionPlugin({
+      filename: '[path][base].gz',
+      algorithm: 'gzip',
+      test: /\.(js|css|html|svg)$/,
+    }),
+    new CompressionPlugin({
+      filename: '[path][base].br',
+      algorithm: 'brotliCompress',
+      test: /\.(js|css|html|svg)$/,
+    }),
   ],
   resolve: {
     alias: {

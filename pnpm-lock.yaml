@@ -199,6 +199,9 @@ importers:
       babel-loader:
         specifier: 9.2.1
         version: 9.2.1(@babel/core@7.26.0)(webpack@5.96.1)
+      compression-webpack-plugin:
+        specifier: 11.1.0
+        version: 11.1.0(webpack@5.96.1)
       core-js:
         specifier: 3.41.0
         version: 3.41.0
@@ -2560,6 +2563,12 @@ packages:
   compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
     engines: {node: '>= 0.6'}
+
+  compression-webpack-plugin@11.1.0:
+    resolution: {integrity: sha512-zDOQYp10+upzLxW+VRSjEpRRwBXJdsb5lBMlRxx1g8hckIFBpe3DTI0en2w7h+beuq89576RVzfiXrkdPGrHhA==}
+    engines: {node: '>= 18.12.0'}
+    peerDependencies:
+      webpack: ^5.1.0
 
   compression@1.7.5:
     resolution: {integrity: sha512-bQJ0YRck5ak3LgtnpKkiabX5pNF7tMUh1BSy2ZBOTh0Dim0BUu6aPPwByIns6/A5Prh8PufSPerMDUklpzes2Q==}
@@ -7589,6 +7598,12 @@ snapshots:
   compressible@2.0.18:
     dependencies:
       mime-db: 1.52.0
+
+  compression-webpack-plugin@11.1.0(webpack@5.96.1):
+    dependencies:
+      schema-utils: 4.2.0
+      serialize-javascript: 6.0.2
+      webpack: 5.96.1(webpack-cli@5.1.4)
 
   compression@1.7.5:
     dependencies:
