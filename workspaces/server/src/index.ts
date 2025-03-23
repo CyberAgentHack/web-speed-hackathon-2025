@@ -17,37 +17,25 @@ async function main() {
     // パスベースのキャッシュポリシー
     const path = req.url;
     
-    // 1. 動画ストリーミングファイル（長時間キャッシュ）
-    if (path.includes('.m3u8') || path.includes('.ts') || path.startsWith('/streams/')) {
+    // 動画ストリーミングファイル（長時間キャッシュ）
+    if (path.includes('.m3u8') || path.includes('.ts') || path.includes('streams')) {
       reply.header('cache-control', 'public, max-age=86400, stale-while-revalidate=172800');
     }
-    // 2. 静的アセット（長時間キャッシュ）
-    else if (path.includes('/public/') || path.match(/\.(jpg|jpeg|png|webp|svg|css|js|ico)(\?|$)/)) {
+    // 静的アセット（長時間キャッシュ）
+    else if (path.includes('public') || path.match(/\.(jpg|jpeg|png|webp|svg|css|js|ico)(\?|$)/)) {
       reply.header('cache-control', 'public, max-age=86400, immutable');
     }
-    // 3. エピソードや番組メタデータ（短時間キャッシュ）
-    else if (path.match(/\/api\/episodes\/|\/api\/programs\//)) {
-      reply.header('cache-control', 'public, max-age=3600, stale-while-revalidate=7200');
-    }
-    // 4. サムネイル画像（中程度のキャッシュ）
-    else if (path.includes('/preview.jpg') || path.includes('/thumbnail')) {
-      reply.header('cache-control', 'public, max-age=43200'); // 12時間
-    }
-    // 5. ユーザー固有のデータやセッション（キャッシュなし）
-    else if (path.includes('/api/user/') || path.includes('/api/auth/')) {
+    // ログイン系はキャッシュしない
+    else if (path.includes('signIn') || path.includes('signUp') || path.includes('users') || path.includes('signOut')) {
       reply.header('cache-control', 'no-store');
     }
-    // 6. その他のAPI（短時間キャッシュ）
-    else if (path.startsWith('/api/')) {
-      if (req.method === 'GET') {
-        reply.header('cache-control', 'public, max-age=60, stale-while-revalidate=300');
-      } else {
-        reply.header('cache-control', 'no-store');
-      }
+    // その他のAPI（短時間キャッシュ）
+    else if (path.startsWith('/api/') && req.method === 'GET') {
+      reply.header('cache-control', 'public, max-age=3600, stale-while-revalidate=7200');
     }
-    // 7. その他すべて（デフォルト）
+    // その他すべて（デフォルト）
     else {
-      reply.header('cache-control', 'no-cache');
+      reply.header('cache-control', 'no-store');
     }
   });
   app.register(cors, {
