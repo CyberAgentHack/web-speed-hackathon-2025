@@ -25,10 +25,7 @@ const config = {
               [
                 '@babel/preset-env',
                 {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
                   targets: 'defaults',
-                  useBuiltIns: 'entry',
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -55,17 +52,16 @@ const config = {
     ],
   },
   optimization: {
-    minimize: true,
     minimizer: [new TerserPlugin()],
+    minimize: true,
     splitChunks: {
-      chunks: 'all',
+      chunks: 'async',
     },
-    usedExports: true,
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+//    chunkFormat: false,
+//    filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
