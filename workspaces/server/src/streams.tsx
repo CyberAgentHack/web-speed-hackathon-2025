@@ -77,40 +77,44 @@ export function registerStreams(app: FastifyInstance): void {
       `,
     ];
 
-    for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
-      const sequence = firstSequence + idx;
-      const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
-      console.log(sequenceStartAt);
-
-      const program = await database.query.program.findFirst({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { and, eq, lt, lte, sql }) {
-          // 競技のため、時刻のみで比較する
-          return and(
-            lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
-            lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
-            eq(program.channelId, req.params.channelId),
-          );
-        },
-        with: {
-          episode: {
-            with: {
-              stream: true,
-            },
+    const programs = await database.query.program.findMany({
+      limit: SEQUENCE_COUNT_PER_PLAYLIST,
+      orderBy(program, { asc }) {
+        return asc(program.startAt);
+      },
+      where(program, { eq }) {
+        return eq(program.channelId, req.params.channelId);
+      },
+      with: {
+        episode: {
+          with: {
+            stream: true,
           },
         },
-      });
+      },
+    });
 
-      if (program == null) {
+    const programStartTimes = programs.map((p) => ({
+      endTime: getTime(new Date(p.endAt)),
+      program: p,
+      startTime: getTime(new Date(p.startAt)),
+    }));
+
+    const sequenceStartAt = new Date();
+
+    for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
+      const sequence = firstSequence + idx;
+      sequenceStartAt.setTime(sequence * SEQUENCE_DURATION_MS);
+      const sequenceTime = sequenceStartAt.getTime() - DateTime.fromJSDate(sequenceStartAt).startOf('day').toMillis();
+
+      const program = programStartTimes.find((p) => sequenceTime >= p.startTime && sequenceTime < p.endTime);
+
+      if (!program) {
         break;
       }
 
-      const stream = program.episode.stream;
-      const sequenceInStream = Math.floor(
-        (getTime(sequenceStartAt) - getTime(new Date(program.startAt))) / SEQUENCE_DURATION_MS,
-      );
+      const stream = program.program.episode.stream;
+      const sequenceInStream = Math.floor((sequenceTime - program.startTime) / SEQUENCE_DURATION_MS);
       const chunkIdx = sequenceInStream % stream.numberOfChunks;
 
       playlist.push(
