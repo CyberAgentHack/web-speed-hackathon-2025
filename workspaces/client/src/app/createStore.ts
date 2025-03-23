@@ -12,6 +12,7 @@ import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetab
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+// @ts-ignore
 import merge from 'lodash-es/merge';
 
 interface Props {
