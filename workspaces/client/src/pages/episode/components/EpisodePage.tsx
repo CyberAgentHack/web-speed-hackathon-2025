@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -36,8 +36,9 @@ export const EpisodePage = () => {
   const episode = useEpisodeById({ episodeId });
   invariant(episode);
 
-  const modules = useRecommended({ referenceId: episodeId });
-
+  // TODO メモ化の方法については要変更
+  // const modules = useRecommended({ referenceId: 'episodeId' });
+  const modules = useMemo(() => useRecommended({ referenceId: 'episodeId' }), []); 
   const playerRef = usePlayerRef();
 
   const isSignInRequired = episode.premium && user == null;
