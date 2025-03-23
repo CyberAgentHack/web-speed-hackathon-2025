@@ -13,9 +13,29 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onSend', async (req, reply) => {
+    // キャッシュ可能なパスのリスト
+    const cachablePaths = [
+      '/api/channels',
+      '/api/episodes',
+      '/api/series',
+      '/api/programs'
+    ];
+    
+    // POSTリクエストや書き込み操作の場合はキャッシュしない
+    if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
+      reply.header('cache-control', 'no-store');
+      return;
+    }
+    
+    // 指定されたパスへのGETリクエストはキャッシュする
+    if (req.method === 'GET' && cachablePaths.some(path => req.url.startsWith(path))) {
+      reply.header('cache-control', 'public, max-age=60'); // 60秒間のキャッシュ
+    } else {
+      reply.header('cache-control', 'no-store');
+    }
   });
+  
   app.register(cors, {
     origin: true,
   });

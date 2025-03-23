@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "build": "wireit",
+    "build:prod": "NODE_ENV=production wireit",
+    "analyze": "NODE_ENV=production ANALYZE=true wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit"
