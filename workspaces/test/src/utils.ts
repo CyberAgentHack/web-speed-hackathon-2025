@@ -53,16 +53,16 @@ export async function waitForAllImagesToLoad(locator: Locator, expectedNumberOfI
 }
 
 export async function scrollEntire(page: Page): Promise<void> {
-  await page.evaluate(async () => {
-    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  await page.evaluate(() => {
+    //const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     for (let i = 0; i < document.body.scrollHeight; i += 100) {
       window.scrollTo(0, i);
-      await delay(50);
+      //await delay(50);
     }
 
     for (let i = document.body.scrollHeight; i > 0; i -= 100) {
       window.scrollTo(0, i);
-      await delay(50);
+      //await delay(50);
     }
   });
 }

@@ -17,9 +17,15 @@ const $fetch = createFetch({
       output: schema.getProgramByIdResponse,
       params: schema.getProgramByIdRequestParams,
     },
+    '/programs/:programId/next': {
+      output: schema.getProgramByIdResponse,
+      params: schema.getProgramByIdRequestParams,
+    },
   }),
   throw: true,
 });
+
+const immediateScheduler: batshit.BatcherScheduler = () => 'immediate';
 
 const batcher = batshit.create({
   async fetcher(queries: { programId: string }[]) {
@@ -37,10 +43,7 @@ const batcher = batshit.create({
     }
     return item;
   },
-  scheduler: batshit.windowedFiniteBatchScheduler({
-    maxBatchSize: 100,
-    windowMs: 1000,
-  }),
+  scheduler: immediateScheduler,
 });
 
 interface ProgramService {
@@ -48,6 +51,9 @@ interface ProgramService {
     programId: string;
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramByIdResponse>>;
   fetchPrograms: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramsResponse>>;
+  fetchNextNextProgram: (query: {
+    programId: string;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramByIdResponse>>;
 }
 
 export const programService: ProgramService = {
@@ -57,6 +63,12 @@ export const programService: ProgramService = {
   },
   async fetchPrograms() {
     const data = await $fetch('/programs', { query: {} });
+    return data;
+  },
+  async fetchNextNextProgram({ programId }) {
+    const data = await $fetch('/programs/:programId/next', {
+      params: { programId },
+    });
     return data;
   },
 };

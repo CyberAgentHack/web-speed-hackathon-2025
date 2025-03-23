@@ -1,16 +1,18 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: process.env['NODE_ENV'] === 'development' ? 'inline-source-map' : false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/, /node_modules\/@ffmpeg/],
         resolve: {
           fullySpecified: false,
         },
@@ -51,22 +53,42 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    usedExports: true,
+    sideEffects: true,
+    splitChunks: {
+      chunks: 'async',
+      minSize: 20000,
+      maxSize: 244000,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: 'auto',
+    publicPath: '/public/',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: process.env['NODE_ENV'] ?? 'development' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+    }),
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: 'index.html',
+      inject: true,
+    }),
   ],
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };

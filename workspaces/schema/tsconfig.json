@@ -16,6 +16,6 @@
     "target": "ESNext"
   },
   "exclude": ["dist"],
-  "extends": "@wsh-2025/configs/tsconfig.json",
+  //"extends": "@wsh-2025/configs/tsconfig.json",
   "include": ["**/*", "**/*.mjs", "../client/**/*"]
 }

@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -18,28 +17,34 @@ interface Props {
   hydrationData?: unknown;
 }
 
-export const createStore = ({ hydrationData }: Props) => {
-  const store = createZustandStore(
-    withLenses(() => ({
-      features: {
-        auth: createAuthStoreSlice(),
-        channel: createChannelStoreSlice(),
-        episode: createEpisodeStoreSlice(),
-        layout: createLayoutStoreSlice(),
-        program: createProgramStoreSlice(),
-        recommended: createRecommendedStoreSlice(),
-        series: createSeriesStoreSlice(),
-        timetable: createTimetableStoreSlice(),
-      },
-      pages: {
-        episode: createEpisodePageStoreSlice(),
-        program: createProgramPageStoreSlice(),
-        timetable: createTimetablePageStoreSlice(),
-      },
-    })),
-  );
+type StoreState = ReturnType<typeof createInitialState>;
 
-  store.setState((s) => _.merge(s, hydrationData));
+function createInitialState() {
+  return {
+    features: {
+      auth: createAuthStoreSlice(),
+      channel: createChannelStoreSlice(),
+      episode: createEpisodeStoreSlice(),
+      layout: createLayoutStoreSlice(),
+      program: createProgramStoreSlice(),
+      recommended: createRecommendedStoreSlice(),
+      series: createSeriesStoreSlice(),
+      timetable: createTimetableStoreSlice(),
+    },
+    pages: {
+      episode: createEpisodePageStoreSlice(),
+      program: createProgramPageStoreSlice(),
+      timetable: createTimetablePageStoreSlice(),
+    },
+  };
+}
+
+export const createStore = ({ hydrationData }: Props) => {
+  const store = createZustandStore(withLenses(() => createInitialState()));
+
+  if (hydrationData) {
+    store.setState((s: StoreState) => ({ ...s, ...(hydrationData as Partial<StoreState>) }));
+  }
 
   return store;
 };

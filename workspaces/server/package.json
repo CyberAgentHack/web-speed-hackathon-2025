@@ -11,6 +11,7 @@
     "start": "wireit"
   },
   "dependencies": {
+    "@fastify/compress": "8.0.1",
     "@fastify/cookie": "11.0.2",
     "@fastify/cors": "10.0.1",
     "@fastify/session": "11.1.0",
@@ -49,12 +50,14 @@
     "@types/node": "22.10.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
-    "@wsh-2025/configs": "workspace:*",
     "drizzle-kit": "0.30.1",
     "iconv-lite": "0.6.3",
     "jszip": "3.10.1",
     "mikanjs": "1.0.14",
     "type-fest": "4.29.1"
+  },
+  "volta": {
+    "node": "22.14.0"
   },
   "wireit": {
     "database:migrate": {

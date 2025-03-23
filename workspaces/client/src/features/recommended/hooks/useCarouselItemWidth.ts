@@ -10,11 +10,16 @@ export function useCarouselItemWidth() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(function tick() {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
       forceUpdate();
-    }, 250);
+    });
+
+    resizeObserver.observe(container);
     return () => {
-      clearInterval(interval);
+      resizeObserver.disconnect();
     };
   }, []);
 

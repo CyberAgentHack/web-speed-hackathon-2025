@@ -7,7 +7,6 @@
   "devDependencies": {
     "@playwright/test": "1.50.1",
     "@types/node": "22.10.0",
-    "@wsh-2025/configs": "workspace:*",
     "mockdate": "3.0.5"
   },
   "wireit": {

@@ -162,7 +162,14 @@ async function main() {
     // Create programs
     console.log('Creating programs...');
     const programList: (typeof schema.program.$inferInsert)[] = [];
-    const episodeListGroupedByStreamId = Object.values(Object.groupBy(episodeList, (episode) => episode.streamId));
+    const episodeListGroupedByStreamId = Object.values(
+      episodeList.reduce<Record<string, (typeof schema.episode.$inferSelect)[]>>((acc, episode) => {
+        const streamId = episode.streamId;
+        acc[streamId] = acc[streamId] || [];
+        acc[streamId]!.push(episode);
+        return acc;
+      }, {}),
+    );
     for (const channel of channelList) {
       let remainingMinutes = 24 * 60;
       let startAt = DateTime.now().startOf('day').toMillis();
@@ -196,99 +203,116 @@ async function main() {
 
     // Create recommended modules
     console.log('Creating recommended modules...');
-    for (const reference of [
+    const batchSize = 10;
+    const references = [
       ...seriesList.map((s) => ({ id: s.id, type: 'series', series: s }) as const),
       ...episodeList.map((e) => ({ id: e.id, type: 'episode', episode: e }) as const),
       ...programList.map((p) => ({ id: p.id, type: 'program', program: p }) as const),
       { id: 'entrance', type: 'entrance' } as const,
       { id: 'error', type: 'error' } as const,
-    ]) {
-      const seriesIds = faker.helpers.shuffle(
-        seriesList
-          .filter((target) => {
-            return target.id !== reference.id;
-          })
-          .map((s) => s.id),
+    ];
+
+    // バッチ処理を実装
+    for (let i = 0; i < references.length; i += batchSize) {
+      console.log(`Processing batch ${i / batchSize + 1} of ${Math.ceil(references.length / batchSize)}`);
+      const batch = references.slice(i, i + batchSize);
+
+      // 各バッチのmoduleを一括生成
+      const allModules = batch.flatMap((reference) =>
+        Array.from({ length: 20 }, (_, moduleOrder) => {
+          const moduleType = reference.id === 'entrance' && moduleOrder % 4 === 0 ? 'jumbotron' : 'carousel';
+          return {
+            id: faker.string.uuid(),
+            order: moduleOrder + 1,
+            referenceId: reference.id,
+            title:
+              moduleType === 'jumbotron'
+                ? ''
+                : `『${faker.helpers.arrayElement(seriesTitleList)}』を見ているあなたにオススメ`,
+            type: moduleType,
+          };
+        }),
       );
 
-      const episodeIds = faker.helpers.shuffle(
-        episodeList
-          .filter((target) => {
-            switch (reference.type) {
-              case 'series': {
-                return target.seriesId !== reference.series.id;
-              }
-              case 'episode': {
-                const series = seriesList.find((s) => s.id === reference.episode.seriesId);
-                const relatedEpisodes = episodeList.filter((e) => e.seriesId === series?.id);
-                return relatedEpisodes.every((r) => r.id !== target.id);
-              }
-              case 'program': {
-                const targetEpisode = episodeList.find((s) => s.id === reference.program.episodeId);
-                const series = seriesList.find((s) => s.id === targetEpisode?.seriesId);
-                const relatedEpisodes = episodeList.filter((e) => e.seriesId === series?.id);
-                return relatedEpisodes.every((r) => r.id !== target.id);
-              }
-              default: {
-                return true;
-              }
-            }
-          })
-          .map((e) => e.id),
-      );
+      // モジュールを一括挿入
+      const moduleList = await database.insert(schema.recommendedModule).values(allModules).returning();
 
-      const moduleList = await database
-        .insert(schema.recommendedModule)
-        .values(
-          Array.from({ length: 20 }, (_, moduleOrder) => {
-            const moduleType = reference.id === 'entrance' && moduleOrder % 4 === 0 ? 'jumbotron' : 'carousel';
+      // 各referenceに対応するモジュールをグループ化
+      const modulesByReference = moduleList.reduce<Record<string, typeof moduleList>>((acc, module) => {
+        const referenceId = module.referenceId;
+        acc[referenceId] = acc[referenceId] || [];
+        acc[referenceId]!.push(module);
+        return acc;
+      }, {});
 
-            return {
-              id: faker.string.uuid(),
-              order: moduleOrder + 1,
-              referenceId: reference.id,
-              title:
-                moduleType === 'jumbotron'
-                  ? ''
-                  : `『${faker.helpers.arrayElement(seriesTitleList)}』を見ているあなたにオススメ`,
-              type: moduleType,
-            };
-          }),
-        )
-        .returning();
+      // 各referenceに対するアイテムを一括生成
+      const allItems: (typeof schema.recommendedItem.$inferInsert)[] = [];
 
-      for (const module of moduleList) {
-        if (module.type === 'jumbotron') {
-          await database.insert(schema.recommendedItem).values([
-            {
+      for (const reference of batch) {
+        const modules = modulesByReference[reference.id] || [];
+        const seriesIds = faker.helpers.shuffle(
+          seriesList.filter((target) => target.id !== reference.id).map((s) => s.id),
+        );
+        const episodeIds = faker.helpers.shuffle(
+          episodeList
+            .filter((target) => {
+              switch (reference.type) {
+                case 'series':
+                  return target.seriesId !== reference.series.id;
+                case 'episode': {
+                  const series = seriesList.find((s) => s.id === reference.episode.seriesId);
+                  return !episodeList.some((e) => e.seriesId === series?.id && e.id === target.id);
+                }
+                case 'program': {
+                  const targetEpisode = episodeList.find((s) => s.id === reference.program.episodeId);
+                  const series = seriesList.find((s) => s.id === targetEpisode?.seriesId);
+                  return !episodeList.some((e) => e.seriesId === series?.id && e.id === target.id);
+                }
+                default:
+                  return true;
+              }
+            })
+            .map((e) => e.id),
+        );
+
+        for (const module of modules) {
+          if (module.type === 'jumbotron') {
+            allItems.push({
               episodeId: episodeIds.shift()!,
               id: faker.string.uuid(),
               moduleId: module.id,
               order: 1,
               seriesId: null,
-            },
-          ]);
-        } else if (module.order === 2) {
-          await database.insert(schema.recommendedItem).values(
-            Array.from({ length: faker.number.int({ max: 20, min: 15 }) }, (_, itemOrder) => ({
-              episodeId: null,
-              id: faker.string.uuid(),
-              moduleId: module.id,
-              order: itemOrder + 1,
-              seriesId: seriesIds.shift()!,
-            })),
-          );
-        } else {
-          await database.insert(schema.recommendedItem).values(
-            Array.from({ length: faker.number.int({ max: 20, min: 15 }) }, (_, itemOrder) => ({
-              episodeId: episodeIds.shift()!,
-              id: faker.string.uuid(),
-              moduleId: module.id,
-              order: itemOrder + 1,
-              seriesId: null,
-            })),
-          );
+            });
+          } else if (module.order === 2) {
+            allItems.push(
+              ...Array.from({ length: faker.number.int({ max: 20, min: 15 }) }, (_, itemOrder) => ({
+                episodeId: null,
+                id: faker.string.uuid(),
+                moduleId: module.id,
+                order: itemOrder + 1,
+                seriesId: seriesIds.shift()!,
+              })),
+            );
+          } else {
+            allItems.push(
+              ...Array.from({ length: faker.number.int({ max: 20, min: 15 }) }, (_, itemOrder) => ({
+                episodeId: episodeIds.shift()!,
+                id: faker.string.uuid(),
+                moduleId: module.id,
+                order: itemOrder + 1,
+                seriesId: null,
+              })),
+            );
+          }
         }
+      }
+
+      // アイテムを一括挿入（1000件ずつ）
+      const itemBatchSize = 1000;
+      for (let j = 0; j < allItems.length; j += itemBatchSize) {
+        const itemBatch = allItems.slice(j, j + itemBatchSize);
+        await database.insert(schema.recommendedItem).values(itemBatch);
       }
     }
 

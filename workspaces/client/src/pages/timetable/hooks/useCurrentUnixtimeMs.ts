@@ -4,13 +4,21 @@ import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useCurrentUnixtimeMs(): number {
   const state = useStore((s) => s);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    let animationFrameId: number;
+
+    function updateTime() {
       state.pages.timetable.refreshCurrentUnixtimeMs();
-    }, 250);
+      animationFrameId = requestAnimationFrame(updateTime);
+    }
+
+    animationFrameId = requestAnimationFrame(updateTime);
+
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
+
   return state.pages.timetable.currentUnixtimeMs;
 }

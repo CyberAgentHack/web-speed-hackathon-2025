@@ -3,6 +3,7 @@ import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
+import { Icon } from '@iconify/react';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
@@ -51,7 +52,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} loading="lazy" />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -75,9 +76,13 @@ export const EpisodePage = () => {
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
                         src={episode.thumbnailUrl}
+                        loading="lazy"
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <Icon
+                        icon="line-md:loading-twotone-loop"
+                        className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]"
+                      />
                     </div>
                   </AspectRatio>
                 }

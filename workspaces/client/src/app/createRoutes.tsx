@@ -11,10 +11,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         {
           index: true,
           async lazy() {
-            const { HomePage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/home/components/HomePage'),
-              1000,
-            );
+            const { HomePage, prefetch } = await lazy(import('@wsh-2025/client/src/pages/home/components/HomePage'), 0);
             return {
               Component: HomePage,
               async loader() {
@@ -27,7 +24,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           async lazy() {
             const { EpisodePage, prefetch } = await lazy(
               import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
-              1000,
+              0,
             );
             return {
               Component: EpisodePage,
@@ -42,7 +39,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           async lazy() {
             const { prefetch, ProgramPage } = await lazy(
               import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
-              1000,
+              0,
             );
             return {
               Component: ProgramPage,
@@ -57,7 +54,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           async lazy() {
             const { prefetch, SeriesPage } = await lazy(
               import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
-              1000,
+              0,
             );
             return {
               Component: SeriesPage,
@@ -72,7 +69,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           async lazy() {
             const { prefetch, TimetablePage } = await lazy(
               import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
-              1000,
+              0,
             );
             return {
               Component: TimetablePage,
@@ -87,7 +84,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
           async lazy() {
             const { NotFoundPage, prefetch } = await lazy(
               import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
-              1000,
+              0,
             );
             return {
               Component: NotFoundPage,

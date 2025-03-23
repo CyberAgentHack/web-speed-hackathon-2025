@@ -9,7 +9,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 import * as schema from '@wsh-2025/schema/src/openapi/schema';
 import * as bcrypt from 'bcrypt';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyReply } from 'fastify';
 import {
   fastifyZodOpenApiPlugin,
   type FastifyZodOpenApiSchema,
@@ -23,6 +23,10 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+
+function sendJson(reply: FastifyReply, statusCode: number, data: unknown): FastifyReply {
+  return reply.code(statusCode).header('content-type', 'application/json').send(JSON.stringify(data));
+}
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -72,7 +76,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function initialize(_req, reply) {
       await initializeDatabase();
-      reply.code(200).send({});
+      return sendJson(reply, 200, {});
     },
   });
 
@@ -107,7 +111,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return void 0;
         },
       });
-      reply.code(200).send(channels);
+      return sendJson(reply, 200, channels);
     },
   });
 
@@ -138,7 +142,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (channel == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(channel);
+      return sendJson(reply, 200, channel);
     },
   });
 
@@ -184,7 +188,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(episodes);
+      return sendJson(reply, 200, episodes);
     },
   });
 
@@ -226,7 +230,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (episode == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(episode);
+      return sendJson(reply, 200, episode);
     },
   });
 
@@ -271,7 +275,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(series);
+      return sendJson(reply, 200, series);
     },
   });
 
@@ -312,7 +316,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (series == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(series);
+      return sendJson(reply, 200, series);
     },
   });
 
@@ -348,7 +352,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           );
         },
       });
-      reply.code(200).send(programs);
+      return sendJson(reply, 200, programs);
     },
   });
 
@@ -399,7 +403,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(programs);
+      return sendJson(reply, 200, programs);
     },
   });
 
@@ -446,7 +450,68 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (program == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(program);
+      return sendJson(reply, 200, program);
+    },
+  });
+
+  api.route({
+    method: 'GET',
+    url: '/programs/:programId/next',
+    schema: {
+      tags: ['番組'],
+      params: schema.getProgramByIdRequestParams,
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getProgramByIdResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getNextProgram(req, reply) {
+      const database = getDatabase();
+
+      // 現在の番組を取得
+      const currentProgram = await database.query.program.findFirst({
+        where(program, { eq }) {
+          return eq(program.id, req.params.programId);
+        },
+      });
+
+      if (currentProgram == null) {
+        return reply.code(404).send();
+      }
+
+      // 次の番組を取得
+      const nextProgram = await database.query.program.findFirst({
+        where(program, { and, eq }) {
+          return and(eq(program.channelId, currentProgram.channelId), eq(program.startAt, currentProgram.endAt));
+        },
+        with: {
+          channel: true,
+          episode: {
+            with: {
+              series: {
+                with: {
+                  episodes: {
+                    orderBy(episode, { asc }) {
+                      return asc(episode.order);
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (nextProgram == null) {
+        return reply.code(404).send();
+      }
+
+      return sendJson(reply, 200, nextProgram);
     },
   });
 
@@ -482,33 +547,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              series: true,
+              episode: true,
             },
           },
         },
       });
-      reply.code(200).send(modules);
+
+      const result = req.params.referenceId !== 'entrance' ? modules.slice(0, 1) : modules;
+      return sendJson(reply, 200, result);
     },
   });
 
@@ -543,7 +590,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const ret = schema.signInResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
-      reply.code(200).send(user);
+      return sendJson(reply, 200, user);
     },
   });
 
@@ -591,7 +638,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
-      reply.code(200).send(ret);
+      return sendJson(reply, 200, ret);
     },
   });
 
@@ -626,7 +673,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (!user) {
         return reply.code(401).send();
       }
-      reply.code(200).send(user);
+      return sendJson(reply, 200, user);
     },
   });
 
@@ -642,7 +689,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(401).send();
       }
       req.session.set('id', void 0);
-      reply.code(200).send();
+      return sendJson(reply, 200, {});
     },
   });
 
