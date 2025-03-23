@@ -25,7 +25,6 @@ export const SeriesItem = ({ series }: Props) => {
                     alt=""
                     className="h-auto w-full"
                     src={series.thumbnailUrl}
-                    decoding="async"
                     loading="lazy"
                     width="333px"
                     height="188px"

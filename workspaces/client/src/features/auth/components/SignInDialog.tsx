@@ -48,14 +48,7 @@ export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img
-            className="object-contain"
-            height={36}
-            src="/public/arema.svg"
-            width={98}
-            decoding="async"
-            loading="lazy"
-          />
+          <img className="object-contain" height={36} src="/public/arema.svg" width={98} loading="lazy" />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">ログイン</h2>

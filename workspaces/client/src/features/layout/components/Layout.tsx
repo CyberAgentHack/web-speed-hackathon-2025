@@ -65,22 +65,14 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img
-              alt="AREMA"
-              className="object-contain"
-              height={36}
-              src="/public/arema.svg"
-              width={98}
-              decoding="async"
-              loading="lazy"
-            />
+            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} loading="lazy" />
           </Link>
         </header>
 
         <aside className="sticky top-[0px] flex h-[100vh] flex-col items-center bg-[#171717] pt-[80px] [grid-area:a1/a1/a2/a2]">
           <nav>
             <button
-              className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+              className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pt-[8px] pr-[8px] pb-[8px] pl-[20px]"
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
@@ -88,25 +80,25 @@ export const Layout = ({ children }: Props) => {
                 icon={`fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'}`}
                 className="m-[4px] size-[20px] shrink-0 grow-0"
               />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
+              <span className="ml-[16px] shrink-1 grow-1 text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
             </button>
 
             <Link
-              className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+              className="block flex h-[56px] w-[188px] items-center justify-center pt-[8px] pr-[8px] pb-[8px] pl-[20px]"
               to="/"
             >
               <Icon icon="bi:house-fill" className="m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
+              <span className="ml-[16px] shrink-1 grow-1 text-left text-[14px] font-bold">ホーム</span>
             </Link>
 
             <Link
-              className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+              className="block flex h-[56px] w-[188px] items-center justify-center pt-[8px] pr-[8px] pb-[8px] pl-[20px]"
               to="/timetable"
             >
               <Icon icon="fa-solid:calendar" className="m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
+              <span className="ml-[16px] shrink-1 grow-1 text-left text-[14px] font-bold">番組表</span>
             </Link>
           </nav>
         </aside>

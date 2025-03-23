@@ -27,7 +27,6 @@ export const EpisodeItem = ({ episode }: Props) => {
                     alt=""
                     className="h-auto w-full"
                     src={episode.thumbnailUrl}
-                    decoding="async"
                     loading="lazy"
                     width="333px"
                     height="188px"
@@ -37,7 +36,7 @@ export const EpisodeItem = ({ episode }: Props) => {
                     className="absolute bottom-[4px] left-[4px] m-[4px] block size-[20px] text-[#ffffff]"
                   />
                   {episode.premium ? (
-                    <span className="absolute bottom-[8px] right-[4px] inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
+                    <span className="absolute right-[4px] bottom-[8px] inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
                       プレミアム
                     </span>
                   ) : null}

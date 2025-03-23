@@ -71,7 +71,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 {DateTime.fromISO(program.startAt).toFormat('mm')}
               </span>
               <div
-                className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
+                className={`shrink-1 grow-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
               >
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
@@ -82,7 +82,6 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 src={program.thumbnailUrl}
-                decoding="async"
                 loading="lazy"
               />
             </div>
