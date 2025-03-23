@@ -58,20 +58,6 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-
-  optimization: {
-    splitChunks: {
-      chunks: 'all', // すべての chunk を対象にコード分割
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
-  },
-
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 100 }),//change
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
