@@ -37,7 +37,10 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              fetchPriority="high"
+              height="225"
               src={series.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
+              width="400"
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
