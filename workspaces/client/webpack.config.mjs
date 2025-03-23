@@ -6,7 +6,7 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'none',
+  devtool: false,
   entry: './src/main.tsx',
   mode: "production",
   module: {
@@ -18,13 +18,20 @@ const config = {
         },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'swc-loader',
           options: {
             cacheDirectory: true,
-            presets: [
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
+            jsc: {
+              parser: {
+                syntax: 'typescript',
+                tsx: true,
+              },
+              transform: {
+                react: {
+                  runtime: 'automatic',
+                },
+              },
+            },
           },
         },
       },
