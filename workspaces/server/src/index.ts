@@ -14,7 +14,11 @@ async function main() {
   const app = fastify();
 
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    if (_req.url.startsWith('/public/')) {
+      reply.header('Cache-Control', 'public, max-age=86400, immutable');
+    } else {
+      reply.header('Cache-Control', 'no-store');
+    }
   });
   app.register(cors, {
     origin: true,

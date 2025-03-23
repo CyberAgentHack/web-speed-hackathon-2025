@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -17,6 +16,32 @@ import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timeta
 interface Props {
   hydrationData?: unknown;
 }
+
+// _.mergeをlodashを使わずに書き換える、再帰的に
+const merge = (s: any, hydrationData: any): any => {
+  if (s == null || hydrationData == null || typeof s !== typeof hydrationData) {
+    return hydrationData ?? s;
+  }
+
+  if (Array.isArray(s) && Array.isArray(hydrationData)) {
+    return Array.from(new Set([...s, ...hydrationData]));
+  }
+
+  if (typeof s === "object" && typeof hydrationData === "object") {
+    const result = { ...s };
+
+    for (const key of Object.keys(hydrationData)) {
+      result[key] =
+        key in s && typeof s[key] === "object"
+          ? merge(s[key], hydrationData[key])
+          : hydrationData[key] ?? s[key];
+    }
+
+    return result;
+  }
+
+  return hydrationData;
+};
 
 export const createStore = ({ hydrationData }: Props) => {
   const store = createZustandStore(
@@ -39,7 +64,7 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  store.setState((s) => merge(s, hydrationData) as any);
 
   return store;
 };

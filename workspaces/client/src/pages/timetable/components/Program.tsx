@@ -10,6 +10,7 @@ import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/compon
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
+import { JpegToWebp } from '@wsh-2025/client/src/util-tmp/jpegToWebp';
 
 interface Props {
   height: number;
@@ -73,7 +74,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-                src={program.thumbnailUrl}
+                loading="lazy"
+                src={JpegToWebp(program.thumbnailUrl)}
               />
             </div>
           </div>
