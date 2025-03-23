@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
@@ -42,15 +41,15 @@ export const TimetablePage = () => {
         <div className="sticky inset-y-0 left-0 z-10 shrink-0 grow-0 bg-[#000000] [grid-area:hours]">
           <TimelineYAxis />
         </div>
+
         <div className="flex flex-row [grid-area:content]">
           {programLists.map((programList, index) => {
             const channelId = channelIds[index];
-            invariant(channelId);
-            return (
-              <div key={channelIds[index]} className="shrink-0 grow-0">
+            return channelId ? (
+              <div key={channelId} className="shrink-0 grow-0">
                 <ProgramList channelId={channelId} programList={programList} />
               </div>
-            );
+            ) : null;
           })}
         </div>
       </div>

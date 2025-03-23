@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { Params, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
@@ -16,7 +15,8 @@ import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
-  invariant(episodeId);
+  if (!episodeId) throw new Error('Episode ID is required');
+
   const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
   const modules = await store
     .getState()
@@ -29,10 +29,10 @@ export const EpisodePage = () => {
   const user = useAuthUser();
 
   const { episodeId } = useParams();
-  invariant(episodeId);
+  if (!episodeId) return null;
 
   const episode = useEpisodeById({ episodeId });
-  invariant(episode);
+  if (!episode) return null;
 
   const modules = useRecommended({ referenceId: episodeId });
 

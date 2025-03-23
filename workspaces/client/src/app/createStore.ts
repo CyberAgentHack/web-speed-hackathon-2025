@@ -39,7 +39,7 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => merge(s, hydrationData)); // _.merge 대신 merge 사용
+  store.setState((s) => merge(s, hydrationData));
 
   return store;
 };

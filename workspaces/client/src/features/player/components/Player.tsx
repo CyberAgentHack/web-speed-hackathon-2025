@@ -1,5 +1,4 @@
 import { Ref, useEffect, useRef } from 'react';
-import invariant from 'tiny-invariant';
 import { assignRef } from 'use-callback-ref';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
@@ -18,7 +17,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
 
   useEffect(() => {
     const mountElement = mountRef.current;
-    invariant(mountElement);
+    if (!mountElement) return;
 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
@@ -32,8 +31,8 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
         }
 
         player = await createPlayer(playerType);
-
-        if (abortController.signal.aborted as boolean) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (abortController.signal.aborted) {
           return;
         }
 

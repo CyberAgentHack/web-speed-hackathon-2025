@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import { useUpdate } from 'react-use';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
@@ -17,7 +16,7 @@ import { PlayerController } from '@wsh-2025/client/src/pages/program/components/
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
-  invariant(programId);
+  if (!programId) throw new Error('Program ID is required');
 
   const now = DateTime.now();
   const since = now.startOf('day').toISO();
@@ -29,15 +28,16 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const modules = await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+
   return { channels, modules, program, timetable };
 };
 
 export const ProgramPage = () => {
   const { programId } = useParams();
-  invariant(programId);
+  if (!programId) return null;
 
   const program = useProgramById({ programId });
-  invariant(program);
+  if (!program) return null;
 
   const timetable = useTimetable();
   const nextProgram = timetable[program.channel.id]?.find((p) => {
@@ -50,8 +50,10 @@ export const ProgramPage = () => {
 
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
+
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+
   useEffect(() => {
     if (isArchivedRef.current) {
       return;

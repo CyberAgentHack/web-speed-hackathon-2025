@@ -1,6 +1,5 @@
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
@@ -9,20 +8,22 @@ import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/componen
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
-  invariant(seriesId);
+  if (!seriesId) throw new Error('Series ID is required');
+
   const series = await store.getState().features.series.fetchSeriesById({ seriesId });
   const modules = await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+
   return { modules, series };
 };
 
 export const SeriesPage = () => {
   const { seriesId } = useParams();
-  invariant(seriesId);
+  if (!seriesId) return null;
 
   const series = useSeriesById({ seriesId });
-  invariant(series);
+  if (!series) return null;
 
   const modules = useRecommended({ referenceId: seriesId });
 

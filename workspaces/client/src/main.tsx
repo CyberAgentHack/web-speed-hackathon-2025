@@ -20,14 +20,19 @@ function main() {
     hydrationData: window.__staticRouterHydrationData,
   });
 
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <StoreProvider createStore={() => store}>
-        <RouterProvider router={router} />
-      </StoreProvider>
-    </StrictMode>,
-  );
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    hydrateRoot(
+      rootElement,
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <RouterProvider router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
+  } else {
+    console.error('Root element not found');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', main);

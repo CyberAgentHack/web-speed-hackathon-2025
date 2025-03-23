@@ -2,7 +2,6 @@ import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Duration } from 'luxon';
-import invariant from 'tiny-invariant';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
@@ -38,8 +37,10 @@ export const PlayerController = ({ episode }: Props) => {
             orientation="horizontal"
             value={[currentTime]}
             onValueChange={([t]) => {
-              invariant(t);
-              updateCurrentTime(t);
+              // null 및 undefined 체크
+              if (t != null) {
+                updateCurrentTime(t);
+              }
             }}
           >
             <Slider.Track className="grow-1 relative h-[2px] rounded-[4px] bg-[#999999] group-hover:h-[4px]">
@@ -57,9 +58,7 @@ export const PlayerController = ({ episode }: Props) => {
                   aria-label={playing ? '一時停止する' : '再生する'}
                   className="block rounded-[4px]"
                   type="button"
-                  onClick={() => {
-                    togglePlaying();
-                  }}
+                  onClick={togglePlaying}
                 >
                   <span
                     className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
@@ -81,12 +80,10 @@ export const PlayerController = ({ episode }: Props) => {
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"
                 type="button"
+                onClick={toggleMuted}
               >
                 <span
                   className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  onClick={() => {
-                    toggleMuted();
-                  }}
                 />
               </button>
             </Hoverable>
