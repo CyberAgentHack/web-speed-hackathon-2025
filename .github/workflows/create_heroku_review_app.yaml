@@ -1,13 +1,40 @@
 name: Review App
 on:
-  pull_request_target:
-    types: [opened]
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   create-review-app:
     runs-on: ubuntu-latest
     steps:
+      - name: Get PR Number
+        id: get_pr_number
+        run: echo "::set-output name=pr_number::${{ github.event.pull_request.number }}"
+
+      - name: Check if PR Number is greater than 140
+        id: set_step_id
+        run: |
+          pr_number=${{ steps.get_pr_number.outputs.pr_number }}
+          if [ $pr_number -gt 140 ]; then
+            echo "::set-output name=step_id::true"
+          else
+            echo "::set-output name=step_id::false"
+          fi
+
+      - name: Display step_id
+        run: echo "Step ID is ${{ steps.set_step_id.outputs.step_id }}"
+
       - uses: kqito/manage-heroku-review-app@55e434ad5ac86f21cf2f7654de1566973fbc7046
+        if: ${{ steps.set_step_id.outputs.step_id == 'true' }}
+        with:
+          action: destroy
+        env:
+          HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_PIPELINE_ID: ${{ secrets.HEROKU_PIPELINE_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: kqito/manage-heroku-review-app@55e434ad5ac86f21cf2f7654de1566973fbc7046
+        if: ${{ steps.set_step_id.outputs.step_id == 'true' }}
         with:
           action: create
         env:

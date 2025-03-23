@@ -2,7 +2,7 @@ import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { ArrayValues } from 'type-fest';
-import { useMergeRefs } from 'use-callback-ref';
+import { useCallback } from 'react';
 
 import { EpisodeItem } from '@wsh-2025/client/src/features/recommended/components/EpisodeItem';
 import { SeriesItem } from '@wsh-2025/client/src/features/recommended/components/SeriesItem';
@@ -11,6 +11,21 @@ import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/u
 
 interface Props {
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+}
+
+// カスタムのuseMergeRefs実装
+function useMergeRefs<T>(refs: Array<React.Ref<T> | null | undefined>): React.Ref<T> {
+  return useCallback((value: T) => {
+    refs.forEach((ref) => {
+      if (!ref) return;
+      
+      if (typeof ref === 'function') {
+        ref(value);
+      } else {
+        (ref as React.MutableRefObject<T>).current = value;
+      }
+    });
+  }, [refs]);
 }
 
 export const CarouselSection = ({ module }: Props) => {

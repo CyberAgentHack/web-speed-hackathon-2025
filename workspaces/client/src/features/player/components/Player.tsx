@@ -1,6 +1,5 @@
 import { Ref, useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
-import { assignRef } from 'use-callback-ref';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
@@ -11,6 +10,15 @@ interface Props {
   playerRef: Ref<PlayerWrapper | null>;
   playerType: PlayerType;
   playlistUrl: string;
+}
+
+// カスタムのassignRef実装
+function assignRef<T>(ref: Ref<T>, value: T): void {
+  if (typeof ref === 'function') {
+    ref(value);
+  } else if (ref !== null && ref !== undefined) {
+    (ref as React.MutableRefObject<T>).current = value;
+  }
 }
 
 export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {

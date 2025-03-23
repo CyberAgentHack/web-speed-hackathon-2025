@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wsh2025
+  namespace: wsh2025
+  labels:
+    app: wsh2025
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wsh2025
+  template:
+    metadata:
+      labels:
+        app: wsh2025
+    spec:
+      containers:
+      - name: wsh2025
+        image: ghcr.io/kentaro1043/web-speed-hackathon-2025:latest
+        ports:
+         - containerPort: 8000

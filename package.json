@@ -19,6 +19,9 @@
   "engines": {
     "node": "22.14.0"
   },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
   "pnpm": {
     "overrides": {
       "es-abstract": "~1.23.9",
