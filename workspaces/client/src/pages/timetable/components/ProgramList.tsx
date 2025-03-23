@@ -4,7 +4,6 @@ import { DateTime } from 'luxon';
 import { ReactElement } from 'react';
 import { ArrayValues } from 'type-fest';
 
-import { HEIGHT_ONE_HOUR } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 import { Gutter } from '@wsh-2025/client/src/pages/timetable/components/Gutter';
 import { Program } from '@wsh-2025/client/src/pages/timetable/components/Program';
 
@@ -21,11 +20,10 @@ export const ProgramList = ({ channelId, programList }: Props): ReactElement => 
           const startAt = DateTime.fromISO(program.startAt);
           const endAt = DateTime.fromISO(program.endAt);
           const duration = endAt.diff(startAt, 'minutes').minutes;
-          const height = HEIGHT_ONE_HOUR * (duration / 60);
 
           return (
             <div key={program.id} className="shrink-0 grow-0">
-              <Program height={height} program={program} />
+              <Program height={duration * 3} program={program} />
             </div>
           );
         })}

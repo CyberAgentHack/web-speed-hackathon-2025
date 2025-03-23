@@ -2,6 +2,7 @@ import 'zod-openapi/extend';
 
 import { randomBytes } from 'node:crypto';
 
+import compress from '@fastify/compress';
 import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
@@ -27,6 +28,13 @@ import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/da
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+
+  await app.register(compress, {
+    applyTo: ['application/json'],
+    customTypes: /json/,
+    global: false,
+    threshold: 0,
+  });
 
   await app.register(fastifyCookie);
   await app.register(fastifySession, {
