@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { memo, Suspense } from 'react';
 import { Outlet, ScrollRestoration } from 'react-router';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -9,7 +9,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
   return { user };
 };
 
-export const Document = () => {
+export const Document = memo(function Document() {
   return (
     <html lang="ja">
       <head>
@@ -27,4 +27,4 @@ export const Document = () => {
       </body>
     </html>
   );
-};
+});
