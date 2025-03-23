@@ -47,19 +47,19 @@ export function registerSsr(app: FastifyInstance): void {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="/public/styles.css" rel="stylesheet">
         <title>AremaTV</title>
-      <script>
-        window.__staticRouterHydrationData = ${
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          htmlescape({
-            actionData: context.actionData,
-            loaderData: context.loaderData,
-          })
-        };
-      </script>
+        <script src="/public/main.js"></script>
+        <script>
+          window.__staticRouterHydrationData = ${
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            htmlescape({
+              actionData: context.actionData,
+              loaderData: context.loaderData,
+            })
+          };
+        </script>
       </head>
       <body>
         <div id="root"></div>
-        <script src="/public/main.js"></script>
       </body>
       </html>
     `);
