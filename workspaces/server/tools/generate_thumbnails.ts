@@ -84,7 +84,7 @@ async function generateThumbnailForEpisode(stream :string ): Promise<void> {
 
   try {
     // 動画の長さに応じてサムネイルの数を決定（最大20個）
-    const numThumbnails = 30 //Math.min(20, Math.max(10, Math.ceil(tsFiles.length / 3)));
+    const numThumbnails = 50 //Math.min(20, Math.max(10, Math.ceil(tsFiles.length / 3)));
     console.log(`Generating ${numThumbnails} thumbnails for episode ${stream} (${tsFiles.length} TS files)`);
 
     for (let i = 0; i < numThumbnails; i++) {

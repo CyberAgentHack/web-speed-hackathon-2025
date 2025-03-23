@@ -44,8 +44,8 @@ export const SeekThumbnail = ({ episode }: Props) => {
   }
 // サムネイルの位置を計算
 // サーバーサイドで生成されたサムネイルは複数枚のサムネイルが横に並んだ画像
-// 固定の数（20枚）を使用する
-const thumbnailCount = 20; // 最大サムネイル数
+// 固定の数（50枚）を使用する
+const thumbnailCount = 50; // 最大サムネイル数
 
 // パーセンテージに基づいてサムネイルインデックスを計算
 const thumbnailIndex = Math.min(thumbnailCount - 1, Math.floor(percentage * thumbnailCount));
@@ -56,7 +56,7 @@ const thumbnailIndex = Math.min(thumbnailCount - 1, Math.floor(percentage * thum
       className="absolute bottom-0 h-[90px] w-[160px] translate-x-[-50%]"
       style={{
         backgroundImage: `url(${seekThumbnail})`,
-        backgroundSize: '3200px 90px', // 20枚のサムネイル (160px * 20)
+        backgroundSize: '8000px 90px', // 20枚のサムネイル (160px * 20)
         backgroundPosition: `-${thumbnailIndex * SEEK_THUMBNAIL_WIDTH}px 0`,
         left: Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT)),
       }}
