@@ -47,7 +47,12 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img className="object-contain" height={36} src={`${process.env['PUBLIC_PREFIX']}/public/arema.svg`} width={98} />
+          <img
+            className="object-contain"
+            height={36}
+            src={`https://deqdfv99n42lf.cloudfront.net/public/arema.svg`}
+            width={98}
+          />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">会員登録</h2>

@@ -32,7 +32,13 @@ export const Header = () => {
       )}
     >
       <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-        <img alt="AREMA" className="object-contain" height={36} src={`${process.env['PUBLIC_PREFIX']}/public/arema.svg`} width={98} />
+        <img
+          alt="AREMA"
+          className="object-contain"
+          height={36}
+          src={`https://deqdfv99n42lf.cloudfront.net/public/arema.svg`}
+          width={98}
+        />
       </Link>
     </header>
   );
