@@ -647,4 +647,5 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
   });
 
   /* eslint-enable sort/object-properties */
+  /* test */
 }
