@@ -17,6 +17,10 @@ const $fetch = createFetch({
       output: schema.getProgramByIdResponse,
       params: schema.getProgramByIdRequestParams,
     },
+    '/programs/:programId/next': {
+      output: schema.getProgramByIdResponse,
+      params: schema.getProgramByIdRequestParams,
+    },
   }),
   throw: true,
 });
@@ -47,6 +51,9 @@ interface ProgramService {
     programId: string;
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramByIdResponse>>;
   fetchPrograms: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramsResponse>>;
+  fetchNextNextProgram: (query: {
+    programId: string;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getProgramByIdResponse>>;
 }
 
 export const programService: ProgramService = {
@@ -56,6 +63,12 @@ export const programService: ProgramService = {
   },
   async fetchPrograms() {
     const data = await $fetch('/programs', { query: {} });
+    return data;
+  },
+  async fetchNextNextProgram({ programId }) {
+    const data = await $fetch('/programs/:programId/next', {
+      params: { programId },
+    });
     return data;
   },
 };
