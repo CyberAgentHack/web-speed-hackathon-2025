@@ -2,11 +2,19 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+import TerserPlugin from 'terser-webpack-plugin';
+
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+import CompressionPlugin from 'compression-webpack-plugin';
+
+const isDev = process.env['NODE_ENV'] === 'development';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: isDev ? 'development' : 'production',
   module: {
     rules: [
       {
@@ -53,15 +61,91 @@ const config = {
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    // filename: '[name].[contenthash].js', // ファイル名にハッシュを追加
+    filename: 'main.js', // ファイル名にハッシュを追加
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // Gzip圧縮を追加
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 10240, // 10KB以上のファイルのみ圧縮
+      minRatio: 0.8,
+    }),
   ],
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [import.meta.url], // 設定ファイルが変更されたらキャッシュを再構築
+    },
+  },
+  optimization: {
+    // モジュールIDを決定的に
+    moduleIds: 'deterministic',
+    // 使用されているexportsのみをバンドルに含める
+    usedExports: true,
+    // 未使用のコードを削除
+    sideEffects: true,
+
+    providedExports: true,
+
+    // コード分割設定を追加
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 20000,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          /**
+           * @param {{ context: { match: (arg0: RegExp) => any[]; }; }} module
+           */
+          name(module) {
+            // node_modulesのパスからパッケージ名を抽出
+            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+            // 問題を起こす可能性のあるパッケージは別チャンクに
+            if (['@dhmk', '@ffmpeg', 'video.js', '@videojs'].some((pkg) => packageName.startsWith(pkg))) {
+              return `npm.${packageName.replace('@', '')}`;
+            }
+            // それ以外のベンダーライブラリ
+            return 'vendors';
+          },
+        },
+      },
+    },
+
+    // コード最小化設定
+    minimize: !isDev,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            ecma: 2020,
+          },
+          compress: {
+            ecma: 2020,
+            comparisons: false, // 不安定な比較を避ける
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 2020,
+            comments: false,
+            ascii_only: true,
+          },
+        },
+        parallel: true,
+        extractComments: false,
+      }),
+    ],
+  },
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),

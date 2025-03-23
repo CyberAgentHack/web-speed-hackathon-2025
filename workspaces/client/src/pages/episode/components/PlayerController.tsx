@@ -52,7 +52,7 @@ export const PlayerController = ({ episode }: Props) => {
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
+              <Hoverable style={{ default: {}, hovered: { backgroundColor: '#FFFFFF1F' } }}>
                 <button
                   aria-label={playing ? '一時停止する' : '再生する'}
                   className="block rounded-[4px]"
@@ -76,7 +76,7 @@ export const PlayerController = ({ episode }: Props) => {
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
+            <Hoverable style={{ default: {}, hovered: { backgroundColor: '#FFFFFF1F' } }}>
               <button
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"

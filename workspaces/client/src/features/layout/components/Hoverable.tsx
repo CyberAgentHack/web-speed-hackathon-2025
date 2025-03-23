@@ -1,39 +1,46 @@
-import classNames from 'classnames';
-import { Children, cloneElement, ReactElement, Ref, useRef } from 'react';
-import { useMergeRefs } from 'use-callback-ref';
+import { Children, cloneElement, ReactElement, Ref, useState } from 'react';
 
-import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
+// 子要素に必要なプロパティの型を定義
+interface ChildProps {
+  ref?: Ref<unknown> | undefined;
+  style?: React.CSSProperties;
+  onMouseEnter?: (e: React.MouseEvent) => void;
+  onMouseLeave?: (e: React.MouseEvent) => void;
+}
 
 interface Props {
-  children: ReactElement<{ className?: string; ref?: Ref<unknown> }>;
-  classNames: {
-    default?: string;
-    hovered?: string;
+  // 子要素の型を拡張した型にする
+  children: ReactElement<ChildProps>;
+  style: {
+    default?: React.CSSProperties;
+    hovered?: React.CSSProperties;
   };
 }
 
 export const Hoverable = (props: Props) => {
   const child = Children.only(props.children);
-  const elementRef = useRef<HTMLDivElement>(null);
-
-  const mergedRef = useMergeRefs([elementRef, child.props.ref].filter((v) => v != null));
-
-  const pointer = usePointer();
-  const elementRect = elementRef.current?.getBoundingClientRect();
-
-  const hovered =
-    elementRect != null &&
-    elementRect.left <= pointer.x &&
-    pointer.x <= elementRect.right &&
-    elementRect.top <= pointer.y &&
-    pointer.y <= elementRect.bottom;
+  const [isHovered, setIsHovered] = useState(false);
 
   return cloneElement(child, {
-    className: classNames(
-      child.props.className,
-      'cursor-pointer',
-      hovered ? props.classNames.hovered : props.classNames.default,
-    ),
-    ref: mergedRef,
+    ref: child.props.ref,
+    style: {
+      ...child.props.style,
+      cursor: 'pointer',
+      ...(isHovered ? props.style.hovered : props.style.default),
+    },
+    onMouseEnter: (e: React.MouseEvent) => {
+      setIsHovered(true);
+      // 元のハンドラがあれば呼び出す
+      if (child.props.onMouseEnter) {
+        child.props.onMouseEnter(e);
+      }
+    },
+    onMouseLeave: (e: React.MouseEvent) => {
+      setIsHovered(false);
+      // 元のハンドラがあれば呼び出す
+      if (child.props.onMouseLeave) {
+        child.props.onMouseLeave(e);
+      }
+    },
   });
 };
