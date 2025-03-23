@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -77,7 +76,36 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <div className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+                          <g
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          >
+                            <path stroke-dasharray="16" stroke-dashoffset="16" d="M12 3c4.97 0 9 4.03 9 9">
+                              <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="16;0" />
+                              <animateTransform
+                                attributeName="transform"
+                                dur="1.5s"
+                                repeatCount="indefinite"
+                                type="rotate"
+                                values="0 12 12;360 12 12"
+                              />
+                            </path>
+                            <path
+                              stroke-dasharray="64"
+                              stroke-dashoffset="64"
+                              stroke-opacity="0.3"
+                              d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                            >
+                              <animate fill="freeze" attributeName="stroke-dashoffset" dur="1.2s" values="64;0" />
+                            </path>
+                          </g>
+                        </svg>
+                      </div>
                     </div>
                   </AspectRatio>
                 }
@@ -100,12 +128,8 @@ export const EpisodePage = () => {
         </Flipped>
 
         <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
-          </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
-          </h1>
+          <div className="turncate-[1] text-[16px] text-[#ffffff]">{episode.series.title}</div>
+          <h1 className="mt-[8px] line-clamp-2 text-[22px] font-bold text-[#ffffff]">{episode.title}</h1>
           {episode.premium ? (
             <div className="mt-[8px]">
               <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
@@ -113,9 +137,7 @@ export const EpisodePage = () => {
               </span>
             </div>
           ) : null}
-          <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
-          </div>
+          <div className="mt-[16px] line-clamp-3 text-[16px] text-[#999999]">{episode.description}</div>
         </div>
 
         {modules[0] != null ? (
