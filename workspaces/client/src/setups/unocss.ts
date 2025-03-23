@@ -66,8 +66,8 @@ async function init() {
             //   .then((m): IconifyJSON => m.default as IconifyJSON),
             'line-md': () => import('@iconify/json/json/line-md.json')
               .then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () => import('@iconify/json/json/material-symbols.json')
-              .then((m): IconifyJSON => m.default as IconifyJSON),
+            // 'material-symbols': () => import('@iconify/json/json/material-symbols.json')
+            //   .then((m): IconifyJSON => m.default as IconifyJSON),
           },
         }),
       ],
