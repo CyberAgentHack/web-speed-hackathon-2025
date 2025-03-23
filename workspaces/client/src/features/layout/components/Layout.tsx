@@ -11,15 +11,12 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
-import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 
 interface Props {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  useSubscribePointer();
-
   const navigation = useNavigation();
   const isLoading =
     navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
@@ -31,26 +28,25 @@ export const Layout = ({ children }: Props) => {
   const authDialogType = useAuthDialogType();
   const user = useAuthUser();
 
-  const [scrollTopOffset, setScrollTopOffset] = useState(0);
-  const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
+  // const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
 
-  useEffect(() => {
-    let lastScrollTop = 0;
-    function handleScroll() {
-      const currentScrollTop = window.scrollY;
-      if (lastScrollTop <= 80 && currentScrollTop > 80) {
-        setShouldHeaderBeTransparent(true);
-      } else if (lastScrollTop > 80 && currentScrollTop <= 80) {
-        setShouldHeaderBeTransparent(false);
-      }
-      lastScrollTop = currentScrollTop;
-    }
+  // useEffect(() => {
+  //   let lastScrollTop = 0;
+  //   function handleScroll() {
+  //     const currentScrollTop = window.scrollY;
+  //     if (lastScrollTop <= 80 && currentScrollTop > 80) {
+  //       setShouldHeaderBeTransparent(true);
+  //     } else if (lastScrollTop > 80 && currentScrollTop <= 80) {
+  //       setShouldHeaderBeTransparent(false);
+  //     }
+  //     lastScrollTop = currentScrollTop;
+  //   }
 
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   const isSignedIn = user != null;
 
@@ -60,7 +56,8 @@ export const Layout = ({ children }: Props) => {
         <header
           className={classNames(
             'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
-            !isLoading && shouldHeaderBeTransparent
+
+            !isLoading
               ? 'bg-gradient-to-b from-[#171717] to-transparent'
               : 'bg-gradient-to-b from-[#171717] to-[#171717]',
           )}

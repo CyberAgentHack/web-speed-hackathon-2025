@@ -117,7 +117,13 @@ export const getEpisodeByIdRequestParams = z.object({
 });
 export const getEpisodeByIdResponse = episode.extend({
   series: series.extend({
-    episodes: z.array(episode.extend({})),
+    episodes: z.array(
+      episode.extend({
+        stream: z.object({
+          id: z.string().openapi({ format: 'uuid' }),
+        }),
+      }),
+    ),
   }),
 });
 
