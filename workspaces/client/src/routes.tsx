@@ -15,10 +15,18 @@ export const routes = (store: ReturnType<typeof createStore>) => [
     // この親ルートで全体をラップする
     element: (
       <>
-        <Layout>
-          <Outlet />
-        </Layout>
-        <ScrollRestoration />
+        <html className="size-full" lang="ja">
+          <head>
+            <meta charSet="UTF-8" />
+            <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          </head>
+          <body className="size-full bg-[#000000] text-[#ffffff]">
+            <Layout>
+              <Outlet />
+            </Layout>
+            <ScrollRestoration />
+          </body>
+        </html>
       </>
     ),
     children: [
