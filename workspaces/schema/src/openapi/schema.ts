@@ -188,14 +188,46 @@ export const getProgramsResponse = z.array(
 export const getProgramByIdRequestParams = z.object({
   programId: z.string(),
 });
-export const getProgramByIdResponse = program.extend({
-  channel: channel.extend({}),
-  episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
-  }),
-});
+export const getProgramByIdResponse = program
+  .pick({
+    startAt: true,
+    endAt: true,
+    title: true,
+    id: true,
+    thumbnailUrl: true,
+    description: true,
+  })
+  .extend({
+    channel: channel
+      .pick({
+        id: true,
+      })
+      .extend({}),
+    episode: episode
+      .pick({
+        id: true,
+      })
+      .extend({
+        series: series
+          .pick({
+            title: true,
+          })
+          .extend({
+            episodes: z.array(
+              episode
+                .pick({
+                  id: true,
+                  title: true,
+                  description: true,
+                  order: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                })
+                .extend({}),
+            ),
+          }),
+      }),
+  });
 
 // GET /recommended/:referenceId
 export const getRecommendedModulesRequestParams = z.object({

@@ -502,7 +502,32 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (program == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(program);
+      reply.code(200).send({
+        startAt: program.startAt,
+        endAt: program.endAt,
+        title: program.title,
+        id: program.id,
+        thumbnailUrl: program.thumbnailUrl,
+        description: program.description?.length > 400 ? program.description.substring(0, 400) : program.description,
+        channel: {
+          id: program.channel.id,
+        },
+        episode: {
+          id: program.episode.id,
+          series: {
+            title: program.episode.series.title,
+            episodes: program.episode.series.episodes.map((episode) => ({
+              id: episode.id,
+              order: episode.order,
+              title: episode.title,
+              description:
+                episode.description?.length > 400 ? episode.description.substring(0, 400) : episode.description,
+              thumbnailUrl: episode.thumbnailUrl,
+              premium: episode.premium,
+            })),
+          },
+        },
+      });
     },
   });
 

@@ -31,7 +31,7 @@ interface ProgramService {
 
 export const programService: ProgramService = {
   async fetchProgramById({ programId }) {
-    const channel = await $fetch('/programs', { query: { programId } });
+    const channel = await $fetch('/programs', { query: { programIds: programId } });
     if (!channel[0]) {
       throw new Error('Program is not found.');
     }
