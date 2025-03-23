@@ -1,58 +1,40 @@
-// ------------------------------
-// ※ 事前準備: webpack.config.js の設定例
-// @ffmpeg/core の alias を使うと、ffmpeg.load({ coreURL, wasmURL }) に
-// "@ffmpeg/core" や "@ffmpeg/core/wasm" と指定するだけでOK
-//
-// resolve: {
-//   alias: {
-//     '@ffmpeg/core$': path.resolve(__dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-//     '@ffmpeg/core/wasm$': path.resolve(__dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-//   },
-// },
-//
-// さらに、下記の通り "maxChunks:1" はコメントアウトして
-// "splitChunks: { chunks: 'all' }" を活かしておくと、
-// 動的インポート時に別チャンクが生成されるようになる。
-// ------------------------------
-
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
 
-// エピソードAPIレスポンスの型
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
+// 一度生成したサムネをキャッシュ
 const weakMap = new WeakMap<object, Promise<string>>();
 
-/**
- * FFmpegを用いてHLSセグメントを結合＆サムネ作成
- * → Blob URLを返す
- */
-async function getSeekThumbnail({ episode }: Params): Promise<string> {
+async function getSeekThumbnail({ episode }: Params) {
   // 1) HLS のプレイリストを取得
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
   const parser = new Parser();
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
-  // 2) FFmpegを必要なタイミングでだけ読み込む (動的インポート)
-  //    => ビルド時には別チャンクとして切り出され、初回呼び出し時までは読み込まれない
+  // 2) @ffmpeg/ffmpeg を「動的インポート」してコード分割
+  //    これにより初回呼び出し時にだけネットワークロード
   const { FFmpeg } = await import('@ffmpeg/ffmpeg');
 
-  // 3) FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  //   coreURL / wasmURL に alias 名を渡すと、webpack が
-  //   '[...]/node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js' と
-  //   '[...]/node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm' を参照
-  await ffmpeg.load({
-    coreURL: '@ffmpeg/core',
-    wasmURL: '@ffmpeg/core/wasm',
+  // 3) ffmpeg-core.js / ffmpeg-core.wasm を arraybuffer ローダーでインライン化したものを Blob 化
+  //    => こちらはビルド時にJSバンドルへ同梱され、サーバー追加設定なしでロード可能
+  const coreURL = await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
+    return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
+  });
+  const wasmURL = await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+    return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
   });
 
-  // 4) 動画のセグメントファイルを取得
+  // 4) FFmpeg の初期化
+  const ffmpeg = new FFmpeg();
+  await ffmpeg.load({ coreURL, wasmURL });
+
+  // 5) 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
     parser.manifest.segments.map(async (s) => {
       const binary = await fetch(s.uri).then((res) => res.arrayBuffer());
@@ -60,12 +42,12 @@ async function getSeekThumbnail({ episode }: Params): Promise<string> {
     }),
   );
 
-  // 5) FFmpeg にセグメントファイルを書き込む
+  // 6) FFmpeg にセグメントファイルを追加
   for (const file of segmentFiles) {
     await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
   }
 
-  // 6) セグメントを1つの mp4 に結合
+  // 7) セグメントファイルを一つの mp4 に結合
   await ffmpeg.exec(
     [
       ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
@@ -76,7 +58,7 @@ async function getSeekThumbnail({ episode }: Params): Promise<string> {
     ].flat()
   );
 
-  // 7) 1秒ごとにフレームを抽出 → サムネタイルを作成
+  // 8) 1秒毎にフレーム抽出 → サムネタイルを作成
   await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
@@ -86,22 +68,20 @@ async function getSeekThumbnail({ episode }: Params): Promise<string> {
     ].flat()
   );
 
-  // 8) 出力ファイルを読み込み & 終了
+  // 9) 出力ファイルを取得して FFmpeg を終了
   const output = await ffmpeg.readFile('preview.jpg');
   ffmpeg.terminate();
 
-  // Blob URL にして返却
+  // 10) Blob URL にして返す
   return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
 }
 
 /**
- * React コンポーネントでサムネイルを簡単に取得できるようにするためのフック
+ * Reactフック: エピソードのシークサムネを取得
+ * → 生成結果をPromiseキャッシュ / React Suspense する
  */
 export const useSeekThumbnail = ({ episode }: Params): string => {
-  // 一度生成したサムネをキャッシュ (WeakMap)
   const promise = weakMap.get(episode) ?? getSeekThumbnail({ episode });
   weakMap.set(episode, promise);
-
-  // React 18 の "use(promise)" 機能を使って、サスペンドする
   return use(promise);
 };
