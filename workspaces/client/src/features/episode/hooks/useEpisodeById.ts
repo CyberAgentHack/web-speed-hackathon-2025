@@ -5,5 +5,9 @@ interface Params {
 }
 
 export function useEpisodeById({ episodeId }: Params) {
-  return useStore((s) => s.features.episode.episodes[episodeId]);
+  const state = useStore((s) => s);
+
+  const episode = state.features.episode.episodes[episodeId];
+
+  return episode;
 }

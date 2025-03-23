@@ -1,5 +1,6 @@
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useAuthUser() {
-  return useStore((s) => s.features.auth.user);
+  const state = useStore((s) => s);
+  return state.features.auth.user;
 }

@@ -1,13 +1,13 @@
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function usePlaying() {
-  const episode = useStore((s) => s.pages.episode);
+  const state = useStore((s) => s);
   const toggle = (): void => {
-    if (episode.playing) {
-      episode.pause();
+    if (state.pages.episode.playing) {
+      state.pages.episode.pause();
     } else {
-      episode.play();
+      state.pages.episode.play();
     }
   };
-  return [episode.playing, toggle] as const;
+  return [state.pages.episode.playing, toggle] as const;
 }
