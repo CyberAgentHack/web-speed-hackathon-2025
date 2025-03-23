@@ -1,0 +1,38 @@
+{
+  "height": 20,
+  "icons": {
+    "live-24-filled": {
+      "body": "<path fill=\"currentColor\" d=\"M6.343 4.938a1 1 0 0 1 0 1.415a8.003 8.003 0 0 0 0 11.317a1 1 0 1 1-1.414 1.414c-3.907-3.906-3.907-10.24 0-14.146a1 1 0 0 1 1.414 0m12.732 0c3.906 3.907 3.906 10.24 0 14.146a1 1 0 0 1-1.415-1.414a8.003 8.003 0 0 0 0-11.317a1 1 0 0 1 1.415-1.415M9.31 7.812a1 1 0 0 1 0 1.414a3.92 3.92 0 0 0 0 5.544a1 1 0 1 1-1.415 1.414a5.92 5.92 0 0 1 0-8.372a1 1 0 0 1 1.415 0m6.958 0a5.92 5.92 0 0 1 0 8.372a1 1 0 0 1-1.414-1.414a3.92 3.92 0 0 0 0-5.544a1 1 0 0 1 1.414-1.414m-4.186 2.77a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3\"/>",
+      "height": 24,
+      "width": 24
+    }
+  },
+  "info": {
+    "author": {
+      "name": "Microsoft Corporation",
+      "url": "https://github.com/microsoft/fluentui-system-icons"
+    },
+    "category": "UI Other / Mixed Grid",
+    "license": {
+      "spdx": "MIT",
+      "title": "MIT",
+      "url": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE"
+    },
+    "name": "Fluent UI System Icons",
+    "palette": false,
+    "samples": [
+      "zoom-out-24-filled",
+      "drink-coffee-24-regular",
+      "photo-filter-24-regular",
+      "checkmark-24-filled",
+      "oval-24-filled",
+      "cloud-24-filled"
+    ],
+    "tags": ["Precise Shapes", "Has Padding"],
+    "total": 17474,
+    "version": "1.1.278"
+  },
+  "lastModified": 1740899893,
+  "prefix": "fluent",
+  "width": 20
+}

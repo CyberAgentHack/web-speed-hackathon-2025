@@ -90,7 +90,9 @@ async function main() {
 
   const rootDir = path.resolve(__dirname, '../../..');
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
-  const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
+  const imagePaths = files
+    .map((file) => path.join('/', path.relative(rootDir, file)))
+    .filter((path) => path.endsWith('.avif'));
 
   try {
     const animeList = await fetchAnimeList();
@@ -131,7 +133,7 @@ async function main() {
       const data: (typeof schema.series.$inferInsert)[] = Array.from({ length: 30 }, () => ({
         description: faker.lorem.paragraph({ max: 200, min: 100 }).replace(/\s/g, '').replace(/\./g, '。'),
         id: faker.string.uuid(),
-        thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
+        thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}`,
         title: faker.helpers.arrayElement(seriesTitleList),
       }));
       const result = await database.insert(schema.series).values(data).returning();
@@ -150,7 +152,7 @@ async function main() {
           order: idx + 1,
           seriesId: series.id,
           streamId: faker.helpers.arrayElement(streamList).id,
-          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
+          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}`,
           title: `第${String(idx + 1)}話 ${faker.helpers.arrayElement(episodeTitleList)}`,
           premium: idx % 5 === 0,
         }),
@@ -183,7 +185,7 @@ async function main() {
           episodeId: episode.id,
           id: faker.string.uuid(),
           startAt: new Date(startAt).toISOString(),
-          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
+          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}`,
           title: `${series?.title ?? ''} ${episode.title}`,
         };
         programList.push(program);

@@ -1,9 +1,8 @@
 import { lens } from '@dhmk/zustand-lens';
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
+import type * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
-import _ from 'lodash';
-import { ArrayValues } from 'type-fest';
+import type { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 
@@ -41,7 +40,7 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
+    refreshCurrentUnixtimeMs: debounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
@@ -54,4 +53,23 @@ export const createTimetablePageStoreSlice = () => {
     },
     shownNewFeatureDialog: true,
   }));
+};
+
+// WARNING: This is not a drop in replacement solution and
+// it might not work for some edge cases. Test your code!
+const debounce = (func, delay, { leading } = {}) => {
+  let timerId;
+  let shouldInvoke;
+
+  return (...args) => {
+    shouldInvoke = true;
+
+    if (!timerId && leading) {
+      func(...args);
+      shouldInvoke = false;
+    }
+    clearTimeout(timerId);
+
+    timerId = setTimeout(() => shouldInvoke && func(...args), delay);
+  };
 };

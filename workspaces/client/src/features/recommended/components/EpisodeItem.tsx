@@ -2,8 +2,6 @@ import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
-
 interface Props {
   episode: {
     id: string;
@@ -18,8 +16,11 @@ interface Props {
 
 export const EpisodeItem = ({ episode }: Props) => {
   return (
-    <Hoverable classNames={{ hovered: 'opacity-75' }}>
-      <NavLink viewTransition className="block w-full overflow-hidden" to={`/episodes/${episode.id}`}>
+    <NavLink
+      viewTransition
+      className="block w-full cursor-pointer overflow-hidden hover:opacity-75"
+      to={`/episodes/${episode.id}`}
+    >
         {({ isTransitioning }) => {
           return (
             <>
@@ -46,6 +47,5 @@ export const EpisodeItem = ({ episode }: Props) => {
           );
         }}
       </NavLink>
-    </Hoverable>
   );
 };
