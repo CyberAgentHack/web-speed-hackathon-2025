@@ -9,7 +9,7 @@ import { registerSsr } from '@wsh-2025/server/src/ssr';
 import { registerStreams } from '@wsh-2025/server/src/streams';
 
 const port = process.env.PORT || 8000;
-const host = 'RENDER' in process.env ? `0.0.0.0` : `localhost`;
+const host = '0.0.0.0';
 
 async function main() {
   await initializeDatabase();
