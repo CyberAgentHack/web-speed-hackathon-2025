@@ -3,7 +3,7 @@ services:
     runtime: node
     name: wsh-2025-server
     plan: free
-    buildCommand: pnpm install
+    buildCommand: pnpm install && pnpm build
     startCommand: pnpm start
     rootDir: workspaces/server
     envVars:
