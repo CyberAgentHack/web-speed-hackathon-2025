@@ -66,10 +66,10 @@ export function registerSsr(app: FastifyInstance): void {
     );
 
     const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
+    const preloadImagePaths: string[] = [
+      //getFilePaths('public/images', rootDir),
+      //getFilePaths('public/animations', rootDir),
+      //getFilePaths('public/logos', rootDir),
     ].flat();
 
     reply
@@ -77,7 +77,8 @@ export function registerSsr(app: FastifyInstance): void {
       .send(
         indexHtml.replace(
           '</head>',
-          imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n') + '</head>',
+          preloadImagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n') +
+            '</head>',
         ) +
           `<script>window.__staticRouterHydrationData = ${htmlescape({ actionData: context.actionData, loaderData: context.loaderData })};</script>`,
       );
