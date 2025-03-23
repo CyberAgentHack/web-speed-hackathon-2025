@@ -40,11 +40,11 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: debounce(() => {
+    refreshCurrentUnixtimeMs: () => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));
-    }, 500),
+    },
     selectedProgramId: null,
     selectProgram: (program: Program | null) => {
       set(() => ({
@@ -54,13 +54,3 @@ export const createTimetablePageStoreSlice = () => {
     shownNewFeatureDialog: true,
   }));
 };
-function debounce<T extends (...args: unknown[]) => void>(func: T, wait: number): T {
-  let timeout: ReturnType<typeof setTimeout> | null;
-
-  return function (...args: Parameters<T>) {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      func(...args);
-    }, wait);
-  } as T;
-}
