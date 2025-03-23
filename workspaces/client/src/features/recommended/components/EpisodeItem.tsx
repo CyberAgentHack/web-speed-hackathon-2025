@@ -29,7 +29,7 @@ export const EpisodeItem = ({ episode }: Props) => {
                     alt=""
                     className="h-auto w-full"
                     loading="lazy"
-                    src={`${episode.thumbnailUrl.replace(/\.(jpe?g)$/i, '')}.webp`}
+                    src={episode.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
                   />
                   <span className="i-material-symbols:play-arrow-rounded absolute bottom-[4px] left-[4px] m-[4px] block size-[20px] text-[#ffffff]" />
                   {episode.premium ? (
