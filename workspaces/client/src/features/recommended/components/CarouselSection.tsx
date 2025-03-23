@@ -11,9 +11,10 @@ import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/u
 
 interface Props {
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  eager?: boolean | undefined;
 }
 
-export const CarouselSection = ({ module }: Props) => {
+export const CarouselSection = ({ module, eager }: Props) => {
   const containerRefForScrollSnap = useScrollSnap({ scrollPadding: 24 });
   const { ref: containerRefForItemWidth, width: itemWidth } = useCarouselItemWidth();
   const mergedRef = useMergeRefs([containerRefForItemWidth, containerRefForScrollSnap]);
@@ -28,10 +29,10 @@ export const CarouselSection = ({ module }: Props) => {
           className="relative mx-[-24px] flex flex-row gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]"
           data-scroll-restore={`carousel-${module.id}`}
         >
-          {module.items.map((item) => (
+          {module.items.map((item, index) => (
             <div key={item.id} className="shrink-0 grow-0" style={{ width: itemWidth }}>
-              {item.series != null ? <SeriesItem series={item.series} /> : null}
-              {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
+              {item.series != null ? <SeriesItem series={item.series} eager={eager === true ? (index <= 5) : false} /> : null}
+              {item.episode != null ? <EpisodeItem episode={item.episode} eager={eager === true ? (index <= 5) : false} /> : null}
             </div>
           ))}
         </div>

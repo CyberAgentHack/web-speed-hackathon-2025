@@ -7,12 +7,13 @@ import { JumbotronSection } from '@wsh-2025/client/src/features/recommended/comp
 
 interface Props {
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  eager?: boolean | undefined;
 }
 
-export const RecommendedSection = ({ module }: Props) => {
+export const RecommendedSection = ({ module, eager }: Props) => {
   if (module.type === 'jumbotron') {
     return <JumbotronSection module={module} />;
   } else {
-    return <CarouselSection module={module} />;
+    return <CarouselSection module={module} eager={eager} />;
   }
 };
