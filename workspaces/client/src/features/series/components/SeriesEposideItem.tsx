@@ -1,7 +1,7 @@
+import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
-import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
@@ -40,10 +40,10 @@ export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
 
               <div className="grow-1 shrink-1">
                 <div className="mb-[8px] text-[18px] font-bold text-[#ffffff]">
-                  <CustomEllipsis maxLine={2} text={episode.title} visibleLine={2} />
+                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
                 </div>
                 <div className="text-[12px] text-[#999999]">
-                  <CustomEllipsis maxLine={2} text={episode.description} visibleLine={2} />
+                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.description} visibleLine={2} />
                 </div>
               </div>
             </>
