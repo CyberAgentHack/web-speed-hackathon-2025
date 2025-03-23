@@ -54,6 +54,14 @@ export function registerStatic(app: FastifyInstance): void {
               width: 120px;
               height: auto;
             }
+            .home-icon {
+              width: 20px;
+              height: 20px;
+            }
+            .timetable-icon {
+              width: 20px;
+              height: 20px;
+            }
           </style>
         </head>
         <body>
