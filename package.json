@@ -37,12 +37,12 @@
     },
     "build": {
       "dependencies": [
+        "./workspaces/server:database:reset",
         "./workspaces/client:build"
       ]
     },
     "heroku-build": {
       "dependencies": [
-        "./workspaces/server:database:reset",
         "build"
       ]
     },
