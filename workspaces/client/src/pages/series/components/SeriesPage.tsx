@@ -1,14 +1,13 @@
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   await store.getState().features.series.fetchSeriesById({ seriesId: seriesId ?? '' });
@@ -18,16 +17,19 @@ const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesI
 }
 
 export const SeriesPage = (store: ReturnType<typeof createStore>) => {
+  const [isLoading, setIsLoading] = useState(true);
   const { seriesId } = useParams();
-  invariant(seriesId);
+  // invariant(seriesId);
 
-  const series = useSeriesById({ seriesId });
-  invariant(series);
+  const { series, modules } = useMemo(() => {
+    const _series = useSeriesById({ seriesId: seriesId ?? '' });
+    const _modules = useRecommended({ referenceId: seriesId ?? '' });
 
-  const modules = useRecommended({ referenceId: seriesId });
+    return { series: _series, modules: _modules };
+  }, [seriesId, isLoading]);
 
-  useMemo(async () => {
-    await fetchSeriesDatas(store, { seriesId });
+  useEffect(() => {
+    (async () => await fetchSeriesDatas(store, { seriesId }))().finally(() => setIsLoading(false));
   }, [seriesId]);
 
   if (series == null) {

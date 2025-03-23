@@ -1,7 +1,7 @@
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 
 // export const prefetch = async (store: ReturnType<typeof createStore>) => {
 //   const modules = await store
@@ -17,8 +17,8 @@ export const fetchRecommends = async (store: ReturnType<typeof createStore>) => 
 export const HomePage = (store: ReturnType<typeof createStore>) => {
   const modules = useRecommended({ referenceId: 'entrance' });
 
-  useMemo(async () => {
-    await fetchRecommends(store);
+  useEffect(() => {
+    (async () => await fetchRecommends(store))();
   }, []);
 
   if (modules == null) {

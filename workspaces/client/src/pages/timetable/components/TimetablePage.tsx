@@ -8,7 +8,7 @@ import { NewTimetableFeatureDialog } from '@wsh-2025/client/src/pages/timetable/
 import { ProgramList } from '@wsh-2025/client/src/pages/timetable/components/ProgramList';
 import { TimelineYAxis } from '@wsh-2025/client/src/pages/timetable/components/TimelineYAxis';
 import { useShownNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useShownNewFeatureDialog';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const now = DateTime.now();
@@ -37,8 +37,8 @@ export const TimetablePage = (store: ReturnType<typeof createStore>) => {
   const channelIds = Object.keys(record);
   const programLists = Object.values(record);    
 
-  useMemo(async () => {
-    await fetchTimeTableDatas(store);
+  useEffect(() => {
+    (async () => fetchTimeTableDatas(store))();
   }, []);
 
   if (!channelIds.length) {

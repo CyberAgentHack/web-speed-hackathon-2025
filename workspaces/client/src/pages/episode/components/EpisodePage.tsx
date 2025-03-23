@@ -1,8 +1,7 @@
-import { Suspense, useMemo } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
@@ -33,24 +32,27 @@ const fetchEpisodeDatas = async (store: ReturnType<typeof createStore>, { episod
 };
 
 export const EpisodePage = (store: ReturnType<typeof createStore>) => {
+  const [isLoading, setIsLoading] = useState(true);
   const authActions = useAuthActions();
   const user = useAuthUser();
 
   const { episodeId } = useParams();
-  invariant(episodeId);
+  // invariant(episodeId);
 
-  const episode = useEpisodeById({ episodeId });
-  invariant(episode);
+  const { episode, modules } = useMemo(() => {
+    const _episode = useEpisodeById({ episodeId: episodeId ?? '' });
+    const _modules = useRecommended({ referenceId: episodeId ?? '' });
 
-  const modules = useRecommended({ referenceId: episodeId });
+    return { episode: _episode, modules: _modules };
+  }, [episodeId, isLoading]);
 
   const playerRef = usePlayerRef();
 
-  const isSignInRequired = episode.premium && user == null;
+  const isSignInRequired = episode?.premium && user == null;
 
-  useMemo(async () => {
-    await fetchEpisodeDatas(store, { episodeId });
-  }, [episodeId]);
+  useEffect(() => {
+    (async () => await fetchEpisodeDatas(store, { episodeId }))().finally(() => setIsLoading(false));
+  }, []);
 
   if (episode == null) {
     return <div></div>

@@ -1,10 +1,9 @@
 import { DateTime } from 'luxon';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import { useUpdate } from 'react-use';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
@@ -47,29 +46,35 @@ const fetchProgramDatas = async (store: ReturnType<typeof createStore>, { progra
 }
 
 export const ProgramPage = (store: ReturnType<typeof createStore>) => {
+  const [isLoading, setIsLoading] = useState(true);
   const { programId } = useParams();
-  invariant(programId);
+  // invariant(programId);
 
-  const program = useProgramById({ programId });
-  invariant(program);
+  const { program, modules } = useMemo(() => {
+    const _program = useProgramById({ programId: programId ?? '' });
+    const _modules = useRecommended({ referenceId: programId ?? '' });
+
+    return { program: _program, modules: _modules };
+  }, [programId, isLoading]);
+  // invariant(program);
 
   const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
+  const nextProgram = program?.channel?.id ? timetable[program.channel.id]?.find((p) => {
     return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  });
-
-  const modules = useRecommended({ referenceId: programId });
+  }) : undefined;
 
   const playerRef = usePlayerRef();
 
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
-  const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
-  const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+  const isArchivedRef = useRef(DateTime.fromISO(program?.endAt ?? '') < DateTime.now());
+  const isBroadcastStarted = DateTime.fromISO(program?.startAt ?? '') < DateTime.now();
 
-  useMemo(async () => {
-    await fetchProgramDatas(store, { programId });
-  }, [programId]);
+  useEffect(() => {
+    (async () => await fetchProgramDatas(store, { programId }))().finally(() => {
+      setIsLoading(false);
+    });
+  }, []);
 
   if (program == null) {
     return <div></div>;
