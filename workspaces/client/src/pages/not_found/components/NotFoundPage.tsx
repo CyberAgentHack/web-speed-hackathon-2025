@@ -1,17 +1,23 @@
-import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { useEffect } from 'react';
+
+import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 
-export const prefetch = async (store: ReturnType<typeof createStore>) => {
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
-  return { modules };
+// ローダーがprefetch関数を期待しているため、空の関数を提供
+export const prefetch = () => {
+  return {};
 };
 
 export const NotFoundPage = () => {
+  const store = useStore((s) => s);
   const modules = useRecommended({ referenceId: 'error' });
   const module = modules.at(0);
+
+  // クライアントサイドでのみデータを取得
+  useEffect(() => {
+    void store.features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
+  }, [store.features.recommended]);
 
   return (
     <>
