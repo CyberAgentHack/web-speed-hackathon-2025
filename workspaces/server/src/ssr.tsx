@@ -72,6 +72,12 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          <link rel="preload" href="/public/arema.svg" as="image" />
+          <style>
+            html, body {
+              background-color: #000000;
+            }
+          </style>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body>${html}</body>
