@@ -1,5 +1,4 @@
 import '@wsh-2025/client/src/setups/polyfill';
-import '@wsh-2025/client/src/setups/luxon';
 import '@unocss/reset/tailwind-compat.css';
 import '@wsh-2025/client/src/styles/global.css';
 // eslint-disable-next-line import/no-unresolved

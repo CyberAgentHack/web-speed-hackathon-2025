@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
@@ -17,12 +16,38 @@ import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useT
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
+// Helper functions for date operations
+const getStartOfDay = (date = new Date()) => {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  return startOfDay.toISOString();
+};
+
+const getEndOfDay = (date = new Date()) => {
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+  return endOfDay.toISOString();
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1; // getMonth() returns 0-11
+  const day = date.getDate();
+  const hours = date.getHours().toString();
+  const minutes = date.getMinutes().toString();
+
+  return `${month}月${day}日 ${hours}:${minutes}`;
+};
+
+const areDatesEqual = (date1: string, date2: string) => {
+  return new Date(date1).getTime() === new Date(date2).getTime();
+};
+
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
+  const since = getStartOfDay();
+  const until = getEndOfDay();
 
   const program = await store.getState().features.program.fetchProgramById({ programId });
   const channels = await store.getState().features.channel.fetchChannels();
@@ -42,7 +67,7 @@ export const ProgramPage = () => {
 
   const timetable = useTimetable();
   const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
+    return areDatesEqual(program.endAt, p.startAt);
   });
 
   const modules = useRecommended({ referenceId: programId });
@@ -51,8 +76,9 @@ export const ProgramPage = () => {
 
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
-  const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
-  const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+  const isArchivedRef = useRef(new Date(program.endAt) <= new Date());
+  const isBroadcastStarted = new Date(program.startAt) <= new Date();
+
   useEffect(() => {
     if (isArchivedRef.current) {
       return;
@@ -71,7 +97,7 @@ export const ProgramPage = () => {
 
     // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
     let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
+      if (new Date() < new Date(program.endAt)) {
         timeout = setTimeout(tick, 250);
         return;
       }
@@ -100,7 +126,7 @@ export const ProgramPage = () => {
         <Flipped stagger flipId={`program-${program.id}`}>
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
-              <div className="relative size-full">
+              <div className="relative h-fit w-fit">
                 <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
@@ -114,7 +140,7 @@ export const ProgramPage = () => {
                 </div>
               </div>
             ) : isBroadcastStarted ? (
-              <div className="relative size-full">
+              <div className="relative h-fit w-fit">
                 <Player
                   className="size-full"
                   playerRef={playerRef}
@@ -126,12 +152,12 @@ export const ProgramPage = () => {
                 </div>
               </div>
             ) : (
-              <div className="relative size-full">
+              <div className="relative h-fit w-fit">
                 <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
-                    この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
+                    この番組は {formatDate(program.startAt)} に放送予定です
                   </p>
                 </div>
               </div>
@@ -147,9 +173,9 @@ export const ProgramPage = () => {
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
           </h1>
           <div className="mt-[8px] text-[16px] text-[#999999]">
-            {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')}
+            {formatDate(program.startAt)}
             {' 〜 '}
-            {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')}
+            {formatDate(program.endAt)}
           </div>
           <div className="mt-[16px] text-[16px] text-[#999999]">
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />

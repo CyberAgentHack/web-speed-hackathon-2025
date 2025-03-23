@@ -1,23 +1,18 @@
 /* eslint-disable sort/object-properties */
-import '@wsh-2025/schema/src/setups/luxon';
+import { relations } from "drizzle-orm";
+import { sqliteTable as table } from "drizzle-orm/sqlite-core";
+import * as t from "drizzle-orm/sqlite-core";
 
-import { relations } from 'drizzle-orm';
-import { sqliteTable as table } from 'drizzle-orm/sqlite-core';
-import * as t from 'drizzle-orm/sqlite-core';
-import { DateTime } from 'luxon';
-
-function parseTime(timeString: string): DateTime {
-  const parsed = DateTime.fromFormat(timeString, 'HH:mm:ss').toObject();
-  return DateTime.now().set({
-    hour: parsed.hour,
-    minute: parsed.minute,
-    second: parsed.second,
-    millisecond: 0,
-  });
+function parseTime(timeString: string): Date {
+  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, seconds, 0);
+  return date;
 }
 
 function formatTime(isoString: string): string {
-  return DateTime.fromISO(isoString).toFormat('HH:mm:ss');
+  const date = new Date(isoString);
+  return date.toTimeString().slice(0, 8); // Returns "HH:mm:ss"
 }
 
 // 競技のため、時刻のみ保持して、日付は現在の日付にします
@@ -26,10 +21,10 @@ const startAtTimestamp = t.customType<{
   driverData: string;
 }>({
   dataType() {
-    return 'text';
+    return "text";
   },
   fromDriver(timeString: string) {
-    return parseTime(timeString).toISO();
+    return parseTime(timeString).toISOString();
   },
   toDriver(isoString: string) {
     return formatTime(isoString);
@@ -43,14 +38,19 @@ const endAtTimestamp = t.customType<{
   driverData: string;
 }>({
   dataType() {
-    return 'text';
+    return "text";
   },
   fromDriver(timeString: string) {
     const parsed = parseTime(timeString);
-    if (DateTime.now().startOf('day').equals(parsed)) {
-      return parsed.plus({ day: 1 }).toISO();
+    const midnight = new Date();
+    midnight.setHours(0, 0, 0, 0);
+
+    if (parsed.getTime() === midnight.getTime()) {
+      const nextDay = new Date(parsed);
+      nextDay.setDate(nextDay.getDate() + 1);
+      return nextDay.toISOString();
     }
-    return parsed.toISO();
+    return parsed.toISOString();
   },
   toDriver(isoString: string) {
     return formatTime(isoString);
@@ -58,7 +58,7 @@ const endAtTimestamp = t.customType<{
 });
 
 export const stream = table(
-  'stream',
+  "stream",
   {
     id: t.text().primaryKey(),
     numberOfChunks: t.integer().notNull(),
@@ -67,7 +67,7 @@ export const stream = table(
 );
 
 export const series = table(
-  'series',
+  "series",
   {
     id: t.text().primaryKey(),
     description: t.text().notNull(),
@@ -81,7 +81,7 @@ export const seriesRelation = relations(series, ({ many }) => ({
 }));
 
 export const episode = table(
-  'episode',
+  "episode",
   {
     id: t.text().primaryKey(),
     description: t.text().notNull(),
@@ -96,7 +96,7 @@ export const episode = table(
       .text()
       .notNull()
       .references(() => stream.id),
-    premium: t.integer({ mode: 'boolean' }).notNull(),
+    premium: t.integer({ mode: "boolean" }).notNull(),
   },
   () => [],
 );
@@ -112,7 +112,7 @@ export const episodeRelation = relations(episode, ({ one }) => ({
 }));
 
 export const channel = table(
-  'channel',
+  "channel",
   {
     id: t.text().primaryKey(),
     name: t.text().notNull(),
@@ -122,7 +122,7 @@ export const channel = table(
 );
 
 export const program = table(
-  'program',
+  "program",
   {
     id: t.text().primaryKey(),
     title: t.text().notNull(),
@@ -153,7 +153,7 @@ export const programRelation = relations(program, ({ one }) => ({
 }));
 
 export const recommendedItem = table(
-  'recommendedItem',
+  "recommendedItem",
   {
     id: t.text().primaryKey(),
     order: t.integer().notNull(),
@@ -166,23 +166,26 @@ export const recommendedItem = table(
   },
   () => [],
 );
-export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
-  module: one(recommendedModule, {
-    fields: [recommendedItem.moduleId],
-    references: [recommendedModule.id],
+export const recommendedItemRelation = relations(
+  recommendedItem,
+  ({ one }) => ({
+    module: one(recommendedModule, {
+      fields: [recommendedItem.moduleId],
+      references: [recommendedModule.id],
+    }),
+    series: one(series, {
+      fields: [recommendedItem.seriesId],
+      references: [series.id],
+    }),
+    episode: one(episode, {
+      fields: [recommendedItem.episodeId],
+      references: [episode.id],
+    }),
   }),
-  series: one(series, {
-    fields: [recommendedItem.seriesId],
-    references: [series.id],
-  }),
-  episode: one(episode, {
-    fields: [recommendedItem.episodeId],
-    references: [episode.id],
-  }),
-}));
+);
 
 export const recommendedModule = table(
-  'recommendedModule',
+  "recommendedModule",
   {
     id: t.text().primaryKey(),
     order: t.integer().notNull(),
@@ -192,12 +195,15 @@ export const recommendedModule = table(
   },
   () => [],
 );
-export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
-  items: many(recommendedItem),
-}));
+export const recommendedModuleRelation = relations(
+  recommendedModule,
+  ({ many }) => ({
+    items: many(recommendedItem),
+  }),
+);
 
 export const user = table(
-  'user',
+  "user",
   {
     id: t.integer().primaryKey().notNull(),
     email: t.text().notNull().unique(),

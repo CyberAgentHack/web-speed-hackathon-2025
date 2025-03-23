@@ -1,5 +1,3 @@
-import "@wsh-2025/server/src/setups/luxon";
-
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 

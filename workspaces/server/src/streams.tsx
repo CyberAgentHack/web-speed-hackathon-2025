@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url';
 import fastifyStatic from '@fastify/static';
 import dedent from 'dedent';
 import type { FastifyInstance } from 'fastify';
-import { DateTime } from 'luxon';
 
 import { getDatabase } from '@wsh-2025/server/src/drizzle/database';
 
@@ -15,7 +14,9 @@ const SEQUENCE_COUNT_PER_PLAYLIST = 10;
 
 // 競技のため、時刻のみを返す
 function getTime(d: Date): number {
-  return d.getTime() - DateTime.fromJSDate(d).startOf('day').toMillis();
+  const startOfDay = new Date(d);
+  startOfDay.setHours(0, 0, 0, 0);
+  return d.getTime() - startOfDay.getTime();
 }
 
 export function registerStreams(app: FastifyInstance): void {
