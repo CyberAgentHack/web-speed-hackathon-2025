@@ -1,0 +1,6 @@
+@import '@unocss/reset/tailwind-compat.css';
+@unocss preflights;
+@unocss default;
+:root {
+  --un-bg-opacity: 1;
+}

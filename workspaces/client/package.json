@@ -54,6 +54,10 @@
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
     "@iconify/types": "2.0.0",
+    "@rsdoctor/cli": "1.0.0",
+    "@rsdoctor/rspack-plugin": "1.0.0",
+    "@rspack/cli": "1.2.8",
+    "@rspack/core": "1.2.8",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
     "@types/m3u8-parser": "7.2.0",
@@ -64,11 +68,16 @@
     "@unocss/preset-wind3": "66.1.0-beta.5",
     "@unocss/reset": "66.1.0-beta.5",
     "@unocss/runtime": "66.1.0-beta.5",
+    "@unocss/webpack": "66.1.0-beta.6",
     "@wsh-2025/configs": "workspace:*",
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
+    "deepmerge": "4.3.1",
     "hls.js": "1.5.17",
+    "lodash-es": "4.17.21",
+    "postcss": "8.5.3",
+    "postcss-loader": "8.1.1",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "video.js": "8.21.0",
@@ -80,7 +89,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "rspack",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
@@ -89,7 +98,13 @@
       ],
       "output": [
         "./dist/**/*"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": {
+          "external": true,
+          "default": "production"
+        }
+      }
     },
     "format": {
       "command": "pnpm run format:eslint && pnpm run format:prettier"

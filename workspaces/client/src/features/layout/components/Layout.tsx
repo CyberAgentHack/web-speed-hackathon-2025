@@ -52,6 +52,11 @@ export const Layout = ({ children }: Props) => {
 
   const isSignedIn = user != null;
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  });
+
   return (
     <>
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
@@ -73,6 +78,7 @@ export const Layout = ({ children }: Props) => {
             <button
               className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               type="button"
+              disabled={!mounted}
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
               <div

@@ -60,23 +60,205 @@ export function registerStreams(app: FastifyInstance): void {
     reply.type('application/vnd.apple.mpegurl').send(playlist);
   });
 
+  // app.get<{
+  //   Params: { channelId: string };
+  // }>('/streams/channel/:channelId/playlist.m3u8', async (req, reply) => {
+  //   const database = getDatabase();
+
+  //   const firstSequence = Math.floor(Date.now() / SEQUENCE_DURATION_MS) - SEQUENCE_COUNT_PER_PLAYLIST;
+  //   const playlistStartAt = new Date(firstSequence * SEQUENCE_DURATION_MS);
+
+  //   const playlist = [
+  //     dedent`
+  //       #EXTM3U
+  //       #EXT-X-TARGETDURATION:3
+  //       #EXT-X-VERSION:3
+  //       #EXT-X-MEDIA-SEQUENCE:${firstSequence}
+  //       #EXT-X-PROGRAM-DATE-TIME:${playlistStartAt.toISOString()}
+  //     `,
+  //   ];
+  //   reply.raw.write(header + '\n');
+  //   reply.type('application/vnd.apple.mpegurl');
+  //   for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
+  //     const sequence = firstSequence + idx;
+  //     const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
+
+  //     const program = await database.query.program.findFirst({
+  //       orderBy(program, { asc }) {
+  //         return asc(program.startAt);
+  //       },
+  //       where(program, { and, eq, lt, lte, sql }) {
+  //         // 競技のため、時刻のみで比較する
+  //         return and(
+  //           lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
+  //           lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
+  //           eq(program.channelId, req.params.channelId),
+  //         );
+  //       },
+  //       with: {
+  //         episode: {
+  //           with: {
+  //             stream: true,
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     if (program == null) {
+  //       break;
+  //     }
+
+  //     const stream = program.episode.stream;
+  //     const sequenceInStream = Math.floor(
+  //       (getTime(sequenceStartAt) - getTime(new Date(program.startAt))) / SEQUENCE_DURATION_MS,
+  //     );
+  //     const chunkIdx = sequenceInStream % stream.numberOfChunks;
+
+  //     // playlist.push(
+  //     const item = dedent`
+  //         ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
+  //         #EXTINF:2.000000,
+  //         /streams/${stream.id}/${String(chunkIdx).padStart(3, '0')}.ts
+  //         #EXT-X-DATERANGE:${[
+  //           `ID="arema-${sequence}"`,
+  //           `START-DATE="${sequenceStartAt.toISOString()}"`,
+  //           `DURATION=2.0`,
+  //           `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+  //         ].join(',')}
+  //       `;
+  //     playlist.push(item);
+  //     resizeBy.
+  //   }
+
+  //   reply.type('application/vnd.apple.mpegurl').send(playlist.join('\n'));
+  // });
+
+  /// v2--------
+  // app.get<{
+  //   Params: { channelId: string };
+  // }>('/streams/channel/:channelId/playlist.m3u8', async (req, reply) => {
+  //   reply.type('application/vnd.apple.mpegurl');
+  //   reply.raw.writeHead(200);
+
+  //   const database = getDatabase();
+
+  //   const firstSequence = Math.floor(Date.now() / SEQUENCE_DURATION_MS) - SEQUENCE_COUNT_PER_PLAYLIST;
+  //   const playlistStartAt = new Date(firstSequence * SEQUENCE_DURATION_MS);
+
+  //   // ヘッダー部分を先に送信
+  //   const header = dedent`
+  //     #EXTM3U
+  //     #EXT-X-TARGETDURATION:3
+  //     #EXT-X-VERSION:3
+  //     #EXT-X-MEDIA-SEQUENCE:${firstSequence}
+  //     #EXT-X-PROGRAM-DATE-TIME:${playlistStartAt.toISOString()}
+  //   `;
+
+  //   reply.raw.write(header + '\n');
+
+  //   for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
+  //     const sequence = firstSequence + idx;
+  //     const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
+
+  //     const program = await database.query.program.findFirst({
+  //       orderBy(program, { asc }) {
+  //         return asc(program.startAt);
+  //       },
+  //       where(program, { and, eq, lt, lte, sql }) {
+  //         // 競技のため、時刻のみで比較する
+  //         return and(
+  //           lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
+  //           lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
+  //           eq(program.channelId, req.params.channelId),
+  //         );
+  //       },
+  //       with: {
+  //         episode: {
+  //           with: {
+  //             stream: true,
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     if (program == null) {
+  //       break;
+  //     }
+
+  //     const stream = program.episode.stream;
+  //     const sequenceInStream = Math.floor(
+  //       (getTime(sequenceStartAt) - getTime(new Date(program.startAt))) / SEQUENCE_DURATION_MS,
+  //     );
+  //     const chunkIdx = sequenceInStream % stream.numberOfChunks;
+
+  //     reply.raw.write(
+  //       dedent`
+  //         ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
+  //         #EXTINF:2.000000,
+  //         /streams/${stream.id}/${String(chunkIdx).padStart(3, '0')}.ts
+  //         #EXT-X-DATERANGE:${[
+  //           `ID="arema-${sequence}"`,
+  //           `START-DATE="${sequenceStartAt.toISOString()}"`,
+  //           `DURATION=2.0`,
+  //           `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+  //         ].join(',')}
+  //       ` + '\n',
+  //     );
+  //   }
+
+  //   // プレイリストの終了
+  //   reply.raw.write('#EXT-X-ENDLIST\n');
+  //   reply.raw.end();
+  // });
+
+  // v3----------------
   app.get<{
     Params: { channelId: string };
   }>('/streams/channel/:channelId/playlist.m3u8', async (req, reply) => {
+    reply.type('application/vnd.apple.mpegurl');
+    reply.raw.writeHead(200);
+
     const database = getDatabase();
 
     const firstSequence = Math.floor(Date.now() / SEQUENCE_DURATION_MS) - SEQUENCE_COUNT_PER_PLAYLIST;
     const playlistStartAt = new Date(firstSequence * SEQUENCE_DURATION_MS);
 
-    const playlist = [
-      dedent`
-        #EXTM3U
-        #EXT-X-TARGETDURATION:3
-        #EXT-X-VERSION:3
-        #EXT-X-MEDIA-SEQUENCE:${firstSequence}
-        #EXT-X-PROGRAM-DATE-TIME:${playlistStartAt.toISOString()}
-      `,
-    ];
+    // ヘッダー部分を先に送信
+    const header = dedent`
+      #EXTM3U
+      #EXT-X-TARGETDURATION:3
+      #EXT-X-VERSION:3
+      #EXT-X-MEDIA-SEQUENCE:${firstSequence}
+      #EXT-X-PROGRAM-DATE-TIME:${playlistStartAt.toISOString()}
+    `;
+
+    reply.raw.write(header + '\n');
+
+    // const sequences = [...Array.from({ length: SEQUENCE_COUNT_PER_PLAYLIST }).map((_, idx) => firstSequence + idx)];
+
+    // for (const sequence of sequences) {
+    //   const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
+
+    // const program = await database.query.program.findFirst({
+    //   orderBy(program, { asc }) {
+    //     return asc(program.startAt);
+    //   },
+    //   where(program, { and, eq, lt, lte, sql }) {
+    //     // 競技のため、時刻のみで比較する
+    //     return and(
+    //       lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
+    //       lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
+    //       eq(program.channelId, req.params.channelId),
+    //     );
+    //   },
+    //   with: {
+    //     episode: {
+    //       with: {
+    //         stream: true,
+    //       },
+    //     },
+    //   },
+    // });
 
     for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
       const sequence = firstSequence + idx;
@@ -113,7 +295,7 @@ export function registerStreams(app: FastifyInstance): void {
       );
       const chunkIdx = sequenceInStream % stream.numberOfChunks;
 
-      playlist.push(
+      reply.raw.write(
         dedent`
           ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
           #EXTINF:2.000000,
@@ -124,10 +306,12 @@ export function registerStreams(app: FastifyInstance): void {
             `DURATION=2.0`,
             `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
           ].join(',')}
-        `,
+        ` + '\n',
       );
     }
 
-    reply.type('application/vnd.apple.mpegurl').send(playlist.join('\n'));
+    // プレイリストの終了
+    reply.raw.write('#EXT-X-ENDLIST\n');
+    reply.raw.end();
   });
 }

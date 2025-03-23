@@ -1,5 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -7,24 +6,47 @@ interface Props {
   ratioWidth: number;
 }
 
-export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
-  const forceUpdate = useUpdate();
-  const containerRef = useRef<HTMLDivElement>(null);
+const throttle = (callback: () => void, limit: number) => {
+  let waiting = false;
+  return () => {
+    if (!waiting) {
+      callback();
+      waiting = true;
+      setTimeout(() => {
+        waiting = false;
+      }, limit);
+    }
+  };
+};
+const debounce = (callback: () => void, wait: number) => {
+  let timeout: NodeJS.Timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(callback, wait);
+  };
+};
 
+export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const width = useMemo(() => containerRef.current?.getBoundingClientRect().width ?? 0, [containerRef.current]);
+  const dynamicHeight = (width * ratioHeight) / ratioWidth;
+  const [height, setHeight] = useState(dynamicHeight);
   useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 1000);
+    if (!containerRef.current) return;
+    const onResize = debounce(() => {
+      if (!containerRef.current) return;
+      const w = containerRef.current.getBoundingClientRect().width ?? 0;
+      const h = (w * ratioHeight) / ratioWidth;
+      setHeight(h);
+    }, 200);
+    containerRef.current.addEventListener('resize', onResize);
     return () => {
-      clearInterval(interval);
+      containerRef.current?.removeEventListener('resize', onResize);
     };
   }, []);
 
-  const width = containerRef.current?.getBoundingClientRect().width ?? 0;
-  const height = (width * ratioHeight) / ratioWidth;
-
   return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
+    <div style={{ height: `${height}px` }} ref={containerRef} className={`relative w-full`}>
       {children}
     </div>
   );

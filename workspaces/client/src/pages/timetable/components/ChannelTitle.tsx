@@ -14,10 +14,17 @@ export const ChannelTitle = ({ channelId }: Props) => {
 
   const width = useColumnWidth(channelId);
 
+  const logoUrl = channel.logoUrl.replace('.svg', '.png');
   return (
     <div className="relative">
-      <div className={`border-x-solid h-[72px] w-auto border-x-[1px] border-x-[#212121] p-[14px]`} style={{ width }}>
-        <img alt={channel.name} className="object-contains size-full" draggable={false} src={channel.logoUrl} />
+      <div className={`border-x-solid h-[72px] w-auto border-x-[1px] border-x-[#212121]`} style={{ width }}>
+        <img
+          alt={channel.name}
+          style={{ width: '280px', height: '100%', objectFit: 'contain' }}
+          className="object-contains size-full"
+          draggable={false}
+          src={logoUrl}
+        />
       </div>
 
       <div className="absolute inset-y-0 right-[-4px] z-10 w-[8px]">

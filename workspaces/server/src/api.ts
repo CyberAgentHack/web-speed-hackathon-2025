@@ -24,6 +24,14 @@ import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
 
+let recCached: Map<string, any> = new Map();
+setInterval(
+  () => {
+    recCached.clear();
+  },
+  1000 * 60 * 10,
+);
+
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
@@ -469,6 +477,50 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
 
+      // const modules = await database.query.recommendedModule.findMany({
+      //   orderBy(module, { asc }) {
+      //     return asc(module.order);
+      //   },
+      //   where(module, { eq }) {
+      //     return eq(module.referenceId, req.params.referenceId);
+      //   },
+      //   with: {
+      //     items: {
+      //       orderBy(item, { asc }) {
+      //         return asc(item.order);
+      //       },
+      //       with: {
+      //         series: {
+      //           with: {
+      //             episodes: {
+      //               orderBy(episode, { asc }) {
+      //                 return asc(episode.order);
+      //               },
+      //             },
+      //           },
+      //         },
+      //         episode: {
+      //           with: {
+      //             series: {
+      //               with: {
+      //                 episodes: {
+      //                   orderBy(episode, { asc }) {
+      //                     return asc(episode.order);
+      //                   },
+      //                 },
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // });
+      const cached = recCached.get(req.params.referenceId);
+      if (cached) {
+        console.log('cache hit');
+        return reply.code(200).send(cached);
+      }
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -483,23 +535,25 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
+                // シリーズの基本情報のみを取得し、エピソードは取得しない
+                // フロントエンドでは id, title, thumbnailUrl のみが使用されている
                 with: {
                   episodes: {
+                    // 必要最小限のフィールドのみを取得し、最初の1件だけに制限
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
+                    limit: 1,
                   },
                 },
               },
               episode: {
                 with: {
                   series: {
+                    // エピソードのシリーズの基本情報のみを取得し、エピソードは取得しない
+                    // フロントエンドでは series.title のみが使用されている
                     with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                      episodes: { limit: 1 },
                     },
                   },
                 },
@@ -508,6 +562,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+      recCached.set(req.params.referenceId, modules);
       reply.code(200).send(modules);
     },
   });
