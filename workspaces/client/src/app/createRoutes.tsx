@@ -3,7 +3,7 @@ import { RouteObject } from 'react-router';
 
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
-import { Layout } from '@wsh-2025/client/src/features/layout/components/Layout';
+import { PureLayout } from '@wsh-2025/client/src/features/layout/components/PureLayout';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
@@ -67,6 +67,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             );
             return {
               Component: TimetablePage,
+              hydrateFallbackElement: <div className="flex h-full items-center justify-center">Loading...</div>,
               async loader() {
                 return await prefetch(store);
               },
@@ -92,9 +93,9 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
       ],
       Component: Document,
       hydrateFallbackElement: (
-        <Layout>
-          <div>Loading...</div>
-        </Layout>
+        <PureLayout>
+          <slot />
+        </PureLayout>
       ),
       async loader() {
         return await prefetch(store);
