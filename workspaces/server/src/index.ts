@@ -12,11 +12,11 @@ async function main() {
   await initializeDatabase();
 
   const app = fastify();
-
+  
   app.addHook('onSend', async (_req, reply) => {
     reply.header('Cache-Control', 'public, max-age=3600'); // 1時間キャッシュ
   });
-
+  
   app.register(cors, {
     origin: true,
   });
