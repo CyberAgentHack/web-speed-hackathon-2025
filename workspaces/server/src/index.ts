@@ -7,6 +7,7 @@ import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
 import { registerSsr } from '@wsh-2025/server/src/ssr';
 import { registerStreams } from '@wsh-2025/server/src/streams';
+import compress from '@fastify/compress'; // 追加：圧縮プラグインの読み込み
 
 async function main() {
   await initializeDatabase();
@@ -18,7 +19,6 @@ async function main() {
     reply.header('cache-control', 'public');
   });
   //add --------------------------
-  import compress from '@fastify/compress'; // 追加：圧縮プラグインの読み込み
   app.register(compress, {
     // デフォルトで最適な圧縮が有効になります
     global: true,
