@@ -93,7 +93,10 @@
       ],
       "output": [
         "./dist/**/*"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
     },
     "start": {
       "command": "webpack-dev-server",
