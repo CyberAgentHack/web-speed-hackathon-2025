@@ -1,6 +1,6 @@
+import { lazy, Suspense } from 'react';
+
 import { createStore } from '@wsh-2025/client/src/app/createStore';
-import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const modules = await store
@@ -9,10 +9,10 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
   return { modules };
 };
 
+const RecommendedSectionPage = lazy(
+  () => import('@wsh-2025/client/src/pages/not_found/components/RecommendedSectionPage'),
+);
 export const NotFoundPage = () => {
-  const modules = useRecommended({ referenceId: 'error' });
-  const module = modules.at(0);
-
   return (
     <>
       <title>見つかりません - AremaTV</title>
@@ -23,7 +23,9 @@ export const NotFoundPage = () => {
           <p>あなたが見ようとしたページは、残念ながら見つけられませんでした。</p>
           <img alt="" className="h-auto w-[640px]" loading="lazy" src="/public/animations/001.gif" />
         </section>
-        <section>{module != null ? <RecommendedSection module={module} /> : null}</section>
+        <Suspense>
+          <RecommendedSectionPage />
+        </Suspense>
       </div>
     </>
   );
