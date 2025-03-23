@@ -51,7 +51,7 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    const content = renderToString(
+    renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
@@ -60,18 +60,11 @@ export function registerSsr(app: FastifyInstance): void {
     );
 
     const rootDir = path.resolve(__dirname, '../../../');
-    const imageDirectories = ['images', 'animations', 'logos'];
-    const imagePaths = imageDirectories.map((dir) => getFilePaths(`public/${dir}`, rootDir)).flat();
-
-    const criticalImages = imagePaths
-      .filter((path) => path.includes('logos')) // ロゴなど重要な画像
-      .map((path) => `<link rel="preload" as="image" href="${path}" />`);
-
-    const prefetchImages = ['animations', 'images'].flatMap((dir) =>
-      imagePaths
-        .filter((path) => path.includes(dir))
-        .map((path) => `<link rel="prefetch" as="image" href="${path}" />`),
-    );
+    const imagePaths = [
+      getFilePaths('public/images', rootDir),
+      getFilePaths('public/animations', rootDir),
+      getFilePaths('public/logos', rootDir),
+    ].flat();
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
@@ -79,14 +72,11 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script defer src="/public/main.js"></script>
-          ${criticalImages.join('\n')}
-          ${prefetchImages.join('\n')}
+          <script src="/public/main.js"></script>
+          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
-        <body>
-          <div id="root">${content}</div>
-        </body>
-      </body>
+        <body></body>
+      </html>
       <script>
         window.__staticRouterHydrationData = ${htmlescape({
           actionData: context.actionData,
