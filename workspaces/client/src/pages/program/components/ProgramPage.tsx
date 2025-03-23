@@ -15,6 +15,7 @@ import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/componen
 import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
+import { Helmet } from 'react-helmet';
 
 // export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
 //   invariant(programId);
@@ -114,7 +115,9 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
 
   return (
     <>
-      <title>{`${program.title} - ${program.series.title} - AremaTV`}</title>
+      <Helmet>
+        <title>{`${program.title} - ${program.series.title} - AremaTV`}</title>
+      </Helmet>
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>

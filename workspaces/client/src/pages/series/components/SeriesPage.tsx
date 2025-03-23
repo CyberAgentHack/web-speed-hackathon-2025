@@ -8,6 +8,7 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 import { useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
 
 const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   await store.getState().features.series.fetchSeriesById({ seriesId: seriesId ?? '' });
@@ -38,7 +39,9 @@ export const SeriesPage = (store: ReturnType<typeof createStore>) => {
 
   return (
     <>
-      <title>{`${series.title} - AremaTV`}</title>
+      <Helmet>
+        <title>{`${series.title} - AremaTV`}</title>
+      </Helmet>
 
       <div className="m-auto px-[24px] py-[48px]">
         <header className="mb-[24px] flex w-full flex-row items-start justify-between gap-[24px]">

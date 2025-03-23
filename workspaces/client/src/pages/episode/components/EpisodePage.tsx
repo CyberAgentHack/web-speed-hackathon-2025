@@ -14,6 +14,7 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
+import { Helmet } from 'react-helmet';
 
 // export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
 //   invariant(episodeId);
@@ -60,7 +61,9 @@ export const EpisodePage = (store: ReturnType<typeof createStore>) => {
 
   return (
     <>
-      <title>{`${episode.title} - ${episode.series.title} - AremaTV`}</title>
+      <Helmet>
+        <title>{`${episode.title} - ${episode.series.title} - AremaTV`}</title>
+      </Helmet>
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`episode-${episode.id}`}>
