@@ -1,5 +1,7 @@
 import "@wsh-2025/server/src/setups/luxon";
 
+import fs from "node:fs";
+
 import cors from "@fastify/cors";
 import fastify from "fastify";
 
@@ -13,22 +15,31 @@ async function main() {
 
   const app = fastify();
 
-  await app.register(import("@fastify/compress"));
   app.addHook("onSend", async (_req, reply) => {
     reply.header("cache-control", "no-store");
   });
   app.register(cors, {
     origin: true,
   });
+  app.get("/ffmpeg-core.js", (_req, reply) => {
+    const stream = fs.createReadStream(
+      "../../node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js",
+      "utf8",
+    );
+    reply.header("Content-Type", "application/octet-stream");
+    reply.send(stream);
+  });
+  app.get("/ffmpeg-core.wasm", (_req, reply) => {
+    const stream = fs.createReadStream(
+      "../../node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm",
+      "utf8",
+    );
+    reply.header("Content-Type", "application/octet-stream");
+    reply.send(stream);
+  });
   app.register(registerApi, { prefix: "/api" });
   app.register(registerStreams);
   app.register(registerSsr);
-  app.get("/ffmpeg-core.js", (_req, reply) => {
-    reply.sendFile("@ffmpeg/core/dist/umd/ffmpeg-core.js");
-  });
-  app.get("/ffmpeg-core.wasm", (_req, reply) => {
-    reply.sendFile("@ffmpeg/core/dist/umd/ffmpeg-core.wasm");
-  });
 
   await app.ready();
   const address = await app.listen({
