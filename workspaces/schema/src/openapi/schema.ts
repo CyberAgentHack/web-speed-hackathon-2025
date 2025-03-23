@@ -115,11 +115,34 @@ export const getEpisodesResponse = z.array(
 export const getEpisodeByIdRequestParams = z.object({
   episodeId: z.string(),
 });
-export const getEpisodeByIdResponse = episode.extend({
-  series: series.extend({
-    episodes: z.array(episode.extend({})),
-  }),
-});
+export const getEpisodeByIdResponse = episode
+  .pick({
+    id: true,
+    title: true,
+    premium: true,
+    thumbnailUrl: true,
+    description: true,
+  })
+  .extend({
+    series: series
+      .pick({
+        title: true,
+      })
+      .extend({
+        episodes: z.array(
+          episode
+            .pick({
+              description: true,
+              id: true,
+              order: true,
+              premium: true,
+              thumbnailUrl: true,
+              title: true,
+            })
+            .extend({}),
+        ),
+      }),
+  });
 
 // GET /series
 export const getSeriesRequestQuery = z.object({

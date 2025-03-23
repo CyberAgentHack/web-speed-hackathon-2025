@@ -66,6 +66,9 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' })],
+  resolve: {
+    extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
+  },
 };
 
 export default config;
