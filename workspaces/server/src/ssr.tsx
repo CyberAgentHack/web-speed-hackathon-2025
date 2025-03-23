@@ -51,13 +51,6 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
-        </StoreProvider>
-      </StrictMode>,
-    );
 
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
@@ -66,23 +59,37 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/logos', rootDir),
     ].flat();
 
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="prefetch" />`).join('\n')}
-        </head>
-        <body></body>
-      </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
-    `);
+    const preloadLinks = imagePaths
+      .map((imagePath) => `<link as="image" href="${imagePath}" rel="prefetch" />`)
+      .join('\n');
+
+    const markup = renderToString(
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <StaticRouterProvider context={context} hydrate={false} router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
+
+    const html = `<!DOCTYPE html>
+    <html className="size-full" lang="ja">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        ${preloadLinks}
+      </head>
+      <body className="size-full bg-[#000000] text-[#ffffff]">
+        <div id="root">${markup}</div>
+        <script>
+          window.__staticRouterHydrationData = ${htmlescape({
+            actionData: context.actionData,
+            loaderData: context.loaderData,
+          })};
+        </script>
+        <script src="/public/main.js"></script>
+      </body>
+    </html>`;
+
+    reply.type('text/html').send(html);
   });
 }
