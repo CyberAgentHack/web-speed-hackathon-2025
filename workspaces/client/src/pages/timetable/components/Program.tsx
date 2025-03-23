@@ -1,7 +1,7 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useMemo, useRef, useState, useLayoutEffect } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
@@ -26,45 +26,73 @@ export const Program = ({ height, program }: Props): ReactElement => {
   };
 
   const currentUnixtimeMs = useCurrentUnixtimeMs();
-  const isBroadcasting =
-    DateTime.fromISO(program.startAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis() &&
-    DateTime.fromMillis(currentUnixtimeMs).toMillis() < DateTime.fromISO(program.endAt).toMillis();
-  const isArchived = DateTime.fromISO(program.endAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis();
+  const startMs = useMemo(() => DateTime.fromISO(program.startAt).toMillis(), [program.startAt]);
+  const endMs = useMemo(() => DateTime.fromISO(program.endAt).toMillis(), [program.endAt]);
+  const isBroadcasting = startMs <= currentUnixtimeMs && currentUnixtimeMs < endMs;
+  const isArchived = endMs <= currentUnixtimeMs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
+
+  // 一度だけチェックする効率的な方法に変更
+  useLayoutEffect(() => {
+    // ウィンドウリサイズ時に再計算するための関数
+    const checkImageVisibility = () => {
       const imageHeight = imageRef.current?.clientHeight ?? 0;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
+    };
+
+    // 初回チェック
+    checkImageVisibility();
+
+    // リサイズイベント時に再計算
+    window.addEventListener('resize', checkImageVisibility);
+
+    // 画像ロード時に再計算
+    const imgElement = imageRef.current;
+    if (imgElement) {
+      imgElement.addEventListener('load', checkImageVisibility);
+    }
+
     return () => {
-      clearInterval(interval);
+      window.removeEventListener('resize', checkImageVisibility);
+      if (imgElement) {
+        imgElement.removeEventListener('load', checkImageVisibility);
+      }
     };
   }, [height]);
+
+  // クラス名を事前に計算
+  const buttonClassName = useMemo(() => {
+    return `h-[${height}px] w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100}`;
+  }, [height, isBroadcasting, isArchived]);
+
+  const titleTimeClassName = useMemo(() => {
+    return `mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`;
+  }, [isBroadcasting]);
+
+  const titleTextClassName = useMemo(() => {
+    return `grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`;
+  }, [isBroadcasting]);
+
+  const startAtFormatted = useMemo(() => DateTime.fromISO(program.startAt).toFormat('mm'), [program.startAt]);
+
+  const thumbnailUrl = useMemo(
+    () => program.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2'),
+    [program.thumbnailUrl],
+  );
 
   return (
     <>
       <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
-        <button
-          className={`h-[${height}px] w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100}`}
-          style={{ width }}
-          type="button"
-          onClick={onClick}
-        >
+        <button className={buttonClassName} style={{ width }} type="button" onClick={onClick}>
           <div className="flex size-full flex-col overflow-hidden">
             <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
-              <span
-                className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
-              >
-                {DateTime.fromISO(program.startAt).toFormat('mm')}
-              </span>
-              <div
-                className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
-              >
+              <span className={titleTimeClassName}>{startAtFormatted}</span>
+              <div className={titleTextClassName}>
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
@@ -74,13 +102,13 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 loading="lazy"
-                src={program.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
+                src={thumbnailUrl}
               />
             </div>
           </div>
         </button>
       </Hoverable>
-      <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />
+      {shouldProgramDetailDialogOpen && <ProgramDetailDialog isOpen={true} program={program} />}
     </>
   );
 };

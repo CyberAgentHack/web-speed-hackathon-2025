@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-// グローバルな更新間隔を1秒に設定
-const UPDATE_INTERVAL = 1000;
+// グローバルな更新間隔を5秒に設定
+const UPDATE_INTERVAL = 5000;
 
 let subscribers = new Set<(time: number) => void>();
 let intervalId: ReturnType<typeof setInterval> | null = null;
