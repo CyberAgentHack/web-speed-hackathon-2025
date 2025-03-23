@@ -10,9 +10,10 @@ interface Props {
     title: string;
   }[];
   selectedEpisodeId: string | null;
+  eager?: boolean | undefined;
 }
 
-export const SeriesEpisodeList = ({ episodes, selectedEpisodeId }: Props) => {
+export const SeriesEpisodeList = ({ episodes, selectedEpisodeId, eager }: Props) => {
   const orderedEpisodes = [...episodes].sort((a, b) => {
     return a.order - b.order;
   });
@@ -21,7 +22,7 @@ export const SeriesEpisodeList = ({ episodes, selectedEpisodeId }: Props) => {
     <div className="flex w-full flex-col gap-y-[16px]">
       {orderedEpisodes.map((episode, index) => (
         <div key={episode.id} className="shrink-0 grow-0">
-          <SeriesEpisodeItem episode={episode} selected={episode.id === selectedEpisodeId} eager={index <= 4} />
+          <SeriesEpisodeItem episode={episode} selected={episode.id === selectedEpisodeId} eager={eager === true ? index <= 4 : false} />
         </div>
       ))}
     </div>

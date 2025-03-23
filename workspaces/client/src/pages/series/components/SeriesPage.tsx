@@ -52,7 +52,7 @@ export const SeriesPage = () => {
 
         <div className="mb-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
-          <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} />
+          <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} eager={true} />
         </div>
 
         {modules[0] != null ? (
