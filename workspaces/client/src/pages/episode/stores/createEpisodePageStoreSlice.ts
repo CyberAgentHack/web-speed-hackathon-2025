@@ -7,6 +7,8 @@ interface EpisodePageState {
   abortController: AbortController | null;
   currentTime: number;
   duration: number;
+  error: boolean;
+  loading: boolean;
   muted: boolean;
   player: PlayerWrapper | null;
   playing: boolean;
@@ -25,6 +27,8 @@ export const createEpisodePageStoreSlice = () => {
     abortController: null,
     currentTime: 0,
     duration: 0,
+    error: false,
+    loading: true,
     muted: true,
     pause: () => {
       const { player } = get();
@@ -39,16 +43,48 @@ export const createEpisodePageStoreSlice = () => {
       function onMount(player: PlayerWrapper): void {
         const abortController = new AbortController();
 
+        // 読み込み状態のイベントリスナー
         player.videoElement.addEventListener(
-          'playing',
+          'loadstart',
           () => {
-            set({ playing: true });
+            console.log('Episode: Media loadstart');
+            set({ loading: true, error: false });
           },
           { signal: abortController.signal },
         );
+
+        player.videoElement.addEventListener(
+          'loadeddata',
+          () => {
+            console.log('Episode: Media loadeddata');
+            set({ loading: false });
+          },
+          { signal: abortController.signal },
+        );
+
+        player.videoElement.addEventListener(
+          'error',
+          (e) => {
+            console.error('Episode: Media error', e);
+            set({ loading: false, error: true });
+          },
+          { signal: abortController.signal },
+        );
+
+        // 再生状態のイベントリスナー
+        player.videoElement.addEventListener(
+          'playing',
+          () => {
+            console.log('Episode: Media playing');
+            set({ playing: true, loading: false });
+          },
+          { signal: abortController.signal },
+        );
+
         player.videoElement.addEventListener(
           'pause',
           () => {
+            console.log('Episode: Media paused');
             set({ playing: false });
           },
           { signal: abortController.signal },
@@ -68,6 +104,8 @@ export const createEpisodePageStoreSlice = () => {
           abortController,
           currentTime: 0,
           duration: 0,
+          error: false,
+          loading: true,
           muted: true,
           player,
           playing: false,
@@ -81,6 +119,8 @@ export const createEpisodePageStoreSlice = () => {
 
         set(() => ({
           abortController: null,
+          error: false,
+          loading: false,
           player: null,
         }));
       }

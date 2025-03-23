@@ -2,6 +2,7 @@
   "name": "@wsh-2025/server",
   "private": true,
   "scripts": {
+    "create-thumbnails": "bash ./tools/create_default_thumbnails.sh",
     "database:migrate": "wireit",
     "database:reset": "wireit",
     "format": "wireit",

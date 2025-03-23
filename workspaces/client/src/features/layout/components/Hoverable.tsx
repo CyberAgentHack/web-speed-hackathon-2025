@@ -1,8 +1,6 @@
 import classNames from 'classnames';
-import { Children, cloneElement, ReactElement, Ref, useRef } from 'react';
+import { Children, cloneElement, ReactElement, Ref, useCallback, useEffect, useRef, useState } from 'react';
 import { useMergeRefs } from 'use-callback-ref';
-
-import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
 
 interface Props {
   children: ReactElement<{ className?: string; ref?: Ref<unknown> }>;
@@ -15,18 +13,32 @@ interface Props {
 export const Hoverable = (props: Props) => {
   const child = Children.only(props.children);
   const elementRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
 
   const mergedRef = useMergeRefs([elementRef, child.props.ref].filter((v) => v != null));
 
-  const pointer = usePointer();
-  const elementRect = elementRef.current?.getBoundingClientRect();
+  // マウスイベントを使用してホバー状態を管理
+  const handleMouseEnter = useCallback(() => {
+    setHovered(true);
+  }, []);
 
-  const hovered =
-    elementRect != null &&
-    elementRect.left <= pointer.x &&
-    pointer.x <= elementRect.right &&
-    elementRect.top <= pointer.y &&
-    pointer.y <= elementRect.bottom;
+  const handleMouseLeave = useCallback(() => {
+    setHovered(false);
+  }, []);
+
+  // イベントリスナーを設定
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    element.addEventListener('mouseenter', handleMouseEnter);
+    element.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      element.removeEventListener('mouseenter', handleMouseEnter);
+      element.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [handleMouseEnter, handleMouseLeave]);
 
   return cloneElement(child, {
     className: classNames(

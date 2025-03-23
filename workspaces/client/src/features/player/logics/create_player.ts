@@ -19,8 +19,14 @@ class ShakaPlayerWrapper implements PlayerWrapper {
   constructor(playerType: PlayerType.ShakaPlayer) {
     this.playerType = playerType;
     this._player.configure({
+      // パフォーマンス最適化のための設定
+      abr: {
+        defaultBandwidthEstimate: 500000,
+        enabled: true, // 初期帯域幅の見積もり（500kbps）
+      },
       streaming: {
         bufferingGoal: 50,
+        // useNativeHlsOnSafari: true, // SafariではネイティブHLSを使用
       },
     });
   }
@@ -42,9 +48,23 @@ class ShakaPlayerWrapper implements PlayerWrapper {
 
   load(playlistUrl: string, options: { loop: boolean }): void {
     void (async () => {
-      await this._player.attach(this.videoElement);
-      this.videoElement.loop = options.loop;
-      await this._player.load(playlistUrl);
+      try {
+        await this._player.attach(this.videoElement);
+        this.videoElement.loop = options.loop;
+        await this._player.load(playlistUrl);
+
+        // loadeddataイベントを発火させて、ローディング状態を更新
+        const event = new Event('loadeddata');
+        this.videoElement.dispatchEvent(event);
+      } catch (error) {
+        console.error('Shaka Player error:', error);
+
+        // エラーイベントを発火させて、ローディング状態を更新
+        const errorEvent = new ErrorEvent('error', {
+          message: error instanceof Error ? error.message : String(error)
+        });
+        this.videoElement.dispatchEvent(errorEvent);
+      }
     })();
   }
   play(): void {
@@ -72,8 +92,17 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     volume: 0.25,
   });
   private _player = new HlsJs({
-    enableWorker: false,
-    maxBufferLength: 50,
+    // レベルロードの最大リトライ回数
+    abrEwmaDefaultEstimate: 500000, // メインスレッドの負荷を軽減するための追加設定
+    backBufferLength: 30,
+    enableWorker: true,
+    // バックバッファの長さを制限
+    fragLoadingMaxRetry: 2,
+    // マニフェストロードの最大リトライ回数
+    levelLoadingMaxRetry: 2, liveSyncDurationCount: 3, // フラグメントロードの最大リトライ回数
+    manifestLoadingMaxRetry: 2, // Web Workerを有効化
+    maxBufferLength: 10, maxMaxBufferLength: 30, // 初期帯域幅の見積もり（500kbps）
+    testBandwidth: false, // 初期帯域幅テストを無効化
   });
   readonly playerType: PlayerType.HlsJS;
 
@@ -97,6 +126,28 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   }
 
   load(playlistUrl: string, options: { loop: boolean }): void {
+    // イベントハンドラの設定
+    this._player.once(HlsJs.Events.MEDIA_ATTACHED, () => {
+      console.log('Media attached');
+    });
+
+    this._player.once(HlsJs.Events.MANIFEST_PARSED, () => {
+      console.log('Manifest parsed, media ready to play');
+      // loadeddataイベントを発火させて、ローディング状態を更新
+      const event = new Event('loadeddata');
+      this.videoElement.dispatchEvent(event);
+    });
+
+    this._player.once(HlsJs.Events.ERROR, (_, data) => {
+      console.error('HLS.js error:', data);
+      if (data.fatal) {
+        // エラーイベントを発火させて、ローディング状態を更新
+        const event = new ErrorEvent('error', { message: `HLS.js fatal error: ${data.type}` });
+        this.videoElement.dispatchEvent(event);
+      }
+    });
+
+    // メディアのアタッチとソースのロード
     this._player.attachMedia(this.videoElement);
     this.videoElement.loop = options.loop;
     this._player.loadSource(playlistUrl);
@@ -138,6 +189,18 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
     vhsConfig.GOAL_BUFFER_LENGTH = 50;
     vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
     this.playerType = playerType;
+
+    // パフォーマンス最適化のための設定
+    this._player.options({
+      html5: {
+        vhs: {
+          enableLowInitialPlaylist: true,
+          limitRenditionByPlayerDimensions: true,
+          overrideNative: !videojs.browser.IS_SAFARI,
+          useDevicePixelRatio: true,
+        },
+      },
+    });
   }
 
   get currentTime(): number {
@@ -155,6 +218,25 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
 
   load(playlistUrl: string, options: { loop: boolean }): void {
     this.videoElement.loop = options.loop;
+
+    // loadeddataイベントのリスナーを追加
+    const loadedDataHandler = () => {
+      console.log('Video.js: Media loaded');
+      // loadeddataイベントを発火させて、ローディング状態を更新
+      const event = new Event('loadeddata');
+      this.videoElement.dispatchEvent(event);
+      this.videoElement.removeEventListener('loadeddata', loadedDataHandler);
+    };
+
+    // errorイベントのリスナーを追加
+    const errorHandler = (error: Event) => {
+      console.error('Video.js error:', error);
+      this.videoElement.removeEventListener('error', errorHandler);
+    };
+
+    this.videoElement.addEventListener('loadeddata', loadedDataHandler);
+    this.videoElement.addEventListener('error', errorHandler);
+
     this._player.src({
       src: playlistUrl,
       type: 'application/x-mpegURL',

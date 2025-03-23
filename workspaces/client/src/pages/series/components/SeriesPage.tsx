@@ -1,9 +1,9 @@
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
@@ -11,11 +11,11 @@ import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
+  const [series] = await Promise.all([
+    store.getState().features.series.fetchSeriesById({ seriesId }),
+    // store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId }),
+  ]);
+  return { series };
 };
 
 export const SeriesPage = () => {
@@ -37,15 +37,16 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
               src={series.thumbnailUrl}
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
             <h1 className="mb-[16px] text-[32px] font-bold text-[#ffffff]">
-              <Ellipsis ellipsis reflowOnResize maxLine={2} text={series.title} visibleLine={2} />
+              <CustomEllipsis maxLine={2} text={series.title} visibleLine={2} />
             </h1>
             <div className="text-[14px] text-[#999999]">
-              <Ellipsis ellipsis reflowOnResize maxLine={3} text={series.description} visibleLine={3} />
+              <CustomEllipsis maxLine={3} text={series.description} visibleLine={3} />
             </div>
           </div>
         </header>

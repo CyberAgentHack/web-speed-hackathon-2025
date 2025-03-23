@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useProgramById';
@@ -20,17 +20,18 @@ import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayer
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
+  // const now = DateTime.now();
+  // const since = now.startOf('day').toISO();
+  // const until = now.endOf('day').toISO();
 
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
-  return { channels, modules, program, timetable };
+  // const [program, channels, timetable, modules] = await Promise.all([
+  const [program] = await Promise.all([
+    store.getState().features.program.fetchProgramById({ programId }),
+    // store.getState().features.channel.fetchChannels(),
+    // store.getState().features.timetable.fetchTimetable({ since, until }),
+    // store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId })
+  ]);
+  return { program};
 };
 
 export const ProgramPage = () => {
@@ -62,8 +63,8 @@ export const ProgramPage = () => {
     if (!isBroadcastStarted) {
       let timeout = setTimeout(function tick() {
         forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
+        timeout = setTimeout(tick, 2000);
+      }, 2000);
       return () => {
         clearTimeout(timeout);
       };
@@ -72,7 +73,7 @@ export const ProgramPage = () => {
     // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
+        timeout = setTimeout(tick, 2000);
         return;
       }
 
@@ -86,7 +87,7 @@ export const ProgramPage = () => {
         isArchivedRef.current = true;
         forceUpdate();
       }
-    }, 250);
+    }, 2000);
     return () => {
       clearTimeout(timeout);
     };
@@ -101,7 +102,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -127,7 +128,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -141,10 +142,10 @@ export const ProgramPage = () => {
 
         <div className="mb-[24px]">
           <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.episode.series.title} visibleLine={1} />
+            <CustomEllipsis maxLine={1} text={program.episode.series.title} visibleLine={1} />
           </div>
           <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
+            <CustomEllipsis maxLine={2} text={program.title} visibleLine={2} />
           </h1>
           <div className="mt-[8px] text-[16px] text-[#999999]">
             {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')}
@@ -152,7 +153,7 @@ export const ProgramPage = () => {
             {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')}
           </div>
           <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />
+            <CustomEllipsis maxLine={3} text={program.description} visibleLine={3} />
           </div>
         </div>
 

@@ -1,7 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { useRef } from 'react';
-import Ellipsis from 'react-ellipsis-component';
+import { useEffect, useRef, useState } from 'react';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -11,6 +10,7 @@ import { Player } from '../../player/components/Player';
 import { PlayerType } from '../../player/constants/player_type';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
@@ -19,13 +19,49 @@ interface Props {
 
 export const JumbotronSection = ({ module }: Props) => {
   const playerRef = useRef<PlayerWrapper>(null);
+  const containerRef = useRef<HTMLAnchorElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
 
   const episode = module.items[0]?.episode;
   invariant(episode);
 
+  // IntersectionObserverを使用して要素が表示されているかを監視
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // 表示されてから少し遅延させてプレーヤーを読み込む
+  useEffect(() => {
+    if (isVisible && !isPlayerLoaded) {
+      const timer = setTimeout(() => {
+        setIsPlayerLoaded(true);
+      }, 100);
+
+      return () => { clearTimeout(timer); };
+    }
+  }, [isVisible, isPlayerLoaded]);
+
   return (
     <Hoverable classNames={{ hovered: 'opacity-50' }}>
       <NavLink
+        ref={containerRef}
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
         to={`/episodes/${episode.id}`}
@@ -35,22 +71,29 @@ export const JumbotronSection = ({ module }: Props) => {
             <>
               <div className="grow-1 shrink-1 p-[24px]">
                 <div className="mb-[16px] w-full text-center text-[22px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
+                  <CustomEllipsis maxLine={2} text={episode.title} visibleLine={2} />
                 </div>
                 <div className="w-full text-center text-[14px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
+                  <CustomEllipsis maxLine={3} text={episode.description} visibleLine={3} />
                 </div>
               </div>
 
               <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
                 <div className="h-full w-auto shrink-0 grow-0">
-                  <Player
-                    loop
-                    className="size-full"
-                    playerRef={playerRef}
-                    playerType={PlayerType.ShakaPlayer}
-                    playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
-                  />
+                  {isPlayerLoaded ? (
+                    <Player
+                      loop
+                      className="size-full"
+                      playerRef={playerRef}
+                      playerType={PlayerType.ShakaPlayer}
+                      playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
+                    />
+                  ) : (
+                    <div className="size-full bg-[#212121] flex items-center justify-center">
+                      {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
+                      <img className="size-[48px]" loading="lazy" src="/public/svg/loading.svg" />
+                    </div>
+                  )}
                 </div>
               </Flipped>
             </>

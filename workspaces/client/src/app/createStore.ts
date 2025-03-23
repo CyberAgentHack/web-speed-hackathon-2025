@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -39,7 +38,26 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  if (hydrationData) {
+    store.setState((s) => {
+      return {
+        ...s,
+        ...hydrationData,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        features: {
+          ...s.features,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+          ...(hydrationData as any)?.features,
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        pages: {
+          ...s.pages,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+          ...(hydrationData as any)?.pages,
+        },
+      };
+    });
+  }
 
   return store;
 };

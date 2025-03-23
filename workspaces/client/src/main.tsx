@@ -3,7 +3,7 @@ import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
-import { hydrateRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
 
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
@@ -17,10 +17,31 @@ declare global {
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  // const router = createBrowserRouter(createRoutes(store), {
+  //   future: {
+  //     // v7_normalizeFormMethod: true,
+  //     v7_partialHydration: true,
+  //   },
+  //   hydrationData: window.__staticRouterHydrationData,
+  // });
 
-  hydrateRoot(
-    document,
+  // const rootElement = document.getElementById('app-root');
+  // if (!rootElement) {
+  //   console.error('Root element #app-root not found');
+  //   return;
+  // }
+
+  // hydrateRoot(
+  //   rootElement,
+  //   <StrictMode>
+  //     <StoreProvider createStore={() => store}>
+  //       <RouterProvider router={router} />
+  //     </StoreProvider>
+  //   </StrictMode>,
+  // );
+  
+  const router = createBrowserRouter(createRoutes(store), {});
+  createRoot(document.getElementById('app-root')).render(
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
@@ -29,4 +50,6 @@ function main() {
   );
 }
 
-document.addEventListener('DOMContentLoaded', main);
+// document.addEventListener('DOMContentLoaded', main);
+
+main();

@@ -5,7 +5,7 @@ import fastify from 'fastify';
 
 import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
-import { registerSsr } from '@wsh-2025/server/src/ssr';
+import { registerSpa, registerSsr } from '@wsh-2025/server/src/ssr';
 import { registerStreams } from '@wsh-2025/server/src/streams';
 
 async function main() {
@@ -21,7 +21,8 @@ async function main() {
   });
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
-  app.register(registerSsr);
+  // app.register(registerSsr);
+  app.register(registerSpa); // ssr をやめてみる
 
   await app.ready();
   const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });
