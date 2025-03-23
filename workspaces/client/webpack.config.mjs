@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -12,6 +13,30 @@ const config = {
     sideEffects: true,
     minimize: process.env['NODE_ENV'] === 'production',
     moduleIds: 'deterministic',
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            ecma: 2017,
+          },
+          compress: {
+            ecma: 5,
+            comparisons: false,
+            inline: 2,
+            drop_console: process.env['NODE_ENV'] === 'production',
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            ascii_only: true,
+          },
+        },
+        parallel: true,
+      }),
+    ],
   },
   module: {
     rules: [
