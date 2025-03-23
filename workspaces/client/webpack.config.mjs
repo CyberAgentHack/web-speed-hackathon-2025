@@ -64,7 +64,10 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 15 }),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 10000
+    }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     new BundleAnalyzerPlugin(), // 追加
   ],
@@ -80,7 +83,37 @@ const config = {
     minimize: true,
     splitChunks: {
       chunks: 'all',
+      maxInitialRequests: 10,
+      minSize: 20000,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          // @ts-ignore
+          name(module) {
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1];
+            return `vendor.${packageName.replace('@', '')}`;
+          },
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
     },
+    runtimeChunk: 'single',
+    usedExports: true,
+    moduleIds: 'deterministic',
+  },
+
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
 };
 
