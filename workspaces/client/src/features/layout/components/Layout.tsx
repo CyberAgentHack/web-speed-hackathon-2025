@@ -64,7 +64,7 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} preload />
+            <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
           </Link>
         </header>
 
@@ -76,7 +76,7 @@ export const Layout = ({ children }: Props) => {
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
               <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
+                className={`${isSignedIn ? 'i-fa-solid:sign-out-alt' : 'i-fa-solid:user'} m-[4px] size-[20px] shrink-0 grow-0`}
               />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}

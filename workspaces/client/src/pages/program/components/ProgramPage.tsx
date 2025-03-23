@@ -120,7 +120,6 @@ export const ProgramPage = () => {
                   playerRef={playerRef}
                   playerType={PlayerType.VideoJS}
                   playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
-                  preload
                 />
                 <div className="absolute inset-x-0 bottom-0">
                   <PlayerController />

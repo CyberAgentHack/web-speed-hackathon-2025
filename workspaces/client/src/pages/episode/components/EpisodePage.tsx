@@ -89,7 +89,6 @@ export const EpisodePage = () => {
                     playerRef={playerRef}
                     playerType={PlayerType.HlsJS}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
-                    preload
                   />
 
                   <div className="absolute inset-x-0 bottom-0">

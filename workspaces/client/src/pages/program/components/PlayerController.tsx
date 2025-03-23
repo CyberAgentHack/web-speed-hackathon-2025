@@ -26,7 +26,7 @@ export const PlayerController = () => {
                 }}
               >
                 <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  className={`${muted ? 'i-material-symbols:volume-off-rounded' : 'i-material-symbols:volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
                 />
               </button>
             </Hoverable>
