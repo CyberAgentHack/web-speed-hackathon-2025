@@ -45,7 +45,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
 
   return (
     <div className={className}>
-      <div className="relative size-full">
+      <div className="relative h-fit w-fit">
         <div ref={mountRef} className="size-full" />
 
         <div className="absolute inset-0 z-[-10] grid place-content-center">

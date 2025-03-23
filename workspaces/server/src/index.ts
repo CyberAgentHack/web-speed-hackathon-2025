@@ -1,8 +1,10 @@
 import "@wsh-2025/server/src/setups/luxon";
 
-import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import cors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
 import fastify from "fastify";
 
 import { registerApi } from "@wsh-2025/server/src/api";
@@ -21,21 +23,13 @@ async function main() {
   app.register(cors, {
     origin: true,
   });
-  app.get("/ffmpeg-core.js", (_req, reply) => {
-    const stream = fs.createReadStream(
-      "../../node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js",
-      "utf8",
-    );
-    reply.header("Content-Type", "application/octet-stream");
-    reply.send(stream);
-  });
-  app.get("/ffmpeg-core.wasm", (_req, reply) => {
-    const stream = fs.createReadStream(
-      "../../node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm",
-      "utf8",
-    );
-    reply.header("Content-Type", "application/octet-stream");
-    reply.send(stream);
+  app.register(fastifyStatic, {
+    decorateReply: false,
+    prefix: "/ffmpeg/",
+    root: path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../node_modules/@ffmpeg/core/dist/umd",
+    ),
   });
   app.register(registerApi, { prefix: "/api" });
   app.register(registerStreams);
