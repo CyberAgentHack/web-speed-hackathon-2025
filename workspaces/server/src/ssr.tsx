@@ -52,7 +52,6 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-      		<link rel="preload" href="/public/main.js" as="script" />
 					<script>
 						window.__staticRouterHydrationData = ${htmlescape({
               actionData: context.actionData,
