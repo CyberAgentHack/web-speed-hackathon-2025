@@ -8,7 +8,7 @@ const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
   mode: 'production',
-  // mode: 'none',
+  // mode: 'development',
   module: {
     rules: [
       {
@@ -38,8 +38,13 @@ const config = {
         },
       },
       {
-        test: /\.png$/,
-        type: 'asset/inline',
+        test: /\.(png|jpg|jpeg|gif|svg|webp|avif)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024,
+          },
+        },
       },
       {
         resourceQuery: /raw/,
@@ -63,7 +68,7 @@ const config = {
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
     // new BundleAnalyzerPlugin(),
   ],
   resolve: {
