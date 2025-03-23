@@ -1,5 +1,5 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import deepmerge from 'deepmerge';
+import { merge } from 'ts-deepmerge';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -39,7 +39,7 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => deepmerge(s, hydrationData ?? {}));
+  store.setState((s) => merge(s, hydrationData ?? {}));
 
   return store;
 };
