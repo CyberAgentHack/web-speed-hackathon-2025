@@ -28,8 +28,8 @@ export const SeriesPage = () => {
   invariant(series);
 
   // TODO メモ化の方法については要変更
-  // const modules = useRecommended({ referenceId: seriesId });
-  const modules = useMemo(() => useRecommended({ referenceId: seriesId }), []); 
+  const modules = useRecommended({ referenceId: seriesId });
+  // const modules = useMemo(() => useRecommended({ referenceId: seriesId }), []); 
 
   return (
     <>
