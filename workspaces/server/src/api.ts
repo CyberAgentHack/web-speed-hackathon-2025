@@ -512,70 +512,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     },
   });
 
-  api.route({
-    method: 'GET',
-    url: '/recommended/entrance',
-    schema: {
-      tags: ['レコメンド'],
-      response: {
-        200: {
-          content: {
-            'application/json': {
-              schema: schema.getRecommendedModulesResponse,
-            },
-          },
-        },
-      },
-    } satisfies FastifyZodOpenApiSchema,
-    handler: async function getRecommendedModules(_req, reply) {
-      const database = getDatabase();
-
-      try {
-        const modules = await database.query.recommendedModule.findMany({
-          orderBy(module, { asc }) {
-            return asc(module.order);
-          },
-          where(module, { eq }) {
-            return eq(module.referenceId, 'entrance');
-          },
-          with: {
-            items: {
-              with: {
-                series: {
-                  with: {
-                    episodes: {
-                      limit: 1,
-                      orderBy(episode, { asc }) {
-                        return asc(episode.order);
-                      },
-                    },
-                  },
-                },
-                episode: {
-                  with: {
-                    series: {
-                      with: {
-                        episodes: {
-                          limit: 1,
-                          orderBy(episode, { asc }) {
-                            return asc(episode.order);
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
-        reply.code(200).send(modules);
-      } catch (error) {
-        console.error(error);
-
-      }
-    },
-  });
 
   api.route({
     method: 'GET',
@@ -609,26 +545,20 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    limit: 1,
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
+              series: true,
               episode: {
+                columns: {
+                  id: true,
+                  description: true,
+                  premium: true,
+                  thumbnailUrl: true,
+                  title: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        limit: 1,
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      id: true,
+                      title: true,
                     },
                   },
                 },
