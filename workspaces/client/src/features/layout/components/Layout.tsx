@@ -22,7 +22,8 @@ export const Layout = ({ children }: Props) => {
 
   const navigation = useNavigation();
   const isLoading =
-    navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
+    navigation.location != null &&
+    ((navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none');
 
   const location = useLocation();
   const isTimetablePage = location.pathname === '/timetable';
@@ -40,10 +41,7 @@ export const Layout = ({ children }: Props) => {
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -64,7 +62,15 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <amp-img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} layout="responsive" />
+            {/* amp-img ではなく通常の img タグに変更 */}
+            <img
+              alt="AREMA"
+              className="object-contain"
+              height={36}
+              src="/public/arema.svg"
+              width={98}
+              loading="lazy"
+            />
           </Link>
         </header>
 
