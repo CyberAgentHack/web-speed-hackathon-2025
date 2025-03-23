@@ -1,6 +1,6 @@
-import * as Slider from '@radix-ui/react-slider';
+import { Root, Track, Range, Thumb} from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getEpisodeByIdResponse } from '@wsh-2025/schema/src/api/schema';
 import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
@@ -12,7 +12,7 @@ import { useMuted } from '@wsh-2025/client/src/pages/episode/hooks/useMuted';
 import { usePlaying } from '@wsh-2025/client/src/pages/episode/hooks/usePlaying';
 
 interface Props {
-  episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+  episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
 }
 
 export const PlayerController = ({ episode }: Props) => {
@@ -31,7 +31,7 @@ export const PlayerController = ({ episode }: Props) => {
             <SeekThumbnail episode={episode} />
           </div>
 
-          <Slider.Root
+          <Root
             className="group relative flex h-[20px] w-full cursor-pointer touch-none select-none flex-row items-center"
             max={duration}
             min={0}
@@ -42,11 +42,11 @@ export const PlayerController = ({ episode }: Props) => {
               updateCurrentTime(t);
             }}
           >
-            <Slider.Track className="grow-1 relative h-[2px] rounded-[4px] bg-[#999999] group-hover:h-[4px]">
-              <Slider.Range className="absolute h-[2px] rounded-[4px] bg-[#1c43d1] group-hover:h-[4px]" />
-            </Slider.Track>
-            <Slider.Thumb className="block size-[20px] rounded-[10px] bg-[#1c43d1] opacity-0 focus:outline-none group-hover:opacity-100" />
-          </Slider.Root>
+            <Track className="grow-1 relative h-[2px] rounded-[4px] bg-[#999999] group-hover:h-[4px]">
+              <Range className="absolute h-[2px] rounded-[4px] bg-[#1c43d1] group-hover:h-[4px]" />
+            </Track>
+            <Thumb className="block size-[20px] rounded-[10px] bg-[#1c43d1] opacity-0 focus:outline-none group-hover:opacity-100" />
+          </Root>
         </div>
 
         <div className="flex w-full flex-row items-center justify-between">
