@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
+import UnoCSS from 'unocss/vite';
 
 export default defineConfig({
   plugins: [
-    react(),
+    UnoCSS(),
+    react()
   ],
   base: '/public/',
   build: {
@@ -27,7 +29,7 @@ export default defineConfig({
       output: {
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'main.js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        assetFileNames: 'assets/[name].[ext]',
       },
       plugins: [
         visualizer({ filename: 'stats.html' }),

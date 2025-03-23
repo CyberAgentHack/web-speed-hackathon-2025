@@ -48,7 +48,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
   return (
     <>
       <button
-        className={`w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100} hover:${isArchived ? 'brightness-200' : 'brightness-125'}`}
+        className={`w-auto border-[1px] border-solid border-[#000000] ${isBroadcasting ? 'bg-[#FCF6E5]' : 'bg-[#212121]'} px-[12px] py-[8px] text-left ${isArchived ? 'opacity-50 hover:brightness-200' : 'opacity-100 hover:brightness-125'}`}
         style={{ width, height }}
         type="button"
         onClick={onClick}
@@ -56,17 +56,17 @@ export const Program = ({ height, program }: Props): ReactElement => {
         <div className="flex size-full flex-col overflow-hidden">
           <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
             <span
-              className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
+              className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold ${isBroadcasting ? 'text-[#767676]' : 'text-[#999999]'}`}
             >
               {DateTime.fromISO(program.startAt).toFormat('mm')}
             </span>
             <div
-              className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}] line-clamp-3`}
+              className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold ${isBroadcasting ? 'text-[#212121]' : 'text-[#ffffff]'} line-clamp-3`}
             >
               {program.title}
             </div>
           </div>
-          <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+          <div className={`${shouldImageBeVisible ? 'opacity-100' : 'opacity-0'} w-full`}>
             <img
               loading='lazy'
               ref={imageRef}

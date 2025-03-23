@@ -45,13 +45,13 @@
     "@types/wicg-task-scheduling": "2024.1.0",
     "@unocss/preset-wind3": "66.1.0-beta.5",
     "@unocss/reset": "66.1.0-beta.5",
-    "@unocss/runtime": "66.1.0-beta.5",
     "@vitejs/plugin-react": "4.3.4",
     "@wsh-2025/configs": "workspace:*",
     "rollup-plugin-visualizer": "5.14.0",
     "shaka-player": "4.12.5",
     "terser": "5.39.0",
     "typescript": "5.7.2",
+    "unocss": "66.1.0-beta.6",
     "vite": "6.2.2",
     "wireit": "0.14.9"
   },
@@ -62,7 +62,8 @@
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*",
-        "./vite.config.js"
+        "./vite.config.js",
+        "./uno.config.ts"
       ],
       "output": [
         "./dist/**/*"

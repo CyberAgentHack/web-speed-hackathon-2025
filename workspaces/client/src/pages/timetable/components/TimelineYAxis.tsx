@@ -7,7 +7,8 @@ export const TimelineYAxis = (): ReactElement => {
     return (
       <div
         key={hour}
-        className={`h-[${HEIGHT_ONE_HOUR}px] border-y-solid flex shrink-0 grow-0 items-center justify-center border-y-[1px] border-y-[#212121] bg-[#000000]`}
+        style={{ height: HEIGHT_ONE_HOUR }}
+        className="border-y-solid flex shrink-0 grow-0 items-center justify-center border-y-[1px] border-y-[#212121] bg-[#000000]"
       >
         <span className="shrink-0 grow-0 text-[16px] font-bold text-[#ffffff]">{hour}</span>
       </div>
