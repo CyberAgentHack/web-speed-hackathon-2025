@@ -69,9 +69,6 @@ importers:
       luxon:
         specifier: 3.5.0
         version: 3.5.0
-      p-min-delay:
-        specifier: 4.0.2
-        version: 4.0.2
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -3355,10 +3352,6 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
-  p-min-delay@4.0.2:
-    resolution: {integrity: sha512-7hJcTq/MGF5pNHbQ2akrpPy1N43YYlB4RPECDSbPRn4xP/dsgP0I6ls7NvSUQ5k88o+CyATMOrQiZ/PK4aQR9w==}
-    engines: {node: '>=12'}
-
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
@@ -4249,10 +4242,6 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  yoctodelay@1.2.0:
-    resolution: {integrity: sha512-12y/P9MSig9/5BEhBgylss+fkHiCRZCvYR81eH35NW9uw801cvJt31EAV+WOLcwZRZbLiIQl/hxcdXXXFmGvXg==}
-    engines: {node: '>=4'}
 
   zod-openapi@4.2.0:
     resolution: {integrity: sha512-lnm1e2X5/Ymox5mYxdspy/y52Hb4rPxG1bcwOuHS+YIpxQNEt9s8G4zo34jm0M3+q71TAxgqzcbPLiBXrsfsGA==}
@@ -7232,10 +7221,6 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
-  p-min-delay@4.0.2:
-    dependencies:
-      yoctodelay: 1.2.0
-
   package-json-from-dist@1.0.1: {}
 
   package-manager-detector@0.2.11:
@@ -8141,8 +8126,6 @@ snapshots:
   yaml@2.6.1: {}
 
   yocto-queue@0.1.0: {}
-
-  yoctodelay@1.2.0: {}
 
   zod-openapi@4.2.0(zod@3.24.1):
     dependencies:
