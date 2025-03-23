@@ -2,6 +2,7 @@ import '@wsh-2025/server/src/setups/luxon';
 
 import cors from '@fastify/cors';
 import fastify from 'fastify';
+import compress from '@fastify/compress';
 
 import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
@@ -19,6 +20,7 @@ async function main() {
   app.register(cors, {
     origin: true,
   });
+  app.register(compress, { global: false });
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
   app.register(registerSsr);
