@@ -14,16 +14,18 @@ import { PlayerType } from '@wsh-2025/client/src/features/player/constants/playe
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
+import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
   const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
+  const series = await store.getState().features.series.fetchSeriesById({ seriesId: episode.series.id });
   const modules = await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
-  return { episode, modules };
+  return { episode, modules, series };
 };
 
 export const EpisodePage = () => {
@@ -35,6 +37,9 @@ export const EpisodePage = () => {
 
   const episode = useEpisodeById({ episodeId });
   invariant(episode);
+
+  const series = useSeriesById({ seriesId: episode.series.id });
+  invariant(series);
 
   const modules = useRecommended({ referenceId: episodeId });
 
@@ -77,7 +82,40 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <svg
+                        className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        width="48"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        >
+                          <path d="M12 3c4.97 0 9 4.03 9 9" strokeDasharray="16" strokeDashoffset="16">
+                            <animate attributeName="stroke-dashoffset" dur="0.3s" fill="freeze" values="16;0" />
+                            <animateTransform
+                              attributeName="transform"
+                              dur="1.5s"
+                              repeatCount="indefinite"
+                              type="rotate"
+                              values="0 12 12;360 12 12"
+                            />
+                          </path>
+                          <path
+                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                            strokeDasharray="64"
+                            strokeDashoffset="64"
+                            strokeOpacity=".3"
+                          >
+                            <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="64;0" />
+                          </path>
+                        </g>
+                      </svg>
                     </div>
                   </AspectRatio>
                 }
@@ -126,7 +164,7 @@ export const EpisodePage = () => {
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
-          <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />
+          <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={episode.id} />
         </div>
       </div>
     </>

@@ -64,7 +64,14 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+            <img
+              alt="AREMA"
+              className="object-contain"
+              fetchPriority="high"
+              height={36}
+              src="/public/arema.svg"
+              width={98}
+            />
           </Link>
         </header>
 
@@ -75,9 +82,29 @@ export const Layout = ({ children }: Props) => {
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
-              />
+              {isSignedIn ? (
+                <svg
+                  className="m-[4px] size-[20px] shrink-0 grow-0"
+                  viewBox="0 0 512 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z"
+                    fill="currentColor"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="m-[4px] size-[20px] shrink-0 grow-0"
+                  viewBox="0 0 448 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
+                    fill="currentColor"
+                  />
+                </svg>
+              )}
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
@@ -87,7 +114,15 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/"
             >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
+              <svg
+                className="m-[4px] size-[20px] shrink-0 grow-0"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
+                <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z" />
+              </svg>
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
             </Link>
 
@@ -95,7 +130,14 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/timetable"
             >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
+              <svg
+                className="m-[4px] size-[20px] shrink-0 grow-0"
+                fill="currentColor"
+                viewBox="0 0 448 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272z" />
+              </svg>
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
             </Link>
           </nav>

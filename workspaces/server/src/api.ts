@@ -173,15 +173,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return void 0;
         },
         with: {
-          series: {
-            with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
-                },
-              },
-            },
-          },
+          series: true,
         },
       });
       reply.code(200).send(episodes);
@@ -212,15 +204,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return eq(episode.id, req.params.episodeId);
         },
         with: {
-          series: {
-            with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
-                },
-              },
-            },
-          },
+          series: true,
         },
       });
       if (episode == null) {
@@ -265,9 +249,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(episode, { asc }) {
               return asc(episode.order);
             },
-            with: {
-              series: true,
-            },
           },
         },
       });
@@ -302,9 +283,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           episodes: {
             orderBy(episode, { asc }) {
               return asc(episode.order);
-            },
-            with: {
-              series: true,
             },
           },
         },
@@ -347,6 +325,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             sql`time(${req.query.until}, '+9 hours')`,
           );
         },
+        // TODO: シリーズを取得する
       });
       reply.code(200).send(programs);
     },
@@ -386,15 +365,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           channel: true,
           episode: {
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
+              series: true,
             },
           },
         },
@@ -430,15 +401,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           channel: true,
           episode: {
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
+              series: true,
             },
           },
         },
@@ -493,15 +456,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               },
               episode: {
                 with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
+                  series: true,
                 },
               },
             },
