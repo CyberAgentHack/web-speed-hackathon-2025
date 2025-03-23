@@ -22,12 +22,17 @@ export function registerSsr(app: FastifyInstance): void {
     const context = await handler.query(request);
 
     console.timeEnd('SSR');
+    const url = req.url?.endsWith('/') ? req.url.slice(0, -1) : req.url;
 
     if (context instanceof Response) {
       return reply.send(context);
     }
     const recommended = store.getState().features.recommended.recommendedModules;
-    const preloads = Object.values(recommended)
+    const preloads: {
+      index: number;
+      url: string | undefined;
+    }[] = [];
+    Object.values(recommended)
       .flatMap((item, j) => {
         return item.items.map((i, index) => {
           return {
@@ -36,7 +41,50 @@ export function registerSsr(app: FastifyInstance): void {
           };
         });
       })
-      .splice(0, 5);
+      .splice(0, 5)
+      .forEach((item) => {
+        if (item.url) {
+          preloads.push(item);
+        }
+      });
+    if (url.startsWith('/episodes/')) {
+      const episodeId = req.url.split('/')[2];
+      const episode = store.getState().features.episode.episodes[episodeId];
+      if (episode != null) {
+        preloads.push({
+          index: 0,
+          url: episode.thumbnailUrl,
+        });
+      }
+      const series = episode.series;
+      for (const item of series.episodes) {
+        if (item.thumbnailUrl) {
+          preloads.push({
+            index: 0,
+            url: item.thumbnailUrl,
+          });
+        }
+      }
+    }
+    if (url.startsWith('/programs/')) {
+      const programId = req.url.split('/')[2];
+      const program = store.getState().features.program.programs[programId];
+      if (program != null) {
+        preloads.push({
+          index: 0,
+          url: program.thumbnailUrl,
+        });
+      }
+      const series = program.episode.series;
+      for (const item of series.episodes) {
+        if (item.thumbnailUrl) {
+          preloads.push({
+            index: 0,
+            url: item.thumbnailUrl,
+          });
+        }
+      }
+    }
     const router = createStaticRouter(handler.dataRoutes, context);
     const renderd = renderToString(
       <StrictMode>

@@ -220,3 +220,6 @@ $RECYCLE.BIN/
 .wireit
 
 tool
+
+*.mp4
+*.m3u8

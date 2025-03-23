@@ -103,10 +103,11 @@ export const ProgramPage = () => {
               <div className="relative size-full">
                 <img
                   alt={program.title}
-                  // TODO:apply width
                   className="h-auto w-full"
-                  loading="lazy"
+                  height={360}
+                  loading="eager"
                   src={program.thumbnailUrl}
+                  width={640}
                 />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
@@ -133,8 +134,14 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                {/* TODO:apply width */}
-                <img alt={program.title} className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
+                <img
+                  alt={program.title}
+                  className="h-auto w-full"
+                  height={360}
+                  loading="eager"
+                  src={program.thumbnailUrl}
+                  width={640}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
