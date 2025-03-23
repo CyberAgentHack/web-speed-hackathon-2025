@@ -1,12 +1,14 @@
 import path from 'node:path';
 
+import TerserPlugin from "terser-webpack-plugin";
 import webpack from 'webpack';
+
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: "production",
   module: {
     rules: [
       {
@@ -16,21 +18,20 @@ const config = {
         },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'swc-loader',
           options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+            cacheDirectory: true,
+            jsc: {
+              parser: {
+                syntax: 'typescript',
+                tsx: true,
+              },
+              transform: {
+                react: {
+                  runtime: 'automatic',
                 },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
+              },
+            },
           },
         },
       },
@@ -51,6 +52,20 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: 4,
+        terserOptions: {
+          compress: {
+            comparisons: false,
+            inline: 2,
+          },
+        },
+      }),
+    ],
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
@@ -68,7 +83,7 @@ const config = {
       '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
-  },
+  }
 };
 
 export default config;
