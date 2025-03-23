@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import path from 'node:path';
 import { readdirSync } from 'node:fs';
 
