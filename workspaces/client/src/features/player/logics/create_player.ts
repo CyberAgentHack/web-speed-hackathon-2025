@@ -14,7 +14,7 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   });
   private _player = new HlsJs({
     enableWorker: false,
-    maxBufferLength: 50,
+    maxBufferLength: 10,
   });
   readonly playerType: PlayerType.HlsJS;
 

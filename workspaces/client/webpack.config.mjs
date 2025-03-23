@@ -54,6 +54,8 @@ const config = {
   },
   optimization: {
     minimize: true,
+    usedExports: true,
+    sideEffects: true,
     splitChunks: {
       chunks: 'async',
       minSize: 20000,
