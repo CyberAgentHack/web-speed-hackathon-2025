@@ -2,6 +2,7 @@ import { RouteObject } from 'react-router';
 
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import lazy from 'p-min-delay';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
@@ -57,7 +58,10 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           async lazy() {
-            const { prefetch, TimetablePage } = await import('@wsh-2025/client/src/pages/timetable/components/TimetablePage');
+            const { prefetch, TimetablePage } = await lazy(
+              import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
+              1000,
+            );
             return {
               Component: TimetablePage,
               async loader() {
