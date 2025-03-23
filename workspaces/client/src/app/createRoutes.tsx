@@ -1,8 +1,7 @@
-import pMinDelay from 'p-min-delay';
 import { RouteObject } from 'react-router';
-
-import { Document, prefetch as prefetchDocument } from './Document';
-import { createStore } from './createStore';
+import { Document, prefetch as rootPrefetch } from '@wsh-2025/client/src/app/Document';
+import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { createLazyRoute } from '@wsh-2025/client/src/utils/loaders';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
@@ -10,80 +9,50 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
       path: '/',
       Component: Document,
       async loader() {
-        return await prefetchDocument(store);
+        return await rootPrefetch(store);
       },
       children: [
         {
           index: true,
-          async lazy() {
-            const mod = await pMinDelay(import('../pages/home/components/HomePage'), 300); 
-            return {
-              Component: mod.HomePage,
-              async loader() {
-                return await mod.prefetch(store);
-              },
-            };
-          },
+          lazy: createLazyRoute(
+            () => import('@wsh-2025/client/src/pages/home/components/HomePage'),
+            store,
+          ),
         },
         {
           path: '/episodes/:episodeId',
-          async lazy() {
-            const mod = await pMinDelay(import('../pages/episode/components/EpisodePage'), 300);
-            return {
-              Component: mod.EpisodePage,
-              async loader({ params }) {
-                return await mod.prefetch(store, params);
-              },
-            };
-          },
+          lazy: createLazyRoute(
+            () => import('@wsh-2025/client/src/pages/episode/components/EpisodePage'),
+            store,
+          ),
         },
         {
           path: '/programs/:programId',
-          async lazy() {
-            const mod = await pMinDelay(import('../pages/program/components/ProgramPage'), 300);
-            return {
-              Component: mod.ProgramPage,
-              async loader({ params }) {
-                return await mod.prefetch(store, params);
-              },
-            };
-          },
+          lazy: createLazyRoute(
+            () => import('@wsh-2025/client/src/pages/program/components/ProgramPage'),
+            store,
+          ),
         },
         {
           path: '/series/:seriesId',
-          async lazy() {
-            const mod = await pMinDelay(import('../pages/series/components/SeriesPage'), 300);
-            return {
-              Component: mod.SeriesPage,
-              async loader({ params }) {
-                return await mod.prefetch(store, params);
-              },
-            };
-          },
+          lazy: createLazyRoute(
+            () => import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
+            store,
+          ),
         },
         {
           path: '/timetable',
-          async lazy() {
-            const mod = await pMinDelay(import('../pages/timetable/components/TimetablePage'), 300);
-            return {
-              Component: mod.TimetablePage,
-              async loader() {
-                return await mod.prefetch(store);
-              },
-            };
-          },
+          lazy: createLazyRoute(
+            () => import('@wsh-2025/client/src/pages/timetable/components/TimetablePage'),
+            store,
+          ),
         },
         {
           path: '*',
-          async lazy() {
-            const mod = await pMinDelay(import('../pages/not_found/components/NotFoundPage'), 300);
-            return {
-              Component: mod.NotFoundPage,
-              async loader() {
-                return await mod.prefetch(store);
-              },
-            };
-          },
+          lazy: createLazyRoute(
+            () => import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
+            store,
+          ),
         },
       ],
     },
