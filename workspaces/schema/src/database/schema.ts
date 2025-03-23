@@ -307,10 +307,10 @@ export const episode = table(
     premium: t.integer({ mode: 'boolean' }).notNull(),
   },
   (table) => [
-    t.index('idx_episode_seriesId').on(table.seriesId),
+    // t.index('idx_episode_seriesId').on(table.seriesId),
     t.index('idx_episode_order').on(table.order),
     t.index('idx_episode_streamId').on(table.streamId),
-    t.index('idx_episode_premium').on(table.premium),
+    // t.index('idx_episode_premium').on(table.premium),
   ],
 );
 export const episodeRelation = relations(episode, ({ one }) => ({
@@ -353,8 +353,8 @@ export const program = table(
       .references(() => episode.id),
   },
   (table) => [
-    t.index('idx_program_startAt').on(table.startAt),
-    t.index('idx_program_endAt').on(table.endAt),
+    // t.index('idx_program_startAt').on(table.startAt),
+    // t.index('idx_program_endAt').on(table.endAt),
     t.index('idx_channelId').on(table.channelId),
     t.index('idx_episodeId').on(table.episodeId),
   ],
@@ -385,8 +385,8 @@ export const recommendedItem = table(
   (table) => [
     t.index('idx_recommendedItem_order').on(table.order),
     t.index('idx_recommendedItem_moduleId').on(table.moduleId),
-    t.index('idx_recommendedItem_seriesId').on(table.seriesId),
-    t.index('idx_recommendedItem_episodeId').on(table.episodeId),
+    // t.index('idx_recommendedItem_seriesId').on(table.seriesId),
+    // t.index('idx_recommendedItem_episodeId').on(table.episodeId),
   ],
 );
 export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
@@ -416,7 +416,7 @@ export const recommendedModule = table(
   (table) => [
     t.index('idx_recommendedModule_order').on(table.order),
     t.index('idx_recommendedModule_referenceId').on(table.referenceId),
-    t.index('idx_recommendedModule_type').on(table.type),
+    // t.index('idx_recommendedModule_type').on(table.type),
   ],
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
