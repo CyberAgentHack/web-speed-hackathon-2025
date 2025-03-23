@@ -1,9 +1,9 @@
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
@@ -43,10 +43,10 @@ export const SeriesPage = () => {
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
             <h1 className="mb-[16px] text-[32px] font-bold text-[#ffffff]">
-              <Ellipsis ellipsis reflowOnResize maxLine={2} text={series.title} visibleLine={2} />
+              <CustomEllipsis maxLine={2} text={series.title} visibleLine={2} />
             </h1>
             <div className="text-[14px] text-[#999999]">
-              <Ellipsis ellipsis reflowOnResize maxLine={3} text={series.description} visibleLine={3} />
+              <CustomEllipsis maxLine={3} text={series.description} visibleLine={3} />
             </div>
           </div>
         </header>

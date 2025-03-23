@@ -1,6 +1,6 @@
 // import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Suspense } from 'react';
-import Ellipsis from 'react-ellipsis-component';
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -113,10 +113,10 @@ export const EpisodePage = () => {
 
         <div className="mb-[24px]">
           <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
+            <CustomEllipsis maxLine={1} text={episode.series.title} visibleLine={1} />
           </div>
           <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
+            <CustomEllipsis maxLine={2} text={episode.title} visibleLine={2} />
           </h1>
           {episode.premium ? (
             <div className="mt-[8px]">
@@ -126,7 +126,7 @@ export const EpisodePage = () => {
             </div>
           ) : null}
           <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
+            <CustomEllipsis maxLine={3} text={episode.description} visibleLine={3} />
           </div>
         </div>
 
