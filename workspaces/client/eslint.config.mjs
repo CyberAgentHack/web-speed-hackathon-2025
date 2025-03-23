@@ -4,5 +4,8 @@ export default [
   ...configs,
   {
     ignores: ['dist/*', '.wireit/*'],
+    rules: {
+      'sort/object-properties': 'off',
+    },
   },
 ];
