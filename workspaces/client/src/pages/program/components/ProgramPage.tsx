@@ -115,7 +115,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img loading='lazy' alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
+                <img alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -141,7 +141,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img loading='lazy' alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
+                <img alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

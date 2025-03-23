@@ -50,7 +50,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img loading='lazy' alt="" className="h-auto w-full" src={getThumbnailUrl(episode.thumbnailUrl, "big")} />
+                <img alt="" className="h-auto w-full" src={getThumbnailUrl(episode.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -70,7 +70,6 @@ export const EpisodePage = () => {
                 fallback={
                   <div className="grid size-full aspect-video">
                     <img
-                      loading='lazy'
                       alt=""
                       className="size-full place-self-stretch [grid-area:1/-1]"
                       src={getThumbnailUrl(episode.thumbnailUrl, "big")}
