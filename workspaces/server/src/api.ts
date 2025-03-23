@@ -449,7 +449,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(program);
     },
   });
-  // 今の所 /recommended/:referenceId のパクリだけど、最適化できそうな気がしてる
   api.route({
     method: 'GET',
     url: '/recommended/error',
