@@ -5,7 +5,6 @@ import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
@@ -48,45 +47,43 @@ export const Program = ({ height, program }: Props): ReactElement => {
 
   return (
     <>
-      <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
-        <button
-          className="w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left"
-          style={{
-            background: isBroadcasting ? '#FCF6E5' : '#212121',
-            height: `${height}px`,
-            opacity: isArchived ? 50 : 100,
-            width,
-          }}
-          type="button"
-          onClick={onClick}
-        >
-          <div className="flex size-full flex-col overflow-hidden">
-            <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
-              <span
-                className="mr-[8px] shrink-0 grow-0 text-[14px] font-bold"
-                style={{ color: isArchived ? '#767676' : '#999999' }}
-              >
-                {DateTime.fromISO(program.startAt).toFormat('mm')}
-              </span>
-              <div
-                className="grow-1 shrink-1 overflow-hidden text-[14px] font-bold"
-                style={{ color: isArchived ? '#212121' : '#ffffff' }}
-              >
-                <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
-              </div>
-            </div>
-            <div className={`${shouldImageBeVisible ? 'opacity-100' : 'opacity-0'} w-full`}>
-              <img
-                ref={imageRef}
-                alt=""
-                className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-                loading="lazy"
-                src={program.thumbnailUrl}
-              />
+      <button
+        className={`w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left ${isArchived ? 'hover:brightness-200' : 'hover:brightness-125'}`}
+        style={{
+          background: isBroadcasting ? '#FCF6E5' : '#212121',
+          height: `${height}px`,
+          opacity: isArchived ? 50 : 100,
+          width,
+        }}
+        type="button"
+        onClick={onClick}
+      >
+        <div className="flex size-full flex-col overflow-hidden">
+          <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
+            <span
+              className="mr-[8px] shrink-0 grow-0 text-[14px] font-bold"
+              style={{ color: isArchived ? '#767676' : '#999999' }}
+            >
+              {DateTime.fromISO(program.startAt).toFormat('mm')}
+            </span>
+            <div
+              className="grow-1 shrink-1 overflow-hidden text-[14px] font-bold"
+              style={{ color: isArchived ? '#212121' : '#ffffff' }}
+            >
+              <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
             </div>
           </div>
-        </button>
-      </Hoverable>
+          <div className={`${shouldImageBeVisible ? 'opacity-100' : 'opacity-0'} w-full`}>
+            <img
+              ref={imageRef}
+              alt=""
+              className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
+              src={program.thumbnailUrl}
+            />
+          </div>
+        </div>
+      </button>
       <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />
     </>
   );
