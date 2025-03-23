@@ -20,7 +20,7 @@ const episode = z.object({
   title: z.string().openapi({ example: '第1話 吾輩は猫である' }),
   description: z.string().openapi({
     example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
+      '『吾輩は猫である』',
   }),
   order: z.number().openapi({ example: 1 }),
   seriesId: z.string().openapi({ format: 'uuid' }),
@@ -37,7 +37,7 @@ const series = z.object({
   title: z.string().openapi({ example: '吾輩は猫である' }),
   description: z.string().openapi({
     example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
+      '『吾輩は猫である』',
   }),
   thumbnailUrl: z.string().openapi({
     example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
@@ -50,7 +50,7 @@ const program = z.object({
   title: z.string().openapi({ example: '吾輩は猫である' }),
   description: z.string().openapi({
     example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
+      '『吾輩は猫である』',
   }),
   startAt: z.string().openapi({ format: 'date-time' }),
   endAt: z.string().openapi({ format: 'date-time' }),
@@ -92,22 +92,18 @@ export const getChannelsRequestQuery = z.object({
   channelIds: z.string().optional(),
 });
 export const getChannelsResponse = z.array(channel.extend({}));
-
 // GET /channels/:channelId
 export const getChannelByIdRequestParams = z.object({
   channelId: z.string(),
 });
 export const getChannelByIdResponse = channel.extend({});
-
 // GET /episodes
 export const getEpisodesRequestQuery = z.object({
   episodeIds: z.string().optional(),
 });
 export const getEpisodesResponse = z.array(
   episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
+    series: series.extend({}),
   }),
 );
 
@@ -115,10 +111,9 @@ export const getEpisodesResponse = z.array(
 export const getEpisodeByIdRequestParams = z.object({
   episodeId: z.string(),
 });
+// AfterChange
 export const getEpisodeByIdResponse = episode.extend({
-  series: series.extend({
-    episodes: z.array(episode.extend({})),
-  }),
+  series: series.extend({}),
 });
 
 // GET /series
@@ -130,7 +125,6 @@ export const getSeriesResponse = z.array(
     episodes: z.array(episode.extend({})),
   }),
 );
-
 // GET /series/:seriesId
 export const getSeriesByIdRequestParams = z.object({
   seriesId: z.string(),
@@ -138,14 +132,12 @@ export const getSeriesByIdRequestParams = z.object({
 export const getSeriesByIdResponse = series.extend({
   episodes: z.array(episode.extend({})),
 });
-
 // GET /timetable
 export const getTimetableRequestQuery = z.object({
   since: z.coerce.string().openapi({ format: 'date-time' }),
   until: z.coerce.string().openapi({ format: 'date-time' }),
 });
 export const getTimetableResponse = z.array(program.extend({}));
-
 // GET /programs
 export const getProgramsRequestQuery = z.object({
   programIds: z.string().optional(),
@@ -154,23 +146,19 @@ export const getProgramsResponse = z.array(
   program.extend({
     channel: channel.extend({}),
     episode: episode.extend({
-      series: series.extend({
-        episodes: z.array(episode.extend({})),
-      }),
+      series: series.extend({}),
     }),
   }),
 );
-
 // GET /programs/:programId
 export const getProgramByIdRequestParams = z.object({
   programId: z.string(),
 });
+//AfterChange
 export const getProgramByIdResponse = program.extend({
   channel: channel.extend({}),
   episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
+    series: series.extend({}),
   }),
 });
 
@@ -188,16 +176,17 @@ export const getRecommendedModulesResponse = z.array(
           })
           .nullable(),
         episode: episode
+        //AfterChange
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
+            series: series.extend({}),
           })
           .nullable(),
       }),
     ),
   }),
 );
+
+
 
 // POST /signIn
 export const signInRequestBody = z.object({
