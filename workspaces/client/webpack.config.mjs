@@ -1,12 +1,13 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -23,8 +24,8 @@ const config = {
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
+                  // forceAllTransforms: true,
+                  targets: {"chrome": "134",},
                   useBuiltIns: 'entry',
                 },
               ],
@@ -51,6 +52,9 @@ const config = {
       },
     ],
   },
+  optimization:{
+    minimize:true //デフォルトでtrue
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
@@ -59,7 +63,8 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    ...(process.env['ANALYZE'] ? [new BundleAnalyzerPlugin()] : []),
+    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {

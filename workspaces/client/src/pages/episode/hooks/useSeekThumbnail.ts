@@ -2,7 +2,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
-import { use } from 'react';
+import { use, useMemo } from 'react';
 
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
@@ -51,11 +51,11 @@ async function getSeekThumbnail({ episode }: Params) {
     ].flat(),
   );
 
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
+  // 240 フレームごとにサムネイルを生成
   await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
+      ['-vf', "fps=240,select='not(mod(n\\,240))',scale=160:90,tile=250x1"],
       ['-frames:v', '1'],
       'preview.jpg',
     ].flat(),
@@ -70,7 +70,9 @@ async function getSeekThumbnail({ episode }: Params) {
 const weakMap = new WeakMap<object, Promise<string>>();
 
 export const useSeekThumbnail = ({ episode }: Params): string => {
-  const promise = weakMap.get(episode) ?? getSeekThumbnail({ episode });
-  weakMap.set(episode, promise);
-  return use(promise);
+  return useMemo(() => {
+    const promise = weakMap.get(episode) ?? getSeekThumbnail({ episode });
+    weakMap.set(episode, promise);
+    return use(promise);
+  }, [episode]);
 };
