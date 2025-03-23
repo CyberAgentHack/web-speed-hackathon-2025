@@ -144,7 +144,7 @@ export const getTimetableRequestQuery = z.object({
   since: z.coerce.string().openapi({ format: 'date-time' }),
   until: z.coerce.string().openapi({ format: 'date-time' }),
 });
-export const getTimetableResponse = z.array(program.extend({}));
+export const getTimetableResponse = z.array(program.omit({ description: true, episodeId: true }));
 
 // GET /programs
 export const getProgramsRequestQuery = z.object({
@@ -221,6 +221,19 @@ export const signUpResponse = z.object({
 export const getUserResponse = z.object({
   id: z.number(),
   email: z.string(),
+});
+
+// GET /programs/:programId/detail
+export const getProgramDetailRequestParams = z.object({
+  programId: z.string(),
+});
+export const getProgramDetailResponse = z.object({
+  description: z.string(),
+  episode: z.object({
+    title: z.string(),
+    description: z.string(),
+    thumbnailUrl: z.string(),
+  }).nullable(),
 });
 
 // GET /programs/:programId/next

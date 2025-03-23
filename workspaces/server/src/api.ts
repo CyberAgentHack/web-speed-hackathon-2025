@@ -347,6 +347,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             sql`time(${req.query.until}, '+9 hours')`,
           );
         },
+        columns: {
+          description: false,
+          episodeId: false,
+        }
       });
       reply.code(200).send(programs);
     },
@@ -652,6 +656,57 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       }
       req.session.set('id', void 0);
       reply.code(200).send();
+    },
+  });
+
+  api.route({
+    method: 'GET',
+    url: '/programs/:programId/detail',
+    schema: {
+      tags: ['番組'],
+      params: schema.getProgramDetailRequestParams,
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getProgramDetailResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getProgramDetail(req, reply) {
+      const database = getDatabase();
+
+      const program = await database.query.program.findFirst({
+        where(program, { eq }) {
+          return eq(program.id, req.params.programId);
+        },
+        with: {
+          episode: {
+            columns: {
+              title: true,
+              description: true,
+              thumbnailUrl: true,
+            },
+          },
+        },
+      });
+
+      if (!program) {
+        return reply.code(404).send();
+      }
+
+      const response = {
+        description: program.description.substring(0, 300),
+        episode: program.episode ? {
+          title: program.episode.title,
+          description: program.episode.description.substring(0, 300),
+          thumbnailUrl: program.episode.thumbnailUrl,
+        } : null,
+      };
+
+      reply.code(200).send(response);
     },
   });
 

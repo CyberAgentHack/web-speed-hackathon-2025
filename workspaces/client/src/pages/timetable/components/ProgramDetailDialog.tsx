@@ -1,11 +1,10 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { ArrayValues } from 'type-fest';
 
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
-import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
 import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getThumbnailUrl';
 
@@ -15,15 +14,28 @@ interface Props {
 }
 
 const _ProgramDetailDialog = ({ program, onClose }: Omit<Props, 'isOpen'> & {onClose: () => void}): ReactElement => {
-  const episode = useEpisode(program.episodeId);
-
+  const [detail, setDetail] = useState<{
+    description: string;
+    episode?: {
+      title: string;
+      description: string;
+      thumbnailUrl: string;
+    }
+  }>({ description: ""});
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(`/api/programs/${program.id}/detail`);
+      const data = await response.json();
+      setDetail(data);
+    })();
+  }, [program]);
   return (
     <div className="h-75vh size-full overflow-auto">
       <h2 className="mb-[24px] text-center text-[24px] font-bold">番組詳細</h2>
 
       <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{program.title}</p>
       <div className="mb-[16px] text-[14px] text-[#999999]">
-        <div className="line-clamp-5">{program.description}</div>
+        <div className="line-clamp-5">{detail.description}</div>
       </div>
       <img
         loading='lazy'
@@ -32,22 +44,22 @@ const _ProgramDetailDialog = ({ program, onClose }: Omit<Props, 'isOpen'> & {onC
         src={getThumbnailUrl(program.thumbnailUrl)}
       />
 
-      {episode != null ? (
+      {detail.episode && (
         <>
           <h3 className="mb-[24px] text-center text-[24px] font-bold">番組で放送するエピソード</h3>
 
-          <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{episode.title}</p>
+          <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{detail.episode.title}</p>
           <div className="mb-[16px] text-[14px] text-[#999999]">
-            <div className="line-clamp-5">{episode.description}</div>
+            <div className="line-clamp-5">{detail.episode.description}</div>
           </div>
           <img
             loading='lazy'
             alt=""
             className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-            src={getThumbnailUrl(episode.thumbnailUrl)}
+            src={getThumbnailUrl(detail.episode.thumbnailUrl)}
           />
         </>
-      ) : null}
+      )}
 
       <div className="flex flex-row justify-center">
         <Link
