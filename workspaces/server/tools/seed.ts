@@ -9,7 +9,7 @@ import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
 import * as bcrypt from 'bcrypt';
 import path from 'node:path';
-import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { gzip } from 'node:zlib';
 import { promisify } from 'node:util';
 import { optimize } from 'svgo';
