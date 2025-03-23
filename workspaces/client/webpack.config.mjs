@@ -6,7 +6,7 @@ import webpack from 'webpack';
 const config = {
   devtool: false,
   entry: './src/main.tsx',
-  mode: 'development',
+  mode: 'production',
   module: {
     rules: [
       {

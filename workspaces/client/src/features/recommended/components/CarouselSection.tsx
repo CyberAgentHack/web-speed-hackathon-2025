@@ -16,7 +16,7 @@ export const CarouselSection = ({ module }: Props) => {
 
   return (
     <>
-      <div className="w-full overflow-hidden">
+      <div className="w-full">
         <h2 className="mb-[16px] w-full text-[22px] font-bold">『{module.title}』を見ているあなたにオススメ</h2>
         <div
           key={module.id}

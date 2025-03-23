@@ -15,7 +15,7 @@ declare global {
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store));
+  const router = createBrowserRouter(createRoutes(store), {});
 
   hydrateRoot(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
