@@ -7,6 +7,7 @@
 今回のテーマは、架空の動画配信サービス「AREMA」です。
 レギュレーションを守った上で、AREMA のパフォーマンスを改善してください。
 
+
 - 開催日程 | 2025/03/22 10:30 JST - 2025/03/23 17:30 JST
 - 募集要項 | https://cyberagent.connpass.com/event/338797
 - リーダーボード・順位表 | https://web-speed-hackathon-scoring-board-2025.fly.dev/

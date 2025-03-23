@@ -1,36 +1,32 @@
 import path from 'node:path';
 
+import { EsbuildPlugin } from 'esbuild-loader';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
-  entry: './src/main.tsx',
-  mode: 'none',
+  devtool: process.env['NODE_ENV'] === 'production' ? false : 'source-map',
+
+  entry: {
+    main: './src/main.tsx',
+  },
+
+  mode: 'production',
+
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+        exclude: /node_modules/,
         resolve: {
           fullySpecified: false,
         },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'esbuild-loader',
           options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
+            loader: 'tsx',
+            sourcemap: false,
+            target: 'esnext',
           },
         },
       },
@@ -51,21 +47,49 @@ const config = {
       },
     ],
   },
+
+  optimization: {
+    // コードの最適化 (圧縮) はそのまま行う
+    minimize: true,
+    minimizer: [
+      new EsbuildPlugin({
+        css: true,
+        target: 'esnext',
+      }),
+    ],
+
+    // ランタイムチャンクの分割もオフ (必要に応じて)
+    runtimeChunk: false,
+    // チャンク分割をオフ
+    splitChunks: false,
+  },
+
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
-    path: path.resolve(import.meta.dirname, './dist'),
+    // 複数エントリだがチャンクを分割しない
+    filename: '[name].js',
+    path: path.resolve(import.meta.dirname, 'dist'),
     publicPath: 'auto',
   },
+
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({
+      API_BASE_URL: '/api',
+      NODE_ENV: 'production',
+    }),
   ],
+
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      '@ffmpeg/core$': path.resolve(
+        import.meta.dirname,
+        'node_modules',
+        '@ffmpeg/core/dist/umd/ffmpeg-core.js'
+      ),
+      '@ffmpeg/core/wasm$': path.resolve(
+        import.meta.dirname,
+        'node_modules',
+        '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'
+      ),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },

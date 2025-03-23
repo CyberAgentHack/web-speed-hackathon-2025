@@ -25,6 +25,16 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
   return files.map((file) => path.join('/', path.relative(rootDir, file)));
 }
 
+const rootDir = path.resolve(__dirname, '../../../');
+
+const imagePaths = [
+  getFilePaths('public/images', rootDir),
+].flat();
+const imagePaths2 = [
+  getFilePaths('public/animations', rootDir),
+  getFilePaths('public/logos', rootDir),
+].flat();
+
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/public/',
@@ -51,20 +61,14 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+    const html = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
         </StoreProvider>
-      </StrictMode>,
+      </StrictMode>
     );
 
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
@@ -73,16 +77,19 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          ${imagePaths.map((imagePath) => `<link rel="prefetch" as="image" href="${imagePath}" />`).join('\n')}
+          ${imagePaths2.map((imagePath2) => `<link rel="prefetch" as="image" href="${imagePath2}" />`).join('\n')}
         </head>
-        <body></body>
+        <body>
+          <div id="root">${html}</div>
+          <script>
+            window.__staticRouterHydrationData = ${htmlescape({
+              actionData: context.actionData,
+              loaderData: context.loaderData,
+            })};
+          </script>
+        </body>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
     `);
   });
 }
