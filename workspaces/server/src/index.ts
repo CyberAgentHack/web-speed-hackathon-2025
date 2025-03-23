@@ -13,8 +13,12 @@ async function main() {
 
   const app = fastify();
   
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('Cache-Control', 'public, max-age=3600'); // 1時間キャッシュ
+  app.addHook('onSend', async (req, reply) => {
+    if (req.raw.url?.match(/\.(png|jpg|jpeg|gif|svg)$/)) {
+      reply.header('Cache-Control', 'public, max-age=31536000'); // 1年間キャッシュ
+    } else {
+      reply.header('Cache-Control', 'public, max-age=3600'); // 1時間キャッシュ
+    }
   });
   
   app.register(cors, {
