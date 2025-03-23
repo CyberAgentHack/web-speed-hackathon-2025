@@ -24,12 +24,7 @@ async function main() {
   });
 
   app.addHook('onSend', async (_req, reply) => {
-    // サムネイルはキャッシュを許可
-    if (_req.url.startsWith('/thumbnails/')) {
-      reply.header('cache-control', 'max-age=86400');
-    } else {
-      reply.header('cache-control', 'no-store');
-    }
+    reply.header('cache-control', 'no-store');
   });
 
   app.register(cors, {
