@@ -508,7 +508,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(modules);
+      // backup
+      // reply.code(200).send(modules);
+      // ✅ 修正後：空配列を保証して送信
+      reply.code(200).send(modules ?? []);
     },
   });
 
