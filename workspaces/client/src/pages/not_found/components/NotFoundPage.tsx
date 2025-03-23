@@ -3,10 +3,9 @@ import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/co
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
-  return { modules };
+  await store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
+  const state = store.getState();
+  return state;
 };
 
 export const NotFoundPage = () => {
