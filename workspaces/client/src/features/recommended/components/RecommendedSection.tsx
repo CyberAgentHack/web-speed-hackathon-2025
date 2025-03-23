@@ -1,9 +1,10 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
 import { ArrayValues } from 'type-fest';
 
 import { CarouselSection } from '@wsh-2025/client/src/features/recommended/components/CarouselSection';
 import { JumbotronSection } from '@wsh-2025/client/src/features/recommended/components/JumbotronSection';
-import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
+
 
 interface Props {
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;

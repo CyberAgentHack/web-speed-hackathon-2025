@@ -1,8 +1,8 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
 
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',

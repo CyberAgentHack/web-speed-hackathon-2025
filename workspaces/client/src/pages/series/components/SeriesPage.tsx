@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -8,6 +9,7 @@ import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/co
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
+
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
@@ -25,7 +27,9 @@ export const SeriesPage = () => {
   const series = useSeriesById({ seriesId });
   invariant(series);
 
-  const modules = useRecommended({ referenceId: seriesId });
+  // TODO メモ化の方法については要変更
+  // const modules = useRecommended({ referenceId: seriesId });
+  const modules = useMemo(() => useRecommended({ referenceId: seriesId }), []); 
 
   return (
     <>
