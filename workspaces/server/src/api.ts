@@ -492,7 +492,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      return sendJson(reply, 200, modules);
+
+      // referenceIdがerrorの場合は最初のモジュールのみを返す
+      const result = req.params.referenceId === 'error' ? modules.slice(0, 1) : modules;
+      return sendJson(reply, 200, result);
     },
   });
 
