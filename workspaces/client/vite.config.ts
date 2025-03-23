@@ -8,7 +8,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   build: {
     assetsDir: 'public',
-    minify: false,
+    minify: 'terser',
     outDir: 'dist',
   },
   plugins: [
