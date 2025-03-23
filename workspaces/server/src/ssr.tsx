@@ -1,88 +1,117 @@
-import { readdirSync } from 'node:fs';
+import { promises } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import fastifyStatic from '@fastify/static';
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Layout } from '@wsh-2025/client/src/features/layout/components/Layout';
 import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
-import htmlescape from 'htmlescape';
-import { StrictMode } from 'react';
+import { StrictMode, Suspense } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
-
 export function registerSsr(app: FastifyInstance): void {
-  app.register(fastifyStatic, {
-    prefix: '/public/',
-    root: [
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
-    ],
-  });
-
-  app.get('/favicon.ico', (_, reply) => {
-    reply.status(404).send();
-  });
-
   app.get('/*', async (req, reply) => {
     // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
-
+    console.time('SSR');
     const store = createStore({});
-    const handler = createStaticHandler(createRoutes(store));
+    const routes = createRoutes(store);
+    const handler = createStaticHandler(routes);
     const context = await handler.query(request);
+
+    console.timeEnd('SSR');
+    const url = req.url?.endsWith('/') ? req.url.slice(0, -1) : req.url;
 
     if (context instanceof Response) {
       return reply.send(context);
     }
-
+    const recommended = store.getState().features.recommended.recommendedModules;
+    const preloads: {
+      index: number;
+      url: string | undefined;
+    }[] = [];
+    Object.values(recommended)
+      .flatMap((item, j) => {
+        return item.items.map((i, index) => {
+          return {
+            index: index + j,
+            url: i.episode?.thumbnailUrl,
+          };
+        });
+      })
+      .splice(0, 5)
+      .forEach((item) => {
+        if (item.url) {
+          preloads.push(item);
+        }
+      });
+    if (url.startsWith('/episodes/')) {
+      const episodeId = req.url.split('/')[2];
+      const episode = store.getState().features.episode.episodes[episodeId];
+      if (episode != null) {
+        preloads.push({
+          index: 0,
+          url: episode.thumbnailUrl,
+        });
+      }
+      const series = episode.series;
+      for (const item of series.episodes) {
+        if (item.thumbnailUrl) {
+          preloads.push({
+            index: 0,
+            url: item.thumbnailUrl,
+          });
+        }
+      }
+    }
+    if (url.startsWith('/programs/')) {
+      const programId = req.url.split('/')[2];
+      const program = store.getState().features.program.programs[programId];
+      if (program != null) {
+        preloads.push({
+          index: 0,
+          url: program.thumbnailUrl,
+        });
+      }
+      const series = program.episode.series;
+      for (const item of series.episodes) {
+        if (item.thumbnailUrl) {
+          preloads.push({
+            index: 0,
+            url: item.thumbnailUrl,
+          });
+        }
+      }
+    }
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+    const renderd = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
+          <Suspense>
+            <Layout>
+              <StaticRouterProvider context={context} hydrate={true} router={router} />
+            </Layout>
+          </Suspense>
         </StoreProvider>
       </StrictMode>,
     );
 
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
+    const clientHTML = path.resolve(__dirname, '../../client/dist/index.html');
+    const clientHTMLContent = await promises.readFile(clientHTML, 'utf-8');
 
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
-        </head>
-        <body></body>
-      </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
-    `);
+    const replaced = clientHTMLContent.replace('<!-- __REACT_APP_HTML__ -->', renderd).replace(
+      '<!-- PRELOAD -->',
+      preloads
+        .map((item) => {
+          return `<link rel="preload" href="${item.url}" as="image" imagesrcset="${item.url}"  fetchPriority="${
+            item.index <= 2 ? 'high' : 'low'
+          }"/>`;
+        })
+        .join(''),
+    );
+
+    reply.type('text/html').send(replaced);
   });
 }

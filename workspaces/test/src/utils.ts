@@ -1,5 +1,5 @@
-import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 export async function waitForImageToLoad(imageLocator: Locator): Promise<void> {
   await imageLocator.scrollIntoViewIfNeeded();
@@ -53,16 +53,13 @@ export async function waitForAllImagesToLoad(locator: Locator, expectedNumberOfI
 }
 
 export async function scrollEntire(page: Page): Promise<void> {
-  await page.evaluate(async () => {
-    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  await page.evaluate(() => {
     for (let i = 0; i < document.body.scrollHeight; i += 100) {
       window.scrollTo(0, i);
-      await delay(50);
     }
 
     for (let i = document.body.scrollHeight; i > 0; i -= 100) {
       window.scrollTo(0, i);
-      await delay(50);
     }
   });
 }

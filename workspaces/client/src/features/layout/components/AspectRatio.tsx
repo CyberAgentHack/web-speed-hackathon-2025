@@ -24,7 +24,13 @@ export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const height = (width * ratioHeight) / ratioWidth;
 
   return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
+    <div
+      ref={containerRef}
+      style={{
+        height,
+      }}
+      className={"relative w-full"}
+    >
       {children}
     </div>
   );

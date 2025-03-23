@@ -11,15 +11,12 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
-import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 
 interface Props {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  useSubscribePointer();
-
   const navigation = useNavigation();
   const isLoading =
     navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
@@ -31,24 +28,25 @@ export const Layout = ({ children }: Props) => {
   const authDialogType = useAuthDialogType();
   const user = useAuthUser();
 
-  const [scrollTopOffset, setScrollTopOffset] = useState(0);
-  const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
+  // const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollTopOffset(window.scrollY);
-    };
+  // useEffect(() => {
+  //   let lastScrollTop = 0;
+  //   function handleScroll() {
+  //     const currentScrollTop = window.scrollY;
+  //     if (lastScrollTop <= 80 && currentScrollTop > 80) {
+  //       setShouldHeaderBeTransparent(true);
+  //     } else if (lastScrollTop > 80 && currentScrollTop <= 80) {
+  //       setShouldHeaderBeTransparent(false);
+  //     }
+  //     lastScrollTop = currentScrollTop;
+  //   }
 
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
-  }, [scrollTopOffset]);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   const isSignedIn = user != null;
 
@@ -58,13 +56,21 @@ export const Layout = ({ children }: Props) => {
         <header
           className={classNames(
             'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
-            !isLoading && shouldHeaderBeTransparent
+
+            !isLoading
               ? 'bg-gradient-to-b from-[#171717] to-transparent'
               : 'bg-gradient-to-b from-[#171717] to-[#171717]',
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+            <img
+              alt="AREMA"
+              className="object-contain"
+              height={36}
+              loading="eager"
+              src="/public/arema.svg"
+              width={98}
+            />
           </Link>
         </header>
 
@@ -75,9 +81,7 @@ export const Layout = ({ children }: Props) => {
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
-              />
+              <div className={`i-custom-${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`} />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
@@ -87,7 +91,7 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/"
             >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
+              <div className="i-custom-house-fill m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
             </Link>
 
@@ -95,7 +99,7 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/timetable"
             >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
+              <div className="i-custom-calendar m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
             </Link>
           </nav>

@@ -1,6 +1,8 @@
-import '@wsh-2025/client/src/setups/polyfills';
+import '@unocss/reset/tailwind.css';
 import '@wsh-2025/client/src/setups/luxon';
-import '@wsh-2025/client/src/setups/unocss';
+import '@wsh-2025/client/src/setups/polyfills';
+// import 'virtual:uno.css';
+import './index.css';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -20,7 +22,7 @@ function main() {
   const router = createBrowserRouter(createRoutes(store), {});
 
   hydrateRoot(
-    document,
+    document.getElementById('root'),
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
@@ -29,4 +31,8 @@ function main() {
   );
 }
 
-document.addEventListener('DOMContentLoaded', main);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', main);
+} else {
+  main();
+}

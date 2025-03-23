@@ -218,6 +218,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                 orderBy(episode, { asc }) {
                   return asc(episode.order);
                 },
+                with: {
+                  stream: {
+                    columns: {
+                      id: true,
+                    },
+                  },
+                },
               },
             },
           },

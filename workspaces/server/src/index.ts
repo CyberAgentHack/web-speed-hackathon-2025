@@ -1,6 +1,10 @@
 import '@wsh-2025/server/src/setups/luxon';
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import fastify from 'fastify';
 
 import { registerApi } from '@wsh-2025/server/src/api';
@@ -19,9 +23,21 @@ async function main() {
   app.register(cors, {
     origin: true,
   });
-  app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
   app.register(registerSsr);
+  app.register(registerApi, { prefix: '/api' });
+  await app.register(import('@fastify/compress'));
+  app.register(fastifyStatic, {
+    prefix: '/public/',
+    root: [
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist/public'),
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
+    ],
+  });
+
+  app.get('/favicon.ico', (_, reply) => {
+    reply.status(404).send();
+  });
 
   await app.ready();
   const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });

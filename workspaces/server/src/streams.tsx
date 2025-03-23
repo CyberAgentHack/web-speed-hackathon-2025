@@ -122,7 +122,7 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${randomBytes(16).toString('base64')}"`,
           ].join(',')}
         `,
       );

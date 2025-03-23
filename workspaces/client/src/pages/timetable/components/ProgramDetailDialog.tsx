@@ -31,8 +31,10 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
           <div className="line-clamp-5">{program.description}</div>
         </div>
         <img
-          alt=""
+          // TODO:apply width
+          alt={program.title}
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+          loading="lazy"
           src={program.thumbnailUrl}
         />
 
@@ -45,8 +47,10 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
               <div className="line-clamp-5">{episode.description}</div>
             </div>
             <img
-              alt=""
+              // TODO:apply width
+              alt={episode.title}
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
               src={episode.thumbnailUrl}
             />
           </>
