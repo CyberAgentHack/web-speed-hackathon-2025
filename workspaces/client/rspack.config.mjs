@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import { rspack } from '@rspack/core';
+import { UnoCSSRspackPlugin } from '@unocss/webpack/rspack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -109,6 +110,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
+    UnoCSSRspackPlugin(),
     // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     // @ts-ignore ignore
     new rspack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),

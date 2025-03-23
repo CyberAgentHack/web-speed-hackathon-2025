@@ -1,6 +1,12 @@
+// @unocss-include
+export const classes = {
+  active: 'bg-primary text-white',
+  inactive: 'bg-gray-200 text-gray-500',
+};
+import './main.css';
 import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/luxon';
-import '@wsh-2025/client/src/setups/unocss';
+// import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';

@@ -50,8 +50,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
     <>
       <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
         <button
-          className={`h-[${height}px] w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100}`}
-          style={{ width }}
+          className={`w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100}`}
+          style={{ width, height }}
           type="button"
           onClick={onClick}
         >
