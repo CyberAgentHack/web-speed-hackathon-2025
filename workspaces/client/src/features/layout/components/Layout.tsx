@@ -96,7 +96,7 @@ export const Layout = ({ children }: Props) => {
               to="/timetable"
             >
               <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
+              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表？</span>
             </Link>
           </nav>
         </aside>
