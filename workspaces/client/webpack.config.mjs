@@ -1,12 +1,30 @@
 import path from 'node:path';
+import { env } from 'node:process';
 
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+const mode = env['NODE_ENV'] === "production" ? 'production' : 'development';
+
+/** @type {import('webpack').Configuration['plugins']} */
+const plugins =
+  [
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api' }),
+  ]
+
+if (mode === 'development') {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+  plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }));
+  plugins.push(new webpack.HotModuleReplacementPlugin());
+}
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devServer: { hot: true },
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode,
   module: {
     rules: [
       {
@@ -35,19 +53,8 @@ const config = {
         },
       },
       {
-        test: /\.png$/,
-        type: 'asset/inline',
-      },
-      {
         resourceQuery: /raw/,
         type: 'asset/source',
-      },
-      {
-        resourceQuery: /arraybuffer/,
-        type: 'javascript/auto',
-        use: {
-          loader: 'arraybuffer-loader',
-        },
       },
     ],
   },
@@ -58,10 +65,7 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  plugins,
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
