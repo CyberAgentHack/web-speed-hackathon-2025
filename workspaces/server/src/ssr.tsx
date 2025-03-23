@@ -1,4 +1,3 @@
-import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -13,18 +12,6 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
-
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/public/',
@@ -32,6 +19,10 @@ export function registerSsr(app: FastifyInstance): void {
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
+    // 静的ファイルのみ長期キャッシュ（1年・immutable）
+    setHeaders: (res, _pathName, _stat) => {
+      res.setHeader('cache-control', 'public, max-age=31536000, immutable');
+    },
   });
 
   app.get('/favicon.ico', (_, reply) => {
@@ -58,13 +49,6 @@ export function registerSsr(app: FastifyInstance): void {
         </StoreProvider>
       </StrictMode>,
     );
-
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>

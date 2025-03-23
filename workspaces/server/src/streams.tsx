@@ -21,6 +21,10 @@ export function registerStreams(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/streams/',
     root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../streams'),
+    // 静的ファイルのみ長期キャッシュ（1年・immutable）
+    setHeaders: (res, _pathName, _stat) => {
+      res.setHeader('cache-control', 'public, max-age=31536000, immutable');
+    },
   });
 
   app.get<{

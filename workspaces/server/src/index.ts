@@ -13,9 +13,14 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  // グローバルな onSend フックでキャッシュヘッダー未設定の場合のみ no-store を適用
+  app.addHook('onSend', async (_req, reply, payload) => {
+    if (!reply.getHeader('cache-control')) {
+      reply.header('cache-control', 'no-store');
+    }
+    return payload;
   });
+
   app.register(cors, {
     origin: true,
   });
