@@ -174,16 +174,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           series: {
-            with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
-                },
-              },
+            // 軽量版のシリーズ情報のみを取得（エピソードを含まない）
+            columns: {
+              id: true,
+              title: true,
+              thumbnailUrl: true,
             },
           },
         },
       });
+
       reply.code(200).send(episodes);
     },
   });
@@ -469,6 +469,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
 
+      // Get the base recommended modules
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -481,34 +482,65 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(item, { asc }) {
               return asc(item.order);
             },
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
           },
         },
       });
-      reply.code(200).send(modules);
+
+      // Fetch minimal information for each module's items
+      const enrichedModules = await Promise.all(
+        modules.map(async (module) => {
+          const itemsWithInfo = await Promise.all(
+            module.items.map(async (item) => {
+              let seriesInfo = null;
+              let episodeInfo = null;
+
+              // If there's a series ID, fetch minimal series info
+              if (item.seriesId) {
+                const seriesData = await database.query.series.findFirst({
+                  where(series, { eq }) {
+                    return eq(series.id, item.seriesId!);
+                  },
+                  columns: {
+                    id: true,
+                    title: true,
+                    thumbnailUrl: true,
+                  },
+                });
+                seriesInfo = seriesData;
+              }
+
+              // If there's an episode ID, fetch minimal episode info
+              if (item.episodeId) {
+                const episodeData = await database.query.episode.findFirst({
+                  where(episode, { eq }) {
+                    return eq(episode.id, item.episodeId!);
+                  },
+                  columns: {
+                    id: true,
+                    title: true,
+                    thumbnailUrl: true,
+                    seriesId: true,
+                  },
+                });
+                episodeInfo = episodeData;
+              }
+
+              return {
+                ...item,
+                seriesInfo,
+                episodeInfo,
+              };
+            }),
+          );
+
+          return {
+            ...module,
+            items: itemsWithInfo,
+          };
+        }),
+      );
+
+      reply.code(200).send(enrichedModules);
     },
   });
 

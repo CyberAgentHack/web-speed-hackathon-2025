@@ -30,8 +30,8 @@ export const CarouselSection = ({ module }: Props) => {
         >
           {module.items.map((item) => (
             <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
-              {item.series != null ? <SeriesItem series={item.series} /> : null}
-              {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
+              {item.seriesInfo != null ? <SeriesItem series={item.seriesInfo} /> : null}
+              {item.episodeInfo != null ? <EpisodeItem episode={item.episodeInfo} /> : null}
             </div>
           ))}
         </div>

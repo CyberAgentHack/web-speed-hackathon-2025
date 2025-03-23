@@ -15,11 +15,13 @@ const $fetch = createFetch({
     },
     '/episodes/:episodeId': {
       output: schema.getEpisodeByIdResponse,
+      params: schema.getEpisodeByIdRequestParams,
     },
   }),
   throw: true,
 });
 
+// バッチャーは一覧取得用の軽量バージョンを使用
 const batcher = batshit.create({
   async fetcher(queries: { episodeId: string }[]) {
     const data = await $fetch('/episodes', {
@@ -51,10 +53,14 @@ interface EpisodeService {
 
 export const episodeService: EpisodeService = {
   async fetchEpisodeById({ episodeId }) {
-    const channel = await batcher.fetch({ episodeId });
-    return channel;
+    // 完全なエピソードデータが必要な場合は /episodes/:episodeId エンドポイントを使用
+    const episode = await $fetch('/episodes/:episodeId', {
+      params: { episodeId },
+    });
+    return episode;
   },
   async fetchEpisodes() {
+    // 一覧取得時は軽量版のエンドポイントを使用
     const data = await $fetch('/episodes', { query: {} });
     return data;
   },

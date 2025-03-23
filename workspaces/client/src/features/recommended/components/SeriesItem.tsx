@@ -1,7 +1,6 @@
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
-
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
@@ -21,7 +20,7 @@ export const SeriesItem = ({ series }: Props) => {
             <>
               <div className="relative overflow-hidden rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]">
                 <Flipped stagger flipId={isTransitioning ? `series-${series.id}` : 0}>
-                  <img alt="" className="h-auto w-full" src={series.thumbnailUrl} />
+                  <img alt="" className="h-auto w-full" src={series.thumbnailUrl} width={373} />
                 </Flipped>
               </div>
               <div className="p-[8px]">

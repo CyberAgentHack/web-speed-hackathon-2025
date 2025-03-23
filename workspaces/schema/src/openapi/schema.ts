@@ -80,6 +80,27 @@ const recommendedItem = z.object({
 });
 assertSchema(recommendedItem, createSelectSchema(databaseSchema.recommendedItem));
 
+// Define lightweight versions of series and episode for the recommended response
+const recommendedItemInfo = recommendedItem.extend({
+  // Only include minimal series info - just the ID and thumbnail for initial display
+  seriesInfo: z.object({
+    id: z.string().openapi({ format: 'uuid' }),
+    title: z.string().openapi({ example: '吾輩は猫である' }),
+    thumbnailUrl: z.string().openapi({
+      example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+    }),
+  }).nullable(),
+  // Only include minimal episode info - just the ID and thumbnail for initial display
+  episodeInfo: z.object({
+    id: z.string().openapi({ format: 'uuid' }),
+    title: z.string().openapi({ example: '第1話 吾輩は猫である' }),
+    thumbnailUrl: z.string().openapi({
+      example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+    }),
+    seriesId: z.string().openapi({ format: 'uuid' }),
+  }).nullable(),
+});
+
 const user = z.object({
   id: z.number().openapi({ format: '0' }),
   email: z.string().openapi({ example: 'user123' }),
@@ -178,24 +199,10 @@ export const getProgramByIdResponse = program.extend({
 export const getRecommendedModulesRequestParams = z.object({
   referenceId: z.string(),
 });
+// Modified to return only necessary data initially
 export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
-    items: z.array(
-      recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
-          .nullable(),
-        episode: episode
-          .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
-          })
-          .nullable(),
-      }),
-    ),
+    items: z.array(recommendedItemInfo),
   }),
 );
 
