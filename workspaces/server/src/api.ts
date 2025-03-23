@@ -508,13 +508,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      // backup
-      // reply.code(200).send(modules);
-      // ✅ ログ確認用
-      console.log('modules for', req.params.referenceId, '=', modules);
-
-      // ✅ 安全送信（どんな場合も []）
-      reply.code(200).send(Array.isArray(modules) ? modules : []);
+      reply.code(200).send(modules);
     },
   });
 
