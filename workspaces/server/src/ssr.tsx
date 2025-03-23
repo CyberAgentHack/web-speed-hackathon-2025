@@ -24,7 +24,37 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          <link rel="preconnect" href="/public/" />
+          <link rel="preload" href="/public/main.js" as="script" />
+          <link rel="preload" href="/public/arema.svg" as="image" />
           <style>
+            /* Critical CSS for initial render */
+            html, body {
+              font-family: 'Noto Sans JP', sans-serif;
+              margin: 0;
+              padding: 0;
+              height: 100%;
+              width: 100%;
+              background-color: #000000;
+              color: #ffffff;
+            }
+            .size-full {
+              height: 100%;
+              width: 100%;
+            }
+            .h-auto { height: auto; }
+            .min-h-100vh { min-height: 100vh; }
+            .w-full { width: 100%; }
+            .bg-black { background-color: #000000; }
+            .text-white { color: #ffffff; }
+            .flex { display: flex; }
+            .items-center { align-items: center; }
+            .justify-center { justify-content: center; }
+            .sticky { position: sticky; }
+            .top-0 { top: 0px; }
+            .z-10 { z-index: 10; }
+
+            /* Loading spinner styles */
             .loading-container {
               display: flex;
               justify-content: center;
@@ -45,12 +75,12 @@ export function registerSsr(app: FastifyInstance): void {
               100% { transform: rotate(360deg); }
             }
           </style>
-          <script src="/public/main.js"></script>
         </head>
         <body>
           <div class="loading-container">
             <div class="loading-spinner"></div>
           </div>
+          <script src="/public/main.js" defer></script>
         </body>
       </html>
     `);
