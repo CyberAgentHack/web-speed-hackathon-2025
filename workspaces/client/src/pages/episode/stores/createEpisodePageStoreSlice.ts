@@ -1,5 +1,5 @@
 import { lens } from '@dhmk/zustand-lens';
-import { RefCallback } from 'react';
+import { RefCallback, useCallback } from 'react';
 
 import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
 
@@ -38,14 +38,15 @@ export const createEpisodePageStoreSlice = () => {
     playerRef: (player: PlayerWrapper | null) => {
       function onMount(player: PlayerWrapper): void {
         const abortController = new AbortController();
+        const playingHandler = useCallback(() => {
+          set({ playing: true });
+        }, []);
 
-        player.videoElement.addEventListener(
-          'playing',
-          () => {
-            set({ playing: true });
-          },
-          { signal: abortController.signal },
-        );
+        player.videoElement.addEventListener('playing', playingHandler, {
+          signal: abortController.signal,
+          passive: true
+        });
+
         player.videoElement.addEventListener(
           'pause',
           () => {
