@@ -1,7 +1,5 @@
 export const getThumbnailUrl = (url: string, size: "small" | "big" = "small") => {
-  // input /public/images/1.jpeg
+  // input /public/images/small/1.avif
   // output /public/images/${size}/1.avif
-  const fileName = url.split('/').pop() || '';
-  const baseName = fileName.split('.')[0];
-  return url.replace(fileName, `${size}/${baseName}.avif`);
+  return url.replace(/\/images\/(small|big)\//, `/images/${size}/`);
 }
