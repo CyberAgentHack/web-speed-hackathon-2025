@@ -16,7 +16,7 @@ export const Document = () => {
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <link href="/public/main.css" rel="stylesheet" />
-        <script src="/public/main.js"></script>
+        <script src="/public/main.js" type="module"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
         <Suspense>
