@@ -108,7 +108,7 @@ export function registerSsr(app: FastifyInstance): void {
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
           ${convertedImagePaths.slice(0, 5) // ← 先頭5枚のみ preload , Backup// ${convertedImagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
-            .map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`)
+            .map((imagePath) => `<link as="image" type="image/webp" href="${imagePath}" rel="preload" />`)
             .join('\n')}
         </head>
         <body></body>
