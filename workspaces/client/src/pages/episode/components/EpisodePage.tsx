@@ -50,7 +50,7 @@ export const EpisodePage = () => {
         <Flipped stagger flipId={`episode-${episode.id}`}>
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
-              <div className="relative size-full">
+              <div className="relative size-full" style={{ aspectRatio: '16 / 9' }}>
                 <img alt="" className="h-auto w-full" loading='lazy' src={episode.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
@@ -70,7 +70,7 @@ export const EpisodePage = () => {
               <Suspense
                 fallback={
                   <AspectRatio ratioHeight={9} ratioWidth={16}>
-                    <div className="grid size-full">
+                    <div className="grid size-full" style={{ aspectRatio: '16 / 9' }}>
                       <img
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"

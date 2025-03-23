@@ -68,7 +68,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
-            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`} style={{ aspectRatio: '16 / 9' }}>
               <img
                 ref={imageRef}
                 alt=""

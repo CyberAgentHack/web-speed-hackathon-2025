@@ -100,7 +100,7 @@ export const ProgramPage = () => {
         <Flipped stagger flipId={`program-${program.id}`}>
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
-              <div className="relative size-full">
+              <div className="relative size-full" style={{ aspectRatio: '16 / 9' }}>
                 <img alt="" className="h-auto w-full" loading='lazy' src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
@@ -126,7 +126,7 @@ export const ProgramPage = () => {
                 </div>
               </div>
             ) : (
-              <div className="relative size-full">
+              <div className="relative size-full" style={{ aspectRatio: '16 / 9' }}>
                 <img alt="" className="h-auto w-full" loading='lazy' src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
