@@ -26,14 +26,14 @@ export const JumbotronSection = ({ module }: Props) => {
   return (
     <Hoverable classNames={{ hovered: 'opacity-50' }}>
       <NavLink
-        viewTransition
+        // viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
         to={`/episodes/${episode.id}`}
       >
         {({ isTransitioning }) => {
           return (
             <>
-              <div className="grow-1 shrink-1 p-[24px]">
+              <div className="shrink-1 grow-1 p-[24px]">
                 <div className="mb-[16px] w-full text-center text-[22px] font-bold text-[#ffffff]">
                   <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
                 </div>

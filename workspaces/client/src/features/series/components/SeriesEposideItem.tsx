@@ -19,7 +19,7 @@ export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
   return (
     <Hoverable classNames={{ hovered: 'opacity-75' }}>
       <NavLink
-        viewTransition
+        // viewTransition
         className="block flex w-full flex-row items-start justify-between gap-x-[16px]"
         to={`/episodes/${episode.id}`}
       >
