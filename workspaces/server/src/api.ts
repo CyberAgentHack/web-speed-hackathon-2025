@@ -551,8 +551,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         }) : []
       ]);
 
-      const seriesMap = new Map(seriesData.map(series => [series.id, series]));
-      const episodeMap = new Map(episodeData.map(episode => [episode.id, episode]));
+      // remove description
+      const seriesMap = new Map(seriesData.map(series => [series.id, {...series, description: '', episodes: series.episodes.map(episode => ({...episode, description: ''}))}]));
+      const episodeMap = new Map(episodeData.map(episode => [episode.id, {...episode, description: '', series: {...episode.series, description: '', episodes: episode.series.episodes.map(episode => ({...episode, description: ''}))}}]));
 
       const result = modules.map(module => ({
         ...module,
@@ -565,7 +566,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         }))
       })) satisfies StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>;
       console.log('getRecommendedModules end', new Date().toISOString());
-      // console.log(result)
 
       // キャッシュに保存
       recommendedModulesCache.set(cacheKey, {
