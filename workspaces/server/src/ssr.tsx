@@ -32,6 +32,7 @@ export function registerSsr(app: FastifyInstance): void {
   );
 
   app.register(fastifyStatic, {
+    preCompressed: true,
     prefix: '/public/',
     root: [
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),

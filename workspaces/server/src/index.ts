@@ -1,6 +1,5 @@
 import '@wsh-2025/server/src/setups/luxon';
 
-//import compress from '@fastify/compress';
 import cors from '@fastify/cors';
 import fastify from 'fastify';
 
@@ -13,8 +12,6 @@ async function main() {
   await initializeDatabase();
 
   const app = fastify();
-
-  //await app.register(compress);
 
   app.addHook('onSend', async (_req, reply) => {
     reply.header('cache-control', 'no-store');

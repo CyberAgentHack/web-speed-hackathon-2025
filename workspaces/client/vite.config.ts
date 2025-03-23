@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   return {
@@ -19,6 +20,12 @@ export default defineConfig(({ mode }) => {
         API_BASE_URL: process.env['API_BASE_URL'],
       },
     },
-    plugins: [react()],
+    plugins: [
+      react(),
+      viteCompression({
+        algorithm: 'brotliCompress',
+        threshold: 0,
+      }),
+    ],
   };
 });
