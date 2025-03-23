@@ -510,8 +510,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       });
       // backup
       // reply.code(200).send(modules);
-      // ✅ 修正後：空配列を保証して送信
-      reply.code(200).send(modules ?? []);
+      // ✅ ログ確認用
+      console.log('modules for', req.params.referenceId, '=', modules);
+
+      // ✅ 安全送信（どんな場合も []）
+      reply.code(200).send(Array.isArray(modules) ? modules : []);
     },
   });
 
