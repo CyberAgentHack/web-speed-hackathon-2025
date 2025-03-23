@@ -18,14 +18,15 @@ async function getSeekThumbnail({ episode }: Params) {
 
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  // await ffmpeg.load({
+  //   coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
+  //     return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
+  //   }),
+  //   wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+  //     return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
+  //   }),
+  // });
+  await ffmpeg.load();
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
@@ -57,7 +58,7 @@ async function getSeekThumbnail({ episode }: Params) {
   await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,300))',scale=160:90,tile=250x1"],
+      ['-vf', "fps=30,select='not(mod(n\\,3000))',scale=160:90,tile=250x1"],
       ['-frames:v', '1'],
       'preview.jpg',
     ].flat(),
