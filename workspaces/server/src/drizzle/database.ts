@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { createClient } from '@libsql/client';
 import * as schema from '@wsh-2025/schema/src/database/schema';
+import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/libsql';
 
 const SQLITE_PATH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../database.sqlite');
@@ -32,4 +33,18 @@ export async function initializeDatabase(): Promise<void> {
     }),
     schema,
   });
+}
+
+/**
+ * 生のSQLクエリを実行するヘルパー関数
+ */
+export async function execSQL(query: string): Promise<void> {
+  const db = getDatabase();
+  try {
+    // drizzleでのSQL実行
+    await db.run(sql.raw(query));
+  } catch (error) {
+    console.error('SQLクエリ実行エラー:', query, error);
+    throw error;
+  }
 }

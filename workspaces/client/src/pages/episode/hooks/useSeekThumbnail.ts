@@ -60,7 +60,7 @@ async function getSeekThumbnail({ episode }: Params) {
   const output = await ffmpeg.readFile('preview.webp');
   ffmpeg.terminate();
 
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
+  return URL.createObjectURL(new Blob([output], { type: 'image/webp' }));
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();

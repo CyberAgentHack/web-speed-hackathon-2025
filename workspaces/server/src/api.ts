@@ -22,7 +22,7 @@ import {
 import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
-import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+import { getDatabase, initializeDatabase, execSQL } from '@wsh-2025/server/src/drizzle/database';
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -71,12 +71,30 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function initialize(_req, reply) {
-      await initializeDatabase();
+      try {
+        // データベースを初期化
+        await initializeDatabase();
 
-      // サーバー側の処理ではなく、画像の配置変更とフロントエンドの参照を変更
-      // データベースの更新は必要なし - WebPとJPEG/PNGファイルは両方配置されている
+        // データベース内の画像パスを.jpeg -> .webpに更新
+        await execSQL(`
+          UPDATE series
+          SET thumbnailUrl = REPLACE(thumbnailUrl, '.jpeg?', '.webp?')
+          WHERE thumbnailUrl LIKE '%.jpeg?%'
+        `);
 
-      reply.code(200).send({});
+        await execSQL(`
+          UPDATE episode
+          SET thumbnailUrl = REPLACE(thumbnailUrl, '.jpeg?', '.webp?')
+          WHERE thumbnailUrl LIKE '%.jpeg?%'
+        `);
+
+        console.log('画像パスの更新が完了しました（.jpeg -> .webp）');
+
+        reply.code(200).send({});
+      } catch (error) {
+        console.error('初期化エラー:', error);
+        reply.code(500).send({ error: '初期化中にエラーが発生しました' });
+      }
     },
   });
 

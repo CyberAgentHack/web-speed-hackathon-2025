@@ -300,11 +300,32 @@ async function main() {
         password: bcrypt.hashSync('test', 10),
       },
     ]);
+
+    // データベース内の画像パスを.webp形式に変更
+    await database.run(`
+      UPDATE series
+      SET thumbnailUrl = REPLACE(thumbnailUrl, '.jpeg?', '.webp?')
+      WHERE thumbnailUrl LIKE '%.jpeg?%'
+    `);
+
+    // episodeテーブルの画像パスも更新
+    await database.run(`
+      UPDATE episode
+      SET thumbnailUrl = REPLACE(thumbnailUrl, '.jpeg?', '.webp?')
+      WHERE thumbnailUrl LIKE '%.jpeg?%'
+    `);
   } finally {
     database.$client.close();
   }
 }
 
-main().catch((error: unknown) => {
-  console.error(error);
-});
+// メインの実行関数をエクスポート
+export async function runSeed(): Promise<void> {
+  await main();
+}
+
+// すでにmain()が実行されている場合は、それをそのままにする
+// スクリプトとして直接実行された場合のみ実行される
+if (require.main === module) {
+  main().catch(console.error);
+}
