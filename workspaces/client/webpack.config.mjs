@@ -1,5 +1,5 @@
 import path from 'node:path';
-
+import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
@@ -67,6 +67,25 @@ const config = {
       '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: 2,
+        // minify: TerserPlugin.swcMinify,
+        terserOptions: {
+            compress: {
+                ecma: 5,
+                comparisons: false,
+                inline: 2,
+            },
+            mangle: {
+                safari10: true,
+            },
+        },
+    }),
+    ],
   }
 };
 

@@ -76,7 +76,8 @@
     "webpack-bundle-analyzer": "4.10.2",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "5.1.0",
-    "wireit": "0.14.9"
+    "wireit": "0.14.9",
+    "terser-webpack-plugin": "5.3.14"
   },
   "wireit": {
     "build": {
