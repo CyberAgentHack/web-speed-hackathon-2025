@@ -332,20 +332,25 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
       },
     } satisfies FastifyZodOpenApiSchema,
-    handler: async function getTimetable(req, reply) {
+    handler: async function getTimetable(_, reply) {
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { between, sql }) {
-          // 競技のため、時刻のみで比較する
-          return between(
-            program.startAt,
-            sql`time(${req.query.since}, '+9 hours')`,
-            sql`time(${req.query.until}, '+9 hours')`,
-          );
+        with: {
+          channel: true,
+          episode: {
+            with: {
+              series: {
+                with: {
+                  episodes: {
+                    orderBy(episode, { asc }) {
+                      return asc(episode.order);
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
       reply.code(200).send(programs);
