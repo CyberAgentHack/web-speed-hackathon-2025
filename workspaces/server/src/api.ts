@@ -23,20 +23,6 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
-import { StandardSchemaV1 } from '@standard-schema/spec';
-import NodeCache from 'node-cache';
-import { recommendedModule, recommendedItem, series, episode } from '@wsh-2025/schema/src/database/schema';
-import { eq, and } from 'drizzle-orm';
-import { db } from './db';
-import type { InferSelectModel } from 'drizzle-orm';
-
-// キャッシュの設定
-const recommendedCache = new NodeCache({ stdTTL: 300 }); // 5分間キャッシュ
-
-type RecommendedModule = InferSelectModel<typeof recommendedModule>;
-type RecommendedItem = InferSelectModel<typeof recommendedItem>;
-type Series = InferSelectModel<typeof series>;
-type Episode = InferSelectModel<typeof episode>;
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -662,83 +648,3 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   /* eslint-enable sort/object-properties */
 }
-
-export const getRecommendedModules = async (
-  fastify: FastifyInstance,
-  params: StandardSchemaV1.InferInput<typeof schema.getRecommendedModulesRequestParams>,
-) => {
-  const { referenceId } = params;
-  const db = getDatabase();
-
-  // キャッシュをチェック
-  const cachedData = recommendedCache.get(referenceId);
-  if (cachedData) {
-    return cachedData;
-  }
-
-  // モジュールを取得
-  const modules = await db
-    .select()
-    .from(recommendedModule)
-    .where(eq(recommendedModule.referenceId, referenceId))
-    .orderBy(recommendedModule.order);
-
-  // 各モジュールのアイテムを取得
-  const modulesWithItems = await Promise.all(
-    modules.map(async (module: RecommendedModule) => {
-      const items = await db
-        .select()
-        .from(recommendedItem)
-        .where(eq(recommendedItem.moduleId, module.id))
-        .orderBy(recommendedItem.order);
-
-      // 各アイテムの関連データを取得
-      const itemsWithRelations = await Promise.all(
-        items.map(async (item: RecommendedItem) => {
-          const [seriesData, episodeData] = await Promise.all([
-            item.seriesId
-              ? db
-                  .select({
-                    id: series.id,
-                    title: series.title,
-                    description: series.description,
-                    thumbnailUrl: series.thumbnailUrl,
-                  })
-                  .from(series)
-                  .where(eq(series.id, item.seriesId))
-                  .limit(1)
-              : null,
-            item.episodeId
-              ? db
-                  .select({
-                    id: episode.id,
-                    title: episode.title,
-                    description: episode.description,
-                    thumbnailUrl: episode.thumbnailUrl,
-                  })
-                  .from(episode)
-                  .where(eq(episode.id, item.episodeId))
-                  .limit(1)
-              : null,
-          ]);
-
-          return {
-            ...item,
-            series: seriesData?.[0] || null,
-            episode: episodeData?.[0] || null,
-          };
-        }),
-      );
-
-      return {
-        ...module,
-        items: itemsWithRelations,
-      };
-    }),
-  );
-
-  // キャッシュに保存
-  recommendedCache.set(referenceId, modulesWithItems);
-
-  return modulesWithItems;
-};
