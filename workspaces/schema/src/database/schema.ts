@@ -2,7 +2,7 @@
 import '@wsh-2025/schema/src/setups/luxon';
 
 import { relations } from 'drizzle-orm';
-import { sqliteTable as table } from 'drizzle-orm/sqlite-core';
+import { sqliteTable as table, index } from 'drizzle-orm/sqlite-core';
 import * as t from 'drizzle-orm/sqlite-core';
 import { DateTime } from 'luxon';
 
@@ -146,8 +146,8 @@ export const program = table(
   (table) => {
     return {
       channelIdIndex: index('channelId_index').on(table.channelId),
-      startTimeIndex: index('startTime_index').on(table.startTime),
-      endTimeIndex: index('endTime_index').on(table.endTime),
+      startTimeIndex: index('startTime_index').on(table.startAt),
+      endTimeIndex: index('endTime_index').on(table.endAt),
     };
   },
 );
