@@ -13,8 +13,14 @@ async function main() {
 
   const app = fastify();
 
+  // 画像のみキャッシュする
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    const contentType = reply.getHeader('Content-Type');
+    if (reply.statusCode === 200 && typeof contentType === 'string' && contentType.startsWith('image/')) {
+      reply.header('Cache-Control', 'public, max-age=31536000');
+    } else {
+      reply.header('Cache-Control', 'no-store');
+    }
   });
   app.register(cors, {
     origin: true,
