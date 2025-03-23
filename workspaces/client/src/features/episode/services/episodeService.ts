@@ -27,7 +27,6 @@ const batcher = batshit.create({
         episodeIds: queries.map((q) => q.episodeId).join(','),
       },
     });
-    console.log('fetcher', data);
     return data;
   },
   resolver(items, query: { episodeId: string }) {
