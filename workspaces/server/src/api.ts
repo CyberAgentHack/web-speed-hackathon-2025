@@ -483,8 +483,19 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                },
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                },
                 with: {
                   series: {
                     columns: {

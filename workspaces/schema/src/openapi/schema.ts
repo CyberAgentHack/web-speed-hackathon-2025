@@ -182,9 +182,18 @@ export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
-        series: series
+        series: series.pick({
+          id: true,
+          title: true,
+          thumbnailUrl: true,
+        })
           .nullable(),
-        episode: episode
+        episode: episode.pick({
+          id: true,
+          title: true,
+          thumbnailUrl: true,
+          premium: true,
+        })
           .extend({
             series: series.pick({ title: true })
           })
