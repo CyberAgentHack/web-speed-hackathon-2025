@@ -22,6 +22,10 @@ async function main() {
   app.register(cors, {
     origin: true,
   });
+  app.register(registerApi, { prefix: "/api" });
+  app.register(fastifyCompress, {
+    global: true,
+  });
   app.register(fastifyStatic, {
     decorateReply: false,
     prefix: "/ffmpeg/",
@@ -30,10 +34,8 @@ async function main() {
       "../../../node_modules/@ffmpeg/core/dist/umd",
     ),
   });
-  app.register(registerApi, { prefix: "/api" });
   app.register(registerStreams);
   app.register(registerSsr);
-  app.register(fastifyCompress);
 
   await app.ready();
   const address = await app.listen({
