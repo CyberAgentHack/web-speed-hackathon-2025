@@ -5,8 +5,8 @@ import fastify from 'fastify';
 
 import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
-import { registerSsr } from '@wsh-2025/server/src/ssr';
 import { registerStreams } from '@wsh-2025/server/src/streams';
+import { registerStatic } from '@wsh-2025/server/src/static';
 
 async function main() {
   await initializeDatabase();
@@ -14,14 +14,21 @@ async function main() {
   const app = fastify();
 
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    reply.header('cache-control', 'public, max-age=86400');
   });
   app.register(cors, {
     origin: true,
   });
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
-  app.register(registerSsr);
+  app.register(registerStatic);
+
+  // await app.register(
+  //   import('@fastify/compress'),
+  //   {
+  //     encodings: ['gzip'],
+  //   },
+  // );
 
   await app.ready();
   const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });

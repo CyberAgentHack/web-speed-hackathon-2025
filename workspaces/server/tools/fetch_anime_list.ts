@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { readFile } from 'node:fs/promises';
+
+
 import JSZip from 'jszip';
 
 interface Content<T extends 'episode' | 'series'> {
@@ -10,9 +13,8 @@ export async function fetchAnimeList(): Promise<{
   episode: Content<'episode'>[];
   series: Content<'series'>[];
 }> {
-  const zipBinary = await fetch(
-    'https://github.com/mediaarts-db/dataset/raw/refs/tags/1.2/data/json-ld/metadata_an-col_an207_json.zip',
-  ).then((r) => r.arrayBuffer());
+  // Read local zip file
+  const zipBinary = await readFile('./metadata_an-col_an207_json.zip');
 
   const zip = await JSZip.loadAsync(zipBinary);
   const file = zip.file('metadata_an-col_an207_00001.json')!;

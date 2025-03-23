@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { readFile } from 'node:fs/promises';
 import { text } from 'node:stream/consumers';
 
 import iconv from 'iconv-lite';
@@ -6,9 +7,8 @@ import JSZip from 'jszip';
 import mikan from 'mikanjs';
 
 export async function fetchLoremIpsumWordList(): Promise<string[]> {
-  const zipBinary = await fetch('https://www.aozora.gr.jp/cards/000148/files/789_ruby_5639.zip').then((r) =>
-    r.arrayBuffer(),
-  );
+  // Read local zip file
+  const zipBinary = await readFile('./789_ruby_5639.zip');
 
   const zip = await JSZip.loadAsync(zipBinary);
   const file = zip.file('wagahaiwa_nekodearu.txt')!;
