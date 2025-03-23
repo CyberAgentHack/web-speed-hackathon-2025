@@ -15,8 +15,8 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 export const HomePage = () => {
 
   // TODO メモ化の方法については要変更
-  // const modules = useRecommended({ referenceId: 'entrance' });
-  const modules = useMemo(() => useRecommended({ referenceId: 'entrance' }), []); 
+  const modules = useRecommended({ referenceId: 'entrance' });
+  // const modules = useMemo(() => useRecommended({ referenceId: 'entrance' }), []); 
 
 
   return (
