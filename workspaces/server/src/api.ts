@@ -24,6 +24,14 @@ import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
 
+let recCached: Map<string, any> = new Map();
+setInterval(
+  () => {
+    recCached.clear();
+  },
+  1000 * 60 * 10,
+);
+
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
@@ -450,7 +458,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     },
   });
 
-  let recCached: Map<string, any> = new Map();
   api.route({
     method: 'GET',
     url: '/recommended/:referenceId',
