@@ -59,7 +59,7 @@ export const createEpisodePageStoreSlice = () => {
             currentTime: player.currentTime,
             duration: player.duration,
           }));
-        }, 250);
+        }, 1000);
         abortController.signal.addEventListener('abort', () => {
           clearInterval(interval);
         });
