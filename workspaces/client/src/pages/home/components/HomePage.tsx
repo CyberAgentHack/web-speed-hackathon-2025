@@ -1,46 +1,61 @@
 // HomePage.tsx
 import { Suspense, memo } from 'react';
+import { useQuery } from 'react-query'; 
 import { createStore } from '@/app/createStore';
 import { RecommendedSection } from '@/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@/features/recommended/hooks/useRecommended';
 
-export const prefetch = async (store: ReturnType<typeof createStore>) => {
+const fetchRecommendedModules = async (referenceId: string) => {
+  const store = createStore(); 
+  const modules = await store
+    .getState()
+    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId });
+  return modules;
+};
+
+export const prefetch = async () => {
   try {
-    const modules = await store
-      .getState()
-      .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
-    return { modules };
+    return await fetchRecommendedModules('entrance');
   } catch (e) {
     console.error('HomePage prefetch error:', e);
-    return { modules: [] };
+    return [];
   }
 };
 
 const LoadingFallback = () => (
   <div className="text-white text-center mt-10" role="status" aria-live="polite">
-    ホーム画面を読み込み中...
   </div>
 );
 
-const ModuleBlock = memo(({ module }: { module: any }) => (
+type Module = {
+  id: string;
+
+};
+
+const ModuleBlock = memo(({ module }: { module: Module }) => (
   <div key={module.id} className="mb-[24px] px-[24px]">
     <RecommendedSection module={module} />
   </div>
 ));
 
 export const HomePage = () => {
-  const modules = useRecommended({ referenceId: 'entrance' });
+  const { data: modules, isLoading, isError } = useQuery(
+    'recommendedModules',
+    () => fetchRecommendedModules('entrance'),
+    {
+      initialData: typeof window === 'undefined' ? prefetch() : undefined, 
+    }
+  );
+
+  if (isLoading) return <LoadingFallback />;
+  if (isError) return <div>エラーが発生しました。</div>;
 
   return (
     <>
-      {/* もしここで <title> 書くなら <Document /> 側と重複しないよう注意 */}
-      <Suspense fallback={<LoadingFallback />}>
-        <main className="w-full py-[48px]" aria-label="おすすめセクション">
-          {modules.map((module) => (
-            <ModuleBlock key={module.id} module={module} />
-          ))}
-        </main>
-      </Suspense>
+      <main className="w-full py-[48px]" aria-label="おすすめセクション">
+        {modules?.map((module) => (
+          <ModuleBlock key={module.id} module={module} />
+        ))}
+      </main>
     </>
   );
 };
