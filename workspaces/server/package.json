@@ -54,6 +54,9 @@
     "iconv-lite": "0.6.3",
     "jszip": "3.10.1",
     "mikanjs": "1.0.14",
+    "postcss": "8.5.3",
+    "postcss-loader": "8.1.1",
+    "postcss-preset-env": "10.1.5",
     "type-fest": "4.29.1"
   },
   "wireit": {

@@ -454,6 +454,15 @@ importers:
       mikanjs:
         specifier: 1.0.14
         version: 1.0.14
+      postcss:
+        specifier: 8.5.3
+        version: 8.5.3
+      postcss-loader:
+        specifier: 8.1.1
+        version: 8.1.1(postcss@8.5.3)(typescript@5.7.2)(webpack@5.96.1)
+      postcss-preset-env:
+        specifier: 10.1.5
+        version: 10.1.5(postcss@8.5.3)
       type-fest:
         specifier: 4.29.1
         version: 4.29.1
