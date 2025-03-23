@@ -2,6 +2,9 @@ import path from 'node:path';
 import os from 'node:os';
 
 import webpack from 'webpack';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+
 // import webpackBundleAnalyzer from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
@@ -70,6 +73,10 @@ const config = {
   //     maxSize: 500000,
   //   },
   // },
+  optimization: {
+    // eslint-disable-next-line
+    minimizer: [new CssMinimizerPlugin()],
+  },
   output: {
     chunkFilename: '[name]-[contenthash].js',
     chunkFormat: false,
@@ -78,15 +85,11 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new MiniCssExtractPlugin(),
     // new webpackBundleAnalyzer.BundleAnalyzerPlugin(),
   ],
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };

@@ -1,4 +1,5 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
@@ -11,15 +12,13 @@ interface Params {
 
 const USE_SEGMENT_NUM = 30;
 
+const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.15/dist/umd';
+
 async function getSeekThumbnail({ episode }: Params) {
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
+    coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+    wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
   });
 
   // HLS のプレイリストを取得
