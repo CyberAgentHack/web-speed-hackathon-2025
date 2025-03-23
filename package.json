@@ -36,7 +36,7 @@
     },
     "build": {
       "dependencies": [
-        "./workspaces/client:build-prod"
+        "./workspaces/client:build"
       ]
     },
     "heroku-build": {
