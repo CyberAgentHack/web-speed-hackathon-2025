@@ -25,7 +25,7 @@ export const SeriesItem = ({ lazy = true, series }: Props) => {
                   className="h-auto w-full"
                   decoding="async"
                   loading={lazy ? 'lazy' : 'eager'}
-                  src={`${process.env['PUBLIC_PREFIX']}${series.thumbnailUrl}`}
+                  src={`https://deqdfv99n42lf.cloudfront.net${series.thumbnailUrl}`}
                 />
               </Flipped>
             </div>
