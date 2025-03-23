@@ -68,7 +68,7 @@
       "command": "tsx ./tools/seed.ts"
     },
     "cmd": {
-      "command": "tsx ./tools/avif.ts"
+      "command": "tsx ./tools/trim.ts"
     },
     "start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",

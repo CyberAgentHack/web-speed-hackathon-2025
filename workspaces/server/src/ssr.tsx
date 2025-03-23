@@ -12,12 +12,7 @@ import { createStaticHandler } from 'react-router';
 
 export function registerSsr(app: FastifyInstance): void {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  app.register(fastifyCompress, {
-    customTypes:
-      /^(text\/html|application\/json|text\/plain|text\/css|text\/javascript|application\/javascript|application\/vnd\.apple\.mpegurl|application\/x-mpegurl|video\/mp2t)$/,
-    global: true,
-    threshold: 0,
-  });
+  app.register(fastifyCompress);
 
   app.register(fastifyStatic, {
     prefix: '/public/',
@@ -56,10 +51,13 @@ export function registerSsr(app: FastifyInstance): void {
         </body>
       </html>
       <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
+        window.__staticRouterHydrationData = ${
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          htmlescape({
+            actionData: context.actionData,
+            loaderData: context.loaderData,
+          })
+        };
       </script>
     `);
   });
