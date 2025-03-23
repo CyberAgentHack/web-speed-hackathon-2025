@@ -43,17 +43,6 @@ export function registerStatic(app: FastifyInstance): void {
               font-family: sans-serif;
               background-color: #f5f5f5;
             }
-            .app-loading {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              width: 100vw;
-            }
-            .app-loading img {
-              width: 120px;
-              height: auto;
-            }
             .home-icon {
               width: 20px;
               height: 20px;
@@ -65,12 +54,7 @@ export function registerStatic(app: FastifyInstance): void {
           </style>
         </head>
         <body>
-          <div id="root">
-            <!-- 初期表示用のプレースホルダー -->
-            <div class="app-loading">
-              <img src="/public/arema.svg" alt="Loading..." />
-            </div>
-          </div>
+          <div id="root"></div>
           <script src="/public/main.js" defer></script>
         </body>
       </html>
