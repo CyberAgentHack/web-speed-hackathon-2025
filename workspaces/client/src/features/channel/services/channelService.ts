@@ -19,7 +19,11 @@ interface ChannelService {
 
 export const channelService: ChannelService = {
   async fetchChannels() {
-    const data = await $fetch('/channels', { query: {} });
-    return data;
+    try {
+      const data = await $fetch('/channels', { query: {} });
+      return data;
+    } catch {
+      return [];
+    }
   },
 };

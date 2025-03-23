@@ -13,7 +13,7 @@ interface EpisodeState {
 interface EpisodeActions {
   fetchEpisodeById: (params: {
     episodeId: EpisodeId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse> | null>;
   fetchEpisodes: () => Promise<StandardSchemaV1.InferOutput<typeof getEpisodesResponse>>;
 }
 
@@ -22,13 +22,14 @@ export const createEpisodeStoreSlice = () => {
     episodes: {},
     fetchEpisodeById: async ({ episodeId }) => {
       const episode = await episodeService.fetchEpisodeById({ episodeId });
+      if (!episode) return null;
       set((state) => {
         return {
           ...state,
           episodes: {
             ...state.episodes,
-            [episode.id]: episode
-          }
+            [episode.id]: episode,
+          },
         };
       });
       return episode;
@@ -42,7 +43,7 @@ export const createEpisodeStoreSlice = () => {
         }
         return {
           ...state,
-          episodes: updatedEpisodes
+          episodes: updatedEpisodes,
         };
       });
       return episodes;

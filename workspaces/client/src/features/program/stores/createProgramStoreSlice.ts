@@ -13,7 +13,7 @@ interface ProgramState {
 interface ProgramActions {
   fetchProgramById: (params: {
     programId: ProgramId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof getProgramByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getProgramByIdResponse> | null>;
   fetchPrograms: () => Promise<StandardSchemaV1.InferOutput<typeof getProgramsResponse>>;
 }
 
@@ -21,13 +21,14 @@ export const createProgramStoreSlice = () => {
   return lens<ProgramState & ProgramActions>((set) => ({
     fetchProgramById: async ({ programId }) => {
       const program = await programService.fetchProgramById({ programId });
+      if (!program) return null;
       set((state) => {
         return {
           ...state,
           programs: {
             ...state.programs,
-            [program.id]: program
-          }
+            [program.id]: program,
+          },
         };
       });
       return program;
@@ -41,7 +42,7 @@ export const createProgramStoreSlice = () => {
         }
         return {
           ...state,
-          programs: updatedPrograms
+          programs: updatedPrograms,
         };
       });
       return programs;

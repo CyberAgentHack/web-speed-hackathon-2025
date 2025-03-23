@@ -48,17 +48,25 @@ const batcher = batshit.create({
 interface ProgramService {
   fetchProgramById: (query: {
     programId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof getProgramByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getProgramByIdResponse> | null>;
   fetchPrograms: () => Promise<StandardSchemaV1.InferOutput<typeof getProgramsResponse>>;
 }
 
 export const programService: ProgramService = {
   async fetchProgramById({ programId }) {
-    const channel = await batcher.fetch({ programId });
-    return channel;
+    try {
+      const channel = await batcher.fetch({ programId });
+      return channel;
+    } catch {
+      return null;
+    }
   },
   async fetchPrograms() {
-    const data = await $fetch('/programs', { query: {} });
-    return data;
+    try {
+      const data = await $fetch('/programs', { query: {} });
+      return data;
+    } catch {
+      return [];
+    }
   },
 };

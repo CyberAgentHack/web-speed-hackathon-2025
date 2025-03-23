@@ -43,16 +43,24 @@ interface SeriesService {
   fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof getSeriesResponse>>;
   fetchSeriesById: (params: {
     seriesId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse> | null>;
 }
 
 export const seriesService: SeriesService = {
   async fetchSeries() {
-    const data = await $fetch('/series', { query: {} });
-    return data;
+    try {
+      const data = await $fetch('/series', { query: {} });
+      return data;
+    } catch {
+      return [];
+    }
   },
   async fetchSeriesById({ seriesId }) {
-    const data = await batcher.fetch({ seriesId });
-    return data;
+    try {
+      const data = await batcher.fetch({ seriesId });
+      return data;
+    } catch {
+      return null;
+    }
   },
 };

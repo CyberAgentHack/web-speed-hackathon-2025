@@ -14,7 +14,7 @@ interface SeriesActions {
   fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof getSeriesResponse>>;
   fetchSeriesById: (params: {
     seriesId: SeriesId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse> | null>;
 }
 
 export const createSeriesStoreSlice = () => {
@@ -28,20 +28,21 @@ export const createSeriesStoreSlice = () => {
         }
         return {
           ...state,
-          series: updatedSeries
+          series: updatedSeries,
         };
       });
       return series;
     },
     fetchSeriesById: async ({ seriesId }) => {
       const series = await seriesService.fetchSeriesById({ seriesId });
+      if (!series) return null;
       set((state) => {
         return {
           ...state,
           series: {
             ...state.series,
-            [seriesId]: series
-          }
+            [seriesId]: series,
+          },
         };
       });
       return series;
