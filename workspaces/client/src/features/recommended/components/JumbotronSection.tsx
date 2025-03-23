@@ -1,7 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useEffect, useRef, useState } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -11,6 +10,7 @@ import { Player } from '../../player/components/Player';
 import { PlayerType } from '../../player/constants/player_type';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
@@ -71,10 +71,10 @@ export const JumbotronSection = ({ module }: Props) => {
             <>
               <div className="grow-1 shrink-1 p-[24px]">
                 <div className="mb-[16px] w-full text-center text-[22px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
+                  <CustomEllipsis maxLine={2} text={episode.title} visibleLine={2} />
                 </div>
                 <div className="w-full text-center text-[14px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
+                  <CustomEllipsis maxLine={3} text={episode.description} visibleLine={3} />
                 </div>
               </div>
 
