@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -74,11 +74,11 @@ const config = {
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     
     // BundleAnalyzerPlugin を追加
-    new BundleAnalyzerPlugin({
-    analyzerMode: 'static', // 'server' や 'json' なども指定可能
-    openAnalyzer: true, // ビルド後に自動でブラウザを開きます
-    reportFilename: 'report.html',
-    }),
+    // new BundleAnalyzerPlugin({
+    // analyzerMode: 'static', // 'server' や 'json' なども指定可能
+    // openAnalyzer: true, // ビルド後に自動でブラウザを開きます
+    // reportFilename: 'report.html',
+    // }),
     ],
 
     resolve: {
