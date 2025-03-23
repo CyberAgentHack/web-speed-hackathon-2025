@@ -103,9 +103,9 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
       ],
       Component: Document,
-      async loader() {
-        return await prefetch(store);
-      },
+      // async loader() {
+      //   return await prefetch(store);
+      // },
       path: '/',
     },
   ];
