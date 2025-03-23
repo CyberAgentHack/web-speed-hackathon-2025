@@ -7,3 +7,8 @@ Module._extensions['.png'] = function (module, fn) {
   const base64 = fs.readFileSync(fn).toString('base64');
   module._compile('module.exports="data:image/png;base64,' + base64 + '"', fn);
 };
+
+Module._extensions['.webp'] = function (module, fn) {
+  const base64 = fs.readFileSync(fn).toString('base64');
+  module._compile('module.exports="data:image/webp;base64,' + base64 + '"', fn);
+};
