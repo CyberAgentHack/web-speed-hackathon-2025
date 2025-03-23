@@ -1,31 +1,43 @@
 import { Flipped } from 'react-flip-toolkit';
-import { Params, useParams } from 'react-router';
+import { Params, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getThumbnailUrl';
+import { useEffect, useState } from 'react';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
   const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
+  return { series };
 };
 
+const RecommendedArea = ({ seriesId }: { seriesId: string }) => {
+  const [recModule, setRecModule] = useState(null);
+  useEffect(() => {
+    const fetchRec = async () => {
+      const response = await fetch(`/api/recommended/${seriesId}`);
+      const data = await response.json();
+      setRecModule(data[0]);
+    };
+    fetchRec();
+  }, [seriesId]);
+  if (!recModule) {
+    return (
+      <div className="min-h-[315px]"></div>
+    );
+  }
+  return (
+    <div>
+      <RecommendedSection module={recModule} />
+    </div>
+  );
+}
+
 export const SeriesPage = () => {
-  const { seriesId } = useParams();
-  invariant(seriesId);
-
-  const series = useSeriesById({ seriesId });
-  invariant(series);
-
-  const modules = useRecommended({ referenceId: seriesId });
+  const { series } = useLoaderData() as Awaited<ReturnType<typeof prefetch>>;
 
   return (
     <>
@@ -36,7 +48,7 @@ export const SeriesPage = () => {
           <Flipped stagger flipId={`series-${series.id}`}>
             <img
               alt=""
-              className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              className="h-auto w-[400px] aspect-video shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
               src={getThumbnailUrl(series.thumbnailUrl)}
             />
           </Flipped>
@@ -55,11 +67,7 @@ export const SeriesPage = () => {
           <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} eager={true} />
         </div>
 
-        {modules[0] != null ? (
-          <div>
-            <RecommendedSection module={modules[0]} />
-          </div>
-        ) : null}
+        <RecommendedArea seriesId={series.id} />
       </div>
     </>
   );
