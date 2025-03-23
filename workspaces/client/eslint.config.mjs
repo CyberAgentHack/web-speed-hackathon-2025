@@ -5,4 +5,14 @@ export default [
   {
     ignores: ['dist/*', '.wireit/*'],
   },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      parser: 'espree',
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  },
 ];

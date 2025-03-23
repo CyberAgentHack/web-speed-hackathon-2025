@@ -1,4 +1,3 @@
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
@@ -35,11 +34,11 @@ export const EpisodeItem = ({ episode }: Props) => {
                 </div>
               </Flipped>
               <div className="p-[8px]">
-                <div className="mb-[4px] text-[14px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
+                <div className="mb-[4px] text-[14px] font-bold text-[#ffffff] overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis' }}>
+                  {episode.title}
                 </div>
-                <div className="text-[12px] text-[#999999]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.series.title} visibleLine={2} />
+                <div className="text-[12px] text-[#999999] overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis' }}>
+                  {episode.series.title}
                 </div>
               </div>
             </>

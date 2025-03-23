@@ -1,4 +1,3 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
@@ -8,6 +7,13 @@ interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
+// FFmpegを動的にインポートする関数
+async function loadFFmpeg() {
+  // 必要になった時点でモジュールをロード
+  const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+  return FFmpeg;
+}
+
 async function getSeekThumbnail({ episode }: Params) {
   // HLS のプレイリストを取得
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
@@ -15,8 +21,11 @@ async function getSeekThumbnail({ episode }: Params) {
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
+  // FFmpegモジュールを動的にロード
+  const FFmpegClass = await loadFFmpeg();
+  
   // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
+  const ffmpeg = new FFmpegClass();
   await ffmpeg.load({
     coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
       return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));

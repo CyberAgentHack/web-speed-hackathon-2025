@@ -15,6 +15,8 @@ export const Document = () => {
       <head>
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <script src="/public/runtime.js"></script>
+        <script src="/public/vendors.js"></script>
         <script src="/public/main.js"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">

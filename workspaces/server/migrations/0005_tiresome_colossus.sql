@@ -1,0 +1,1 @@
+CREATE INDEX `reference_id_idx` ON `recommendedModule` (`referenceId`);

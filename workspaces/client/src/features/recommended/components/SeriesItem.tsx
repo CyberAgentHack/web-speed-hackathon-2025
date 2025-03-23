@@ -1,4 +1,3 @@
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 
@@ -25,8 +24,8 @@ export const SeriesItem = ({ series }: Props) => {
                 </Flipped>
               </div>
               <div className="p-[8px]">
-                <div className="text-[14px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={series.title} visibleLine={2} />
+                <div className="text-[14px] font-bold text-[#ffffff] overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis' }}>
+                  {series.title}
                 </div>
               </div>
             </>
