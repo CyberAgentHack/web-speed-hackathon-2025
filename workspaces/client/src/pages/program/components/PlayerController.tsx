@@ -25,8 +25,11 @@ export const PlayerController = () => {
                   toggleMuted();
                 }}
               >
-                <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                <img
+                  alt={muted ? 'ミュート解除する' : 'ミュートする'}
+                  className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
+                  loading="lazy"
+                  src={muted ? '/public/icons/volume-off-rounded.svg' : '/public/icons/volume-up-rounded.svg'}
                 />
               </button>
             </Hoverable>
