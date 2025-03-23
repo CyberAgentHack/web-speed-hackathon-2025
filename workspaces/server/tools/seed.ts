@@ -183,7 +183,7 @@ async function main() {
           episodeId: episode.id,
           id: faker.string.uuid(),
           startAt: new Date(startAt).toISOString(),
-          thumbnailUrl: `${faker.helpers.arrayElement(imagePaths)}?version=${faker.string.nanoid()}`,
+          thumbnailUrl: faker.helpers.arrayElement(imagePaths),
           title: `${series?.title ?? ''} ${episode.title}`,
         };
         programList.push(program);
