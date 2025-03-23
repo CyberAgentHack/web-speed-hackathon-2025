@@ -113,18 +113,9 @@ export const Layout = ({ children }: Props) => {
           </div>
         ) : null}
       </div>
-
-      <SignInDialog
-        isOpen={authDialogType === AuthDialogType.SignIn}
-        onClose={authActions.closeDialog}
-        onOpenSignUp={authActions.openSignUpDialog}
-      />
-      <SignUpDialog
-        isOpen={authDialogType === AuthDialogType.SignUp}
-        onClose={authActions.closeDialog}
-        onOpenSignIn={authActions.openSignInDialog}
-      />
-      <SignOutDialog isOpen={authDialogType === AuthDialogType.SignOut} onClose={authActions.closeDialog} />
+      {authDialogType === AuthDialogType.SignIn && <SignInDialog />}
+      {authDialogType === AuthDialogType.SignUp && <SignUpDialog/>}
+      {authDialogType === AuthDialogType.SignOut && <SignOutDialog />}
     </>
   );
 };
