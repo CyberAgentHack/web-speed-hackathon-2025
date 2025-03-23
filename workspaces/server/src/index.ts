@@ -1,8 +1,5 @@
 import '@wsh-2025/server/src/setups/luxon';
-import path from 'path';
-
 import cors from '@fastify/cors';
-import fastifyStatic from '@fastify/static';
 import fastify from 'fastify';
 
 import { registerApi } from '@wsh-2025/server/src/api';
