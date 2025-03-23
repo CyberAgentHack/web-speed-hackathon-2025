@@ -37,8 +37,8 @@ export const EpisodePage = () => {
   invariant(episode);
 
   // TODO メモ化の方法については要変更
-  // const modules = useRecommended({ referenceId: 'episodeId' });
-  const modules = useMemo(() => useRecommended({ referenceId: 'episodeId' }), []); 
+  const modules = useRecommended({ referenceId: episodeId });
+  // const modules = useMemo(() => useRecommended({ referenceId: episodeId }), []); 
   const playerRef = usePlayerRef();
 
   const isSignInRequired = episode.premium && user == null;
