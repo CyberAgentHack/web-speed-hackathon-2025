@@ -63,11 +63,6 @@ const config = {
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     new CompressionPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.(js|css|html|svg)$/,
-    }),
-    new CompressionPlugin({
       filename: '[path][base].br',
       algorithm: 'brotliCompress',
       test: /\.(js|css|html|svg)$/,
