@@ -1,9 +1,14 @@
+import { useCallback } from 'react';
+
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useCurrentTime() {
-  const state = useStore((s) => s);
-  const update = (second: number): void => {
-    state.pages.episode.updateCurrentTime(second);
-  };
-  return [state.pages.episode.currentTime, update] as const;
+  const currentTime = useStore((s) => s.pages.episode.currentTime);
+  const updateCurrentTime = useStore((s) => s.pages.episode.updateCurrentTime);
+
+  const update = useCallback((second: number): void => {
+    updateCurrentTime(second);
+  }, [updateCurrentTime]);
+
+  return [currentTime, update] as const;
 }

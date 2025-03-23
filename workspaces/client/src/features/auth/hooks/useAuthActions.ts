@@ -1,15 +1,17 @@
+import { useMemo } from 'react';
+
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useAuthActions() {
-  const state = useStore((s) => s);
+  const actions = useStore((s) => ({
+    closeDialog: s.features.auth.closeDialog,
+    openSignInDialog: s.features.auth.openSignInDialog,
+    openSignOutDialog: s.features.auth.openSignOutDialog,
+    openSignUpDialog: s.features.auth.openSignUpDialog,
+    signIn: s.features.auth.signIn,
+    signOut: s.features.auth.signOut,
+    signUp: s.features.auth.signUp,
+  }));
 
-  return {
-    closeDialog: state.features.auth.closeDialog,
-    openSignInDialog: state.features.auth.openSignInDialog,
-    openSignOutDialog: state.features.auth.openSignOutDialog,
-    openSignUpDialog: state.features.auth.openSignUpDialog,
-    signIn: state.features.auth.signIn,
-    signOut: state.features.auth.signOut,
-    signUp: state.features.auth.signUp,
-  };
+  return useMemo(() => actions, [actions]);
 }
