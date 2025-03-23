@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import UnoCSS from 'unocss/webpack';
+import UnoCSS from 'unocss/webpack'; // ← この行を修正
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -38,9 +38,10 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/resource',
+        // type: 'asset/inline', // 古い設定（Base64を使用）
+        type: 'asset/resource', // 新しい設定（ファイルとして扱う）
         generator: {
-          filename: 'images/[name][ext]',
+          filename: 'images/[name][ext]', // 出力されるファイルパス
         },
       },
       {
@@ -104,10 +105,15 @@ const config = {
           priority: 9,
           chunks: 'async',
         },
+        // 他の大きなライブラリも同様に設定可能
       },
     },
   },
   resolve: {
+    alias: {
+      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };

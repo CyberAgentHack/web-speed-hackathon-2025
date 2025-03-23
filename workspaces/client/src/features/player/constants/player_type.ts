@@ -1,4 +1,5 @@
 export enum PlayerType {
+  ShakaPlayer = 'shaka-player',
   HlsJS = 'hls.js',
-  ThumbnailPlayer = 'thumbnail-player',
+  VideoJS = 'video-js',
 }
