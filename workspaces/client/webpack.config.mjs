@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -55,6 +56,19 @@ const config = {
   },
   optimization: {
     minimize: process.env['NODE_ENV'] === 'production',
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: process.env['NODE_ENV'] === 'production',
+          },
+          output: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
     usedExports: true,
     sideEffects: true,
     splitChunks: {
@@ -145,7 +159,7 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'development' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api' }),
   ],
   resolve: {
     alias: {
