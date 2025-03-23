@@ -7,6 +7,7 @@ interface Props {
 }
 
 export const Gutter = ({ channelId }: Props): ReactElement => {
+  console.log('Gutter', channelId);
   const changeColumnWidth = useChangeColumnWidth();
 
   const [lastScreenX, setLastScreenX] = React.useState<number | null>(null);

@@ -1,20 +1,20 @@
 import { FORM_ERROR } from 'final-form';
 import { Form } from 'react-final-form';
 
-import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
+// import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
+import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const SignOutDialog = ({ isOpen, onClose }: Props) => {
-  const authActions = useAuthActions();
+export const SignOutDialog = () => {
+  const {
+    isOpen,
+    onClose,
+  } = useStore(s => s.features.auth.signOutDialogState);
+  const signOutAction = useStore(s => s.features.auth.signOut);
 
   const onSubmit = async () => {
     try {
-      await authActions.signOut();
+      await signOutAction();
 
       alert('ログアウトしました');
       onClose();

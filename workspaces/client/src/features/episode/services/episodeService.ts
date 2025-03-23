@@ -27,6 +27,7 @@ const batcher = batshit.create({
         episodeIds: queries.map((q) => q.episodeId).join(','),
       },
     });
+    console.log('batcher', data);
     return data;
   },
   resolver(items, query: { episodeId: string }) {
@@ -52,10 +53,12 @@ interface EpisodeService {
 export const episodeService: EpisodeService = {
   async fetchEpisodeById({ episodeId }) {
     const channel = await batcher.fetch({ episodeId });
+    console.log('fetchEpisodeById', channel);
     return channel;
   },
   async fetchEpisodes() {
     const data = await $fetch('/episodes', { query: {} });
+    console.log('fetchEpisodes', data);
     return data;
   },
 };

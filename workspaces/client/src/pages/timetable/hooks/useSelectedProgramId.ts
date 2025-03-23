@@ -7,9 +7,15 @@ import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
 
 export function useSelectedProgramId() {
-  const timetableState = useStore((s) => s.pages.timetable);
+  console.log('useSelectedProgramId');
+  const selectedProgramState = useStore((s) => s.pages.timetable.selectProgram);
+  const {
+    selectedProgramId,
+    selectProgram
+  } = selectedProgramState;
+
   const setProgram = (program: Program | null) => {
-    timetableState.selectProgram(program);
+    selectProgram(program);
   };
-  return [timetableState.selectedProgramId, setProgram] as const;
+  return [selectedProgramId, setProgram] as const;
 }

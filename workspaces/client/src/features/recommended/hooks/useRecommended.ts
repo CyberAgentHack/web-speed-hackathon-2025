@@ -1,22 +1,20 @@
 import useSWR from 'swr';
 
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
 
 interface Params {
   referenceId: string;
 }
 
 export function useRecommended({ referenceId }: Params) {
-  const recommendState = useStore(s => s.features.recommended);
+  const fetcher = recommendedService.fetchRecommendedModulesByReferenceId({
+    referenceId,
+  })
+  const { data: modules } = useSWR(
+    `/recommend/${referenceId}`,
+    () => fetcher,
+    { suspense: true }
+  );
 
-  const fetcher = recommendState.fetchRecommendedModulesByReferenceId({ referenceId });
-  useSWR(`/recommend/${referenceId}`, () => fetcher);
-
-  const moduleIds = recommendState.references[referenceId];
-
-  const modules = (moduleIds ?? [])
-    .map((moduleId) => recommendState.recommendedModules[moduleId])
-    .filter(<T>(m: T): m is NonNullable<T> => m != null);
-
-  return modules;
+  return { modules };
 }

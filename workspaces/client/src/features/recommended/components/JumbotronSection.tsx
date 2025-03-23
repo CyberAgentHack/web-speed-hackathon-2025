@@ -18,6 +18,7 @@ interface Props {
 }
 
 export const JumbotronSection = ({ module }: Props) => {
+  console.log('JumbotronSection', module.id);
   const playerRef = useRef<PlayerWrapper>(null);
 
   const episode = module.items[0]?.episode;
@@ -38,7 +39,7 @@ export const JumbotronSection = ({ module }: Props) => {
                   <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
                 </div>
                 <div className="w-full text-center text-[14px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
+                  <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description ?? ''} visibleLine={3} />
                 </div>
               </div>
 

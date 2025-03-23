@@ -28,6 +28,7 @@ const batcher = batshit.create({
         programIds: queries.map((q) => q.programId).join(','),
       },
     });
+    console.log('batcher', data);
     return data;
   },
   resolver(items, query: { programId: string }) {
@@ -53,10 +54,12 @@ interface ProgramService {
 export const programService: ProgramService = {
   async fetchProgramById({ programId }) {
     const channel = await batcher.fetch({ programId });
+    console.log('fetchProgramById', channel);
     return channel;
   },
   async fetchPrograms() {
     const data = await $fetch('/programs', { query: {} });
+    console.log('fetchPrograms', data);
     return data;
   },
 };

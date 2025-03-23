@@ -4,7 +4,8 @@ import { useId } from 'react';
 import { Field, Form } from 'react-final-form';
 import { z } from 'zod';
 
-import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
+// import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
+import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
@@ -14,20 +15,19 @@ interface SignInFormValues {
   password: string;
 }
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  onOpenSignIn: () => void;
-}
-
-export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
-  const authActions = useAuthActions();
+export const SignUpDialog = () => {
+  const {
+    isOpen,
+    onClose
+  } = useStore((s) => s.features.auth.signUpDialogState);
+  const { onOpen: onOpenSignIn } = useStore((s) => s.features.auth.signInDialogState);
+  const signUpAction = useStore((s) => s.features.auth.signUp);
   const emailId = useId();
   const passwordId = useId();
 
   const onSubmit = async (values: SignInFormValues) => {
     try {
-      await authActions.signUp({
+      await signUpAction({
         email: values.email,
         password: values.password,
       });

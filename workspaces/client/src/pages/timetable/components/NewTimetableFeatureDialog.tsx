@@ -1,13 +1,12 @@
 import FeatureExplainImageUrl from '@wsh-2025/client/assets/timetable/feature-explain.png';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useCloseNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useCloseNewFeatureDialog';
+import { useShownNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useShownNewFeatureDialog';
 
-interface Props {
-  isOpen: boolean;
-}
 
-export const NewTimetableFeatureDialog = ({ isOpen }: Props) => {
+export const NewTimetableFeatureDialog = () => {
   const onClose = useCloseNewFeatureDialog();
+  const isOpen = useShownNewFeatureDialog();
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>

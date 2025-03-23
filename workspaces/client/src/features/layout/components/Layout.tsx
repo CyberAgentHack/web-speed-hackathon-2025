@@ -3,12 +3,13 @@ import { ReactNode, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
+import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
 import { SignUpDialog } from '@wsh-2025/client/src/features/auth/components/SignUpDialog';
-import { AuthDialogType } from '@wsh-2025/client/src/features/auth/constants/auth_dialog_type';
-import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
-import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
+// import { AuthDialogType } from '@wsh-2025/client/src/features/auth/constants/auth_dialog_type';
+// import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
+// import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export const Layout = ({ children }: Props) => {
+  console.log('Layout');
   useSubscribePointer();
 
   const navigation = useNavigation();
@@ -26,13 +28,18 @@ export const Layout = ({ children }: Props) => {
 
   const location = useLocation();
   const isTimetablePage = location.pathname === '/timetable';
+  console.log(navigation, location)
 
-  const authActions = useAuthActions();
-  const authDialogType = useAuthDialogType();
+  // const authActions = useAuthActions();
+  const onOpenSignInDialog = useStore((s) => s.features.auth.signInDialogState.onOpen);
+  const onOpenSignOutDialog = useStore((s) => s.features.auth.signOutDialogState.onOpen);
+  // const authDialogType = useAuthDialogType();
   const user = useAuthUser();
 
   const [scrollTopOffset, setScrollTopOffset] = useState(0);
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
+  console.log('scrollTopOffset', scrollTopOffset);
+  console.log('shouldHeaderBeTransparent', shouldHeaderBeTransparent);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +80,7 @@ export const Layout = ({ children }: Props) => {
             <button
               className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               type="button"
-              onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
+              onClick={isSignedIn ? onOpenSignOutDialog : onOpenSignInDialog}
             >
               <div
                 className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
@@ -114,17 +121,9 @@ export const Layout = ({ children }: Props) => {
         ) : null}
       </div>
 
-      <SignInDialog
-        isOpen={authDialogType === AuthDialogType.SignIn}
-        onClose={authActions.closeDialog}
-        onOpenSignUp={authActions.openSignUpDialog}
-      />
-      <SignUpDialog
-        isOpen={authDialogType === AuthDialogType.SignUp}
-        onClose={authActions.closeDialog}
-        onOpenSignIn={authActions.openSignInDialog}
-      />
-      <SignOutDialog isOpen={authDialogType === AuthDialogType.SignOut} onClose={authActions.closeDialog} />
+      <SignInDialog />
+      <SignUpDialog />
+      <SignOutDialog />
     </>
   );
 };

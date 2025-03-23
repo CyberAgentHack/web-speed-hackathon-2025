@@ -1,11 +1,15 @@
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+import useSWR from 'swr';
+
+import { channelService } from '@wsh-2025/client/src/features/channel/services/channelService';
 
 type ChannelId = string;
 
 export function useChannelById(params: { channelId: ChannelId }) {
-  const channelState = useStore((s) => s.features.channel);
 
-  const channel = channelState.channels[params.channelId];
+  const fetcher = channelService.fetchChannelById(params);
+  const { data: channel } = useSWR(`/channels/${params.channelId}`, () => fetcher, {
+    suspense: true,
+  });
 
-  return channel;
+  return { channel };
 }

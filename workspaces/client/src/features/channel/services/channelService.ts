@@ -49,6 +49,7 @@ interface ChannelService {
 export const channelService: ChannelService = {
   async fetchChannelById({ channelId }) {
     const channel = await batcher.fetch({ channelId });
+    console.log('fetchChannelById', channel);
     return channel;
   },
   async fetchChannels() {

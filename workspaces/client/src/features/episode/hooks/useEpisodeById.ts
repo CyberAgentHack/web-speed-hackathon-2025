@@ -1,13 +1,23 @@
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+
+import useSWR from 'swr';
+
+import { episodeService } from '@wsh-2025/client/src/features/episode/services/episodeService';
+
+
 
 interface Params {
   episodeId: string;
 }
 
 export function useEpisodeById({ episodeId }: Params) {
-  const episodeState = useStore((s) => s.features.episode);
+  const episodeFetcher = episodeService.fetchEpisodeById({
+    episodeId,
+  })
+  const { data: episode } = useSWR(
+    `/episode/${episodeId}`,
+    () => episodeFetcher,
+    { suspense: true }
+  )
 
-  const episode = episodeState.episodes[episodeId];
-
-  return episode;
+  return { episode };
 }

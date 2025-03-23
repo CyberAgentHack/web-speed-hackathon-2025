@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -11,11 +12,12 @@ import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
+  const series = store.getState().features.series.fetchSeriesById({ seriesId });
+  const modules = store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
+  const [a, b] = await Promise.all([series, modules]);
+  return { modules: a, series: b };
 };
 
 export const SeriesPage = () => {
@@ -25,10 +27,11 @@ export const SeriesPage = () => {
   const series = useSeriesById({ seriesId });
   invariant(series);
 
-  const modules = useRecommended({ referenceId: seriesId });
+  const { modules } = useRecommended({ referenceId: seriesId });
 
   return (
-    <>
+    <Suspense>
+
       <title>{`${series.title} - AremaTV`}</title>
 
       <div className="m-auto px-[24px] py-[48px]">
@@ -61,6 +64,6 @@ export const SeriesPage = () => {
           </div>
         ) : null}
       </div>
-    </>
+    </Suspense>
   );
 };

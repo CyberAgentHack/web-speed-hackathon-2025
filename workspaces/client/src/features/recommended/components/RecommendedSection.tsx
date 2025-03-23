@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const RecommendedSection = ({ module }: Props) => {
+  console.log('RecommendedSection', module.id);
   if (module.type === 'jumbotron') {
     return <JumbotronSection module={module} />;
   } else {
