@@ -1,0 +1,42 @@
+# 開発用ファイル
+.git
+.github
+.vscode
+.idea
+*.log
+*.md
+.env*
+.editorconfig
+.eslintrc*
+.prettierrc*
+.wireit
+
+# ビルド成果物
+**/dist
+**/build
+**/.next
+**/.nuxt
+**/.output
+
+# 依存関係
+**/node_modules
+
+# キャッシュ
+.cache
+**/.cache
+**/.temp
+**/.turbo
+
+# データベース
+
+# テスト関連
+**/coverage
+**/__tests__
+**/*.test.*
+**/*.spec.*
+
+# その他
+.DS_Store
+**/README.md
+**/LICENSE
+**/.gitignore

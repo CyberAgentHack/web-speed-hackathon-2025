@@ -17,7 +17,6 @@
     "zod-openapi": "4.2.0"
   },
   "devDependencies": {
-    "@wsh-2025/configs": "workspace:*",
     "@wsh-2025/schema": "workspace:*",
     "wireit": "0.14.9"
   },
