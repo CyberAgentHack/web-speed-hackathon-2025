@@ -26,7 +26,7 @@ test.describe('認証', () => {
       const signInDialogPanel = signInDialog.locator('>div');
 
       // 画像読み込みの待ち時間を短縮
-      // await waitForImageToLoad(signInDialogPanel.locator('img').first());
+       await waitForImageToLoad(signInDialogPanel.locator('img').first());
       await expect(signInDialogPanel).toHaveScreenshot('vrt-signIn-dialog.png');
     });
 
@@ -40,7 +40,7 @@ test.describe('認証', () => {
       const signUpDialogPanel = signUpDialog.locator('>div');
 
       // 画像読み込みの待ち時間を短縮
-      // await waitForImageToLoad(signUpDialogPanel.locator('img').first());
+       await waitForImageToLoad(signUpDialogPanel.locator('img').first());
       await expect(signUpDialogPanel).toHaveScreenshot('vrt-signUp-dialog.png');
     });
 
@@ -69,8 +69,7 @@ test.describe('認証', () => {
       await expect(signOutDialog).toBeVisible();
       const signOutDialogPanel = signOutDialog.locator('>div');
 
-      // 画像読み込みの待ち時間を短縮
-      // await waitForImageToLoad(signOutDialogPanel.locator('img').first());
+      await waitForImageToLoad(signOutDialogPanel.locator('img').first());
       await expect(signOutDialogPanel).toHaveScreenshot('vrt-signOut-dialog.png');
     });
 
