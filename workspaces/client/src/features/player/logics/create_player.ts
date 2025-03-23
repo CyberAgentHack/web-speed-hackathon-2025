@@ -1,4 +1,3 @@
-import '@videojs/http-streaming';
 import shaka from 'shaka-player';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
