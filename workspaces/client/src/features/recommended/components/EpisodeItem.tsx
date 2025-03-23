@@ -29,7 +29,7 @@ export const EpisodeItem = ({ episode, lazy = true }: Props) => {
                   className="h-auto w-full"
                   decoding="async"
                   loading={lazy ? 'lazy' : 'eager'}
-                  src={episode.thumbnailUrl}
+                  src={`${process.env['PUBLIC_PREFIX']}${episode.thumbnailUrl}`}
                 />
                 <span className="i-material-symbols:play-arrow-rounded absolute bottom-[4px] left-[4px] m-[4px] block size-[20px] text-[#ffffff]" />
                 {episode.premium ? (

@@ -25,7 +25,7 @@ export const SeriesItem = ({ lazy = true, series }: Props) => {
                   className="h-auto w-full"
                   decoding="async"
                   loading={lazy ? 'lazy' : 'eager'}
-                  src={series.thumbnailUrl}
+                  src={`${process.env['PUBLIC_PREFIX']}${series.thumbnailUrl}`}
                 />
               </Flipped>
             </div>

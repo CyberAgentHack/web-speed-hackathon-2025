@@ -71,7 +71,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
               ref={imageRef}
               alt=""
               className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={program.thumbnailUrl}
+              src={`${process.env['PUBLIC_PREFIX']}${program.thumbnailUrl}`}
             />
           </div>
         </div>
