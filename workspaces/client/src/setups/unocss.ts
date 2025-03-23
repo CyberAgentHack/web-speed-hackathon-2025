@@ -49,17 +49,35 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            bi: async () => {
+              // CDNからJSONを取得
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/bi.json');
+              return await response.json() as IconifyJSON;
+            },
+            bx: async () => {
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/bx.json');
+              return await response.json() as IconifyJSON;
+            },
+            'fa-regular': async () => {
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/fa-regular.json');
+              return await response.json() as IconifyJSON;
+            },
+            'fa-solid': async () => {
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/fa-solid.json');
+              return await response.json() as IconifyJSON;
+            },
+            fluent: async () => {
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/fluent.json');
+              return await response.json() as IconifyJSON;
+            },
+            'line-md': async () => {
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/line-md.json');
+              return await response.json() as IconifyJSON;
+            },
+            'material-symbols': async () => {
+              const response = await fetch('https://cdn.jsdelivr.net/npm/@iconify/json@2.2.319/json/material-symbols.json');
+              return await response.json() as IconifyJSON;
+            },
           },
         }),
       ],

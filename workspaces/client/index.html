@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- faviconの設定 -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/public/favicon.svg" type="image/svg+xml" />
+    <!-- shaka-playerをグローバルに利用できるようにCDNから読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.12.5/dist/shaka-player.compiled.js"></script>
+    <title>Web Speed Hackathon 2025</title>
+    <!-- 画像の事前読み込み -->
+    <link rel="preload" as="image" href="/public/arema.svg" />
+  </head>
+  <body class="size-full bg-[#000000] text-[#ffffff]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

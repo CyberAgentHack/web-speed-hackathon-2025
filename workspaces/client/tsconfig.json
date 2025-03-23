@@ -1,15 +1,7 @@
 {
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "paths": {
-      "@wsh-2025/client/*": ["./*"]
-    },
-    "skipLibCheck": true,
-    "target": "ESNext"
-  },
-  "exclude": ["dist"],
-  "extends": "@wsh-2025/configs/tsconfig.json",
-  "include": ["**/*", "**/*.mjs"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

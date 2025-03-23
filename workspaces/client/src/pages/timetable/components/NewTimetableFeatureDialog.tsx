@@ -1,4 +1,4 @@
-import FeatureExplainImageUrl from '@wsh-2025/client/assets/timetable/feature-explain.png';
+import FeatureExplainImageUrl from '@wsh-2025/client/assets/timetable/feature-explain.webp';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
 import { useCloseNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useCloseNewFeatureDialog';
 
