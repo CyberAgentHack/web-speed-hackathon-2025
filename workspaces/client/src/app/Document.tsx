@@ -18,7 +18,7 @@ export const Document = () => {
         <script src="/public/main.js"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
-        <Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
           <Layout>
             <Outlet />
           </Layout>

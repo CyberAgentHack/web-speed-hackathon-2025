@@ -38,9 +38,7 @@ export const Layout = ({ children }: Props) => {
     const handleScroll = () => {
       setScrollTopOffset(window.scrollY);
     };
-
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -51,6 +49,20 @@ export const Layout = ({ children }: Props) => {
   }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
+
+  // ホームと番組表の先読み
+  const preloadHomePage = () => {
+    void import(
+      /* webpackPrefetch: true */
+      '@wsh-2025/client/src/pages/home/components/HomePage'
+    );
+  };
+  const preloadTimetablePage = () => {
+    void import(
+      /* webpackPrefetch: true */
+      '@wsh-2025/client/src/pages/timetable/components/TimetablePage'
+    );
+  };
 
   return (
     <>
@@ -63,7 +75,11 @@ export const Layout = ({ children }: Props) => {
               : 'bg-gradient-to-b from-[#171717] to-[#171717]',
           )}
         >
-          <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
+          <Link
+            className="block flex w-[188px] items-center justify-center px-[8px]"
+            to="/"
+            onMouseEnter={preloadHomePage}
+          >
             <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
           </Link>
         </header>
@@ -86,6 +102,7 @@ export const Layout = ({ children }: Props) => {
             <Link
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/"
+              onMouseEnter={preloadHomePage}
             >
               <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
@@ -94,6 +111,7 @@ export const Layout = ({ children }: Props) => {
             <Link
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/timetable"
+              onMouseEnter={preloadTimetablePage}
             >
               <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
@@ -107,11 +125,11 @@ export const Layout = ({ children }: Props) => {
           </Flipper>
         </main>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="sticky top-[80px] z-50 [grid-area:b2]">
             <Loading />
           </div>
-        ) : null}
+        )}
       </div>
 
       <SignInDialog
