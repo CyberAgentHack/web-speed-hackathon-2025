@@ -4,20 +4,19 @@ import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 // 基本プラグイン
-const basePlugins = [
-  new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-];
+const basePlugins = [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' })];
 
-const plugins = process.env['ANALYZE'] === 'true'
-  ? [
-    ...basePlugins,
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: true,
-      reportFilename: 'bundle-report.html',
-    })
-  ]
-  : basePlugins;
+const plugins =
+  process.env['ANALYZE'] === 'true'
+    ? [
+        ...basePlugins,
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          openAnalyzer: true,
+          reportFilename: 'bundle-report.html',
+        }),
+      ]
+    : basePlugins;
 
 /** @type {import('webpack').Configuration} */
 const config = {

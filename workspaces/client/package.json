@@ -2,11 +2,11 @@
   "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
+    "analyze": "wireit",
     "build": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
-    "format:prettier": "wireit",
-    "analyze": "wireit"
+    "format:prettier": "wireit"
   },
   "dependencies": {
     "@babel/runtime": "7.26.10",
@@ -64,8 +64,8 @@
     "babel-loader": "9.2.1",
     "hls.js": "1.5.17",
     "shaka-player": "4.12.5",
-    "typescript": "5.7.2",
     "type-fest": "4.29.1",
+    "typescript": "5.7.2",
     "valibot": "1.0.0-rc.3",
     "video.js": "8.21.0",
     "webpack": "5.96.1",

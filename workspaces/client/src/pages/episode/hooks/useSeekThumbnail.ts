@@ -17,12 +17,12 @@ async function getSeekThumbnail({ episode }: Params) {
   parser.end();
 
   // FFmpeg の初期化
-  const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
+  const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
     wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-});
+  });
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(

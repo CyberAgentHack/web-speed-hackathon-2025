@@ -50,9 +50,7 @@ async function loadUnoCSS() {
         `,
         },
       ],
-      presets: [
-        presetWind3(),
-      ],
+      presets: [presetWind3()],
     }),
   });
 }

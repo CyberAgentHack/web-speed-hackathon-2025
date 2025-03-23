@@ -27,11 +27,11 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     // Use Intersection Observer to detect when the player is in viewport
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           setIsInViewport(entry.isIntersecting);
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(mountElement);
@@ -66,14 +66,31 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
         <div ref={mountRef} className="size-full" />
 
         <div className="absolute inset-0 z-[-10] grid place-content-center">
-          <svg className="size-[48px] text-[#ffffff]" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="size-[48px] text-[#ffffff]"
+            height="48"
+            viewBox="0 0 24 24"
+            width="48"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
               <path d="M12 3c4.97 0 9 4.03 9 9" strokeDasharray="16" strokeDashoffset="16">
-                <animate attributeName="stroke-dashoffset" dur="0.3s" fill="freeze" values="16;0"/>
-                <animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/>
+                <animate attributeName="stroke-dashoffset" dur="0.3s" fill="freeze" values="16;0" />
+                <animateTransform
+                  attributeName="transform"
+                  dur="1.5s"
+                  repeatCount="indefinite"
+                  type="rotate"
+                  values="0 12 12;360 12 12"
+                />
               </path>
-              <path d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z" strokeDasharray="64" strokeDashoffset="64" strokeOpacity=".3">
-                <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="64;0"/>
+              <path
+                d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                strokeDasharray="64"
+                strokeDashoffset="64"
+                strokeOpacity=".3"
+              >
+                <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="64;0" />
               </path>
             </g>
           </svg>

@@ -11,4 +11,4 @@ declare module 'webpack-bundle-analyzer' {
     constructor(options?: BundleAnalyzerPluginOptions);
     apply(compiler: Compiler): void;
   }
-} 
+}
