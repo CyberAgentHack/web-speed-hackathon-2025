@@ -55,3 +55,5 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     </div>
   );
 };
+
+export default Player;

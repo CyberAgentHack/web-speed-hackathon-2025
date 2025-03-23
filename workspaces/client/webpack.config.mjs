@@ -1,12 +1,17 @@
 import path from 'node:path';
-
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
+
+  experiments: {
+    asyncWebAssembly: true,
+  },
+
   module: {
     rules: [
       {
@@ -24,6 +29,7 @@ const config = {
                 {
                   corejs: '3.41',
                   forceAllTransforms: true,
+                  modules: false,
                   targets: 'defaults',
                   useBuiltIns: 'entry',
                 },
@@ -42,30 +48,46 @@ const config = {
         resourceQuery: /raw/,
         type: 'asset/source',
       },
-      {
-        resourceQuery: /arraybuffer/,
-        type: 'javascript/auto',
-        use: {
-          loader: 'arraybuffer-loader',
-        },
-      },
+
+      // {
+      //   resourceQuery: /arraybuffer/,
+      //   type: 'javascript/auto',
+      //   use: {
+      //     loader: 'arraybuffer-loader',
+      //   },
+      // },
     ],
   },
+
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+  },
+
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
+    assetModuleFilename: 'assets/[name][ext]',
   },
+
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({
+      API_BASE_URL: '/api',
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: true,
+      reportFilename: 'bundle-report.html',
+    }),
   ],
+
   resolve: {
     alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
+      //'@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
+      //'@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },

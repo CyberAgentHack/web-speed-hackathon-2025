@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -9,13 +9,16 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
-import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
+
+const Player = lazy(() => import('@wsh-2025/client/src/features/player/components/Player').then((module) => ({ default: module.Player })));
+const PlayerController = lazy(() =>
+  import('@wsh-2025/client/src/pages/episode/components/PlayerController').then((module) => ({ default: module.PlayerController }))
+);
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
@@ -72,7 +75,7 @@ export const EpisodePage = () => {
                   <AspectRatio ratioHeight={9} ratioWidth={16}>
                     <div className="grid size-full">
                       <img
-                        alt=""
+                        alt="loading thumbnail"
                         className="size-full place-self-stretch [grid-area:1/-1]"
                         src={episode.thumbnailUrl}
                       />
@@ -106,23 +109,23 @@ export const EpisodePage = () => {
           <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
           </h1>
-          {episode.premium ? (
+          {episode.premium && (
             <div className="mt-[8px]">
               <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
                 プレミアム
               </span>
             </div>
-          ) : null}
+          )}
           <div className="mt-[16px] text-[16px] text-[#999999]">
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
           </div>
         </div>
 
-        {modules[0] != null ? (
+        {modules[0] && (
           <div className="mt-[24px]">
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
+        )}
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>

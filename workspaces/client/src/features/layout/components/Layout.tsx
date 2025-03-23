@@ -38,12 +38,8 @@ export const Layout = ({ children }: Props) => {
     const handleScroll = () => {
       setScrollTopOffset(window.scrollY);
     };
-
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -76,7 +72,10 @@ export const Layout = ({ children }: Props) => {
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
               <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
+                className={classNames(
+                  isSignedIn ? 'i-fa-solid:sign-out-alt' : 'i-fa-solid:user',
+                  'm-[4px] size-[20px] shrink-0 grow-0'
+                )}
               />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
@@ -107,11 +106,11 @@ export const Layout = ({ children }: Props) => {
           </Flipper>
         </main>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="sticky top-[80px] z-50 [grid-area:b2]">
             <Loading />
           </div>
-        ) : null}
+        )}
       </div>
 
       <SignInDialog
