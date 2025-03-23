@@ -10,7 +10,7 @@
     "format:prettier": "wireit",
     "heroku-start": "wireit",
     "start": "wireit",
-    "start-render": "node ./dist/index.js",
+    "start-render": "node ./dist/server/src/index.js",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -73,10 +73,6 @@
         "API_BASE_URL": {
           "external": true,
           "default": "http://localhost:8000/api"
-        },
-        "PORT": {
-          "external": true,
-          "default": "8000"
         }
       },
       "files": [
