@@ -37,8 +37,8 @@ const batcher = batshit.create({
     return item;
   },
   scheduler: batshit.windowedFiniteBatchScheduler({
-    maxBatchSize: 100,
-    windowMs: 1000,
+    maxBatchSize: 20,
+    windowMs: 0,
   }),
 });
 
@@ -49,13 +49,45 @@ interface SeriesService {
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>>;
 }
 
+// シリーズデータのキャッシュ
+const seriesCache = new Map<string, StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>>();
+// 全シリーズデータのキャッシュ
+let allSeriesCache: StandardSchemaV1.InferOutput<typeof schema.getSeriesResponse> | null = null;
+
 export const seriesService: SeriesService = {
   async fetchSeries() {
+    // キャッシュがあればそれを返す
+    if (allSeriesCache) {
+      return allSeriesCache;
+    }
+
     const data = await $fetch('/series', { query: {} });
+
+    // キャッシュに保存
+    allSeriesCache = data;
+
+    // 個別のシリーズもキャッシュに保存
+    for (const series of data) {
+      seriesCache.set(series.id, series);
+    }
+
     return data;
   },
   async fetchSeriesById({ seriesId }) {
+    // キャッシュにあればそれを返す
+    if (seriesCache.has(seriesId)) {
+      const cachedData = seriesCache.get(seriesId);
+      if (cachedData) {
+        return cachedData;
+      }
+    }
+
+    // キャッシュになければbatcherで取得
     const data = await batcher.fetch({ seriesId });
+
+    // キャッシュに保存
+    seriesCache.set(seriesId, data);
+
     return data;
   },
 };
