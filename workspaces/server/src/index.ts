@@ -13,9 +13,18 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onSend', async (req, reply) => {
+    const url = req.raw.url;
+
+    if (url && url.startsWith('/public/')) {
+      // 静的ファイルのキャッシュ設定
+      reply.header('cache-control', 'public, max-age=31536000, immutable');
+    } else {
+      // 動的コンテンツのキャッシュ設定
+      reply.header('cache-control', 'public, max-age=60, must-revalidate');
+    }
   });
+
   app.register(cors, {
     origin: true,
   });
