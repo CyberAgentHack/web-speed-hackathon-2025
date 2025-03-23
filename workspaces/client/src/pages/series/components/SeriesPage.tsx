@@ -11,11 +11,11 @@ import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
+  const [series] = await Promise.all([
+    store.getState().features.series.fetchSeriesById({ seriesId }),
+    // store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId }),
+  ]);
+  return { series };
 };
 
 export const SeriesPage = () => {
@@ -37,6 +37,7 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
               src={series.thumbnailUrl}
             />
           </Flipped>

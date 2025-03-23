@@ -19,8 +19,14 @@ class ShakaPlayerWrapper implements PlayerWrapper {
   constructor(playerType: PlayerType.ShakaPlayer) {
     this.playerType = playerType;
     this._player.configure({
+      // パフォーマンス最適化のための設定
+      abr: {
+        defaultBandwidthEstimate: 500000,
+        enabled: true, // 初期帯域幅の見積もり（500kbps）
+      },
       streaming: {
         bufferingGoal: 50,
+        // useNativeHlsOnSafari: true, // SafariではネイティブHLSを使用
       },
     });
   }
@@ -72,8 +78,17 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     volume: 0.25,
   });
   private _player = new HlsJs({
-    enableWorker: false,
-    maxBufferLength: 50,
+    // レベルロードの最大リトライ回数
+    abrEwmaDefaultEstimate: 500000, // メインスレッドの負荷を軽減するための追加設定
+    backBufferLength: 30,
+    enableWorker: true,
+    // バックバッファの長さを制限
+    fragLoadingMaxRetry: 2,
+    // マニフェストロードの最大リトライ回数
+    levelLoadingMaxRetry: 2, liveSyncDurationCount: 3, // フラグメントロードの最大リトライ回数
+    manifestLoadingMaxRetry: 2, // Web Workerを有効化
+    maxBufferLength: 10, maxMaxBufferLength: 30, // 初期帯域幅の見積もり（500kbps）
+    testBandwidth: false, // 初期帯域幅テストを無効化
   });
   readonly playerType: PlayerType.HlsJS;
 
@@ -138,6 +153,18 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
     vhsConfig.GOAL_BUFFER_LENGTH = 50;
     vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
     this.playerType = playerType;
+
+    // パフォーマンス最適化のための設定
+    this._player.options({
+      html5: {
+        vhs: {
+          enableLowInitialPlaylist: true,
+          limitRenditionByPlayerDimensions: true,
+          overrideNative: !videojs.browser.IS_SAFARI,
+          useDevicePixelRatio: true,
+        },
+      },
+    });
   }
 
   get currentTime(): number {

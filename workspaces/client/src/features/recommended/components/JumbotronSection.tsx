@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
@@ -19,13 +19,49 @@ interface Props {
 
 export const JumbotronSection = ({ module }: Props) => {
   const playerRef = useRef<PlayerWrapper>(null);
+  const containerRef = useRef<HTMLAnchorElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
 
   const episode = module.items[0]?.episode;
   invariant(episode);
 
+  // IntersectionObserverを使用して要素が表示されているかを監視
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // 表示されてから少し遅延させてプレーヤーを読み込む
+  useEffect(() => {
+    if (isVisible && !isPlayerLoaded) {
+      const timer = setTimeout(() => {
+        setIsPlayerLoaded(true);
+      }, 100);
+
+      return () => { clearTimeout(timer); };
+    }
+  }, [isVisible, isPlayerLoaded]);
+
   return (
     <Hoverable classNames={{ hovered: 'opacity-50' }}>
       <NavLink
+        ref={containerRef}
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
         to={`/episodes/${episode.id}`}
@@ -44,13 +80,20 @@ export const JumbotronSection = ({ module }: Props) => {
 
               <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
                 <div className="h-full w-auto shrink-0 grow-0">
-                  <Player
-                    loop
-                    className="size-full"
-                    playerRef={playerRef}
-                    playerType={PlayerType.ShakaPlayer}
-                    playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
-                  />
+                  {isPlayerLoaded ? (
+                    <Player
+                      loop
+                      className="size-full"
+                      playerRef={playerRef}
+                      playerType={PlayerType.ShakaPlayer}
+                      playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
+                    />
+                  ) : (
+                    <div className="size-full bg-[#212121] flex items-center justify-center">
+                      {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
+                      <img className="size-[48px]" loading="lazy" src="/public/svg/loading.svg" />
+                    </div>
+                  )}
                 </div>
               </Flipped>
             </>

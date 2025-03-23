@@ -49,7 +49,8 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
         <div ref={mountRef} className="size-full" />
 
         <div className="absolute inset-0 z-[-10] grid place-content-center">
-          <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" />
+          <img className="size-[48px]"  loading="lazy" src="/public/svg/loading.svg" />
+          {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
         </div>
       </div>
     </div>

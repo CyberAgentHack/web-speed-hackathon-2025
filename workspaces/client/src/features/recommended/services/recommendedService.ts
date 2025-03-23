@@ -11,6 +11,9 @@ const $fetch = createFetch({
     '/recommended/:referenceId': {
       output: schema.getRecommendedModulesResponse,
     },
+    '/recommended/error': {
+      output: schema.getRecommendedModulesErrorResponse,
+    },
   }),
   throw: true,
 });
@@ -18,11 +21,16 @@ const $fetch = createFetch({
 interface RecommendedService {
   fetchRecommendedModulesByReferenceId: (params: {
     referenceId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse> | StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesErrorResponse>>;
 }
 
 export const recommendedService: RecommendedService = {
   async fetchRecommendedModulesByReferenceId({ referenceId }) {
+    if (referenceId === 'error') {
+      const data = await $fetch('/recommended/error', {});
+      return data;
+    }
+    
     const data = await $fetch('/recommended/:referenceId', {
       params: { referenceId },
     });

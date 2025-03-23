@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,6 +22,74 @@ export function registerStreams(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/streams/',
     root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../streams'),
+  });
+
+  // 静的サムネイルディレクトリを提供
+  app.register(fastifyStatic, {
+    prefix: '/thumbnails/',
+    root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../static/thumbnails'),
+    decorateReply: false, // 既に登録済みのため
+  });
+
+  // 静的なサムネイル画像のフォールバック
+  app.get<{
+    Params: { episodeId: string };
+  }>('/thumbnails/episode/:episodeId/preview.jpg', async (req, reply) => {
+    const episodeId = req.params.episodeId;
+    console.log(`Thumbnail requested for episode: ${episodeId}`);
+
+    // 1. ストリームIDに基づくデフォルトサムネイルを探す（優先的に）
+    const database = getDatabase();
+    const episode = await database.query.episode.findFirst({
+      where(episode, { eq }) {
+        return eq(episode.id, episodeId);
+      },
+      with: {
+        stream: true,
+      },
+    });
+
+    if (episode) {
+      const streamId = episode.stream.id;
+      console.log(`Found stream ID: ${streamId} for episode: ${episodeId}`);
+
+      // ストリームIDに基づくサムネイルを探す
+      const streamThumbnailPath = path.resolve(
+        path.dirname(fileURLToPath(import.meta.url)),
+        `../static/thumbnails/${streamId}.jpg`
+      );
+
+      if (fs.existsSync(streamThumbnailPath)) {
+        console.log(`Found stream thumbnail at: ${streamThumbnailPath}`);
+        return reply.sendFile(`${streamId}.jpg`, path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../static/thumbnails'));
+      }
+    }
+
+    // 2. 事前生成されたエピソード固有のサムネイルを探す
+    const staticThumbnailPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      `../static/thumbnails/${episodeId}.jpg`
+    );
+
+    // 事前生成されたサムネイルが存在する場合はそれを返す
+    if (fs.existsSync(staticThumbnailPath)) {
+      console.log(`Found static thumbnail at: ${staticThumbnailPath}`);
+      return reply.sendFile(`${episodeId}.jpg`, path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../static/thumbnails'));
+    }
+
+    // 3. 汎用的なデフォルトサムネイルを返す
+    const defaultThumbnailPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '../static/thumbnails/default.jpg'
+    );
+
+    if (fs.existsSync(defaultThumbnailPath)) {
+      console.log(`Using default thumbnail at: ${defaultThumbnailPath}`);
+      return reply.sendFile('default.jpg', path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../static/thumbnails'));
+    }
+
+    // 4. デフォルトサムネイルも存在しない場合は404を返す
+    return reply.code(404).send({ error: 'Thumbnail not found' });
   });
 
   app.get<{
@@ -122,7 +191,7 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${randomBytes(16).toString('base64')}"`,
           ].join(',')}
         `,
       );

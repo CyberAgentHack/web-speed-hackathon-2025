@@ -449,6 +449,75 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(program);
     },
   });
+  api.route({
+    method: 'GET',
+    url: '/recommended/error',
+    schema: {
+      tags: ['レコメンド'],
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getRecommendedModulesErrorResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getRecommendedModules(req, reply) {
+      const database = getDatabase();
+
+      const modules = await database.query.recommendedModule.findMany({
+        orderBy(module, { asc }) {
+          return asc(module.order);
+        },
+        // TODO: このwhereいる？
+        where(module, { eq }) {
+          const a =eq(module.referenceId, 'error');
+          return a
+        },
+        columns: {
+          id: true,
+          title: true,
+          type: true,
+        },
+        with: {
+          items: {
+            orderBy(item, { asc }) {
+              return asc(item.order);
+            },
+            with: {
+              series: {
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                }
+              },
+              episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  premium: true,
+                  thumbnailUrl: true,
+                },
+                with: {
+                  series: {
+                    columns: {
+                      title: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      reply.code(200).send(modules);
+    },
+  })
+
 
   api.route({
     method: 'GET',
@@ -460,7 +529,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         200: {
           content: {
             'application/json': {
-              schema: schema.getRecommendedModulesResponse,
+              schema: schema.getRecommendedModulesErrorResponse,
             },
           },
         },
@@ -476,6 +545,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         where(module, { eq }) {
           return eq(module.referenceId, req.params.referenceId);
         },
+        columns: {
+          id: true,
+          title: true,
+          type: true,
+        },
         with: {
           items: {
             orderBy(item, { asc }) {
@@ -483,23 +557,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                }
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  premium: true,
+                  thumbnailUrl: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      title: true,
                     },
                   },
                 },

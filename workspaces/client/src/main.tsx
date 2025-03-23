@@ -17,10 +17,22 @@ declare global {
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const router = createBrowserRouter(createRoutes(store), {
+    future: {
+      // v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+    },
+    hydrationData: window.__staticRouterHydrationData,
+  });
+
+  const rootElement = document.getElementById('app-root');
+  if (!rootElement) {
+    console.error('Root element #app-root not found');
+    return;
+  }
 
   hydrateRoot(
-    document,
+    rootElement,
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />

@@ -1,6 +1,7 @@
 import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
+import { memo } from 'react';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
@@ -12,6 +13,24 @@ import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/u
 interface Props {
   module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
 }
+
+// メモ化されたアイテムコンポーネント
+const CarouselItem = memo(({
+  item,
+  width
+}: {
+  item: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>['items'][0];
+  width: number;
+}) => {
+  return (
+    <div className="shrink-0 grow-0" style={{ width: `${width}px` }}>
+      {item.series != null ? <SeriesItem series={item.series} /> : null}
+      {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
+    </div>
+  );
+});
+
+CarouselItem.displayName = 'CarouselItem';
 
 export const CarouselSection = ({ module }: Props) => {
   const containerRefForScrollSnap = useScrollSnap({ scrollPadding: 24 });
@@ -29,10 +48,7 @@ export const CarouselSection = ({ module }: Props) => {
           data-scroll-restore={`carousel-${module.id}`}
         >
           {module.items.map((item) => (
-            <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
-              {item.series != null ? <SeriesItem series={item.series} /> : null}
-              {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
-            </div>
+            <CarouselItem key={item.id} item={item} width={itemWidth} />
           ))}
         </div>
       </div>

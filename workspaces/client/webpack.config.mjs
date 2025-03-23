@@ -1,12 +1,16 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+// import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer'
+
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
+  // devtool: false,
   entry: './src/main.tsx',
-  mode: 'none',
+  // mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -18,16 +22,17 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
             presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
+            //   [
+            //     '@babel/preset-env',
+            //     {
+            //       corejs: '3.41',
+            //       forceAllTransforms: true,
+            //       targets: 'defaults',
+            //       useBuiltIns: 'entry',
+            //     },
+            //   ],
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],
@@ -51,16 +56,22 @@ const config = {
       },
     ],
   },
+  optimization: {
+    usedExports: true,
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
+    // chunkFormat: false,
+    chunkFormat: "module",
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    // new BundleAnalyzerPlugin(),
+    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     alias: {
