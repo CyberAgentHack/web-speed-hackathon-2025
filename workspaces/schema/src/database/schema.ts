@@ -140,8 +140,11 @@ export const program = table(
       .text()
       .notNull()
       .references(() => episode.id),
-  },
-  () => [],
+  }, (table) => [
+    index("startAtIndex").on(table.startAt),
+    index("channelIdIndex").on(table.channelId),
+    index("episodeIdIndex").on(table.episodeId),
+  ],
 );
 export const programRelation = relations(program, ({ one }) => ({
   channel: one(channel, {
