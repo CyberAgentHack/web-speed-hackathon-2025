@@ -1,10 +1,10 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 
 import { authService } from '../services/authService';
 
 import { AuthDialogType } from '@wsh-2025/client/src/features/auth/constants/auth_dialog_type';
+import { getUserResponse, signInRequestBody, signInResponse, signUpRequestBody, signUpResponse } from '@wsh-2025/schema/src/api/schema';
 
 interface AuthState {
   dialog: AuthDialogType | null;
@@ -13,17 +13,17 @@ interface AuthState {
 
 interface AuthActions {
   closeDialog: () => void;
-  fetchUser: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getUserResponse> | null>;
+  fetchUser: () => Promise<StandardSchemaV1.InferOutput<typeof getUserResponse> | null>;
   openSignInDialog: () => void;
   openSignOutDialog: () => void;
   openSignUpDialog: () => void;
   signIn: (
-    body: StandardSchemaV1.InferOutput<typeof schema.signInRequestBody>,
-  ) => Promise<StandardSchemaV1.InferOutput<typeof schema.signInResponse>>;
+    body: StandardSchemaV1.InferOutput<typeof signInRequestBody>,
+  ) => Promise<StandardSchemaV1.InferOutput<typeof signInResponse>>;
   signOut: () => Promise<void>;
   signUp: (
-    body: StandardSchemaV1.InferOutput<typeof schema.signUpRequestBody>,
-  ) => Promise<StandardSchemaV1.InferOutput<typeof schema.signUpResponse>>;
+    body: StandardSchemaV1.InferOutput<typeof signUpRequestBody>,
+  ) => Promise<StandardSchemaV1.InferOutput<typeof signUpResponse>>;
 }
 
 export const createAuthStoreSlice = () => {

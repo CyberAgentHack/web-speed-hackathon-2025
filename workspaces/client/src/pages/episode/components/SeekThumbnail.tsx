@@ -1,15 +1,15 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
 
 import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useSeekThumbnail } from '@wsh-2025/client/src/pages/episode/hooks/useSeekThumbnail';
+import { getEpisodeByIdResponse } from '@wsh-2025/schema/src/api/schema';
 
 const SEEK_THUMBNAIL_WIDTH = 160;
 
 interface Props {
-  episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+  episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
 }
 
 export const SeekThumbnail = ({ episode }: Props) => {

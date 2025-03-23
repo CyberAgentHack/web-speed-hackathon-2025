@@ -14,7 +14,7 @@
       "@wsh-2025/server/*": ["./*"]
     },
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "target": "ESNext"
   },
   "exclude": ["./dist", "./streams", "../client/dist"],

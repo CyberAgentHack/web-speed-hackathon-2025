@@ -1,5 +1,4 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import { ReactElement } from 'react';
 import { ArrayValues } from 'type-fest';
@@ -7,10 +6,11 @@ import { ArrayValues } from 'type-fest';
 import { HEIGHT_ONE_HOUR } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 import { Gutter } from '@wsh-2025/client/src/pages/timetable/components/Gutter';
 import { Program } from '@wsh-2025/client/src/pages/timetable/components/Program';
+import { getTimetableResponse } from '@wsh-2025/schema/src/api/schema';
 
 interface Props {
   channelId: string;
-  programList: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>[];
+  programList: ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>[];
 }
 
 export const ProgramList = ({ channelId, programList }: Props): ReactElement => {

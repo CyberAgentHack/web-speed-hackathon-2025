@@ -1,20 +1,20 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import * as batshit from '@yornaath/batshit';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
+import { getEpisodesResponse, getEpisodesRequestQuery, getEpisodeByIdResponse } from '@wsh-2025/schema/src/api/schema';
 
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',
   plugins: [schedulePlugin],
   schema: createSchema({
     '/episodes': {
-      output: schema.getEpisodesResponse,
-      query: schema.getEpisodesRequestQuery,
+      output: getEpisodesResponse,
+      query: getEpisodesRequestQuery,
     },
     '/episodes/:episodeId': {
-      output: schema.getEpisodeByIdResponse,
+      output: getEpisodeByIdResponse,
     },
   }),
   throw: true,
@@ -45,8 +45,8 @@ const batcher = batshit.create({
 interface EpisodeService {
   fetchEpisodeById: (query: {
     episodeId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>>;
-  fetchEpisodes: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getEpisodesResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>>;
+  fetchEpisodes: () => Promise<StandardSchemaV1.InferOutput<typeof getEpisodesResponse>>;
 }
 
 export const episodeService: EpisodeService = {

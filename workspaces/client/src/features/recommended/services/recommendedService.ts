@@ -1,6 +1,6 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
 
@@ -9,7 +9,7 @@ const $fetch = createFetch({
   plugins: [schedulePlugin],
   schema: createSchema({
     '/recommended/:referenceId': {
-      output: schema.getRecommendedModulesResponse,
+      output: getRecommendedModulesResponse,
     },
   }),
   throw: true,
@@ -18,7 +18,7 @@ const $fetch = createFetch({
 interface RecommendedService {
   fetchRecommendedModulesByReferenceId: (params: {
     referenceId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;
 }
 
 export const recommendedService: RecommendedService = {
