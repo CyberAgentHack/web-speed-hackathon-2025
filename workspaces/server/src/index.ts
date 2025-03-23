@@ -15,7 +15,7 @@ async function main() {
   const app = fastify();
 
   app.register(compress, {
-    global: false,
+    global: true,
     encodings: ['gzip'],
   });
 
