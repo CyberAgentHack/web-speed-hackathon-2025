@@ -38,7 +38,7 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+    const reactHtml = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
@@ -52,20 +52,20 @@ export function registerSsr(app: FastifyInstance): void {
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          <script src="/public/vendors.js"></script>
-          <script src="/public/iconify.js"></script>
-          <script src="/public/ffmpeg.chunk.js"></script>
           <link rel="preload" href="/public/arema.svg" as="image" />
+          <script>
+            window.__staticRouterHydrationData = ${htmlescape({
+              actionData: context.actionData,
+              loaderData: context.loaderData,
+            })};
+          </script>
         </head>
-        <body></body>
+        <body>${reactHtml}</body>
+        <script src="/public/main.js" defer></script>
+        <script src="/public/vendors.js" defer></script>
+        <script src="/public/iconify.js" defer></script>
+        <script src="/public/ffmpeg.chunk.js" defer></script>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
     `);
   });
 }
