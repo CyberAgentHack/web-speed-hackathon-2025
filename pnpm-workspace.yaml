@@ -4,3 +4,6 @@ packages:
   - ./workspaces/client
   - ./workspaces/server
   - ./workspaces/test
+onlyBuiltDependencies:
+  - bcrypt
+  - esbuild

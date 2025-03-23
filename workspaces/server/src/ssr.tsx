@@ -1,29 +1,8 @@
-import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
-import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
-import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
-import { createStore } from '@wsh-2025/client/src/app/createStore';
 import type { FastifyInstance } from 'fastify';
-import { createStandardRequest } from 'fastify-standard-request-reply';
-import htmlescape from 'htmlescape';
-import { StrictMode } from 'react';
-import { renderToString } from 'react-dom/server';
-import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
-
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
@@ -35,54 +14,75 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/favicon.ico', (_, reply) => {
-    reply.status(404).send();
+    reply.sendFile('favicon.ico', path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'));
   });
 
-  app.get('/*', async (req, reply) => {
-    // @ts-expect-error ................
-    const request = createStandardRequest(req, reply);
-
-    const store = createStore({});
-    const handler = createStaticHandler(createRoutes(store));
-    const context = await handler.query(request);
-
-    if (context instanceof Response) {
-      return reply.send(context);
-    }
-
-    const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
-        </StoreProvider>
-      </StrictMode>,
-    );
-
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
-
+  app.get('/*', async (_, reply) => {
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
       <html lang="ja">
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          <link rel="preconnect" href="/public/" />
+          <link rel="preload" href="/public/main.js" as="script" />
+          <link rel="preload" href="/public/arema.svg" as="image" />
+          <style>
+            /* Critical CSS for initial render */
+            html, body {
+              font-family: 'Noto Sans JP', sans-serif;
+              margin: 0;
+              padding: 0;
+              height: 100%;
+              width: 100%;
+              background-color: #000000;
+              color: #ffffff;
+            }
+            .size-full {
+              height: 100%;
+              width: 100%;
+            }
+            .h-auto { height: auto; }
+            .min-h-100vh { min-height: 100vh; }
+            .w-full { width: 100%; }
+            .bg-black { background-color: #000000; }
+            .text-white { color: #ffffff; }
+            .flex { display: flex; }
+            .items-center { align-items: center; }
+            .justify-center { justify-content: center; }
+            .sticky { position: sticky; }
+            .top-0 { top: 0px; }
+            .z-10 { z-index: 10; }
+
+            /* Loading spinner styles */
+            .loading-container {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              width: 100%;
+            }
+            .loading-spinner {
+              width: 50px;
+              height: 50px;
+              border: 5px solid #f3f3f3;
+              border-top: 5px solid #3498db;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          </style>
         </head>
-        <body></body>
+        <body>
+          <div class="loading-container">
+            <div class="loading-spinner"></div>
+          </div>
+          <script src="/public/main.js" defer></script>
+        </body>
       </html>
-      <script>
-        window.__staticRouterHydrationData = ${htmlescape({
-          actionData: context.actionData,
-          loaderData: context.loaderData,
-        })};
-      </script>
     `);
   });
 }

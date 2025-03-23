@@ -1,30 +1,43 @@
-import { createStore } from '@wsh-2025/client/src/app/createStore';
-import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import * as schema from '@wsh-2025/schema/src/api/schema';
+import { Suspense, use } from 'react';
+import { ArrayValues } from 'type-fest';
 
-export const prefetch = async (store: ReturnType<typeof createStore>) => {
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
-  return { modules };
-};
+import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
+import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
 
 export const HomePage = () => {
-  const modules = useRecommended({ referenceId: 'entrance' });
+  const modules = recommendedService.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
 
   return (
     <>
       <title>Home - AremaTV</title>
 
       <div className="w-full py-[48px]">
-        {modules.map((module) => {
-          return (
-            <div key={module.id} className="mb-[24px] px-[24px]">
-              <RecommendedSection module={module} />
-            </div>
-          );
-        })}
+        <Suspense fallback={<div>Loading...</div>}>
+          <HomePageSuspense modulesProps={modules} />
+        </Suspense>
+
       </div>
     </>
+  );
+};
+
+interface Props {
+  modulesProps: Promise<ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>[]>;
+}
+
+const HomePageSuspense = ({ modulesProps }: Props) => {
+  const modules = use(modulesProps);
+  return (
+    <>
+      {modules.map((module) => {
+        return (
+          <div key={module.id} className="mb-[24px] px-[24px]">
+            <RecommendedSection module={module} />
+          </div>
+        );
+      })}
+      </>
   );
 };

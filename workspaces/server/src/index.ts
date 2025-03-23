@@ -13,8 +13,30 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onSend', async (req, reply) => {
+    // パスベースのキャッシュポリシー
+    const path = req.url;
+    
+    // 動画ストリーミングファイル（長時間キャッシュ）
+    if (path.includes('.m3u8') || path.includes('.ts') || path.includes('streams')) {
+      reply.header('cache-control', 'public, max-age=86400, stale-while-revalidate=172800');
+    }
+    // 静的アセット（長時間キャッシュ）
+    else if (path.includes('public') || path.match(/\.(jpg|jpeg|png|webp|svg|css|js|ico)(\?|$)/)) {
+      reply.header('cache-control', 'public, max-age=86400, immutable');
+    }
+    // ログイン系はキャッシュしない
+    else if (path.includes('signIn') || path.includes('signUp') || path.includes('users') || path.includes('signOut')) {
+      reply.header('cache-control', 'no-store');
+    }
+    // その他のAPI（短時間キャッシュ）
+    else if (path.startsWith('/api/') && req.method === 'GET') {
+      reply.header('cache-control', 'public, max-age=3600, stale-while-revalidate=7200');
+    }
+    // その他すべて（デフォルト）
+    else {
+      reply.header('cache-control', 'no-store');
+    }
   });
   app.register(cors, {
     origin: true,
