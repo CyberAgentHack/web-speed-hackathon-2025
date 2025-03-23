@@ -13,6 +13,11 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
+// キャッシュ変数
+let imagePaths: string[] | null = null;
+let lastCacheTime = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5分のキャッシュ有効期限
+
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
   return dirents
@@ -23,6 +28,29 @@ function getFiles(parent: string): string[] {
 function getFilePaths(relativePath: string, rootDir: string): string[] {
   const files = getFiles(path.resolve(rootDir, relativePath));
   return files.map((file) => path.join('/', path.relative(rootDir, file)));
+}
+
+// 画像パスを取得する関数（キャッシュを使用）
+function getCachedImagePaths(rootDir: string): string[] {
+  const now = Date.now();
+  
+  // キャッシュが有効な場合はキャッシュを返す
+  if (imagePaths !== null && now - lastCacheTime < CACHE_TTL) {
+    return imagePaths;
+  }
+  
+  // キャッシュがない場合は新しく取得
+  const paths = [
+    getFilePaths('public/images', rootDir),
+    getFilePaths('public/animations', rootDir),
+    getFilePaths('public/logos', rootDir),
+  ].flat();
+  
+  // キャッシュを更新
+  imagePaths = paths;
+  lastCacheTime = now;
+  
+  return paths;
 }
 
 export function registerSsr(app: FastifyInstance): void {
@@ -60,11 +88,8 @@ export function registerSsr(app: FastifyInstance): void {
     );
 
     const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
+    // キャッシュされたイメージパスを取得
+    const imagePaths = getCachedImagePaths(rootDir);
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
