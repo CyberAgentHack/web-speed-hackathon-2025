@@ -90,3 +90,64 @@ export function registerSsr(app: FastifyInstance): void {
     `);
   });
 }
+
+
+export function registerSpa(app: FastifyInstance): void {
+  app.register(fastifyStatic, {
+    prefix: '/public/',
+    root: [
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
+    ],
+  });
+
+  app.get('/favicon.ico', (_, reply) => {
+    reply.status(404).send();
+  });
+
+  app.get('/*', async (_req, reply) => {
+    // const request = createStandardRequest(req, reply);
+
+    // const store = createStore({});
+    // const handler = createStaticHandler(createRoutes(store));
+    // const context = await handler.query(request);
+
+    // if (context instanceof Response) {
+    //   return reply.send(context);
+    // }
+
+    // const router = createStaticRouter(handler.dataRoutes, context);
+    // renderToString(
+    //   <StrictMode>
+    //     <StoreProvider createStore={() => store}>
+    //       <StaticRouterProvider context={context} hydrate={false} router={router} />
+    //     </StoreProvider>
+    //   </StrictMode>,
+    // );
+
+    // const rootDir = path.resolve(__dirname, '../../../');
+    // const imagePaths = [
+    //   getFilePaths('public/images', rootDir),
+    //   getFilePaths('public/animations', rootDir),
+    //   getFilePaths('public/logos', rootDir),
+    // ].flat();
+
+
+    // ↓ からを消した
+    // ${/* imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n') */ ''}
+     
+    reply.type('text/html').send(/* html */ `
+      <!DOCTYPE html>
+      <html lang="ja" style="background: #000; color: #fff;">
+        <head>
+          <meta charSet="UTF-8" />
+          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+          <script src="/public/main.js" type="module"></script>
+        </head>
+        <body style="background: #000; color: #fff; margin: 0; padding: 0;">
+          <div id="app-root" style="min-height: 100dvh; width: 100dvw;"></div>
+        </body>
+      </html>
+    `);
+  });
+}
