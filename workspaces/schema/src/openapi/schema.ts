@@ -212,6 +212,9 @@ export const getRecommendedModulesErrorResponse = z.array(
           .object({
             id: z.string().openapi({ format: 'uuid' }),
             title: z.string().openapi({ example: '吾輩は猫である' }),
+            thumbnailUrl: z.string().openapi({
+              example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
+            }),
           })
           .nullable(),
         episode: z

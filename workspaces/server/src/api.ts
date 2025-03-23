@@ -471,6 +471,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         orderBy(module, { asc }) {
           return asc(module.order);
         },
+        // TODO: このwhereいる？
         where(module, { eq }) {
           const a =eq(module.referenceId, 'error');
           return a
@@ -490,6 +491,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                 columns: {
                   id: true,
                   title: true,
+                  thumbnailUrl: true,
                 }
               },
               episode: {
@@ -527,7 +529,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         200: {
           content: {
             'application/json': {
-              schema: schema.getRecommendedModulesResponse,
+              schema: schema.getRecommendedModulesErrorResponse,
             },
           },
         },
@@ -543,6 +545,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         where(module, { eq }) {
           return eq(module.referenceId, req.params.referenceId);
         },
+        columns: {
+          id: true,
+          title: true,
+          type: true,
+        },
         with: {
           items: {
             orderBy(item, { asc }) {
@@ -550,23 +557,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                }
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  premium: true,
+                  thumbnailUrl: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      title: true,
                     },
                   },
                 },
