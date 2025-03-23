@@ -18,6 +18,7 @@ function getTime(d: Date): number {
 }
 
 export function registerStreams(app: FastifyInstance): void {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   app.register(compress, {
     customTypes:
       /^(|text\/css|text\/javascript|application\/javascript|image\/avif|video\/mp2t|application\/vnd.apple.mpegurl|application\/x-mpegurl|video\/mp2t|application\/octet-stream)$/,

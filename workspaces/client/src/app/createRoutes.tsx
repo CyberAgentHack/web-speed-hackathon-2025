@@ -1,4 +1,3 @@
-import lazy from 'p-min-delay';
 import { RouteObject } from 'react-router';
 
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
@@ -46,10 +45,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           async lazy() {
-            const { prefetch, SeriesPage } = await lazy(
-              import('@wsh-2025/client/src/pages/series/components/SeriesPage'),
-              1000,
-            );
+            const { prefetch, SeriesPage } = await import('@wsh-2025/client/src/pages/series/components/SeriesPage');
             return {
               Component: SeriesPage,
               async loader({ params }) {
@@ -75,9 +71,8 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
         {
           async lazy() {
-            const { NotFoundPage, prefetch } = await lazy(
-              import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
-              1000,
+            const { NotFoundPage, prefetch } = await import(
+              '@wsh-2025/client/src/pages/not_found/components/NotFoundPage'
             );
             return {
               Component: NotFoundPage,
