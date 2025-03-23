@@ -29,7 +29,7 @@ interface EpisodeService {
 
 export const episodeService: EpisodeService = {
   async fetchEpisodeById({ episodeId }) {
-    const channel = await $fetch('/episodes', { query: { episodeId } });
+    const channel = await $fetch('/episodes', { query: { episodeIds: episodeId } });
     if (!channel[0]) {
       throw new Error('Episode is not found.');
     }
