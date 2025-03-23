@@ -10,7 +10,7 @@
     "test": "wireit"
   },
   "dependencies": {
-    "wireit": "0.14.9"
+    "wireit": "0.14.11"
   },
   "devDependencies": {
     "@wsh-2025/configs": "workspace:*"
@@ -58,5 +58,8 @@
         "./workspaces/test:test"
       ]
     }
+  },
+  "volta": {
+    "node": "22.14.0"
   }
 }

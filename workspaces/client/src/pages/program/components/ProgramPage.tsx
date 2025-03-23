@@ -41,24 +41,20 @@ export const ProgramPage = () => {
   invariant(program);
 
   const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  });
+  const nextProgram = timetable[program.channel.id]?.find((p) =>
+    DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt)),
+  );
 
   const modules = useRecommended({ referenceId: programId });
-
   const playerRef = usePlayerRef();
-
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
-  useEffect(() => {
-    if (isArchivedRef.current) {
-      return;
-    }
 
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
+  useEffect(() => {
+    if (isArchivedRef.current) return;
+
     if (!isBroadcastStarted) {
       let timeout = setTimeout(function tick() {
         forceUpdate();
@@ -69,13 +65,11 @@ export const ProgramPage = () => {
       };
     }
 
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
         timeout = setTimeout(tick, 250);
         return;
       }
-
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
           preventScrollReset: true,
@@ -95,14 +89,12 @@ export const ProgramPage = () => {
   return (
     <>
       <title>{`${program.title} - ${program.episode.series.title} - AremaTV`}</title>
-
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
-
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
                   <Link
@@ -128,7 +120,6 @@ export const ProgramPage = () => {
             ) : (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
-
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
                     この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
@@ -138,7 +129,6 @@ export const ProgramPage = () => {
             )}
           </div>
         </Flipped>
-
         <div className="mb-[24px]">
           <div className="text-[16px] text-[#ffffff]">
             <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.episode.series.title} visibleLine={1} />
@@ -155,13 +145,11 @@ export const ProgramPage = () => {
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />
           </div>
         </div>
-
-        {modules[0] != null ? (
+        {modules[0] != null && (
           <div className="mt-[24px]">
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
-
+        )}
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">関連するエピソード</h2>
           <SeriesEpisodeList episodes={program.episode.series.episodes} selectedEpisodeId={program.episode.id} />

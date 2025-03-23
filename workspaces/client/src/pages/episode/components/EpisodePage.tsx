@@ -29,7 +29,6 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
 export const EpisodePage = () => {
   const authActions = useAuthActions();
   const user = useAuthUser();
-
   const { episodeId } = useParams();
   invariant(episodeId);
 
@@ -37,22 +36,18 @@ export const EpisodePage = () => {
   invariant(episode);
 
   const modules = useRecommended({ referenceId: episodeId });
-
   const playerRef = usePlayerRef();
-
   const isSignInRequired = episode.premium && user == null;
 
   return (
     <>
       <title>{`${episode.title} - ${episode.series.title} - AremaTV`}</title>
-
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`episode-${episode.id}`}>
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
-
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
                     プレミアムエピソードの視聴にはログインが必要です
@@ -89,7 +84,6 @@ export const EpisodePage = () => {
                     playerType={PlayerType.HlsJS}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
-
                   <div className="absolute inset-x-0 bottom-0">
                     <PlayerController episode={episode} />
                   </div>
@@ -98,7 +92,6 @@ export const EpisodePage = () => {
             )}
           </div>
         </Flipped>
-
         <div className="mb-[24px]">
           <div className="text-[16px] text-[#ffffff]">
             <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
@@ -106,24 +99,22 @@ export const EpisodePage = () => {
           <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
           </h1>
-          {episode.premium ? (
+          {episode.premium && (
             <div className="mt-[8px]">
               <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
                 プレミアム
               </span>
             </div>
-          ) : null}
+          )}
           <div className="mt-[16px] text-[16px] text-[#999999]">
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
           </div>
         </div>
-
-        {modules[0] != null ? (
+        {modules[0] != null && (
           <div className="mt-[24px]">
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
-
+        )}
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
           <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />

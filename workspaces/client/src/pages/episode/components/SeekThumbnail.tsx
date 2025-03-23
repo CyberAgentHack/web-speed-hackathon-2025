@@ -1,8 +1,10 @@
+/* eslint-disable eqeqeq */
+// workspaces/client/src/pages/episode/components/SeekThumbnail.tsx
+
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useSeekThumbnail } from '@wsh-2025/client/src/pages/episode/hooks/useSeekThumbnail';
 
@@ -15,16 +17,44 @@ interface Props {
 export const SeekThumbnail = ({ episode }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const seekThumbnail = useSeekThumbnail({ episode });
-  const pointer = usePointer();
   const duration = useDuration();
 
+  // state は更新頻度を requestAnimationFrame でスロットリング
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const animationFrameRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    // 親要素に対してのみイベントリスナーを追加
+    const parent = ref.current?.parentElement;
+    if (!parent) return;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      pointerRef.current = { x: event.clientX, y: event.clientY };
+      if (animationFrameRef.current === null) {
+        animationFrameRef.current = requestAnimationFrame(() => {
+          setPointer(pointerRef.current);
+          animationFrameRef.current = null;
+        });
+      }
+    };
+
+    parent.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      parent.removeEventListener('mousemove', handleMouseMove);
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
+
+  // 親要素の位置情報から相対的な位置を計算
   const elementRect = ref.current?.parentElement?.getBoundingClientRect() ?? { left: 0, width: 0 };
   const relativeX = pointer.x - elementRect.left;
-
   const percentage = Math.max(0, Math.min(relativeX / elementRect.width, 1));
   const pointedTime = duration * percentage;
 
-  // サムネイルが画面からはみ出ないようにサムネイル中央を基準として left を計算する
+  // サムネイルがはみ出さないように、中央基準で left を計算
   const MIN_LEFT = SEEK_THUMBNAIL_WIDTH / 2;
   const MAX_LEFT = elementRect.width - SEEK_THUMBNAIL_WIDTH / 2;
 

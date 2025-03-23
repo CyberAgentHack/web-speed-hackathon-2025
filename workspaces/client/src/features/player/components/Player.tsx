@@ -1,4 +1,4 @@
-import { Ref, useEffect, useRef } from 'react';
+import { memo, Ref, useEffect, useMemo, useRef } from 'react';
 import invariant from 'tiny-invariant';
 import { assignRef } from 'use-callback-ref';
 
@@ -13,7 +13,7 @@ interface Props {
   playlistUrl: string;
 }
 
-export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {
+const PlayerComponent = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,10 +41,12 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
       }
       assignRef(playerRef, null);
     };
-  }, [playerType, playlistUrl, loop]);
+  }, [playerType, playlistUrl, loop, playerRef]);
+
+  const containerClassName = useMemo(() => className, [className]);
 
   return (
-    <div className={className}>
+    <div className={containerClassName}>
       <div className="relative size-full">
         <div ref={mountRef} className="size-full" />
 
@@ -55,3 +57,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     </div>
   );
 };
+
+PlayerComponent.displayName = 'Player';
+
+export const Player = memo(PlayerComponent);

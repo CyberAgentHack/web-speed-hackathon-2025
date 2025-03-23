@@ -30,7 +30,6 @@ export const SeriesPage = () => {
   return (
     <>
       <title>{`${series.title} - AremaTV`}</title>
-
       <div className="m-auto px-[24px] py-[48px]">
         <header className="mb-[24px] flex w-full flex-row items-start justify-between gap-[24px]">
           <Flipped stagger flipId={`series-${series.id}`}>
@@ -49,17 +48,15 @@ export const SeriesPage = () => {
             </div>
           </div>
         </header>
-
         <div className="mb-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
           <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} />
         </div>
-
-        {modules[0] != null ? (
+        {modules[0] != null && (
           <div>
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
+        )}
       </div>
     </>
   );

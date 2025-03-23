@@ -1,11 +1,15 @@
 import classNames from 'classnames';
-import { Children, cloneElement, ReactElement, Ref, useRef } from 'react';
+import React, { Children, cloneElement, ReactElement, Ref, useRef, useState } from 'react';
 import { useMergeRefs } from 'use-callback-ref';
 
-import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
+// 子要素の型を拡張して HTML 属性も許容する
+interface HoverableChildProps extends React.HTMLAttributes<HTMLElement> {
+  className?: string;
+  ref?: Ref<unknown>;
+}
 
 interface Props {
-  children: ReactElement<{ className?: string; ref?: Ref<unknown> }>;
+  children: ReactElement<HoverableChildProps>;
   classNames: {
     default?: string;
     hovered?: string;
@@ -15,18 +19,16 @@ interface Props {
 export const Hoverable = (props: Props) => {
   const child = Children.only(props.children);
   const elementRef = useRef<HTMLDivElement>(null);
-
   const mergedRef = useMergeRefs([elementRef, child.props.ref].filter((v) => v != null));
 
-  const pointer = usePointer();
-  const elementRect = elementRef.current?.getBoundingClientRect();
-
-  const hovered =
-    elementRect != null &&
-    elementRect.left <= pointer.x &&
-    pointer.x <= elementRect.right &&
-    elementRect.top <= pointer.y &&
-    pointer.y <= elementRect.bottom;
+  // マウスのエンター／リーブでホバー状態を管理
+  const [hovered, setHovered] = useState(false);
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
 
   return cloneElement(child, {
     className: classNames(
@@ -34,6 +36,8 @@ export const Hoverable = (props: Props) => {
       'cursor-pointer',
       hovered ? props.classNames.hovered : props.classNames.default,
     ),
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
     ref: mergedRef,
   });
 };
