@@ -655,5 +655,54 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     },
   });
 
+  api.route({
+    method: 'GET',
+    url: '/programs/:programId/next',
+    schema: {
+      tags: ['番組'],
+      params: schema.getNextProgramRequestParams,
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getNextProgramResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getNextProgram(req, reply) {
+      const database = getDatabase();
+
+      const currentProgram = await database.query.program.findFirst({
+        where(program, { eq }) {
+          return eq(program.id, req.params.programId);
+        },
+      });
+
+      if (!currentProgram) {
+        return reply.code(404).send();
+      }
+
+      const nextProgram = await database.query.program.findFirst({
+        where(program, { and, eq }) {
+          return and(
+            eq(program.channelId, currentProgram.channelId),
+            eq(program.startAt, currentProgram.endAt)
+          );
+        },
+        columns: {
+          id: true,
+        }
+      });
+
+      if (!nextProgram) {
+        return reply.code(404).send();
+      }
+
+      reply.code(200).send(nextProgram);
+    },
+  });
+
   /* eslint-enable sort/object-properties */
 }

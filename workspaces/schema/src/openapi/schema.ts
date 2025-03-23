@@ -222,3 +222,9 @@ export const getUserResponse = z.object({
   id: z.number(),
   email: z.string(),
 });
+
+// GET /programs/:programId/next
+export const getNextProgramRequestParams = z.object({
+  programId: z.string(),
+});
+export const getNextProgramResponse = program.pick({ id: true });

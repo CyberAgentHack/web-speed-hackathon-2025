@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useLoaderData, useNavigate } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -9,22 +9,14 @@ import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getThumbnailUrl';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
-
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
-
   const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  return { channels, program, timetable };
+  return { program };
 };
 
 const RecommendedArea = ({ programId }: { programId: string }) => {
@@ -69,14 +61,7 @@ const PlayerArea = ({ program }: { program: Awaited<ReturnType<typeof prefetch>>
 export const ProgramPage = () => {
   const { program } = useLoaderData() as Awaited<ReturnType<typeof prefetch>>;
 
-  const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  });
-
   const navigate = useNavigate();
-  const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
-  const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
 
   const [currentPhase, setCurrentPhase] = useState(() => {
     const now = DateTime.now();
@@ -88,6 +73,22 @@ export const ProgramPage = () => {
       return 'archived';
     }
   });
+
+  const gotoNextProgram = async (program: Awaited<ReturnType<typeof prefetch>>['program']) => {
+    const response = await fetch(`/api/programs/${program.id}/next`);
+    const data = await response.json();
+    if (!data['id']) {
+      setCurrentPhase('archived');
+    }
+    else {
+      navigate(`/programs/${data['id']}`, {
+        preventScrollReset: true,
+        replace: true,
+        state: { loading: 'none' },
+      });
+    }
+  }
+
   useEffect(() => {
     let timeout: NodeJS.Timeout | null = null;
 
@@ -104,33 +105,17 @@ export const ProgramPage = () => {
       const timeUntilEnd = DateTime.fromISO(program.endAt).diffNow('milliseconds').toMillis();
       if (timeUntilEnd > 0) {
         timeout = setTimeout(() => {
-          if (nextProgram?.id) {
-            navigate(`/programs/${nextProgram.id}`, {
-              preventScrollReset: true,
-              replace: true,
-              state: { loading: 'none' },
-            });
-          } else {
-            setCurrentPhase('archived');
-          }
+          gotoNextProgram(program);
         }, timeUntilEnd);
       } else {
-        if (nextProgram?.id) {
-          navigate(`/programs/${nextProgram.id}`, {
-            preventScrollReset: true,
-            replace: true,
-            state: { loading: 'none' },
-          });
-        } else {
-          setCurrentPhase('archived');
-        }
+        gotoNextProgram(program);
       }
     }
 
     return () => {
       if (timeout) clearTimeout(timeout);
     };
-  }, [currentPhase, program.startAt, program.endAt, nextProgram?.id, navigate]);
+  }, [currentPhase, program.startAt, program.endAt, navigate]);
 
   return (
     <>
@@ -139,7 +124,7 @@ export const ProgramPage = () => {
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>
           <div className="m-auto aspect-video mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
-            {isArchivedRef.current ? (
+            {currentPhase === 'archived' ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full aspect-video" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
@@ -153,7 +138,7 @@ export const ProgramPage = () => {
                   </Link>
                 </div>
               </div>
-            ) : isBroadcastStarted ? (
+            ) : currentPhase === 'live' ? (
               <PlayerArea program={program} />
             ) : (
               <div className="relative size-full">
