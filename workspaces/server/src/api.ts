@@ -435,10 +435,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return eq(program.id, req.params.programId);
         },
         with: {
-          channel: true,
           episode: {
+            columns: {
+              id: true,
+            },
             with: {
               series: {
+                columns: {
+                  title: true,
+                },
                 with: {
                   episodes: {
                     orderBy(episode, { asc }) {

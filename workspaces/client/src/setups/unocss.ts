@@ -30,6 +30,7 @@ async function init() {
             max-width: 100%;
           }
         `,
+          layer: 'reset',
         },
         {
           getCSS: () => /* css */ `
@@ -42,6 +43,7 @@ async function init() {
             }
           }
         `,
+          layer: 'reset',
         },
       ],
       presets: [
