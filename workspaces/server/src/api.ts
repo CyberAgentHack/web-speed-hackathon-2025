@@ -52,6 +52,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     routePrefix: '/docs',
   });
 
+
+  const trimString = (text: string | null | undefined, maxLength: number) =>
+    text ? text.substring(0, maxLength) : text;
+
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
@@ -184,7 +188,20 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(episodes);
+
+      // 加工
+      // seriesに関して、episodeは不要なので、空配列にする
+      const trimmedEpisodes = episodes.map(episode => ({
+        ...episode,
+        description: trimString(episode.description, 512),
+        series: {
+              ...episode.series,
+              description: trimString(episode.series.description, 512),
+              episodes: [],
+            },
+      }));
+
+      reply.code(200).send(trimmedEpisodes);
     },
   });
 
@@ -348,7 +365,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           );
         },
       });
-      reply.code(200).send(programs);
+
+      const trimmedPrograms = programs.map(program => ({
+        ...program,
+        description: trimString(program.description, 1000)
+      }));
+
+      reply.code(200).send(trimmedPrograms);
     },
   });
 
@@ -508,7 +531,38 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      reply.code(200).send(modules);
+
+      const trimmedModules = modules.map(module => ({
+        ...module,
+        items: module.items.map(item => ({
+          ...item,
+          episode: item.episode
+            ? {
+                ...item.episode,
+                description: trimString(item.episode.description, 512),
+                series: {
+                      ...item.episode.series,
+                      description: trimString(item.episode.series.description, 0),
+                      episodes: [],
+                      id: "",
+                      thumbnailUrl: "",
+                      // episodes: item.episode.series.episodes.map(episode => ({
+                      //   ...episode,
+                      //   description: trimString(episode.description, 512),
+                      // })),
+                    },
+              }
+            : null,
+          series: item.series
+            ? {
+                ...item.series,
+                description: trimString(item.series.description, 0),
+                episodes: [],
+              }
+            : null,
+        })),
+      }));
+      reply.code(200).send(trimmedModules);
     },
   });
 

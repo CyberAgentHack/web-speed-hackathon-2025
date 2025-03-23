@@ -1,12 +1,13 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -28,7 +29,11 @@ const config = {
                   useBuiltIns: 'entry',
                 },
               ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
+              ['@babel/preset-react', 
+                {
+                  runtime: 'automatic' 
+                }
+              ],
               ['@babel/preset-typescript'],
             ],
           },
@@ -52,15 +57,18 @@ const config = {
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: 'chunk-[name].js',
+    chunkFormat: 'array-push',
+    filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      publicPath: 'public',
+    }),
   ],
   resolve: {
     alias: {
@@ -69,6 +77,14 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
+  optimization: {
+    nodeEnv: 'production',
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+
+  target: ['web'],
 };
 
 export default config;

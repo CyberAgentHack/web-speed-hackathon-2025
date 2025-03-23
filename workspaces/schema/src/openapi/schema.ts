@@ -123,6 +123,7 @@ export const getEpisodeByIdResponse = episode.extend({
 
 // GET /series
 export const getSeriesRequestQuery = z.object({
+  light: z.boolean().optional(),
   seriesIds: z.string().optional(),
 });
 export const getSeriesResponse = z.array(

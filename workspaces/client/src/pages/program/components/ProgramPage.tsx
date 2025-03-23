@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
@@ -17,12 +16,22 @@ import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useT
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
+const formatDateTime = (isoString: string) => {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat('ja-JP', {
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+};
+
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
+  const now = new Date();
+  const since = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+  const until = new Date(now.setHours(23, 59, 59, 999)).toISOString();
 
   const program = await store.getState().features.program.fetchProgramById({ programId });
   const channels = await store.getState().features.channel.fetchChannels();
@@ -42,7 +51,8 @@ export const ProgramPage = () => {
 
   const timetable = useTimetable();
   const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
+    // return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
+    return new Date(program.endAt).getTime() === new Date(p.startAt).getTime();
   });
 
   const modules = useRecommended({ referenceId: programId });
@@ -51,8 +61,8 @@ export const ProgramPage = () => {
 
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
-  const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
-  const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+  const isArchivedRef = useRef(new Date(program.endAt) <= new Date());
+  const isBroadcastStarted = new Date(program.startAt) <= new Date();
   useEffect(() => {
     if (isArchivedRef.current) {
       return;
@@ -71,7 +81,7 @@ export const ProgramPage = () => {
 
     // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
     let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
+      if (new Date() < new Date(program.endAt)) {
         timeout = setTimeout(tick, 250);
         return;
       }
@@ -131,7 +141,8 @@ export const ProgramPage = () => {
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
-                    この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
+                    {/* この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です */}
+                    この番組は {formatDateTime(program.startAt)} に放送予定です
                   </p>
                 </div>
               </div>
@@ -147,9 +158,11 @@ export const ProgramPage = () => {
             <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
           </h1>
           <div className="mt-[8px] text-[16px] text-[#999999]">
-            {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')}
+            {/* {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} */}
+            {formatDateTime(program.startAt)}
             {' 〜 '}
-            {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')}
+            {/* {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')} */}
+            {formatDateTime(program.endAt)}
           </div>
           <div className="mt-[16px] text-[16px] text-[#999999]">
             <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />

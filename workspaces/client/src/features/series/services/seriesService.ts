@@ -21,7 +21,7 @@ const $fetch = createFetch({
 });
 
 const batcher = batshit.create({
-  async fetcher(queries: { seriesId: string }[]) {
+  async fetcher(queries: { light?: boolean, seriesId: string }[]) {
     const data = await $fetch('/series', {
       query: {
         seriesIds: queries.map((q) => q.seriesId).join(','),
@@ -29,7 +29,7 @@ const batcher = batshit.create({
     });
     return data;
   },
-  resolver(items, query: { seriesId: string }) {
+  resolver(items, query: { light?: boolean, seriesId: string }) {
     const item = items.find((item) => item.id === query.seriesId);
     if (item == null) {
       throw new Error('Series is not found.');
@@ -38,13 +38,14 @@ const batcher = batshit.create({
   },
   scheduler: batshit.windowedFiniteBatchScheduler({
     maxBatchSize: 100,
-    windowMs: 1000,
+    windowMs: 1,
   }),
 });
 
 interface SeriesService {
   fetchSeries: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesResponse>>;
   fetchSeriesById: (params: {
+    light?: boolean;
     seriesId: string;
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getSeriesByIdResponse>>;
 }
@@ -54,8 +55,9 @@ export const seriesService: SeriesService = {
     const data = await $fetch('/series', { query: {} });
     return data;
   },
-  async fetchSeriesById({ seriesId }) {
-    const data = await batcher.fetch({ seriesId });
+  async fetchSeriesById({ light, seriesId }) {
+    // lightがundefinedの場合、falseにする
+    const data = await batcher.fetch({ light: light ?? false, seriesId });
     return data;
   },
 };

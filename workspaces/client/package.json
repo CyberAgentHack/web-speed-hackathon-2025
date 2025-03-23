@@ -21,6 +21,7 @@
     "@yornaath/batshit": "0.10.1",
     "classnames": "2.5.1",
     "final-form": "4.20.10",
+    "html-webpack-plugin": "5.6.3",
     "immer": "10.1.1",
     "lodash": "4.17.21",
     "luxon": "3.5.0",
@@ -80,7 +81,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "webpack --mode production --json > stats.json",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",

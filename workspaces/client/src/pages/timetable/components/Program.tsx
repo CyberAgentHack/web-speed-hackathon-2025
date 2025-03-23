@@ -1,6 +1,5 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { DateTime } from 'luxon';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
@@ -26,10 +25,12 @@ export const Program = ({ height, program }: Props): ReactElement => {
   };
 
   const currentUnixtimeMs = useCurrentUnixtimeMs();
-  const isBroadcasting =
-    DateTime.fromISO(program.startAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis() &&
-    DateTime.fromMillis(currentUnixtimeMs).toMillis() < DateTime.fromISO(program.endAt).toMillis();
-  const isArchived = DateTime.fromISO(program.endAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis();
+  const programStartAt = new Date(program.startAt).getTime();
+  const programEndAt = new Date(program.endAt).getTime();
+  const currentTime = new Date(currentUnixtimeMs).getTime();
+
+  const isBroadcasting = programStartAt <= currentTime && currentTime < programEndAt;
+  const isArchived = programEndAt <= currentTime;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -37,7 +38,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
   const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
   useEffect(() => {
     const interval = setInterval(() => {
-      const imageHeight = imageRef.current?.clientHeight ?? 0;
+      const estimatedHeight = (titleRef.current?.clientWidth ?? 0) / 1.8;
+      const imageHeight = imageRef.current?.clientHeight ?? estimatedHeight;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
     }, 250);
@@ -60,7 +62,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
               <span
                 className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
               >
-                {DateTime.fromISO(program.startAt).toFormat('mm')}
+                {new Date(program.startAt).getMinutes().toString().padStart(2, '0')}
               </span>
               <div
                 className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
@@ -68,14 +70,27 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
-            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+            {/* <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
               <img
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 src={program.thumbnailUrl}
               />
-            </div>
+            </div> */}
+            {
+              shouldImageBeVisible && (
+                <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+                  <img
+                    ref={imageRef}
+                    alt=""
+                    className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+                    src={program.thumbnailUrl}
+                    loading="lazy"
+                  />
+                </div>
+              )
+            }
           </div>
         </button>
       </Hoverable>

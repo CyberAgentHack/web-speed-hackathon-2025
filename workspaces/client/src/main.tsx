@@ -1,6 +1,8 @@
-import '@wsh-2025/client/src/setups/polyfills';
-import '@wsh-2025/client/src/setups/luxon';
+'user server';
+
+// import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
+import '@wsh-2025/client/src/setups/polyfills';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -13,11 +15,13 @@ import { createStore } from '@wsh-2025/client/src/app/createStore';
 declare global {
   var __zustandHydrationData: unknown;
   var __staticRouterHydrationData: HydrationState;
-}
+};
 
-function main() {
+async function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
+
+  console.log('Hydrating root...');
 
   hydrateRoot(
     document,
@@ -27,6 +31,11 @@ function main() {
       </StoreProvider>
     </StrictMode>,
   );
+  console.log('Root hydrated!');
 }
 
-document.addEventListener('DOMContentLoaded', main);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', main);
+} else {
+  requestIdleCallback(main);
+}

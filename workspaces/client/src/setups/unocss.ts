@@ -3,7 +3,14 @@ import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
+import biIcons from '@wsh-2025/client/src/setups/icons/bi.json';
+import faSolidIcons from '@wsh-2025/client/src/setups/icons/fa-solid.json';
+import fluentIcons from '@wsh-2025/client/src/setups/icons/fluent.json';
+import lineMdIcons from '@wsh-2025/client/src/setups/icons/line-md.json';
+import materialSymbolsIcons from '@wsh-2025/client/src/setups/icons/material-symbols.json';
+
 async function init() {
+  console.log('Initializing Unocss runtime...');
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -49,22 +56,21 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            bi: () => Promise.resolve(biIcons as IconifyJSON),
+            // bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            // 'fa-regular': () =>
+            //   import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            'fa-solid': () => Promise.resolve(faSolidIcons as IconifyJSON),
+            fluent: () => Promise.resolve(fluentIcons as IconifyJSON),
+            'line-md': () => Promise.resolve(lineMdIcons as IconifyJSON),
+            'material-symbols': () => Promise.resolve(materialSymbolsIcons as IconifyJSON),
           },
         }),
       ],
     }),
   });
+
+  console.log('Unocss runtime initialized');
 }
 
 init().catch((err: unknown) => {

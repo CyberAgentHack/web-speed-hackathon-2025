@@ -1,3 +1,8 @@
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import * as schema from '@wsh-2025/schema/src/api/schema';
+// import invariant from 'tiny-invariant';
+import { ArrayValues } from 'type-fest';
+
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
@@ -10,8 +15,25 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const HomePage = () => {
-  const modules = useRecommended({ referenceId: 'entrance' });
+  console.log("HomePage");
 
+  // const modules = useRecommended({ referenceId: 'entrance' });
+  const hydrationData = window.__staticRouterHydrationData as {
+    loaderData?: {
+      "0-0"?: {
+        modules?: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>[];
+      };
+    };
+  };
+  let modules_ = hydrationData.loaderData?.["0-0"]?.modules;
+  // invariant(modules, 'Expected hydration data to include modules');
+  // もしmodulesにに値がないなら、useRecommendedを使ってデータを取得する
+  if (!modules_) {
+    modules_ = useRecommended({ referenceId: 'entrance' });
+  }
+  const modules = modules_;
+
+  console.log("HomePage Rendered");
   return (
     <>
       <title>Home - AremaTV</title>

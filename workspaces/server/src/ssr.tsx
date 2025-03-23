@@ -12,6 +12,7 @@ import htmlescape from 'htmlescape';
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
+import * as fs from 'fs';
 
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
@@ -26,6 +27,8 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
 }
 
 export function registerSsr(app: FastifyInstance): void {
+  const baseHtml = fs.readFileSync(path.resolve(__dirname, '../../client/dist/index.html'), 'utf-8');
+
   app.register(fastifyStatic, {
     prefix: '/public/',
     root: [
@@ -60,23 +63,14 @@ export function registerSsr(app: FastifyInstance): void {
     );
 
     const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
+    // const imagePaths = [
+    //   getFilePaths('public/images', rootDir),
+    //   getFilePaths('public/animations', rootDir),
+    //   getFilePaths('public/logos', rootDir),
+    // ].flat();
 
     reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
-        </head>
-        <body></body>
-      </html>
+      ${baseHtml}
       <script>
         window.__staticRouterHydrationData = ${htmlescape({
           actionData: context.actionData,
@@ -86,3 +80,8 @@ export function registerSsr(app: FastifyInstance): void {
     `);
   });
 }
+
+/*
+
+          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+*/
