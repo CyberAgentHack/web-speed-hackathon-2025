@@ -9,7 +9,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 import * as schema from '@wsh-2025/schema/src/openapi/schema';
 import * as bcrypt from 'bcrypt';
-import type { FastifyInstance, FastifyReply } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import {
   fastifyZodOpenApiPlugin,
   type FastifyZodOpenApiSchema,
@@ -23,10 +23,6 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
-
-function sendJson(reply: FastifyReply, statusCode: number, data: unknown): FastifyReply {
-  return reply.code(statusCode).header('content-type', 'application/json').send(JSON.stringify(data));
-}
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -76,7 +72,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function initialize(_req, reply) {
       await initializeDatabase();
-      return sendJson(reply, 200, {});
+      reply.code(200).send({});
     },
   });
 
@@ -111,7 +107,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return void 0;
         },
       });
-      return sendJson(reply, 200, channels);
+      reply.code(200).send(channels);
     },
   });
 
@@ -142,7 +138,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (channel == null) {
         return reply.code(404).send();
       }
-      return sendJson(reply, 200, channel);
+      reply.code(200).send(channel);
     },
   });
 
@@ -188,7 +184,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      return sendJson(reply, 200, episodes);
+      reply.code(200).send(episodes);
     },
   });
 
@@ -230,7 +226,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (episode == null) {
         return reply.code(404).send();
       }
-      return sendJson(reply, 200, episode);
+      reply.code(200).send(episode);
     },
   });
 
@@ -275,7 +271,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      return sendJson(reply, 200, series);
+      reply.code(200).send(series);
     },
   });
 
@@ -316,7 +312,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (series == null) {
         return reply.code(404).send();
       }
-      return sendJson(reply, 200, series);
+      reply.code(200).send(series);
     },
   });
 
@@ -352,7 +348,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           );
         },
       });
-      return sendJson(reply, 200, programs);
+      reply.code(200).send(programs);
     },
   });
 
@@ -403,7 +399,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      return sendJson(reply, 200, programs);
+      reply.code(200).send(programs);
     },
   });
 
@@ -450,7 +446,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (program == null) {
         return reply.code(404).send();
       }
-      return sendJson(reply, 200, program);
+      reply.code(200).send(program);
     },
   });
 
@@ -492,7 +488,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      return sendJson(reply, 200, modules);
+      reply.code(200).send(modules);
     },
   });
 
@@ -527,7 +523,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const ret = schema.signInResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
-      return sendJson(reply, 200, user);
+      reply.code(200).send(user);
     },
   });
 
@@ -575,7 +571,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
-      return sendJson(reply, 200, ret);
+      reply.code(200).send(ret);
     },
   });
 
@@ -610,7 +606,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       if (!user) {
         return reply.code(401).send();
       }
-      return sendJson(reply, 200, user);
+      reply.code(200).send(user);
     },
   });
 
@@ -626,7 +622,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(401).send();
       }
       req.session.set('id', void 0);
-      return sendJson(reply, 200, {});
+      reply.code(200).send();
     },
   });
 

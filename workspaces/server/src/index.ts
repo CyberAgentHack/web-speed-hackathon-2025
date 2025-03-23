@@ -14,6 +14,12 @@ async function main() {
 
   const app = fastify();
 
+  app.addHook('onRequest', async (request, _reply) => {
+    if (request.url.includes('/api/')) {
+      request.headers['accept-encoding'] = 'identity';
+    }
+  });
+
   app.register(compress, {
     global: true,
     encodings: ['gzip'],
