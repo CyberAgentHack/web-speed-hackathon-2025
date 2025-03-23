@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 
 const RecommendedSection = lazy(() =>
@@ -18,13 +19,13 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 
 export const HomePage = () => {
   const modules = useRecommended({ referenceId: 'entrance' });
-
+  if (modules.length === 0) return <Loading />;
   return (
     <>
       <title>Home - AremaTV</title>
 
       <div className="w-full py-[48px]">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           {modules.map((module) => {
             return (
               <div key={module.id} className="mb-[24px] px-[24px]">
