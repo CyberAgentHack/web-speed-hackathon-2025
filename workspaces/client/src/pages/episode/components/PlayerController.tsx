@@ -64,7 +64,9 @@ export const PlayerController = ({ episode }: Props) => {
                   {playing ? (
                     <svg
                       className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
+                      height={20}
                       viewBox="0 0 24 24"
+                      width={20}
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
@@ -75,7 +77,9 @@ export const PlayerController = ({ episode }: Props) => {
                   ) : (
                     <svg
                       className="m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]"
+                      height={20}
                       viewBox="0 0 24 24"
+                      width={20}
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
