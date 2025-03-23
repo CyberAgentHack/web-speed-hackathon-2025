@@ -6,7 +6,7 @@ import webpack from 'webpack';
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'production',
+  mode: 'none',
   module: {
     rules: [
       {
@@ -22,14 +22,12 @@ const config = {
               [
                 '@babel/preset-env',
                 {
+                  corejs: '3.41',
+                  forceAllTransforms: true,
                   targets: 'defaults',
                   useBuiltIns: 'entry',
-                  corejs: '3.41',
-                  // ここが重要: modules: false にしないと ES Modules が CJS に変換される
-                  modules: false,
                 },
               ],
-              // 他のプリセットについても同様。@babel/preset-typescriptはmodulesオプションなしでもOKな場合が多いです
               ['@babel/preset-react', { runtime: 'automatic' }],
               ['@babel/preset-typescript'],
             ],

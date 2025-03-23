@@ -1,7 +1,6 @@
 {
   "name": "@wsh-2025/client",
   "private": true,
-  "sideEffects": false,
   "scripts": {
     "build": "wireit",
     "format": "wireit",
