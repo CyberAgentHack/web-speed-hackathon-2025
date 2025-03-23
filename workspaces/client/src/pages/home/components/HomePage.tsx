@@ -1,6 +1,6 @@
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { useLoaderData } from 'react-router';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const modules = await store
@@ -10,7 +10,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const HomePage = () => {
-  const modules = useRecommended({ referenceId: 'entrance' });
+  const { modules } = useLoaderData<Awaited<ReturnType<typeof prefetch>>>();
 
   return (
     <>
