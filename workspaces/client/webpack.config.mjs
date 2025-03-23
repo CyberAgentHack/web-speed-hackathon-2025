@@ -1,12 +1,15 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import BundleAnalyzerPlugin from 'webpack-bundle-analyzer';
+
+const isProduction = process.env['NODE_ENV'] === 'production';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: isProduction ? 'source-map' : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       {
@@ -52,15 +55,44 @@ const config = {
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: isProduction ? 'chunk-[contenthash].js' : 'chunk-[name].js',
     chunkFormat: false,
-    filename: 'main.js',
+    filename: isProduction ? '[name].[contenthash].js' : 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
+  optimization: {
+    minimize: isProduction,
+    splitChunks: isProduction ? {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10
+        },
+        player: {
+          test: /[\\/]node_modules[\\/](hls\.js|shaka-player|video\.js)[\\/]/,
+          name: 'player-vendors',
+          chunks: 'all',
+          priority: 20
+        }
+      }
+    } : false,
+  },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ 
+      API_BASE_URL: '/api', 
+      NODE_ENV: isProduction ? 'production' : 'development' 
+    }),
+    ...(isProduction ? [
+      // プロダクション環境のみのプラグイン
+      process.env['ANALYZE'] && new BundleAnalyzerPlugin.BundleAnalyzerPlugin()
+    ] : [
+      // 開発環境のみのプラグイン
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
+    ]).filter(Boolean),
   ],
   resolve: {
     alias: {
