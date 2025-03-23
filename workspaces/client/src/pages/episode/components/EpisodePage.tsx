@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, memo, useMemo } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -26,10 +26,77 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
   return { episode, modules };
 };
 
-export const EpisodePage = () => {
+// サインインを促すオーバーレイを切り出し memo 化
+const SignInOverlay = memo(({ episode, authActions }: { episode: any; authActions: any }) => (
+  <div className="relative size-full">
+    <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
+      <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
+        プレミアムエピソードの視聴にはログインが必要です
+      </p>
+      <button
+        className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+        type="button"
+        onClick={authActions.openSignInDialog}
+      >
+        ログイン
+      </button>
+    </div>
+  </div>
+));
+
+// プレイヤー部分を Suspense 内に切り出し memo 化
+const PlayerView = memo(({ episode, playerRef }: { episode: any; playerRef: any }) => (
+  <Suspense
+    fallback={
+      <AspectRatio ratioHeight={9} ratioWidth={16}>
+        <div className="grid size-full">
+          <img alt="" className="size-full place-self-stretch [grid-area:1/-1]" src={episode.thumbnailUrl} />
+          <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
+          <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+        </div>
+      </AspectRatio>
+    }
+  >
+    <div className="relative size-full">
+      <Player
+        className="size-full"
+        playerRef={playerRef}
+        playerType={PlayerType.HlsJS}
+        playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
+      />
+      <div className="absolute inset-x-0 bottom-0">
+        <PlayerController episode={episode} />
+      </div>
+    </div>
+  </Suspense>
+));
+
+// エピソード情報ヘッダー部分を切り出し memo 化
+const EpisodeHeader = memo(({ episode }: { episode: any }) => (
+  <div className="mb-[24px]">
+    <div className="text-[16px] text-[#ffffff]">
+      <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
+    </div>
+    <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
+      <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
+    </h1>
+    {episode.premium && (
+      <div className="mt-[8px]">
+        <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
+          プレミアム
+        </span>
+      </div>
+    )}
+    <div className="mt-[16px] text-[16px] text-[#999999]">
+      <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
+    </div>
+  </div>
+));
+
+export const EpisodePage = memo(() => {
   const authActions = useAuthActions();
   const user = useAuthUser();
-
   const { episodeId } = useParams();
   invariant(episodeId);
 
@@ -37,10 +104,20 @@ export const EpisodePage = () => {
   invariant(episode);
 
   const modules = useRecommended({ referenceId: episodeId });
-
   const playerRef = usePlayerRef();
 
   const isSignInRequired = episode.premium && user == null;
+
+  // プレイヤーセクションは条件によって切り替え、メモ化して不要な再計算を防止
+  const playerSection = useMemo(
+    () =>
+      isSignInRequired ? (
+        <SignInOverlay episode={episode} authActions={authActions} />
+      ) : (
+        <PlayerView episode={episode} playerRef={playerRef} />
+      ),
+    [isSignInRequired, episode, authActions, playerRef]
+  );
 
   return (
     <>
@@ -49,80 +126,17 @@ export const EpisodePage = () => {
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`episode-${episode.id}`}>
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
-            {isSignInRequired ? (
-              <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
-                  <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
-                    プレミアムエピソードの視聴にはログインが必要です
-                  </p>
-                  <button
-                    className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
-                    type="button"
-                    onClick={authActions.openSignInDialog}
-                  >
-                    ログイン
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <Suspense
-                fallback={
-                  <AspectRatio ratioHeight={9} ratioWidth={16}>
-                    <div className="grid size-full">
-                      <img
-                        alt=""
-                        className="size-full place-self-stretch [grid-area:1/-1]"
-                        src={episode.thumbnailUrl}
-                      />
-                      <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
-                    </div>
-                  </AspectRatio>
-                }
-              >
-                <div className="relative size-full">
-                  <Player
-                    className="size-full"
-                    playerRef={playerRef}
-                    playerType={PlayerType.HlsJS}
-                    playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
-                  />
-
-                  <div className="absolute inset-x-0 bottom-0">
-                    <PlayerController episode={episode} />
-                  </div>
-                </div>
-              </Suspense>
-            )}
+            {playerSection}
           </div>
         </Flipped>
 
-        <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
-          </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
-          </h1>
-          {episode.premium ? (
-            <div className="mt-[8px]">
-              <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
-                プレミアム
-              </span>
-            </div>
-          ) : null}
-          <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
-          </div>
-        </div>
+        <EpisodeHeader episode={episode} />
 
-        {modules[0] != null ? (
+        {modules[0] && (
           <div className="mt-[24px]">
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
+        )}
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
@@ -131,4 +145,4 @@ export const EpisodePage = () => {
       </div>
     </>
   );
-};
+});
