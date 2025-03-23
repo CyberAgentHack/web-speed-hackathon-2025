@@ -1,36 +1,22 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
-        exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: {
-          fullySpecified: false,
-        },
-        test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
+        exclude: /node_modules/,
+        test: /\.(ts|tsx|js|jsx)$/,
         use: {
-          loader: 'babel-loader',
+          loader: 'ts-loader',
           options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              ['@babel/preset-typescript'],
-            ],
+            transpileOnly: true,
           },
         },
       },
@@ -60,7 +46,8 @@ const config = {
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: true }),
   ],
   resolve: {
     alias: {

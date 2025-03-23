@@ -2,14 +2,12 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "paths": {
-      "@wsh-2025/client/*": ["./*"]
-    },
+    "moduleResolution": "node",
     "skipLibCheck": true,
-    "target": "ESNext"
-  },
-  "exclude": ["dist"],
-  "extends": "@wsh-2025/configs/tsconfig.json",
-  "include": ["**/*", "**/*.mjs"]
+    "target": "ES2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  }
 }
