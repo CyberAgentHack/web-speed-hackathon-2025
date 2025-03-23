@@ -26,7 +26,17 @@ export function registerSsr(app: FastifyInstance): void {
     if (context instanceof Response) {
       return reply.send(context);
     }
-
+    const recommended = store.getState().features.recommended.recommendedModules;
+    const preloads = Object.values(recommended)
+      .flatMap((item, j) => {
+        return item.items.map((i, index) => {
+          return {
+            index: index + j,
+            url: i.episode?.thumbnailUrl,
+          };
+        });
+      })
+      .splice(0, 5);
     const router = createStaticRouter(handler.dataRoutes, context);
     const renderd = renderToString(
       <StrictMode>
@@ -43,7 +53,16 @@ export function registerSsr(app: FastifyInstance): void {
     const clientHTML = path.resolve(__dirname, '../../client/dist/index.html');
     const clientHTMLContent = await promises.readFile(clientHTML, 'utf-8');
 
-    const replaced = clientHTMLContent.replace('<!-- __REACT_APP_HTML__ -->', renderd);
+    const replaced = clientHTMLContent.replace('<!-- __REACT_APP_HTML__ -->', renderd).replace(
+      '<!-- PRELOAD -->',
+      preloads
+        .map((item) => {
+          return `<link rel="preload" href="${item.url}" as="image" imagesrcset="${item.url}"  fetchPriority="${
+            item.index <= 2 ? 'high' : 'low'
+          }"/>`;
+        })
+        .join(''),
+    );
 
     reply.type('text/html').send(replaced);
   });
