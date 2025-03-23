@@ -25,7 +25,6 @@ dist/
 
 # テストデータ
 **/streams/
-workspaces/server/database.sqlite
 
 # 開発用ファイル
 .vscode/
