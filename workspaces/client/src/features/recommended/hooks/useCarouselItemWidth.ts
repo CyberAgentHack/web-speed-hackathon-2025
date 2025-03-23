@@ -29,3 +29,5 @@ export function useCarouselItemWidth() {
 
   return { ref: containerRef, width: itemWidth };
 }
+
+// w 400px

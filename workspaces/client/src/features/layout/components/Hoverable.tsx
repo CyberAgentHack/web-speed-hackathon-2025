@@ -12,6 +12,9 @@ interface Props {
   };
 }
 
+/**
+ * @deprecated
+ */
 export const Hoverable = (props: Props) => {
   const child = Children.only(props.children);
   const elementRef = useRef<HTMLDivElement>(null);

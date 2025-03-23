@@ -1,6 +1,7 @@
 import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
+import React from 'react';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
@@ -25,11 +26,15 @@ export const CarouselSection = ({ module }: Props) => {
         <div
           key={module.id}
           ref={mergedRef}
-          className={`relative mx-[-24px] flex flex-row gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]`}
+          className="relative mx-[-24px] flex flex-row gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]"
           data-scroll-restore={`carousel-${module.id}`}
         >
           {module.items.map((item) => (
-            <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
+            <div
+              key={item.id}
+              className="w-[var(--width)] shrink-0 grow-0"
+              style={{ '--width': `${itemWidth}px` } as React.CSSProperties}
+            >
               {item.series != null ? <SeriesItem series={item.series} /> : null}
               {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
             </div>

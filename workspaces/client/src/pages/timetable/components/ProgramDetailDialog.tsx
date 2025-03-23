@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { ArrayValues } from 'type-fest';
 
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { toSmallThumbnailUrl } from '@wsh-2025/client/src/features/thumbnail/resize';
 import { useEpisode } from '@wsh-2025/client/src/pages/timetable/hooks/useEpisode';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
 
@@ -33,7 +34,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
         <img
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-          src={program.thumbnailUrl}
+          src={toSmallThumbnailUrl(program.thumbnailUrl)}
         />
 
         {episode != null ? (
@@ -47,7 +48,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
             <img
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={episode.thumbnailUrl}
+              src={toSmallThumbnailUrl(episode.thumbnailUrl)}
             />
           </>
         ) : null}
