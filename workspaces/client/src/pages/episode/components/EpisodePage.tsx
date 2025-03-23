@@ -16,7 +16,7 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
-
+import { Icon } from '@iconify/react/dist/iconify.js';
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
   const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
@@ -78,7 +78,10 @@ export const EpisodePage = () => {
                         loading="lazy"
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <Icon
+                        icon="line-md:loading-twotone-loop"
+                        className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]"
+                      />
                     </div>
                   </AspectRatio>
                 }
