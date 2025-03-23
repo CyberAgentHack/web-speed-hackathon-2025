@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
+import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -26,7 +27,7 @@ export default defineConfig(({ mode }) => ({
     exclude: ['video.js', '@videojs'],
   },
 
-  plugins: [tsconfigPaths(), react()],
+  plugins: [tsconfigPaths(), react(), UnoCSS()],
 
   publicDir: '../../public',
 }));
