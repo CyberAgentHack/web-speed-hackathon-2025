@@ -1,0 +1,63 @@
+{
+	"prefix": "fluent",
+	"info": {
+		"name": "Fluent UI System Icons",
+		"total": 17474,
+		"version": "1.1.278",
+		"author": {
+			"name": "Microsoft Corporation",
+			"url": "https://github.com/microsoft/fluentui-system-icons"
+		},
+		"license": {
+			"title": "MIT",
+			"spdx": "MIT",
+			"url": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE"
+		},
+		"samples": [
+			"zoom-out-24-filled",
+			"drink-coffee-24-regular",
+			"photo-filter-24-regular",
+			"checkmark-24-filled",
+			"oval-24-filled",
+			"cloud-24-filled"
+		],
+		"category": "UI Other / Mixed Grid",
+		"tags": [
+			"Precise Shapes",
+			"Has Padding"
+		],
+		"palette": false
+	},
+	"lastModified": 1740899893,
+	"icons": {
+		"live-24-filled": {
+			"body": "<path fill=\"currentColor\" d=\"M6.343 4.938a1 1 0 0 1 0 1.415a8.003 8.003 0 0 0 0 11.317a1 1 0 1 1-1.414 1.414c-3.907-3.906-3.907-10.24 0-14.146a1 1 0 0 1 1.414 0m12.732 0c3.906 3.907 3.906 10.24 0 14.146a1 1 0 0 1-1.415-1.414a8.003 8.003 0 0 0 0-11.317a1 1 0 0 1 1.415-1.415M9.31 7.812a1 1 0 0 1 0 1.414a3.92 3.92 0 0 0 0 5.544a1 1 0 1 1-1.415 1.414a5.92 5.92 0 0 1 0-8.372a1 1 0 0 1 1.415 0m6.958 0a5.92 5.92 0 0 1 0 8.372a1 1 0 0 1-1.414-1.414a3.92 3.92 0 0 0 0-5.544a1 1 0 0 1 1.414-1.414m-4.186 2.77a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3\"/>",
+			"width": 24,
+			"height": 24
+		}
+	},
+	"suffixes": {
+		"10-filled": "10 Filled",
+		"10-regular": "10 Regular",
+		"12-filled": "12 Filled",
+		"12-regular": "12 Regular",
+		"16-filled": "16 Filled",
+		"16-regular": "16 Regular",
+		"20-filled": "20 Filled",
+		"20-regular": "20 Regular",
+		"24-filled": "24 Filled",
+		"24-regular": "24 Regular",
+		"24-light": "24 Light",
+		"28-filled": "28 Filled",
+		"28-regular": "28 Regular",
+		"28-light": "28 Light",
+		"32-filled": "32 Filled",
+		"32-regular": "32 Regular",
+		"32-light": "32 Light",
+		"48-filled": "48 Filled",
+		"48-regular": "48 Regular",
+		"48-light": "48 Light"
+	},
+	"width": 20,
+	"height": 20
+}

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -12,6 +12,7 @@ import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useA
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
+import { useThrottle } from 'react-use';
 
 interface Props {
   children: ReactNode;
@@ -21,8 +22,12 @@ export const Layout = ({ children }: Props) => {
   useSubscribePointer();
 
   const navigation = useNavigation();
-  const isLoading =
-    navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
+
+  const isLoading = useMemo(() => {
+    return (
+      navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none'
+    );
+  }, [navigation.location]);
 
   const location = useLocation();
   const isTimetablePage = location.pathname === '/timetable';
@@ -32,39 +37,38 @@ export const Layout = ({ children }: Props) => {
   const user = useAuthUser();
 
   const [scrollTopOffset, setScrollTopOffset] = useState(0);
-  const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
+  const shouldHeaderBeTransparent = scrollTopOffset > 80;
+
+  const handleScroll = () => {
+    setScrollTopOffset(window.scrollY);
+  };
+  const throttledHandleScroll = useThrottle(handleScroll, 100);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollTopOffset(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', throttledHandleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', throttledHandleScroll);
     };
   }, []);
 
-  useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
-  }, [scrollTopOffset]);
+  const headerClassName = useMemo(() => {
+    return classNames(
+      'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
+      !isLoading && shouldHeaderBeTransparent
+        ? 'bg-gradient-to-b from-[#171717] to-transparent'
+        : 'bg-gradient-to-b from-[#171717] to-[#171717]',
+    );
+  }, [isLoading, shouldHeaderBeTransparent]);
 
-  const isSignedIn = user != null;
+  const isSignedIn = useMemo(() => user != null, [user]);
 
   return (
     <>
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
-        <header
-          className={classNames(
-            'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
-            !isLoading && shouldHeaderBeTransparent
-              ? 'bg-gradient-to-b from-[#171717] to-transparent'
-              : 'bg-gradient-to-b from-[#171717] to-[#171717]',
-          )}
-        >
+        <header className={headerClassName}>
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+            <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
           </Link>
         </header>
 

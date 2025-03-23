@@ -1,40 +1,49 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
+const USE_SEGMENT_NUM = 30;
+
+const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+
 async function getSeekThumbnail({ episode }: Params) {
+  const ffmpeg = new FFmpeg();
+  if (!ffmpeg.loaded) {
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+    });
+  }
+
   // HLS のプレイリストを取得
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
   const parser = new Parser();
   parser.push(await fetch(playlistUrl).then((res) => res.text()));
   parser.end();
 
-  // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  const totalSegmentsNum = parser.manifest.segments.length;
+  const step = Math.max(Math.ceil(totalSegmentsNum / USE_SEGMENT_NUM), 1);
+  const selectedSegments = parser.manifest.segments.filter((_, index) => index % step === 0).slice(0, USE_SEGMENT_NUM);
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
-    parser.manifest.segments.map((s) => {
+    selectedSegments.map((s) => {
       return fetch(s.uri).then(async (res) => {
         const binary = await res.arrayBuffer();
-        return { binary, id: Math.random().toString(36).slice(2) };
+        return { binary, id: uuidv4() };
       });
     }),
   );
+
+  // TODO: serverでthumbnail生成 or ここでせめて効率化
   // FFmpeg にセグメントファイルを追加
   for (const file of segmentFiles) {
     await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
@@ -55,7 +64,7 @@ async function getSeekThumbnail({ episode }: Params) {
   await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
+      ['-vf', "fps=10,select='not(mod(n\\,10))',scale=160:90,tile=250x1"],
       ['-frames:v', '1'],
       'preview.jpg',
     ].flat(),

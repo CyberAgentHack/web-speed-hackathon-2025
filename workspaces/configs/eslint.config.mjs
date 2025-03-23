@@ -56,6 +56,7 @@ const configs = [
           allowNumber: true,
         },
       ],
+      '@typescript-eslint/no-non-null-assertion': ['off'],
       eqeqeq: ['error', 'always', { null: 'never' }],
       'import/no-named-as-default': ['off'],
       'import/no-named-as-default-member': ['off'],
@@ -78,6 +79,8 @@ const configs = [
         },
       ],
       'sort/imports': ['off'],
+      'import/order': ['off'],
+      'sort/object-properties': ['off'],
       'sort/type-properties': ['error'],
     },
     settings: {
