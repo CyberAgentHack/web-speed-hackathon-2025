@@ -63,11 +63,11 @@ export function registerSsr(app: FastifyInstance): void {
     const imageDirectories = ['images', 'animations', 'logos'];
     const imagePaths = imageDirectories.map((dir) => getFilePaths(`public/${dir}`, rootDir)).flat();
 
-    const criticalImages = imagePaths
-      .filter((path) => path.includes('logos')) // ロゴなど重要な画像
-      .map((path) => `<link rel="preload" as="image" href="${path}" />`);
+    // const criticalImages = imagePaths
+    //   .filter((path) => path.includes('logos')) // ロゴなど重要な画像
+    //   .map((path) => `<link rel="preload" as="image" href="${path}" />`);
 
-    const prefetchImages = ['animations', 'images'].flatMap((dir) =>
+    const prefetchImages = ['animations', 'images', 'logos'].flatMap((dir) =>
       imagePaths
         .filter((path) => path.includes(dir))
         .map((path) => `<link rel="prefetch" as="image" href="${path}" />`),
@@ -80,7 +80,6 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script defer src="/public/main.js"></script>
-          ${criticalImages.join('\n')}
           ${prefetchImages.join('\n')}
         </head>
         <body>
