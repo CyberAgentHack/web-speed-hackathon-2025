@@ -90,6 +90,7 @@ async function main() {
 
   const rootDir = path.resolve(__dirname, '../../..');
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
+  console.log('ファイル一覧：', files);
   const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
 
   try {
