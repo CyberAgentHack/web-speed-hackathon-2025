@@ -542,8 +542,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
                 description: trimString(item.episode.description, 512),
                 series: {
                       ...item.episode.series,
-                      description: trimString(item.episode.series.description, 64),
+                      description: trimString(item.episode.series.description, 0),
                       episodes: [],
+                      id: "",
+                      thumbnailUrl: "",
                       // episodes: item.episode.series.episodes.map(episode => ({
                       //   ...episode,
                       //   description: trimString(episode.description, 512),
@@ -554,11 +556,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           series: item.series
             ? {
                 ...item.series,
-                description: trimString(item.series.description, 512),
-                episodes: item.series.episodes.map(episode => ({
-                  ...episode,
-                  description: trimString(episode.description, 64),
-                })),
+                description: trimString(item.series.description, 0),
+                episodes: [],
               }
             : null,
         })),
