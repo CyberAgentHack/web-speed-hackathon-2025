@@ -27,11 +27,16 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
+    cacheControl: true,
+    maxAge: 31536000,
     prefix: '/public/',
     root: [
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
+    setHeaders(res) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+    },
   });
 
   app.get('/favicon.ico', (_, reply) => {
