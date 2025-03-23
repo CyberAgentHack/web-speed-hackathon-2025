@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import { Children, cloneElement, ReactElement, Ref, useRef } from 'react';
-import { useMergeRefs } from 'use-callback-ref';
+import { Children, cloneElement, ReactElement, Ref, useCallback, useRef } from 'react';
 
 import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
 
@@ -12,11 +11,26 @@ interface Props {
   };
 }
 
+// カスタムのuseMergeRefs実装
+function useMergeRefs<T>(refs: Array<Ref<T> | null | undefined>): Ref<T> {
+  return useCallback((value: T) => {
+    refs.forEach((ref) => {
+      if (!ref) return;
+      
+      if (typeof ref === 'function') {
+        ref(value);
+      } else {
+        (ref as React.MutableRefObject<T>).current = value;
+      }
+    });
+  }, [refs]);
+}
+
 export const Hoverable = (props: Props) => {
   const child = Children.only(props.children);
   const elementRef = useRef<HTMLDivElement>(null);
 
-  const mergedRef = useMergeRefs([elementRef, child.props.ref].filter((v) => v != null));
+  const mergedRef = useMergeRefs([elementRef, child.props.ref]);
 
   const pointer = usePointer();
   const elementRect = elementRef.current?.getBoundingClientRect();
