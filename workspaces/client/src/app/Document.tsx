@@ -18,11 +18,11 @@ export const Document = () => {
         <script src="/public/main.js"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
-        <Suspense>
           <Layout>
-            <Outlet />
+            <Suspense>
+              <Outlet />
+            </Suspense>
           </Layout>
-        </Suspense>
         <ScrollRestoration />
       </body>
     </html>

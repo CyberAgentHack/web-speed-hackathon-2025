@@ -3,6 +3,11 @@ declare module '*.png' {
   export = value;
 }
 
+declare module '*.webp' {
+  const value: string;
+  export = value;
+}
+
 declare module '*?raw' {
   const value: string;
   export = value;

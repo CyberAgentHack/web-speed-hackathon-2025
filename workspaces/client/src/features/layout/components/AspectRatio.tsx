@@ -1,5 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import { ReactNode, useEffect, useRef , useState} from 'react';
 
 interface Props {
   children: ReactNode;
@@ -8,23 +7,29 @@ interface Props {
 }
 
 export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
-  const forceUpdate = useUpdate();
+  const [height, setHeight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 1000);
-    return () => {
-      clearInterval(interval);
+    const calculateHeight = () => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.getBoundingClientRect().width;
+      setHeight((width * ratioHeight) / ratioWidth);
     };
-  }, []);
 
-  const width = containerRef.current?.getBoundingClientRect().width ?? 0;
-  const height = (width * ratioHeight) / ratioWidth;
+    // 初回
+    calculateHeight();
+    
+    // リサイズ時のみ計算
+    window.addEventListener('resize', calculateHeight);
+    
+    return () => {
+      window.removeEventListener('resize', calculateHeight);
+    };
+  }, [ratioHeight, ratioWidth]);
 
   return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
+    <div ref={containerRef} className="relative w-full" style={{ height: `${height}px` }}>
       {children}
     </div>
   );
