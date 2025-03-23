@@ -19,8 +19,8 @@ async function getSeekThumbnail({ episode }: Params) {
 
 	try {
 		await ffmpeg.load({
-			coreURL: "https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.js",
-			wasmURL: "https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.wasm",
+			coreURL: "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js",
+			wasmURL: "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.wasm",
 		});
 	} catch (error) {
 		console.error("FFmpeg loading failed:", error);
