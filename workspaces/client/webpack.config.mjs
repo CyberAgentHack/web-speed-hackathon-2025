@@ -82,7 +82,7 @@ const config = {
         },
         // Reactとその関連ライブラリ
         react: {
-          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|react-use|react-final-form|react-ellipsis-component|react-flip-toolkit)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|react-use|react-final-form|react-flip-toolkit)[\\/]/,
           priority: 20,
           name: 'react-libs',
           enforce: true,

@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import { useUpdate } from 'react-use';
@@ -140,19 +139,19 @@ export const ProgramPage = () => {
         </Flipped>
 
         <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.episode.series.title} visibleLine={1} />
+          <div className="text-[16px] text-[#ffffff] overflow-hidden text-ellipsis whitespace-nowrap">
+            {program.episode.series.title}
           </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
+          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff] overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis' }}>
+            {program.title}
           </h1>
           <div className="mt-[8px] text-[16px] text-[#999999]">
             {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')}
             {' 〜 '}
             {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')}
           </div>
-          <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />
+          <div className="mt-[16px] text-[16px] text-[#999999] overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', textOverflow: 'ellipsis' }}>
+            {program.description}
           </div>
         </div>
 
