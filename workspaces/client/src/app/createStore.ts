@@ -19,7 +19,6 @@ interface Props {
 }
 
 export const createStore = ({ hydrationData }: Props) => {
-  console.log("hydrationData:", hydrationData); // 追加
   const store = createZustandStore(
     withLenses(() => ({
       features: {
