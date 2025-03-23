@@ -174,31 +174,84 @@ export const getProgramByIdResponse = program.extend({
   }),
 });
 
+const episodeMinimal = episode.pick({
+  id: true,
+  title: true,
+  description: true,
+  premium: true,
+  thumbnailUrl: true,
+  order: true,
+  seriesId: true,
+  streamId: true,
+});
+
+const seriesMinimal = series.pick({
+  id: true,
+  title: true,
+  thumbnailUrl: true,
+});
+
+export const getRecommendedShotrModulesResponse = z.array(
+  recommendedModule
+    .pick({
+      id: true,
+      order: true,
+      title: true,
+      referenceId: true,
+      type: true,
+    })
+    .extend({
+      items: z.array(
+        recommendedItem
+          .pick({
+            id: true,
+            order: true,
+            moduleId: true,
+            seriesId: true,
+            episodeId: true,
+          })
+          .extend({
+            series: seriesMinimal.nullable(),
+            episode: episodeMinimal
+              .extend({
+                series: seriesMinimal,
+              })
+              .nullable(),
+          }),
+      ),
+    }),
+);
+
 // GET /recommended/:referenceId
 export const getRecommendedModulesRequestParams = z.object({
   referenceId: z.string(),
 });
 export const getRecommendedModulesResponse = z.array(
-  recommendedModule.extend({
+  recommendedModule.pick({ id: true, title: true, type: true }).extend({
     items: z.array(
-      recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
-          .nullable(),
-        episode: episode
-          .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
-          })
-          .nullable(),
-      }),
+      recommendedItem
+        .pick({
+          id: true,
+        })
+        .extend({
+          series: series.pick({ id: true, thumbnailUrl: true, title: true }).nullable(),
+          episode: episode
+            .pick({
+              description: true,
+              id: true,
+              premium: true,
+              thumbnailUrl: true,
+              title: true,
+            })
+            .extend({
+              description: z.string().max(100), // 100文字制限を追加
+              series: series.pick({ id: true, thumbnailUrl: true, title: true }),
+            })
+            .nullable(),
+        }),
     ),
   }),
 );
-
 // POST /signIn
 export const signInRequestBody = z.object({
   email: z.string(),
