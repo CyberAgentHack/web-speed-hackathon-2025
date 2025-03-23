@@ -51,7 +51,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative h-fit w-fit">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={episode.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -74,6 +74,7 @@ export const EpisodePage = () => {
                       <img
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
+                        loading="lazy"
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
@@ -88,6 +89,7 @@ export const EpisodePage = () => {
                     playerRef={playerRef}
                     playerType={PlayerType.HlsJS}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
+                    preload
                   />
 
                   <div className="absolute inset-x-0 bottom-0">
