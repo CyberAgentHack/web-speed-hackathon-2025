@@ -7,7 +7,7 @@ jobs:
   create-review-app:
     runs-on: ubuntu-latest
     steps:
-      - uses: fastruby/manage-heroku-review-app@9fa49f0320460f278c3687bc348dd0cbb18555dc # v1.3
+      - uses: kqito/manage-heroku-review-app@55e434ad5ac86f21cf2f7654de1566973fbc7046
         with:
           action: create
         env:
