@@ -33,7 +33,7 @@ export const SeriesPage = (store: ReturnType<typeof createStore>) => {
     (async () => await fetchSeriesDatas(store, { seriesId }))().finally(() => setIsLoading(false));
   }, [seriesId]);
 
-  if (!series) {
+  if (!series || isLoading) {
     return <div></div>
   }
 

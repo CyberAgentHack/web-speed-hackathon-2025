@@ -92,13 +92,14 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
     });
   }, [programId]);
 
-  if (!program) {
+  if (!program || isLoading) {
     return <div></div>;
   }
 
   useEffect(() => {
     if (isArchivedRef.current) return;
-  
+    if (isLoading) return;
+
     const intervalId = setInterval(() => {
       // 放送前の場合は定期的に更新
       if (!isBroadcastStarted) {
@@ -126,7 +127,7 @@ export const ProgramPage = (store: ReturnType<typeof createStore>) => {
     }, 250);
   
     return () => clearInterval(intervalId);
-  }, [isBroadcastStarted, nextProgram?.id, program, program.endAt]);
+  }, [isBroadcastStarted, nextProgram?.id, program, program.endAt, isLoading]);
 
   return (
     <>

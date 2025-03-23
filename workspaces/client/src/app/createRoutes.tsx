@@ -1,8 +1,9 @@
 import lazy from 'p-min-delay';
 import { RouteObject } from 'react-router';
 
-import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
+import { Document } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { prefetch } from '@wsh-2025/client/src/app/Document';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
@@ -16,9 +17,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               0,
             );
             const Component = () => HomePage(store);
-            return {
-              Component,
-            };
+            return { Component };
           },
         },
         {
@@ -28,9 +27,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               0,
             );
             const Component = () => EpisodePage(store);
-            return {
-              Component,
-            };
+            return { Component };
           },
           path: '/episodes/:episodeId',
         },
@@ -41,9 +38,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               0,
             );
             const Component = () => ProgramPage(store);
-            return {
-              Component,
-            };
+            return { Component };
           },
           path: '/programs/:programId',
         },
@@ -54,9 +49,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               0,
             );
             const Component = () => SeriesPage(store);
-            return {
-              Component,
-            };
+            return { Component };
           },
           path: '/series/:seriesId',
         },
@@ -67,9 +60,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               0,
             );
             const Component = () => TimetablePage(store);
-            return {
-              Component,
-            };
+            return { Component };
           },
           path: '/timetable',
         },
@@ -80,9 +71,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               0,
             );
             const Component = () => NotFoundPage(store);
-            return {
-              Component,
-            };
+            return { Component };
           },
           path: '*',
         },
@@ -90,7 +79,7 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
       Component: Document,
       async loader() {
         return await prefetch(store);
-      },
+              },
       path: '/',
     },
   ];

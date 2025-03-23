@@ -55,7 +55,7 @@ export const EpisodePage = (store: ReturnType<typeof createStore>) => {
     (async () => await fetchEpisodeDatas(store, { episodeId }))().finally(() => setIsLoading(false));
   }, []);
 
-  if (!episode) {
+  if (!episode || isLoading) {
     return <div></div>
   }
 

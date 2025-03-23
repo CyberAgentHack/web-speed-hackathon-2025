@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Outlet, ScrollRestoration } from 'react-router';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -15,14 +14,11 @@ export const Document = () => {
       <head>
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <script src="/public/main.js"></script>
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
-        <Suspense>
-          <Layout>
-            <Outlet />
-          </Layout>
-        </Suspense>
+        <Layout>
+          <Outlet />
+        </Layout>
         <ScrollRestoration />
       </body>
     </html>
