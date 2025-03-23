@@ -200,6 +200,7 @@ export const getRecommendedModulesResponse = z.array(
           title: true,
           thumbnailUrl: true,
           premium: true,
+          description: true,
         })
           .extend({
             series: series.pick({ title: true })
