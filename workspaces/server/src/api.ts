@@ -1,6 +1,8 @@
 import 'zod-openapi/extend';
 
+import fs from 'fs';
 import { randomBytes } from 'node:crypto';
+import path from 'path';
 
 import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
@@ -19,10 +21,14 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-zod-openapi';
+import ffmpeg, { FfmpegCommand } from 'fluent-ffmpeg';
+import { Parser } from 'm3u8-parser';
+import fetch from 'node-fetch';
 import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -643,6 +649,94 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       }
       req.session.set('id', void 0);
       reply.code(200).send();
+    },
+  });
+
+  api.route({
+    method: 'GET',
+    url: '/thumbnail/:episodeId',
+    schema: {
+      tags: ['サムネイル'],
+      params: schema.getEpisodeByIdRequestParams, // 必要に応じてスキーマを定義
+      response: {
+        200: {
+          content: {
+            'image/jpeg': {
+              schema: z.unknown(), // OpenAPI 用に適切なスキーマを設定
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getThumbnail(req, reply) {
+      const { episodeId } = req.params;
+
+      try {
+        // HLS プレイリストを取得
+        const playlistUrl = `https://your-cdn.com/streams/episode/${episodeId}/playlist.m3u8`;
+        const playlistResponse = await fetch(playlistUrl);
+        const playlistText = await playlistResponse.text();
+
+        const parser = new Parser();
+        parser.push(playlistText);
+        parser.end();
+
+        // セグメントを一時ディレクトリにダウンロード
+        const tempDir = path.join(__dirname, `../../temp/${episodeId}`);
+        fs.mkdirSync(tempDir, { recursive: true });
+
+        const segmentPaths = await Promise.all(
+          parser.manifest.segments.map(async (segment, index) => {
+            const segmentResponse = await fetch(segment.uri);
+            const segmentBuffer = Buffer.from(await segmentResponse.arrayBuffer());
+            const segmentPath = path.join(tempDir, `segment${index}.ts`);
+            fs.writeFileSync(segmentPath, segmentBuffer);
+            return segmentPath;
+          }),
+        );
+
+        // セグメントを結合
+        const concatFilePath = path.join(tempDir, 'concat.txt');
+        fs.writeFileSync(
+          concatFilePath,
+          segmentPaths.map((p) => `file '${p}'`).join('\n'),
+        );
+
+        const outputVideoPath = path.join(tempDir, 'output.mp4');
+        await new Promise((resolve, reject) => {
+          const command: FfmpegCommand = ffmpeg();
+          command
+            .input(concatFilePath)
+            .inputOptions('-f concat', '-safe 0')
+            .output(outputVideoPath)
+            .on('end', resolve)
+            .on('error', reject)
+            .run();
+        });
+
+        // サムネイルを生成
+        const thumbnailPath = path.join(tempDir, 'thumbnail.jpg');
+        await new Promise((resolve, reject) => {
+          ffmpeg(outputVideoPath)
+            .outputOptions([
+              '-vf', "fps=1,scale=160:90,tile=5x1",
+              '-frames:v', '1',
+            ])
+            .output(thumbnailPath)
+            .on('end', resolve)
+            .on('error', reject)
+            .run();
+        });
+
+        // サムネイルをレスポンスとして送信
+        reply.type('image/jpeg').send(fs.createReadStream(thumbnailPath));
+
+        // 一時ファイルを削除
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      } catch (error) {
+        console.error(error);
+        reply.status(500).send('サムネイル生成に失敗しました');
+      }
     },
   });
 
