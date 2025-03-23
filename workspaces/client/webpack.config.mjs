@@ -2,19 +2,11 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+/** @type {import('webpack').Configuration} */
 const config = {
-  devServer: {
-    compress: true,
-    // HMRを有効化
-    historyApiFallback: true,
-    hot: true,
-    port: 3000,
-    static: path.resolve(import.meta.dirname, 'dist'), // SPAでのリロード対応
-  },
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: 'development',
-  // HMRは開発モードで有効
+  mode: 'production',
   module: {
     rules: [
       {
@@ -64,22 +56,11 @@ const config = {
     chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: '/',
+    publicPath: 'auto',
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-    new webpack.HotModuleReplacementPlugin(), // HMRプラグインを追加
-    // {
-    //   apply: (compiler) => {
-    //     compiler.hooks.done.tap('MetafilePlugin', (stats) => {
-    //       const metafilePath = path.resolve(import.meta.dirname, './dist/metafile.json');
-    //       const jsonStats = stats.toJson({ all: true });
-    //       writeFileSync(metafilePath, JSON.stringify(jsonStats, null, 2));
-    //       console.log(`Metafile generated: ${metafilePath}`);
-    //     });
-    //   },
-    // },
   ],
   resolve: {
     alias: {
