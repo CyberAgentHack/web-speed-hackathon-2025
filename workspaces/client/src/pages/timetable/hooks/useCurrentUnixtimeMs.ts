@@ -1,16 +1,25 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useCurrentUnixtimeMs(): number {
-  const state = useStore((s) => s);
+  // セレクタを最適化: 必要な状態のみを選択
+  const refreshCurrentUnixtimeMs = useStore(
+    useCallback((s) => s.pages.timetable.refreshCurrentUnixtimeMs, [])
+  );
+  const currentUnixtimeMs = useStore(
+    useCallback((s) => s.pages.timetable.currentUnixtimeMs, [])
+  );
+
   useEffect(() => {
+    // 更新間隔を250msから1000msに延長
     const interval = setInterval(() => {
-      state.pages.timetable.refreshCurrentUnixtimeMs();
-    }, 250);
+      refreshCurrentUnixtimeMs();
+    }, 1000);
     return () => {
       clearInterval(interval);
     };
-  }, []);
-  return state.pages.timetable.currentUnixtimeMs;
+  }, [refreshCurrentUnixtimeMs]);
+
+  return currentUnixtimeMs;
 }
