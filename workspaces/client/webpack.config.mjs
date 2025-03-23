@@ -4,9 +4,15 @@ import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: process.env['NODE_ENV'] === 'production' ? false : 'cheap-module-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
+  optimization: {
+    usedExports: true,
+    sideEffects: true,
+    minimize: process.env['NODE_ENV'] === 'production',
+    moduleIds: 'deterministic',
+  },
   module: {
     rules: [
       {
@@ -18,6 +24,7 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
             presets: [
               [
                 '@babel/preset-env',
@@ -58,10 +65,7 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' })],
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
