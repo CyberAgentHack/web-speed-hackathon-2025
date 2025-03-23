@@ -2,13 +2,16 @@
   "name": "@wsh-2025/server",
   "private": true,
   "scripts": {
+    "build": "tsc",
     "database:migrate": "wireit",
     "database:reset": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit",
     "heroku-start": "wireit",
-    "start": "wireit"
+    "start": "wireit",
+    "start-render": "node ./dist/server/src/index.js",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@fastify/cookie": "11.0.2",
@@ -64,29 +67,22 @@
       "command": "tsx ./tools/seed.ts"
     },
     "start": {
-      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx ./src/index.ts",
       "service": true,
       "env": {
         "API_BASE_URL": {
           "external": true,
           "default": "http://localhost:8000/api"
-        },
-        "PORT": {
-          "external": true,
-          "default": "8000"
         }
       },
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*"
-      ],
-      "dependencies": [
-        "../client:build"
       ]
     },
     "heroku-start": {
-      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx ./src/index.ts",
       "service": true,
       "env": {
         "API_BASE_URL": {

@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { ArrayValues } from 'type-fest';
 
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
@@ -6,25 +5,30 @@ import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 type ChannelId = string;
 
 export function useTimetable() {
-  const state = useStore((s) => s);
+  const channels = useStore((s) => Object.values(s.features.channel.channels));
+  const programs = useStore((s) => Object.values(s.features.timetable.programs));
 
-  const channels = Object.values(state.features.channel.channels);
-  const programs = Object.values(state.features.timetable.programs);
-
-  const record: Record<ChannelId, ArrayValues<typeof programs>[]> = {};
+  const record: Record<
+    ChannelId,
+    {
+      id: ChannelId;
+      logoUrl: string;
+      name: string;
+      programs: ArrayValues<typeof programs>[];
+    }
+  > = {};
 
   for (const channel of channels) {
-    const filteredPrograms = [];
+    const filteredPrograms = programs
+      .filter((program) => program.channelId === channel.id)
+      .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
 
-    for (const program of programs) {
-      if (program.channelId === channel.id) {
-        filteredPrograms.push(program);
-      }
-    }
-
-    record[channel.id] = filteredPrograms.sort((a, b) => {
-      return DateTime.fromISO(a.startAt).toMillis() - DateTime.fromISO(b.startAt).toMillis();
-    });
+    record[channel.id] = {
+      id: channel.id,
+      logoUrl: channel.logoUrl,
+      name: channel.name,
+      programs: filteredPrograms,
+    };
   }
 
   return record;

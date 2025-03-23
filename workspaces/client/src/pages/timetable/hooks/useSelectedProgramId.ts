@@ -1,15 +1,15 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { ArrayValues } from 'type-fest';
 
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
-type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 
 export function useSelectedProgramId() {
-  const state = useStore((s) => s);
+  const state = useStore((s) => s.pages.timetable);
   const setProgram = (program: Program | null) => {
-    state.pages.timetable.selectProgram(program);
+    state.selectProgram(program);
   };
-  return [state.pages.timetable.selectedProgramId, setProgram] as const;
+  return [state.selectedProgramId, setProgram] as const;
 }

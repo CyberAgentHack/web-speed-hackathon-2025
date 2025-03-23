@@ -1,16 +1,20 @@
-import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
+
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
 
-export const prefetch = async (store: ReturnType<typeof createStore>) => {
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
+export async function loader() {
+  const modules = await recommendedService.fetchRecommendedModulesByReferenceId({ referenceId: 'entrance' });
   return { modules };
-};
+}
 
-export const HomePage = () => {
-  const modules = useRecommended({ referenceId: 'entrance' });
+export default function HomePage({
+  loaderData,
+}: {
+  loaderData: { modules: StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse> };
+}) {
+  const { modules } = loaderData;
 
   return (
     <>
@@ -27,4 +31,4 @@ export const HomePage = () => {
       </div>
     </>
   );
-};
+}

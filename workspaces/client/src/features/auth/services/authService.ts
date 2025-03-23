@@ -1,24 +1,27 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
+import {
+  getUserResponse,
+  signInRequestBody,
+  signInResponse,
+  signUpRequestBody,
+  signUpResponse,
+} from '@wsh-2025/schema/src/openapi/schema';
 
 const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
+  baseURL: import.meta.env['VITE_API_BASE_URL'] ?? 'http://localhost:8000/api',
   schema: createSchema({
     '/signIn': {
-      input: schema.signInRequestBody,
-      output: schema.signInResponse,
+      input: signInRequestBody,
+      output: signInResponse,
     },
     '/signOut': {},
     '/signUp': {
-      input: schema.signUpRequestBody,
-      output: schema.signUpResponse,
+      input: signUpRequestBody,
+      output: signUpResponse,
     },
     '/users/me': {
-      output: schema.getUserResponse,
+      output: getUserResponse,
     },
   }),
   throw: true,
@@ -26,13 +29,13 @@ const $fetch = createFetch({
 
 interface AuthService {
   fetchSignIn: (
-    body: StandardSchemaV1.InferOutput<typeof schema.signInRequestBody>,
-  ) => Promise<StandardSchemaV1.InferOutput<typeof schema.signInResponse>>;
+    body: StandardSchemaV1.InferOutput<typeof signInRequestBody>,
+  ) => Promise<StandardSchemaV1.InferOutput<typeof signInResponse>>;
   fetchSignOut: () => Promise<void>;
   fetchSignUp: (
-    body: StandardSchemaV1.InferOutput<typeof schema.signUpRequestBody>,
-  ) => Promise<StandardSchemaV1.InferOutput<typeof schema.signUpResponse>>;
-  fetchUser: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getUserResponse>>;
+    body: StandardSchemaV1.InferOutput<typeof signUpRequestBody>,
+  ) => Promise<StandardSchemaV1.InferOutput<typeof signUpResponse>>;
+  fetchUser: () => Promise<StandardSchemaV1.InferOutput<typeof getUserResponse> | null>;
 }
 
 export const authService: AuthService = {
@@ -48,7 +51,11 @@ export const authService: AuthService = {
     return data;
   },
   async fetchUser() {
-    const data = await $fetch('/users/me');
-    return data;
+    try {
+      const data = await $fetch('/users/me');
+      return data;
+    } catch {
+      return null;
+    }
   },
 };

@@ -5,12 +5,11 @@ interface Params {
 }
 
 export function useRecommended({ referenceId }: Params) {
-  const state = useStore((s) => s);
-
-  const moduleIds = state.features.recommended.references[referenceId];
+  const moduleIds = useStore((s) => s.features.recommended.references[referenceId]);
+  const _modules = useStore((s) => s.features.recommended.recommendedModules);
 
   const modules = (moduleIds ?? [])
-    .map((moduleId) => state.features.recommended.recommendedModules[moduleId])
+    .map((moduleId) => _modules[moduleId])
     .filter(<T>(m: T): m is NonNullable<T> => m != null);
 
   return modules;

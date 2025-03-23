@@ -1,0 +1,11 @@
+services:
+  - type: web
+    runtime: node
+    name: wsh-2025-server
+    plan: free
+    buildCommand: pnpm install
+    startCommand: pnpm start
+    rootDir: workspaces/server
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -1,14 +1,28 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { produce } from 'immer';
-import _ from 'lodash';
+import { getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 
+// Custom debounce utility function
+function debounce<T extends (...args: unknown[]) => unknown>(func: T, wait: number): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return (...args: Parameters<T>) => {
+    if (timeoutId != null) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      func(...args);
+      timeoutId = null;
+    }, wait);
+  };
+}
+
 type ChannelId = string;
-type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 
 interface TimetablePageState {
   columnWidthRecord: Record<ChannelId, number>;
@@ -28,10 +42,14 @@ export const createTimetablePageStoreSlice = () => {
   return lens<TimetablePageState & TimetablePageActions>((set, _get) => ({
     changeColumnWidth: (params: { channelId: string; delta: number }) => {
       set((state) => {
-        return produce(state, (draft) => {
-          const current = draft.columnWidthRecord[params.channelId] ?? DEFAULT_WIDTH;
-          draft.columnWidthRecord[params.channelId] = Math.max(current + params.delta, 100);
-        });
+        const current = state.columnWidthRecord[params.channelId] ?? DEFAULT_WIDTH;
+        return {
+          ...state,
+          columnWidthRecord: {
+            ...state.columnWidthRecord,
+            [params.channelId]: Math.max(current + params.delta, 100)
+          }
+        };
       });
     },
     closeNewFeatureDialog: () => {
@@ -41,7 +59,7 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
+    refreshCurrentUnixtimeMs: debounce(() => {
       set(() => ({
         currentUnixtimeMs: Date.now(),
       }));

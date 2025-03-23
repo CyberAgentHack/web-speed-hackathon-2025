@@ -8,14 +8,14 @@ import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
 import { registerSsr } from '@wsh-2025/server/src/ssr';
 import { registerStreams } from '@wsh-2025/server/src/streams';
 
+const port = process.env.PORT || 8000;
+const host = '0.0.0.0';
+
 async function main() {
   await initializeDatabase();
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
-  });
   app.register(cors, {
     origin: true,
   });
@@ -24,7 +24,7 @@ async function main() {
   app.register(registerSsr);
 
   await app.ready();
-  const address = await app.listen({ host: '0.0.0.0', port: Number(process.env['PORT']) });
+  const address = await app.listen({ host, port });
   console.log(`Server listening at ${address}`);
 }
 

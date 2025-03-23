@@ -1,10 +1,15 @@
-import * as Slider from '@radix-ui/react-slider';
+import { Range, Root, Thumb, Track } from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Duration } from 'luxon';
+import { getEpisodeByIdResponse } from '@wsh-2025/schema/src/openapi/schema';
 import invariant from 'tiny-invariant';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+// Helper function to format seconds into mm:ss format
+const formatTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
@@ -12,7 +17,7 @@ import { useMuted } from '@wsh-2025/client/src/pages/episode/hooks/useMuted';
 import { usePlaying } from '@wsh-2025/client/src/pages/episode/hooks/usePlaying';
 
 interface Props {
-  episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
+  episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
 }
 
 export const PlayerController = ({ episode }: Props) => {
@@ -31,7 +36,7 @@ export const PlayerController = ({ episode }: Props) => {
             <SeekThumbnail episode={episode} />
           </div>
 
-          <Slider.Root
+          <Root
             className="group relative flex h-[20px] w-full cursor-pointer touch-none select-none flex-row items-center"
             max={duration}
             min={0}
@@ -42,20 +47,19 @@ export const PlayerController = ({ episode }: Props) => {
               updateCurrentTime(t);
             }}
           >
-            <Slider.Track className="grow-1 relative h-[2px] rounded-[4px] bg-[#999999] group-hover:h-[4px]">
-              <Slider.Range className="absolute h-[2px] rounded-[4px] bg-[#1c43d1] group-hover:h-[4px]" />
-            </Slider.Track>
-            <Slider.Thumb className="block size-[20px] rounded-[10px] bg-[#1c43d1] opacity-0 focus:outline-none group-hover:opacity-100" />
-          </Slider.Root>
+            <Track className="grow-1 relative h-[2px] rounded-[4px] bg-[#999999] group-hover:h-[4px]">
+              <Range className="absolute h-[2px] rounded-[4px] bg-[#1c43d1] group-hover:h-[4px]" />
+            </Track>
+            <Thumb className="block size-[20px] rounded-[10px] bg-[#1c43d1] opacity-0 focus:outline-none group-hover:opacity-100" />
+          </Root>
         </div>
 
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
                 <button
                   aria-label={playing ? '一時停止する' : '再生する'}
-                  className="block rounded-[4px]"
+                  className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F] cursor-pointer"
                   type="button"
                   onClick={() => {
                     togglePlaying();
@@ -65,21 +69,19 @@ export const PlayerController = ({ episode }: Props) => {
                     className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
                   />
                 </button>
-              </Hoverable>
 
               <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
-                {Duration.fromObject({ seconds: currentTime }).toFormat('mm:ss')}
+                {formatTime(currentTime)}
                 {' / '}
-                {Duration.fromObject({ seconds: duration }).toFormat('mm:ss')}
+                {formatTime(duration)}
               </span>
             </div>
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
               <button
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
-                className="block rounded-[4px]"
+                className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F] cursor-pointer"
                 type="button"
               >
                 <span
@@ -89,7 +91,6 @@ export const PlayerController = ({ episode }: Props) => {
                   }}
                 />
               </button>
-            </Hoverable>
           </div>
         </div>
       </div>

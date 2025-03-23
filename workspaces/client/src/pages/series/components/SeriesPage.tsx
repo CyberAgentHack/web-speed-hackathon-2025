@@ -1,31 +1,40 @@
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import { getRecommendedModulesResponse, getSeriesByIdResponse } from '@wsh-2025/schema/src/openapi/schema';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
-import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
+import { seriesService } from '@wsh-2025/client/src/features/series/services/seriesService';
 
-export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
+export const loader = async ({ params }: { params: Params }) => {
+  const { seriesId } = params;
   invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+
+  // 複数のAPIリクエストを並行して実行
+  const [series, modules] = await Promise.all([
+    seriesService.fetchSeriesById({ seriesId }),
+    recommendedService.fetchRecommendedModulesByReferenceId({ referenceId: seriesId }),
+  ]);
+
   return { modules, series };
 };
 
-export const SeriesPage = () => {
+export default function SeriesPage({
+  loaderData,
+}: {
+  loaderData: {
+    modules: StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>;
+    series: StandardSchemaV1.InferOutput<typeof getSeriesByIdResponse>;
+  };
+}) {
   const { seriesId } = useParams();
   invariant(seriesId);
 
-  const series = useSeriesById({ seriesId });
-  invariant(series);
-
-  const modules = useRecommended({ referenceId: seriesId });
+  const { modules, series } = loaderData;
 
   return (
     <>
@@ -37,6 +46,7 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
               src={series.thumbnailUrl}
             />
           </Flipped>
@@ -63,4 +73,4 @@ export const SeriesPage = () => {
       </div>
     </>
   );
-};
+}

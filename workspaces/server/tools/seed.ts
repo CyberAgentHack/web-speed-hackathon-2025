@@ -3,11 +3,10 @@ import { createClient } from '@libsql/client';
 import * as schema from '@wsh-2025/schema/src/database/schema';
 import { drizzle } from 'drizzle-orm/libsql';
 import { reset } from 'drizzle-seed';
-import { DateTime } from 'luxon';
 
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
-import * as bcrypt from 'bcrypt';
+import { hashSync } from 'bcrypt';
 import path from 'node:path';
 import { readdirSync } from 'node:fs';
 
@@ -89,7 +88,7 @@ async function main() {
   });
 
   const rootDir = path.resolve(__dirname, '../../..');
-  const files = await getFiles(path.resolve(rootDir, 'public/images'));
+  const files = await getFiles(path.resolve(rootDir, 'public/images-compress'));
   const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
 
   try {
@@ -117,7 +116,7 @@ async function main() {
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
         id: faker.string.uuid(),
-        logoUrl: `/public/logos/${id}.svg`,
+        logoUrl: `/public/logos/${id}.avif`,
         name,
       }));
       const result = await database.insert(schema.channel).values(data).returning();
@@ -165,7 +164,7 @@ async function main() {
     const episodeListGroupedByStreamId = Object.values(Object.groupBy(episodeList, (episode) => episode.streamId));
     for (const channel of channelList) {
       let remainingMinutes = 24 * 60;
-      let startAt = DateTime.now().startOf('day').toMillis();
+      let startAt = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
       while (remainingMinutes > 0) {
         const durationCandidate =
@@ -297,7 +296,7 @@ async function main() {
     await database.insert(schema.user).values([
       {
         email: 'test@example.com',
-        password: bcrypt.hashSync('test', 10),
+        password: hashSync('test', 10),
       },
     ]);
   } finally {

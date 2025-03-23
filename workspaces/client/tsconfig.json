@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "target": "ESNext"
   },
-  "exclude": ["dist"],
+  "exclude": ["build"],
   "extends": "@wsh-2025/configs/tsconfig.json",
-  "include": ["**/*", "**/*.mjs"]
+  "include": ["**/*", "**/.server/**/*", "**/.client/**/*", ".react-router/types/**/*"]
 }

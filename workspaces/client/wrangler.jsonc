@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "web-speed-hack",
+  "compatibility_date": "2025-02-24",
+  "main": "./workers/app.ts",
+  "assets": {},
+  "vars": {
+    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare",
+    "VITE_API_BASE_URL": "https://wsh-2025-server.onrender.com/api",
+    "VITE_STREAM_BASE_URL": "https://wsh-2025-server.onrender.com",
+  },
+}

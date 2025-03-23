@@ -1,8 +1,14 @@
-import type { ExtractState } from 'zustand/vanilla';
-import { createContext } from 'zustand-di';
+import { createContext, useContext } from 'react';
+import { useStore as useZustandStore } from 'zustand';
 
-import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Store, StoreState } from '@wsh-2025/client/src/app/createStore';
 
-const [StoreProvider, useStore] = createContext<ExtractState<ReturnType<typeof createStore>>>();
+export const StoreContext = createContext<Store | null>(null);
 
-export { StoreProvider, useStore };
+export const useStore = <T>(selector: (state: StoreState) => T): T => {
+  const store = useContext(StoreContext);
+  if (!store) {
+    throw new Error('useStore must be used within StoreProvider');
+  }
+  return useZustandStore(store, selector);
+};
