@@ -1,5 +1,7 @@
 # Web Speed Hackathon 2025 AREMA
 
+## デプロイ確認用
+
 ## 概要
 
 **"Web Speed Hackathon 2025" は、非常に重たい Web アプリをチューニングして、いかに高速にするかを競う競技です。**
@@ -55,10 +57,10 @@ https://github.com/CyberAgentHack/web-speed-hackathon-2025-scoring-tool/issues/n
   - WING IT!: CC BY 4.0 by Blender Foundation
   - GIF 画像: [Pexels License](https://www.pexels.com/license/) by Pexels
 - Fonts
-  - 無心: [MODI工場独自ライセンス](https://modi.jpn.org/licence.php) by MODI工場
-  - まなびや さくら: [MODI工場独自ライセンス](https://modi.jpn.org/licence.php) by MODI工場
-  - 黒薔薇ゴシック Medium: M+ FONTS LICENSE by MODI工場
-  - めもわーる: [MODI工場独自ライセンス](https://modi.jpn.org/licence.php) by MODI工場
+  - 無心: [MODI 工場独自ライセンス](https://modi.jpn.org/licence.php) by MODI 工場
+  - まなびや さくら: [MODI 工場独自ライセンス](https://modi.jpn.org/licence.php) by MODI 工場
+  - 黒薔薇ゴシック Medium: M+ FONTS LICENSE by MODI 工場
+  - めもわーる: [MODI 工場独自ライセンス](https://modi.jpn.org/licence.php) by MODI 工場
 - Program metadata
   - 作品名は [メディア芸術データベースデータセット](https://github.com/mediaarts-db/dataset) をもとにランダム値を生成しています
     - > メディア芸術データベースデータセットは、自由な二次利用が可能です。
