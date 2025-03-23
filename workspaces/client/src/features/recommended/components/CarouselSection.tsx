@@ -21,11 +21,11 @@ export const CarouselSection = ({ module }: Props) => {
         <div
           key={module.id}
           ref={containerRefForScrollSnap}
-          className="relative mx-[-24px] grid auto-cols-[minmax(276px,1fr)] grid-flow-col gap-3 overflow-x-auto overflow-y-hidden pl-6 pr-14"
+          className="carousel"
           data-scroll-restore={`carousel-${module.id}`}
         >
           {module.items.map((item) => (
-            <div key={item.id} className="shrink-0 grow-0">
+            <div key={item.id} className="whitespace-nowrap">
               {item.series != null ? <SeriesItem first={module.order < 3} series={item.series} /> : null}
               {item.episode != null ? <EpisodeItem episode={item.episode} first={module.order < 3} /> : null}
             </div>
