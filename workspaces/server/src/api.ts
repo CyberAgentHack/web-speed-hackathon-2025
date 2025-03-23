@@ -1,5 +1,7 @@
 import 'zod-openapi/extend';
+
 import { randomBytes } from 'node:crypto';
+
 import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
@@ -19,10 +21,13 @@ import {
 } from 'fastify-zod-openapi';
 import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
+
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+
   await app.register(fastifyCookie);
   await app.register(fastifySession, {
     cookie: {
@@ -47,10 +52,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     routePrefix: '/docs',
   });
 
-  // 文字数圧縮
-  const trimString = (text: string | null | undefined, maxLength: number) =>
-    text ? text.substring(0, maxLength) : text;
-
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
   /* eslint-disable sort/object-properties */
@@ -74,6 +75,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send({});
     },
   });
+
   api.route({
     method: 'GET',
     url: '/channels',
@@ -92,6 +94,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannels(req, reply) {
       const database = getDatabase();
+
       const channels = await database.query.channel.findMany({
         orderBy(channel, { asc }) {
           return asc(channel.id);
@@ -107,6 +110,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(channels);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/channels/:channelId',
@@ -125,6 +129,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannelById(req, reply) {
       const database = getDatabase();
+
       const channel = await database.query.channel.findFirst({
         where(channel, { eq }) {
           return eq(channel.id, req.params.channelId);
@@ -136,6 +141,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(channel);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/episodes',
@@ -154,6 +160,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodes(req, reply) {
       const database = getDatabase();
+
       const episodes = await database.query.episode.findMany({
         orderBy(episode, { asc }) {
           return asc(episode.id);
@@ -177,18 +184,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-      // AfterChange
-      const trimmedEpisodes = episodes.map(episode => ({
-        ...episode,
-        description: trimString(episode.description, 50),
-        series: {
-              ...episode.series,
-              description: trimString(episode.series.description, 50),
-              episodes: [],
-            },
-      }));
-      //
-      reply.code(200).send(trimmedEpisodes);
+      reply.code(200).send(episodes);
     },
   });
 
@@ -210,6 +206,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodeById(req, reply) {
       const database = getDatabase();
+
       const episode = await database.query.episode.findFirst({
         where(episode, { eq }) {
           return eq(episode.id, req.params.episodeId);
@@ -232,6 +229,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(episode);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/series',
@@ -250,6 +248,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getSeries(req, reply) {
       const database = getDatabase();
+
       const series = await database.query.series.findMany({
         orderBy(series, { asc }) {
           return asc(series.id);
@@ -275,6 +274,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(series);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/series/:seriesId',
@@ -293,6 +293,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getProgramById(req, reply) {
       const database = getDatabase();
+
       const series = await database.query.series.findFirst({
         where(series, { eq }) {
           return eq(series.id, req.params.seriesId);
@@ -314,6 +315,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(series);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/timetable',
@@ -332,6 +334,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getTimetable(req, reply) {
       const database = getDatabase();
+
       const programs = await database.query.program.findMany({
         orderBy(program, { asc }) {
           return asc(program.startAt);
@@ -348,6 +351,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(programs);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/programs',
@@ -366,6 +370,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getPrograms(req, reply) {
       const database = getDatabase();
+
       const programs = await database.query.program.findMany({
         orderBy(program, { asc }) {
           return asc(program.startAt);
@@ -397,6 +402,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(programs);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/programs/:programId',
@@ -415,6 +421,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getProgramById(req, reply) {
       const database = getDatabase();
+
       const program = await database.query.program.findFirst({
         where(program, { eq }) {
           return eq(program.id, req.params.programId);
@@ -442,6 +449,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(program);
     },
   });
+
   api.route({
     method: 'GET',
     url: '/recommended/:referenceId',
@@ -460,6 +468,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
+
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -499,37 +508,143 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-
-      const trimmedModules = modules.map(module => ({
-        ...module,
-        items: module.items.map(item => ({
-          ...item,
-          episode: item.episode
-            ? {
-                ...item.episode,
-                description: trimString(item.episode.description, 50),
-                series: {
-                      ...item.episode.series,
-                      description: trimString(item.episode.series.description, 50),
-                      episodes: [],
-                    },
-              }
-            : null,
-          series: item.series
-            ? {
-                ...item.series,
-                description: trimString(item.series.description, 50),
-                episodes: item.series.episodes.map(episode => ({
-                  ...episode,
-                  description: trimString(episode.description, 50),
-                })),
-              }
-            : null,
-        })),
-      }));
-      reply.code(200).send(trimmedModules);
+      reply.code(200).send(modules);
     },
   });
 
-   /* eslint-enable sort/object-properties */
+  api.route({
+    method: 'POST',
+    url: '/signIn',
+    schema: {
+      tags: ['認証'],
+      body: schema.signInRequestBody,
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.signInResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function signIn(req, reply) {
+      const database = getDatabase();
+
+      const user = await database.query.user.findFirst({
+        where(user, { eq }) {
+          return eq(user.email, req.body.email);
+        },
+      });
+      if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+        return reply.code(401).send();
+      }
+
+      const ret = schema.signInResponse.parse({ id: user.id, email: user.email });
+
+      req.session.set('id', ret.id.toString());
+      reply.code(200).send(user);
+    },
+  });
+
+  api.route({
+    method: 'POST',
+    url: '/signUp',
+    schema: {
+      tags: ['認証'],
+      body: schema.signUpRequestBody,
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.signUpResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function signUp(req, reply) {
+      const database = getDatabase();
+
+      const hasAlreadyExists = await database.query.user.findFirst({
+        where(user, { eq }) {
+          return eq(user.email, req.body.email);
+        },
+      });
+      if (hasAlreadyExists) {
+        return reply.code(400).send();
+      }
+
+      const users = await database
+        .insert(databaseSchema.user)
+        .values({
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 10),
+        })
+        .returning();
+
+      const user = users.find((u) => u.email === req.body.email);
+      if (!user) {
+        return reply.code(500).send();
+      }
+
+      const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
+
+      req.session.set('id', ret.id.toString());
+      reply.code(200).send(ret);
+    },
+  });
+
+  api.route({
+    method: 'GET',
+    url: '/users/me',
+    schema: {
+      tags: ['認証'],
+      response: {
+        200: {
+          content: {
+            'application/json': {
+              schema: schema.getUserResponse,
+            },
+          },
+        },
+      },
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function getSession(req, reply) {
+      const database = getDatabase();
+
+      const userId = req.session.get('id');
+      if (!userId) {
+        return reply.code(401).send();
+      }
+
+      const user = await database.query.user.findFirst({
+        where(user, { eq }) {
+          return eq(user.id, Number(userId));
+        },
+      });
+      if (!user) {
+        return reply.code(401).send();
+      }
+      reply.code(200).send(user);
+    },
+  });
+
+  api.route({
+    method: 'POST',
+    url: '/signOut',
+    schema: {
+      tags: ['認証'],
+    } satisfies FastifyZodOpenApiSchema,
+    handler: async function signOut(req, reply) {
+      const userId = req.session.get('id');
+      if (!userId) {
+        return reply.code(401).send();
+      }
+      req.session.set('id', void 0);
+      reply.code(200).send();
+    },
+  });
+
+  /* eslint-enable sort/object-properties */
 }
