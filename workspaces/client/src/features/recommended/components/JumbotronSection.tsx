@@ -91,7 +91,7 @@ export const JumbotronSection = ({ module }: Props) => {
                   ) : (
                     <div className="size-full bg-[#212121] flex items-center justify-center">
                       {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
-                      <img className="size-[48px]" src="/public/svg/loading.svg" />
+                      <img className="size-[48px]" loading="lazy" src="/public/svg/loading.svg" />
                     </div>
                   )}
                 </div>
