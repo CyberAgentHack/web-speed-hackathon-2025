@@ -1,6 +1,6 @@
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { useLoaderData } from 'react-router';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const modules = await store
@@ -10,9 +10,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const NotFoundPage = () => {
-  const modules = useRecommended({ referenceId: 'error' });
-  const module = modules.at(0);
-
+  const { modules } = useLoaderData() as Awaited<ReturnType<typeof prefetch>>;
   return (
     <>
       <title>見つかりません - AremaTV</title>
@@ -23,7 +21,7 @@ export const NotFoundPage = () => {
           <p>あなたが見ようとしたページは、残念ながら見つけられませんでした。</p>
           <img alt="" width={640} height={360} src="/public/animations/001.gif" />
         </section>
-        <section>{module != null ? <RecommendedSection module={module} eager={true} /> : null}</section>
+        <section>{modules[0] && <RecommendedSection module={modules[0]} eager={true} />}</section>
       </div>
     </>
   );
