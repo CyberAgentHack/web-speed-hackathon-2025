@@ -1,5 +1,6 @@
 import path from "node:path";
 
+import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
 // import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
@@ -7,10 +8,12 @@ import webpack from "webpack";
 const config = {
 	entry: "./src/main.tsx",
 	mode: "production",
+	target: "web",
 	module: {
 		rules: [
 			{
-				exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+				// exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
+				exclude: /node_modules/,
 				resolve: {
 					fullySpecified: false,
 				},
@@ -58,16 +61,24 @@ const config = {
 			},
 		],
 	},
+	optimization: {
+		// Terserプラグインによる圧縮を無効化
+		minimize: true,
+		minimizer: [new TerserPlugin()],
+	},
 	output: {
 		chunkFilename: "chunk-[contenthash].js",
 		chunkFormat: false,
-		filename: "main.js",
+		filename: "[name].js",
 		path: path.resolve(import.meta.dirname, "./dist"),
-		publicPath: "auto",
+		publicPath: "/",
 	},
 	plugins: [
-		new webpack.EnvironmentPlugin({ API_BASE_URL: "/api", NODE_ENV: "" }),
-		// new BundleAnalyzerPlugin()
+		new webpack.EnvironmentPlugin({
+			API_BASE_URL: "/api",
+			NODE_ENV: "",
+		}),
+		// new BundleAnalyzerPlugin(),
 	],
 	resolve: {
 		alias: {
@@ -82,7 +93,17 @@ const config = {
 				"@ffmpeg/core/dist/umd/ffmpeg-core.wasm",
 			),
 		},
-		extensions: [".js", ".cjs", ".mjs", ".ts", ".cts", ".mts", ".tsx", ".jsx"],
+		extensions: [
+			".js",
+			".cjs",
+			".mjs",
+			".ts",
+			".cts",
+			".mts",
+			".tsx",
+			".jsx",
+			".css",
+		],
 	},
 };
 

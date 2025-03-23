@@ -1,6 +1,5 @@
 import "@wsh-2025/client/src/setups/polyfills";
 import "@wsh-2025/client/src/setups/luxon";
-import "@wsh-2025/client/src/setups/unocss";
 
 import { StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
@@ -20,13 +19,11 @@ declare global {
 }
 
 function main() {
-	const store = createStore({
-		hydrationData: window.__staticRouterHydrationData,
-	});
-	const router = createBrowserRouter(createRoutes(store), {});
+	const store = createStore({});
+	const router = createBrowserRouter(createRoutes(store));
 
 	hydrateRoot(
-		document,
+		document.getElementById("app"),
 		<StrictMode>
 			<StoreProvider createStore={() => store}>
 				<RouterProvider router={router} />
@@ -35,4 +32,4 @@ function main() {
 	);
 }
 
-document.addEventListener("DOMContentLoaded", main);
+main();

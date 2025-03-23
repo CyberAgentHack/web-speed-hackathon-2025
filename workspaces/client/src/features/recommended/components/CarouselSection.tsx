@@ -1,12 +1,12 @@
 import { ElementScrollRestoration } from "@epic-web/restore-scroll";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type * as schema from "@wsh-2025/schema/src/api/schema";
+import { useRef } from "react";
 import type { ArrayValues } from "type-fest";
 import { useMergeRefs } from "use-callback-ref";
 
 import { EpisodeItem } from "@wsh-2025/client/src/features/recommended/components/EpisodeItem";
 import { SeriesItem } from "@wsh-2025/client/src/features/recommended/components/SeriesItem";
-import { useCarouselItemWidth } from "@wsh-2025/client/src/features/recommended/hooks/useCarouselItemWidth";
 import { useScrollSnap } from "@wsh-2025/client/src/features/recommended/hooks/useScrollSnap";
 
 interface Props {
@@ -17,8 +17,7 @@ interface Props {
 
 export const CarouselSection = ({ module }: Props) => {
 	const containerRefForScrollSnap = useScrollSnap({ scrollPadding: 24 });
-	const { ref: containerRefForItemWidth, width: itemWidth } =
-		useCarouselItemWidth();
+	const containerRefForItemWidth = useRef<HTMLDivElement>(null);
 	const mergedRef = useMergeRefs([
 		containerRefForItemWidth,
 		containerRefForScrollSnap,
@@ -33,16 +32,16 @@ export const CarouselSection = ({ module }: Props) => {
 				<div
 					key={module.id}
 					ref={mergedRef}
-					className={`relative mx-[-24px] flex flex-row gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]`}
+					className="relative mx-[-24px] grid auto-cols-[minmax(276px,1fr)] grid-flow-col gap-x-3 overflow-x-auto overflow-y-hidden pl-6 pr-14"
 					data-scroll-restore={`carousel-${module.id}`}
 				>
 					{module.items.map((item) => (
-						<div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
+						<div key={item.id} className="shrink-0 grow-0">
 							{item.series != null ? (
 								<SeriesItem loading="lazy" series={item.series} />
 							) : null}
 							{item.episode != null ? (
-								<EpisodeItem episode={item.episode} />
+								<EpisodeItem episode={item.episode} loading="lazy" />
 							) : null}
 						</div>
 					))}
