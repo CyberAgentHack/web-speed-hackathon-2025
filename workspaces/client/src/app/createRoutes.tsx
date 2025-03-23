@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router';
 
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Layout } from '@wsh-2025/client/src/features/layout/components/Layout';
 
 export function createRoutes(store: ReturnType<typeof createStore>): RouteObject[] {
   return [
@@ -90,6 +91,11 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         },
       ],
       Component: Document,
+      hydrateFallbackElement: (
+        <Layout>
+          <div>Loading...</div>
+        </Layout>
+      ),
       async loader() {
         return await prefetch(store);
       },

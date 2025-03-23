@@ -1,58 +1,10 @@
-import presetWind3 from '@unocss/preset-wind3';
-import tailwindCompatCSS from '@unocss/reset/tailwind-compat.css?raw';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
 async function init() {
   await initUnocssRuntime({
     defaults: defineConfig({
-      layers: {
-        default: 1,
-        icons: 0,
-        preflights: 0,
-        reset: -1,
-      },
-      preflights: [
-        {
-          getCSS: () => Promise.resolve(tailwindCompatCSS),
-          layer: 'reset',
-        },
-        {
-          getCSS: () => /* css */ `
-          @view-transition {
-            navigation: auto;
-          }
-          html, body {
-            height: 100%;
-            width: 100%;
-          }
-          body {
-            background-color: #000000;
-            color: #ffffff;
-          }
-          html,
-          :host {
-            font-family: 'Noto Sans JP', sans-serif !important;
-          }
-          video {
-            max-height: 100%;
-            max-width: 100%;
-          }
-        `,
-        },
-        {
-          getCSS: () => /* css */ `
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-        `,
-        },
-      ],
-      presets: [presetWind3()],
+      preflights: [],
+      presets: [],
     }),
   });
 }
