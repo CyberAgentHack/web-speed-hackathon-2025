@@ -1,15 +1,13 @@
 import { DateTime } from 'luxon';
 import { useEffect, useRef, useState } from 'react';
 import { Flipped } from 'react-flip-toolkit';
-import { Link, Params, useNavigate, useParams } from 'react-router';
+import { Link, Params, useLoaderData, useNavigate } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
-import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useProgramById';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
@@ -26,27 +24,55 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const program = await store.getState().features.program.fetchProgramById({ programId });
   const channels = await store.getState().features.channel.fetchChannels();
   const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
-  return { channels, modules, program, timetable };
+  return { channels, program, timetable };
 };
 
-export const ProgramPage = () => {
-  const { programId } = useParams();
-  invariant(programId);
+const RecommendedArea = ({ programId }: { programId: string }) => {
+  const [recModule, setRecModule] = useState(null);
+  useEffect(() => {
+    const fetchRec = async () => {
+      const response = await fetch(`/api/recommended/${programId}`);
+      const data = await response.json();
+      setRecModule(data[0]);
+    };
+    fetchRec();
+  }, [programId]);
+  if (!recModule) {
+    return (
+      <div className="mt-[24px] min-h-[315px]"></div>
+    );
+  }
+  return (
+    <div className="mt-[24px]">
+      <RecommendedSection module={recModule} />
+    </div>
+  );
+}
 
-  const program = useProgramById({ programId });
-  invariant(program);
+const PlayerArea = ({ program }: { program: Awaited<ReturnType<typeof prefetch>>['program'] }) => {
+  const playerRef = usePlayerRef();
+  return (
+    <div className="relative size-full">
+      <Player
+        className="size-full"
+        playerRef={playerRef}
+        playerType={PlayerType.ShakaPlayer}
+        playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
+      />
+      <div className="absolute inset-x-0 bottom-0">
+        <PlayerController />
+      </div>
+    </div>
+  )
+}
+
+export const ProgramPage = () => {
+  const { program } = useLoaderData() as Awaited<ReturnType<typeof prefetch>>;
 
   const timetable = useTimetable();
   const nextProgram = timetable[program.channel.id]?.find((p) => {
     return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
   });
-
-  const modules = useRecommended({ referenceId: programId });
-
-  const playerRef = usePlayerRef();
 
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
@@ -112,10 +138,10 @@ export const ProgramPage = () => {
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`program-${program.id}`}>
-          <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          <div className="m-auto aspect-video mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
+                <img alt="" className="h-auto w-full aspect-video" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -128,20 +154,10 @@ export const ProgramPage = () => {
                 </div>
               </div>
             ) : isBroadcastStarted ? (
-              <div className="relative size-full">
-                <Player
-                  className="size-full"
-                  playerRef={playerRef}
-                  playerType={PlayerType.ShakaPlayer}
-                  playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
-                />
-                <div className="absolute inset-x-0 bottom-0">
-                  <PlayerController />
-                </div>
-              </div>
+              <PlayerArea program={program} />
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
+                <img alt="" className="h-auto w-full aspect-video" src={getThumbnailUrl(program.thumbnailUrl, "big")} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -170,11 +186,7 @@ export const ProgramPage = () => {
           </div>
         </div>
 
-        {modules[0] != null ? (
-          <div className="mt-[24px]">
-            <RecommendedSection module={modules[0]} />
-          </div>
-        ) : null}
+        <RecommendedArea programId={program.id} />
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">関連するエピソード</h2>
