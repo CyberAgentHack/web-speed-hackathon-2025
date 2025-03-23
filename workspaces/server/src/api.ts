@@ -459,7 +459,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         200: {
           content: {
             'application/json': {
-              schema: schema.getRecommendedModulesResponse,
+              schema: schema.getRecommendedModulesErrorResponse,
             },
           },
         },
@@ -476,6 +476,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           const a =eq(module.referenceId, 'error');
           return a
         },
+        columns: {
+          id: true,
+          title: true,
+          type: true,
+        },
         with: {
           items: {
             orderBy(item, { asc }) {
@@ -483,23 +488,23 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
+                columns: {
+                  id: true,
+                  title: true,
+                }
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  premium: true,
+                  thumbnailUrl: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      title: true,
                     },
                   },
                 },

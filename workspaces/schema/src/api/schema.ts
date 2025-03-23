@@ -22,6 +22,7 @@ export const getProgramByIdRequestParams = Compile(Valibot(openapiSchema.getProg
 export const getProgramByIdResponse = Compile(Valibot(openapiSchema.getProgramByIdResponse));
 export const getRecommendedModulesRequestParams = Compile(Valibot(openapiSchema.getRecommendedModulesRequestParams));
 export const getRecommendedModulesResponse = Compile(Valibot(openapiSchema.getRecommendedModulesResponse));
+export const getRecommendedModulesErrorResponse = Compile(Valibot(openapiSchema.getRecommendedModulesErrorResponse));
 export const signInRequestBody = Compile(Zod(openapiSchema.signInRequestBody));
 export const signInResponse = Compile(Zod(openapiSchema.signInResponse));
 export const signUpRequestBody = Compile(Zod(openapiSchema.signUpRequestBody));
