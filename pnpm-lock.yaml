@@ -39,9 +39,6 @@ importers:
       '@epic-web/restore-scroll':
         specifier: 1.1.1
         version: 1.1.1(react-router-dom@7.0.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
-      '@ffmpeg/ffmpeg':
-        specifier: 0.12.15
-        version: 0.12.15
       '@headlessui/react':
         specifier: 2.2.0
         version: 2.2.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -148,12 +145,6 @@ importers:
       '@babel/preset-typescript':
         specifier: 7.26.0
         version: 7.26.0(@babel/core@7.26.0)
-      '@ffmpeg/core':
-        specifier: 0.12.10
-        version: 0.12.10
-      '@ffmpeg/util':
-        specifier: 0.12.2
-        version: 0.12.2
       '@iconify/json':
         specifier: 2.2.317
         version: 2.2.317
@@ -339,6 +330,9 @@ importers:
       '@fastify/swagger-ui':
         specifier: 5.1.0
         version: 5.1.0
+      '@ffmpeg/ffmpeg':
+        specifier: 0.12.15
+        version: 0.12.15
       '@libsql/client':
         specifier: 0.14.0
         version: 0.14.0
@@ -409,6 +403,12 @@ importers:
       '@faker-js/faker':
         specifier: 9.2.0
         version: 9.2.0
+      '@ffmpeg/core':
+        specifier: 0.12.10
+        version: 0.12.10
+      '@ffmpeg/util':
+        specifier: 0.12.2
+        version: 0.12.2
       '@types/bcrypt':
         specifier: 5.0.2
         version: 5.0.2
@@ -1502,6 +1502,7 @@ packages:
   '@faker-js/faker@9.2.0':
     resolution: {integrity: sha512-ulqQu4KMr1/sTFIYvqSdegHT8NIkt66tFAkugGnHA+1WAfEn6hMzNR+svjXGFRVLnapxvej67Z/LwchFrnLBUg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/accept-negotiator@2.0.0':
     resolution: {integrity: sha512-/Sce/kBzuTxIq5tJh85nVNOq9wKD8s+viIgX0fFMDBdw95gnpf53qmF1oBgJym3cPFliWUuSloVg/1w/rH0FcQ==}

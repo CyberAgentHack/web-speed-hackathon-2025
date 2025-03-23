@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
-import { Link, Params, useNavigate, useParams } from 'react-router';
-import { useUpdate } from 'react-use';
+import { Link, Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -13,7 +12,6 @@ import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useP
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
@@ -27,10 +25,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const program = await store.getState().features.program.fetchProgramById({ programId });
   const channels = await store.getState().features.channel.fetchChannels();
   const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
-  return { channels, modules, program, timetable };
+  return { channels, program, timetable };
 };
 
 export const ProgramPage = () => {
@@ -40,57 +35,12 @@ export const ProgramPage = () => {
   const program = useProgramById({ programId });
   invariant(program);
 
-  const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  });
-
   const modules = useRecommended({ referenceId: programId });
 
   const playerRef = usePlayerRef();
 
-  const forceUpdate = useUpdate();
-  const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
-  useEffect(() => {
-    if (isArchivedRef.current) {
-      return;
-    }
-
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
-    if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
-        forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-    let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
-        return;
-      }
-
-      if (nextProgram?.id) {
-        void navigate(`/programs/${nextProgram.id}`, {
-          preventScrollReset: true,
-          replace: true,
-          state: { loading: 'none' },
-        });
-      } else {
-        isArchivedRef.current = true;
-        forceUpdate();
-      }
-    }, 250);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [isBroadcastStarted, nextProgram?.id]);
 
   return (
     <>

@@ -20,7 +20,7 @@ interface Props {
 export const JumbotronSection = ({ module }: Props) => {
   const playerRef = useRef<PlayerWrapper>(null);
 
-  const episode = module.items[0]?.episode;
+  const episode = module.headEpisode;
   invariant(episode);
 
   return (

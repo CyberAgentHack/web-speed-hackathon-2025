@@ -5,7 +5,6 @@ import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
-import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useMuted } from '@wsh-2025/client/src/pages/episode/hooks/useMuted';
@@ -28,7 +27,7 @@ export const PlayerController = ({ episode }: Props) => {
       <div className="absolute inset-x-0 bottom-0 px-[12px]">
         <div className="group relative size-full">
           <div className="pointer-events-none relative size-full opacity-0 group-hover:opacity-100">
-            <SeekThumbnail episode={episode} />
+            {/* <SeekThumbnail episode={episode} /> */}
           </div>
 
           <Slider.Root
