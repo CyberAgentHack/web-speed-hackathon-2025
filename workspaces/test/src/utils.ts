@@ -5,31 +5,25 @@ export async function waitForImageToLoad(imageLocator: Locator): Promise<void> {
   await imageLocator.scrollIntoViewIfNeeded();
   await expect(imageLocator).toBeVisible();
   await expect(async () => {
-    expect(
-      await (
-        await imageLocator.evaluateHandle((element, prop) => {
-          if (!(element instanceof HTMLImageElement)) {
-            throw new Error('Element is not an image');
-          }
-          return element[prop as keyof typeof element];
-        }, 'naturalWidth')
-      ).jsonValue(),
-    ).toBeGreaterThan(0);
+    const naturalWidth = await imageLocator.evaluate((element) => {
+      if (!(element instanceof HTMLImageElement)) {
+        throw new Error('Element is not an image');
+      }
+      return element.naturalWidth;
+    });
+    expect(naturalWidth).toBeGreaterThan(0);
   }).toPass();
 }
 
 export async function waitForVideoToLoad(videoLocator: Locator): Promise<void> {
-  // メタデータが読み込まれれば、動画のサイズが取得できる
   await videoLocator.evaluate((video) => {
     if (!(video instanceof HTMLVideoElement)) {
       throw new Error('Element is not a video');
     }
+    if (video.readyState >= 1) {
+      return;
+    }
     return new Promise((resolve) => {
-      if (video.readyState >= 1) {
-        resolve(null);
-        return;
-      }
-
       video.addEventListener('loadedmetadata', () => {
         resolve(null);
       });
@@ -47,22 +41,33 @@ export async function waitForAllImagesToLoad(locator: Locator, expectedNumberOfI
   }).toPass();
 
   const count = await images.count();
+  const imagePromises = [];
   for (let i = 0; i < count; i++) {
-    await waitForImageToLoad(images.nth(i));
+    imagePromises.push(waitForImageToLoad(images.nth(i)));
   }
+  await Promise.all(imagePromises);
 }
 
 export async function scrollEntire(page: Page): Promise<void> {
   await page.evaluate(async () => {
-    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-    for (let i = 0; i < document.body.scrollHeight; i += 100) {
-      window.scrollTo(0, i);
-      await delay(50);
+    const scrollStep = 200;
+    const scrollDelay = 10;
+
+    const scroll = (y: number) => {
+      return new Promise<void>((resolve) => {
+        window.scrollTo(0, y);
+        requestAnimationFrame(() => {
+          setTimeout(resolve, scrollDelay);
+        });
+      });
+    };
+
+    for (let i = 0; i < document.body.scrollHeight; i += scrollStep) {
+      await scroll(i);
     }
 
-    for (let i = document.body.scrollHeight; i > 0; i -= 100) {
-      window.scrollTo(0, i);
-      await delay(50);
+    for (let i = document.body.scrollHeight; i > 0; i -= scrollStep) {
+      await scroll(i);
     }
   });
 }

@@ -1,45 +1,51 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
+import _ from 'lodash';
 
-import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
-import { createChannelStoreSlice } from '@wsh-2025/client/src/features/channel/stores/createChannelStoreSlice';
-import { createEpisodeStoreSlice } from '@wsh-2025/client/src/features/episode/stores/createEpisodeStoreSlice';
-import { createLayoutStoreSlice } from '@wsh-2025/client/src/features/layout/stores/createLayoutStore';
-import { createProgramStoreSlice } from '@wsh-2025/client/src/features/program/stores/createProgramStoreSlice';
-import { createRecommendedStoreSlice } from '@wsh-2025/client/src/features/recommended/stores/createRecomendedStoreSlice';
-import { createSeriesStoreSlice } from '@wsh-2025/client/src/features/series/stores/createSeriesStoreSlice';
-import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetable/stores/createTimetableStoreSlice';
-import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
-import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
-import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+import { createAuthStoreSlice } from '../features/auth/stores/createAuthStoreSlice';
+import { createChannelStoreSlice } from '../features/channel/stores/createChannelStoreSlice';
+import { createEpisodeStoreSlice } from '../features/episode/stores/createEpisodeStoreSlice';
+import { createLayoutStoreSlice } from '../features/layout/stores/createLayoutStore';
+import { createProgramStoreSlice } from '../features/program/stores/createProgramStoreSlice';
+import { createRecommendedStoreSlice } from '../features/recommended/stores/createRecomendedStoreSlice';
+import { createSeriesStoreSlice } from '../features/series/stores/createSeriesStoreSlice';
+import { createTimetableStoreSlice } from '../features/timetable/stores/createTimetableStoreSlice';
+import { createEpisodePageStoreSlice } from '../pages/episode/stores/createEpisodePageStoreSlice';
+import { createProgramPageStoreSlice } from '../pages/program/stores/createProgramPageStoreSlice';
+import { createTimetablePageStoreSlice } from '../pages/timetable/stores/createTimetablePageStoreSlice';
 
 interface Props {
-  hydrationData?: unknown;
+  hydrationData?: Partial<RootState>;
 }
 
-export const createStore = ({ hydrationData }: Props) => {
-  const store = createZustandStore(
-    withLenses(() => ({
-      features: {
-        auth: createAuthStoreSlice(),
-        channel: createChannelStoreSlice(),
-        episode: createEpisodeStoreSlice(),
-        layout: createLayoutStoreSlice(),
-        program: createProgramStoreSlice(),
-        recommended: createRecommendedStoreSlice(),
-        series: createSeriesStoreSlice(),
-        timetable: createTimetableStoreSlice(),
-      },
-      pages: {
-        episode: createEpisodePageStoreSlice(),
-        program: createProgramPageStoreSlice(),
-        timetable: createTimetablePageStoreSlice(),
-      },
-    })),
-  );
+export type RootState = ReturnType<typeof buildInitialState>;
 
-  store.setState((s) => _.merge(s, hydrationData));
+const buildInitialState = () => ({
+  features: {
+    auth: createAuthStoreSlice(),
+    channel: createChannelStoreSlice(),
+    episode: createEpisodeStoreSlice(),
+    layout: createLayoutStoreSlice(),
+    program: createProgramStoreSlice(),
+    recommended: createRecommendedStoreSlice(),
+    series: createSeriesStoreSlice(),
+    timetable: createTimetableStoreSlice(),
+  },
+  pages: {
+    episode: createEpisodePageStoreSlice(),
+    program: createProgramPageStoreSlice(),
+    timetable: createTimetablePageStoreSlice(),
+  },
+});
+
+export const createStore = ({ hydrationData }: Props) => {
+  const baseState = buildInitialState();
+
+  const store = createZustandStore(withLenses(() => baseState));
+
+  if (hydrationData) {
+    store.setState((prev) => _.merge({}, prev, hydrationData));
+  }
 
   return store;
 };

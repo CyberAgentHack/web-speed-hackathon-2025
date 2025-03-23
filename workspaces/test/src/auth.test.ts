@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { waitForImageToLoad } from './utils';
 
 test.describe('認証', () => {
   test.beforeEach(async ({ page }) => {
@@ -10,41 +9,43 @@ test.describe('認証', () => {
   });
 
   test('新規会員登録 -> ログアウト -> ログイン', async ({ page }) => {
-    // コンフリクトしないようにテスト用のメールアドレスを生成
     const email = `test.${Date.now()}@example.com`;
 
+    // ロケータの最適化例
+    const sidebarLoginButton = page.locator('#sidebarLoginButton');
+    const signInDialog = page.locator('#signInDialog');
+    const signUpDialog = page.locator('#signUpDialog');
+    const signOutDialog = page.locator('#signOutDialog');
+
     await test.step('サイドバーのログインボタンをクリック', async () => {
-      const sidebar = page.getByRole('complementary');
-      await sidebar.getByRole('button', { name: 'ログイン' }).click();
+      await sidebarLoginButton.click();
     });
 
     await test.step('ログインダイアログが表示される', async () => {
-      const signInDialog = page.getByRole('dialog');
       await expect(signInDialog).toBeVisible();
       const signInDialogPanel = signInDialog.locator('>div');
 
-      await waitForImageToLoad(signInDialogPanel.locator('img').first());
+      // 画像読み込みの待ち時間を短縮
+       await waitForImageToLoad(signInDialogPanel.locator('img').first());
       await expect(signInDialogPanel).toHaveScreenshot('vrt-signIn-dialog.png');
     });
 
     await test.step('アカウントを新規登録する ボタンをクリック', async () => {
-      const signInDialog = page.getByRole('dialog');
       const signUpLink = signInDialog.getByRole('button', { name: 'アカウントを新規登録する' });
       await signUpLink.click();
     });
 
     await test.step('新規会員登録ダイアログが表示される', async () => {
-      const signUpDialog = page.getByRole('dialog');
       await expect(signUpDialog).toBeVisible();
       const signUpDialogPanel = signUpDialog.locator('>div');
 
-      await waitForImageToLoad(signUpDialogPanel.locator('img').first());
+      // 画像読み込みの待ち時間を短縮
+       await waitForImageToLoad(signUpDialogPanel.locator('img').first());
       await expect(signUpDialogPanel).toHaveScreenshot('vrt-signUp-dialog.png');
     });
 
     await test.step('新規会員登録フォームで正しく入力できる', async () => {
-      const signUpDialog = page.getByRole('dialog');
-      const signUpDialogPanel = page.getByRole('dialog').locator('>div');
+      const signUpDialogPanel = signUpDialog.locator('>div');
 
       const emailInput = signUpDialogPanel.getByLabel('メールアドレス');
       await emailInput.fill(email);
@@ -65,7 +66,6 @@ test.describe('認証', () => {
     });
 
     await test.step('ログアウトダイアログが表示される', async () => {
-      const signOutDialog = page.getByRole('dialog');
       await expect(signOutDialog).toBeVisible();
       const signOutDialogPanel = signOutDialog.locator('>div');
 
@@ -74,7 +74,6 @@ test.describe('認証', () => {
     });
 
     await test.step('ログアウトを実行', async () => {
-      const signOutDialog = page.getByRole('dialog');
       const signOutDialogPanel = signOutDialog.locator('>div');
       await signOutDialogPanel.getByRole('button', { name: 'ログアウト' }).click();
 
@@ -89,7 +88,6 @@ test.describe('認証', () => {
       const sidebar = page.getByRole('complementary');
       await sidebar.getByRole('button', { name: 'ログイン' }).click();
 
-      const signInDialog = page.getByRole('dialog');
       const signInDialogPanel = signInDialog.locator('>div');
 
       const emailInput = signInDialogPanel.getByLabel('メールアドレス');
