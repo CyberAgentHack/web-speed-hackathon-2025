@@ -1,7 +1,7 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { debounce } from 'es-toolkit'
+import { debounce } from 'lodash';
 import { produce } from 'immer';
 import { ArrayValues } from 'type-fest';
 
