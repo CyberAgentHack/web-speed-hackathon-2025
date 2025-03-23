@@ -2,11 +2,13 @@ import { en, Faker, ja } from '@faker-js/faker';
 import { createClient } from '@libsql/client';
 import * as schema from '@wsh-2025/schema/src/database/schema';
 import { drizzle } from 'drizzle-orm/libsql';
+import { eq } from 'drizzle-orm';
 import { reset } from 'drizzle-seed';
 import { DateTime } from 'luxon';
 
 import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
+import generateThumbnails, { generateThumbnailForEpisode } from '@wsh-2025/server/tools/generate_thumbnails';
 import * as bcrypt from 'bcrypt';
 import path from 'node:path';
 import { readdirSync } from 'node:fs';
@@ -159,6 +161,22 @@ async function main() {
       episodeList.push(...result);
     }
 
+    // エピソードごとにサムネイルを生成し、サムネイルURLを更新
+    console.log('Generating thumbnails for episodes...');
+
+    const streams = ['caminandes2', 'dailydweebs', 'glasshalf', 'wing-it'];
+    for (const stream of streams) {
+      try {
+        await generateThumbnailForEpisode(stream);
+
+        //　このサムネイルとthumbnailUrlは別物
+
+        console.log(`Generated and updated thumbnail for episode ${stream}`);
+      } catch (error) {
+        console.error(`Error generating thumbnail for episode ${stream}:`, error);
+      }
+    }
+
     // Create programs
     console.log('Creating programs...');
     const programList: (typeof schema.program.$inferInsert)[] = [];
@@ -303,6 +321,20 @@ async function main() {
   } finally {
     database.$client.close();
   }
+
+  // デフォルトのサムネイル画像を作成
+  // console.log('Creating default thumbnails...');
+  // try {
+  //   // create_default_thumbnails.shを実行
+  //   const { exec } = require('child_process');
+  //   const { promisify } = require('util');
+  //   const execPromise = promisify(exec);
+
+  //   await execPromise('bash ./tools/create_default_thumbnails.sh');
+  //   console.log('Default thumbnails created successfully.');
+  // } catch (error) {
+  //   console.error('Error creating default thumbnails:', error);
+  // }
 }
 
 main().catch((error: unknown) => {
