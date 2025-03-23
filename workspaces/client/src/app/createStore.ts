@@ -90,7 +90,10 @@ export const createStore = ({ hydrationData }: Props) => {
   );
 
   if (hydrationData) {
-    store.setState((s) => deepMerge(s, hydrationData as typeof s));
+    const isServer = typeof window === 'undefined';
+    if (!isServer) {
+      store.setState((s) => deepMerge(s, hydrationData as typeof s));
+    }
   }
 
   return store;
