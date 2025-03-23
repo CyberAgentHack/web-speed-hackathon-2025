@@ -43,15 +43,12 @@ export const Program = ({ height, program }: Props): ReactElement => {
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
 
-      // 다음 프레임에 다시 요청
       rafId = requestAnimationFrame(checkImageVisibility);
     };
 
-    // 초기 애니메이션 프레임 요청
     rafId = requestAnimationFrame(checkImageVisibility);
 
     return () => {
-      // 애니메이션 프레임 취소
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [height]);
