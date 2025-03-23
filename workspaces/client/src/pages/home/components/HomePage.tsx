@@ -15,6 +15,8 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const HomePage = () => {
+  console.log("HomePage");
+
   // const modules = useRecommended({ referenceId: 'entrance' });
   const hydrationData = window.__staticRouterHydrationData as {
     loaderData?: {
@@ -31,6 +33,7 @@ export const HomePage = () => {
   }
   const modules = modules_;
 
+  console.log("HomePage Rendered");
   return (
     <>
       <title>Home - AremaTV</title>

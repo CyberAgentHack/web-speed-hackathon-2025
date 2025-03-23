@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
@@ -44,6 +44,8 @@ export const JumbotronSection = ({ module }: Props) => {
 
               <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
                 <div className="h-full w-auto shrink-0 grow-0">
+                  <Suspense fallback={<div className="h-[260px] bg-[#1c1c1c]" />}>
+
                   <Player
                     loop
                     className="size-full"
@@ -51,6 +53,7 @@ export const JumbotronSection = ({ module }: Props) => {
                     playerType={PlayerType.ShakaPlayer}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
+                  </Suspense>
                 </div>
               </Flipped>
             </>

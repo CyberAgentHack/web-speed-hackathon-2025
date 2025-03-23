@@ -10,6 +10,7 @@ import lineMdIcons from '@wsh-2025/client/src/setups/icons/line-md.json';
 import materialSymbolsIcons from '@wsh-2025/client/src/setups/icons/material-symbols.json';
 
 async function init() {
+  console.log('Initializing Unocss runtime...');
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -68,6 +69,8 @@ async function init() {
       ],
     }),
   });
+
+  console.log('Unocss runtime initialized');
 }
 
 init().catch((err: unknown) => {

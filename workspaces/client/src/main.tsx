@@ -1,3 +1,5 @@
+'user server';
+
 // import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 import '@wsh-2025/client/src/setups/polyfills';
@@ -15,9 +17,11 @@ declare global {
   var __staticRouterHydrationData: HydrationState;
 };
 
-function main() {
+async function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
+
+  console.log('Hydrating root...');
 
   hydrateRoot(
     document,
@@ -27,6 +31,7 @@ function main() {
       </StoreProvider>
     </StrictMode>,
   );
+  console.log('Root hydrated!');
 }
 
 if (document.readyState === 'loading') {
