@@ -368,10 +368,10 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
       const trimmedPrograms = programs.map(program => ({
         ...program,
-        description: trimString(program.description, 512)
+        description: trimString(program.description, 1000)
       }));
 
-      reply.code(200).send(programs);
+      reply.code(200).send(trimmedPrograms);
     },
   });
 
