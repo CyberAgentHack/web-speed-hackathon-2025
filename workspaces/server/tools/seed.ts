@@ -14,7 +14,11 @@ import { readdirSync } from 'node:fs';
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
   return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
+    .filter((dirent) => 
+      dirent.isFile() && 
+      !dirent.name.startsWith('.') && 
+      dirent.name.toLowerCase().endsWith('.avif')
+    )
     .map((dirent) => path.join(parent, dirent.name));
 }
 
