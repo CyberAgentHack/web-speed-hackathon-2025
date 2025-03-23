@@ -11,24 +11,32 @@ import { Program } from '@wsh-2025/client/src/pages/timetable/components/Program
 interface Props {
   channelId: string;
   programList: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>[];
+  eager?: boolean | undefined;
 }
 
-export const ProgramList = ({ channelId, programList }: Props): ReactElement => {
+const ProgramItem = ({ program, eager }: {
+  program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+  eager?: boolean | undefined;
+}): ReactElement => {
+  const startAt = DateTime.fromISO(program.startAt);
+  const endAt = DateTime.fromISO(program.endAt);
+  const duration = endAt.diff(startAt, 'minutes').minutes;
+  const height = HEIGHT_ONE_HOUR * (duration / 60);
+
+  return (
+    <div key={program.id} className="shrink-0 grow-0">
+      <Program height={height} program={program} eager={eager} />
+    </div>
+  );
+}
+
+export const ProgramList = ({ channelId, programList, eager }: Props): ReactElement => {
   return (
     <div className="relative">
       <div className="flex flex-col">
-        {programList.map((program) => {
-          const startAt = DateTime.fromISO(program.startAt);
-          const endAt = DateTime.fromISO(program.endAt);
-          const duration = endAt.diff(startAt, 'minutes').minutes;
-          const height = HEIGHT_ONE_HOUR * (duration / 60);
-
-          return (
-            <div key={program.id} className="shrink-0 grow-0">
-              <Program height={height} program={program} />
-            </div>
-          );
-        })}
+        {programList.map((program, index) => (
+          <ProgramItem key={program.id} program={program} eager={eager === true ? (index <= 1) : false} />
+        ))}
       </div>
 
       <div className="absolute inset-y-0 right-[-4px] z-10 w-[8px]">

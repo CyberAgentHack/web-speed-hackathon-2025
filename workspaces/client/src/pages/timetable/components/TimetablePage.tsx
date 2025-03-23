@@ -32,9 +32,9 @@ export const TimetablePage = () => {
 
       <div className="relative grid size-full overflow-x-auto overflow-y-auto [grid-template-areas:'channel_channel''hours_content']">
         <div className="sticky top-0 z-20 flex w-fit flex-row bg-[#000000] pl-[24px] [grid-area:channel]">
-          {channelIds.map((channelId) => (
+          {channelIds.map((channelId, index) => (
             <div key={channelId} className="shrink-0 grow-0">
-              <ChannelTitle channelId={channelId} />
+              <ChannelTitle channelId={channelId} eager={index <= 5} />
             </div>
           ))}
         </div>
@@ -48,7 +48,7 @@ export const TimetablePage = () => {
             invariant(channelId);
             return (
               <div key={channelIds[index]} className="shrink-0 grow-0">
-                <ProgramList channelId={channelId} programList={programList} />
+                <ProgramList channelId={channelId} programList={programList} eager={index <= 5} />
               </div>
             );
           })}

@@ -13,9 +13,10 @@ import { getThumbnailUrl } from '@wsh-2025/client/src/features/image/utils/getTh
 interface Props {
   height: number;
   program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+  eager?: boolean | undefined;
 }
 
-export const Program = ({ height, program }: Props): ReactElement => {
+export const Program = ({ height, program, eager }: Props): ReactElement => {
   const width = useColumnWidth(program.channelId);
 
   const [selectedProgramId, setProgram] = useSelectedProgramId();
@@ -68,7 +69,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
           </div>
           <div className={`${shouldImageBeVisible ? 'opacity-100' : 'opacity-0'} w-full`}>
             <img
-              loading='lazy'
+              loading={eager === true ? undefined : 'lazy'}
               ref={imageRef}
               alt=""
               className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
