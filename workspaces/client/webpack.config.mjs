@@ -1,27 +1,38 @@
 import path from 'node:path';
+
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'production',
+  mode: 'none',
   module: {
     rules: [
       {
-        // 一部除外するモジュールはそのまま
         exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: { fullySpecified: false },
+        resolve: {
+          fullySpecified: false,
+        },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
-          loader: 'swc-loader',
+          loader: 'babel-loader',
           options: {
-            jsc: {
-              parser: { syntax: 'typescript', tsx: true },
-              transform: { react: { runtime: 'automatic' } }
-            }
-          }
-        }
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  corejs: '3.41',
+                  forceAllTransforms: true,
+                  targets: 'defaults',
+                  useBuiltIns: 'entry',
+                },
+              ],
+              ['@babel/preset-react', { runtime: 'automatic' }],
+              ['@babel/preset-typescript'],
+            ],
+          },
+        },
       },
       {
         test: /\.png$/,
@@ -34,35 +45,22 @@ const config = {
       {
         resourceQuery: /arraybuffer/,
         type: 'javascript/auto',
-        use: { loader: 'arraybuffer-loader' },
+        use: {
+          loader: 'arraybuffer-loader',
+        },
       },
     ],
   },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
+    chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
-    publicPath: '/public/',
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      minSize: 20000,
-      maxSize: 70000,
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-            return `npm.${packageName.replace('@', '')}`;
-          },
-        },
-      },
-    },
+    publicPath: 'auto',
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {
     alias: {
