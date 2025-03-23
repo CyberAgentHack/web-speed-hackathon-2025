@@ -1,6 +1,7 @@
 import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
+import { memo } from 'react';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
@@ -29,10 +30,13 @@ export const CarouselSection = ({ module }: Props) => {
           data-scroll-restore={`carousel-${module.id}`}
         >
           {module.items.map((item) => (
-            <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
-              {item.series != null ? <SeriesItem series={item.series} /> : null}
-              {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
-            </div>
+            <ItemComponent
+              key={item.id}
+              episode={item.episode}
+              id={item.id}
+              itemWidth={itemWidth}
+              series={item.series}
+            />
           ))}
         </div>
       </div>
@@ -41,3 +45,40 @@ export const CarouselSection = ({ module }: Props) => {
     </>
   );
 };
+
+type ItemComponentProps = {
+  episode: {
+    id: string;
+    premium: boolean;
+    series: {
+      title: string;
+    };
+    thumbnailUrl: string;
+    title: string;
+  } | null;
+  id: string;
+  itemWidth: number;
+  series: {
+    id: string;
+    thumbnailUrl: string;
+    title: string;
+  } | null;
+};
+const ItemComponent = memo(function ItemComponent({ episode, id, itemWidth, series }: ItemComponentProps) {
+  return (
+    <>
+      <div key={id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
+        {series != null ? <SeriesItem id={series.id} thumbnailUrl={series.thumbnailUrl} title={series.title} /> : null}
+        {episode != null ? (
+          <EpisodeItem
+            id={episode.id}
+            premium={episode.premium}
+            seriesTitle={episode.series.title}
+            thumbnailUrl={episode.thumbnailUrl}
+            title={episode.title}
+          />
+        ) : null}
+      </div>
+    </>
+  );
+});
