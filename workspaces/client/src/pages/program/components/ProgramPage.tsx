@@ -16,6 +16,7 @@ import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useT
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 import { Helmet } from 'react-helmet';
+import invariant from 'tiny-invariant';
 
 // export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
 //   invariant(programId);
@@ -49,35 +50,49 @@ const fetchProgramDatas = async (store: ReturnType<typeof createStore>, { progra
 export const ProgramPage = (store: ReturnType<typeof createStore>) => {
   const [isLoading, setIsLoading] = useState(true);
   const { programId } = useParams();
-  // invariant(programId);
+  invariant(programId);
 
   const { program, modules } = useMemo(() => {
-    const _program = useProgramById({ programId: programId ?? '' });
-    const _modules = useRecommended({ referenceId: programId ?? '' });
+    const _program = useProgramById({ programId: programId });
+    const _modules = useRecommended({ referenceId: programId });
 
     return { program: _program, modules: _modules };
   }, [programId, isLoading]);
   // invariant(program);
 
   const timetable = useTimetable();
-  const nextProgram = program?.channel?.id ? timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  }) : undefined;
+  const nextProgram = useMemo(() => {
+    if (program) {
+      return timetable[program.channel.id]?.find((p) => {
+        return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
+      });
+    }
+
+    return undefined;
+  }, [program, timetable]);
 
   const playerRef = usePlayerRef();
 
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
-  const isArchivedRef = useRef(DateTime.fromISO(program?.endAt ?? '') < DateTime.now());
-  const isBroadcastStarted = DateTime.fromISO(program?.startAt ?? '') < DateTime.now();
+  const isArchivedRef = useMemo(() => {
+    if (!program) return useRef(false);
+
+    return useRef(DateTime.fromISO(program.endAt) < DateTime.now());
+  }, [program]);
+  const isBroadcastStarted = useMemo(() => {
+    if (!program) return false;
+
+    return DateTime.fromISO(program.startAt) < DateTime.now();
+  }, [program]);
 
   useEffect(() => {
     (async () => await fetchProgramDatas(store, { programId }))().finally(() => {
       setIsLoading(false);
     });
-  }, []);
+  }, [programId]);
 
-  if (program == null) {
+  if (!program) {
     return <div></div>;
   }
 
