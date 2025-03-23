@@ -1,7 +1,7 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
@@ -34,17 +34,17 @@ export const Program = ({ height, program }: Props): ReactElement => {
   const titleRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const imageHeight = imageRef.current?.clientHeight ?? 0;
-      const titleHeight = titleRef.current?.clientHeight ?? 0;
-      setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [height]);
+  const [shouldImageBeVisible] = useState<boolean>(false);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const imageHeight = imageRef.current?.clientHeight ?? 0;
+  //     const titleHeight = titleRef.current?.clientHeight ?? 0;
+  //     setShouldImageBeVisible(imageHeight <= height - titleHeight);
+  //   }, 250);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [height]);
 
   return (
     <>
