@@ -5,6 +5,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: '/public/',
     build: {
+      minify: 'terser',
       outDir: 'dist',
       sourcemap: mode !== 'production',
       target: ['chrome134'],
