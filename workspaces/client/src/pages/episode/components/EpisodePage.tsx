@@ -55,7 +55,7 @@ export const EpisodePage = () => {
                   alt=""
                   className="h-auto w-full"
                   loading="lazy"
-                  src={`${episode.thumbnailUrl.replace(/\.(jpe?g)$/i, '')}.webp`}
+                  src={episode.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
                 />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
@@ -80,7 +80,7 @@ export const EpisodePage = () => {
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
                         loading="lazy"
-                        src={`${episode.thumbnailUrl.replace(/\.(jpe?g)$/i, '')}.webp`}
+                        src={episode.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
                       <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
