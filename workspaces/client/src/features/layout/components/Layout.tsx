@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, useCallback } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -46,8 +46,8 @@ export const Layout = ({ children }: Props) => {
     };
   }, []);
 
-  useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
+  useCallback(() => {
+    setShouldHeaderBeTransparent(scrollTopOffset > 1000);
   }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
