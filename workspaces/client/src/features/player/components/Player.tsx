@@ -23,15 +23,27 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
-      if (abortController.signal.aborted) {
-        return;
+    void (async () => {
+      try {
+        const { createPlayer } = await import('@wsh-2025/client/src/features/player/logics/create_player');
+
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        player = await createPlayer(playerType);
+
+        if (abortController.signal.aborted as boolean) {
+          return;
+        }
+
+        player.load(playlistUrl, { loop: loop ?? false });
+        mountElement.appendChild(player.videoElement);
+        assignRef(playerRef, player);
+      } catch (error) {
+        console.error('Error loading player:', error);
       }
-      player = createPlayer(playerType);
-      player.load(playlistUrl, { loop: loop ?? false });
-      mountElement.appendChild(player.videoElement);
-      assignRef(playerRef, player);
-    });
+    })();
 
     return () => {
       abortController.abort();
