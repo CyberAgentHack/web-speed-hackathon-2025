@@ -48,7 +48,15 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         target: 'http://localhost:8000',
       },
+      '/favicon.ico': {
+        changeOrigin: true,
+        target: 'http://localhost:8000',
+      },
       '/public': {
+        changeOrigin: true,
+        target: 'http://localhost:8000',
+      },
+      '/streams': {
         changeOrigin: true,
         target: 'http://localhost:8000',
       },

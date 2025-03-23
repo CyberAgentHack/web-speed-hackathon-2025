@@ -1,41 +1,48 @@
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import { getEpisodeByIdResponse, getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
 import { Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
-import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
-import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
+import { authService } from '@wsh-2025/client/src/features/auth/services/authService';
+import { episodeService } from '@wsh-2025/client/src/features/episode/services/episodeService';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
 
-export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
+export const loader = async ({ params: { episodeId } }: { params: Params }) => {
   invariant(episodeId);
-  const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
-  return { episode, modules };
+  const [episode, modules, user] = await Promise.all([
+    episodeService.fetchEpisodeById({ episodeId }),
+    recommendedService.fetchRecommendedModulesByReferenceId({ referenceId: episodeId }),
+    authService.fetchUser(),
+  ]);
+  return { episode, modules, user };
 };
 
-export const EpisodePage = () => {
+export default function EpisodePage({
+  loaderData,
+}: {
+  loaderData: {
+    episode: StandardSchemaV1.InferOutput<typeof getEpisodeByIdResponse>;
+    modules: StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>;
+  };
+}) {
   const authActions = useAuthActions();
-  const user = useAuthUser();
 
   const { episodeId } = useParams();
   invariant(episodeId);
 
-  const episode = useEpisodeById({ episodeId });
-  invariant(episode);
-
-  const modules = useRecommended({ referenceId: episodeId });
+  const { episode, modules } = loaderData;
+  const user = useAuthUser();
 
   const playerRef = usePlayerRef();
 
@@ -130,4 +137,4 @@ export const EpisodePage = () => {
       </div>
     </>
   );
-};
+}

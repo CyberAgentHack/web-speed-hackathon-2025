@@ -1,8 +1,23 @@
+import { StandardSchemaV1 } from '@standard-schema/spec';
+import {
+  getProgramByIdResponse,
+  getProgramsResponse,
+  getRecommendedModulesResponse,
+} from '@wsh-2025/schema/src/openapi/schema';
 import { useEffect, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
+
+import { channelService } from '@wsh-2025/client/src/features/channel/services/channelService';
+import { Player } from '@wsh-2025/client/src/features/player/components/Player';
+import { programService } from '@wsh-2025/client/src/features/program/services/programService';
+import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
+import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
+import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
+import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
+import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
 // Helper function to format date in Japanese style (L月d日 H:mm)
 const formatJapaneseDateTime = (date: Date): string => {
@@ -13,45 +28,37 @@ const formatJapaneseDateTime = (date: Date): string => {
   return `${month}月${day}日 ${hours}:${minutes}`;
 };
 
-import { createStore } from '@wsh-2025/client/src/app/createStore';
-import { Player } from '@wsh-2025/client/src/features/player/components/Player';
-import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useProgramById';
-import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
-import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
-import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
-import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
-
-export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
+export const loader = async ({ params: { programId } }: { params: Params }) => {
   invariant(programId);
 
-  const now = new Date();
-  const since = new Date(now.setHours(0, 0, 0, 0)).toISOString();
-  const until = new Date(now.setHours(23, 59, 59, 999)).toISOString();
-
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
-  return { channels, modules, program, timetable };
+  // 複数のAPIリクエストを並行して実行
+  const [program, channels, modules] = await Promise.all([
+    programService.fetchProgramById({ programId }),
+    channelService.fetchChannels(),
+    recommendedService.fetchRecommendedModulesByReferenceId({ referenceId: programId }),
+  ]);
+  return { channels, modules, program };
 };
 
-export const ProgramPage = () => {
+export default function ProgramPage({
+  loaderData,
+}: {
+  loaderData: {
+    channels: StandardSchemaV1.InferOutput<typeof getProgramsResponse>;
+    modules: StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>;
+    program: StandardSchemaV1.InferOutput<typeof getProgramByIdResponse>;
+  };
+}) {
   const { programId } = useParams();
   invariant(programId);
 
-  const program = useProgramById({ programId });
-  invariant(program);
+  const { channels, modules, program } = loaderData;
 
-  const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.programs.find((p) => {
-    return new Date(program.endAt).getTime() === new Date(p.startAt).getTime();
-  });
-
-  const modules = useRecommended({ referenceId: programId });
+  const nextProgram = channels
+    .filter((c) => c.channelId === program.channelId)
+    .find((c) => {
+      return new Date(program.endAt).getTime() === new Date(c.startAt).getTime();
+    });
 
   const playerRef = usePlayerRef();
 
@@ -68,11 +75,11 @@ export const ProgramPage = () => {
       const startTime = new Date(program.startAt).getTime();
       const now = new Date().getTime();
       const timeUntilStart = Math.max(0, startTime - now);
-      
+
       const timeout = setTimeout(() => {
         setIsBroadcastStarted(true);
       }, timeUntilStart);
-      
+
       return () => {
         clearTimeout(timeout);
       };
@@ -82,7 +89,7 @@ export const ProgramPage = () => {
     const endTime = new Date(program.endAt).getTime();
     const now = new Date().getTime();
     const timeUntilEnd = Math.max(0, endTime - now);
-    
+
     const timeout = setTimeout(() => {
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
@@ -94,7 +101,7 @@ export const ProgramPage = () => {
         setIsArchived(true);
       }
     }, timeUntilEnd);
-    
+
     return () => {
       clearTimeout(timeout);
     };
@@ -176,4 +183,4 @@ export const ProgramPage = () => {
       </div>
     </>
   );
-};
+}

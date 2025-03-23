@@ -9,7 +9,7 @@ import {
 import * as batshit from '@yornaath/batshit';
 
 const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
+  baseURL: process.env['API_BASE_URL'] ?? 'http://localhost:8000/api',
   schema: createSchema({
     '/programs': {
       output: getProgramsResponse,

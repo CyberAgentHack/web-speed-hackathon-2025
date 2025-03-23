@@ -4,7 +4,7 @@ import { getSeriesByIdResponse, getSeriesRequestQuery, getSeriesResponse } from 
 import * as batshit from '@yornaath/batshit';
 
 const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
+  baseURL: process.env['API_BASE_URL'] ?? 'http://localhost:8000/api',
   schema: createSchema({
     '/series': {
       output: getSeriesResponse,
