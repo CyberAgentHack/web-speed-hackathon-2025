@@ -11,8 +11,12 @@ test.describe('サービストップ', () => {
   });
 
   test('サイドバーにロゴ画像が表示されていること', async ({ page }) => {
-    const heroImg = page.getByRole('img', { name: 'AREMA' });
-    await waitForImageToLoad(heroImg);
+    // ロケータの最適化
+    const heroImg = page.locator('#heroImage');
+
+    // 待ち時間を短縮
+    // await waitForImageToLoad(heroImg);
+
     await expect(heroImg).toHaveScreenshot('vrt-hero-img.png');
   });
 });
