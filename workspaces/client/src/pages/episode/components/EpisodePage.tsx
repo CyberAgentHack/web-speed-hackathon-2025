@@ -42,9 +42,10 @@ export const EpisodePage = () => {
 
 	// const episode = useEpisodeById({ episodeId });
 	// invariant(episode);
+	// console.log("episode", episode);
 
-	// const modules = useRecommended({ referenceId: episodeId });
-	const { episode, modules } = useLoaderData();
+	const modules = useRecommended({ referenceId: episodeId });
+	const { episode } = useLoaderData();
 
 	const playerRef = usePlayerRef();
 

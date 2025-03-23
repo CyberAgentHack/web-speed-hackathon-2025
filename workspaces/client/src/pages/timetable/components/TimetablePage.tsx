@@ -23,8 +23,8 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const TimetablePage = () => {
-	// const record = useTimetable();
-	const record = useLoaderData();
+	const record = useTimetable();
+
 	const shownNewFeatureDialog = useShownNewFeatureDialog();
 
 	const channelIds = Object.keys(record);
