@@ -1,11 +1,11 @@
 import { randomBytes } from 'node:crypto';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
 import dedent from 'dedent';
 import type { FastifyInstance } from 'fastify';
-import { DateTime } from 'luxon';
 
 import { getDatabase } from '@wsh-2025/server/src/drizzle/database';
 
@@ -14,7 +14,9 @@ const SEQUENCE_COUNT_PER_PLAYLIST = 10;
 
 // 競技のため、時刻のみを返す
 function getTime(d: Date): number {
-  return d.getTime() - DateTime.fromJSDate(d).startOf('day').toMillis();
+  const startOfDay = new Date(d);
+  startOfDay.setHours(0, 0, 0, 0);
+  return d.getTime() - startOfDay.getTime();
 }
 
 export function registerStreams(app: FastifyInstance): void {
@@ -129,5 +131,44 @@ export function registerStreams(app: FastifyInstance): void {
     }
 
     reply.type('application/vnd.apple.mpegurl').send(playlist.join('\n'));
+  });
+
+  app.get<{
+    Params: { episodeId: string };
+  }>('/streams/episode/:episodeId/preview.jpg', async (req, reply) => {
+    const database = getDatabase();
+
+    const episode = await database.query.episode.findFirst({
+      where(episode, { eq }) {
+        return eq(episode.id, req.params.episodeId);
+      },
+      with: {
+        stream: true,
+      },
+    });
+
+    if (episode == null) {
+      throw new Error('The episode is not found.');
+    }
+
+    const stream = episode.stream;
+
+    const previewPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '../streams',
+      stream.id,
+      'preview.jpg',
+    );
+
+    try {
+      // Check if file exists before creating read stream
+      await fs.promises.access(previewPath, fs.constants.F_OK);
+
+      const fileBuffer = await fs.promises.readFile(previewPath);
+      reply.type('image/jpeg').send(fileBuffer);
+    } catch (error) {
+      app.log.error(`Failed to read preview image: ${error}`);
+      reply.code(404).send({ error: 'Preview image not found' });
+    }
   });
 }

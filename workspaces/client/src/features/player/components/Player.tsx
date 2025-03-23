@@ -23,11 +23,11 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
+    void import('@wsh-2025/client/src/features/player/logics/create_player').then(async ({ createPlayer }) => {
       if (abortController.signal.aborted) {
         return;
       }
-      player = createPlayer(playerType);
+      player = await createPlayer(playerType);
       player.load(playlistUrl, { loop: loop ?? false });
       mountElement.appendChild(player.videoElement);
       assignRef(playerRef, player);
@@ -45,7 +45,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
 
   return (
     <div className={className}>
-      <div className="relative size-full">
+      <div className="relative aspect-[16/9] h-full">
         <div ref={mountRef} className="size-full" />
 
         <div className="absolute inset-0 z-[-10] grid place-content-center">

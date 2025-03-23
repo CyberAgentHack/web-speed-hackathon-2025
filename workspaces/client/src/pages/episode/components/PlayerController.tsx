@@ -1,15 +1,19 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
-import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useMuted } from '@wsh-2025/client/src/pages/episode/hooks/useMuted';
 import { usePlaying } from '@wsh-2025/client/src/pages/episode/hooks/usePlaying';
+
+const formatSeconds = (seconds: number) => {
+  const minute = Math.floor(seconds / 60);
+  const second = Math.floor(seconds % 60);
+  return `${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+};
 
 interface Props {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
@@ -52,44 +56,40 @@ export const PlayerController = ({ episode }: Props) => {
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
             <div className="flex flex-row items-center">
-              <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
-                <button
-                  aria-label={playing ? '一時停止する' : '再生する'}
-                  className="block rounded-[4px]"
-                  type="button"
-                  onClick={() => {
-                    togglePlaying();
-                  }}
-                >
-                  <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  />
-                </button>
-              </Hoverable>
+              <button
+                aria-label={playing ? '一時停止する' : '再生する'}
+                className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F]"
+                type="button"
+                onClick={() => {
+                  togglePlaying();
+                }}
+              >
+                <span
+                  className={`${playing ? 'i-material-symbols:pause-rounded' : 'i-material-symbols:play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                />
+              </button>
 
               <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
-                {Duration.fromObject({ seconds: currentTime }).toFormat('mm:ss')}
+                {formatSeconds(currentTime)}
                 {' / '}
-                {Duration.fromObject({ seconds: duration }).toFormat('mm:ss')}
+                {formatSeconds(duration)}
               </span>
             </div>
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
-              <button
-                aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
-                className="block rounded-[4px]"
-                type="button"
-              >
-                <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  onClick={() => {
-                    toggleMuted();
-                  }}
-                />
-              </button>
-            </Hoverable>
+            <button
+              aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
+              className="block rounded-[4px] bg-transparent hover:bg-[#FFFFFF1F]"
+              type="button"
+            >
+              <span
+                className={`${muted ? 'i-material-symbols:volume-off-rounded' : 'i-material-symbols:volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                onClick={() => {
+                  toggleMuted();
+                }}
+              />
+            </button>
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
 {
+  "deno.enable": true,
+  "deno.enablePaths": ["./public", "workspaces/server/streams"],
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }

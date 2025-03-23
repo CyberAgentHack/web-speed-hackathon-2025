@@ -38,6 +38,7 @@ export const SeriesPage = () => {
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
               src={series.thumbnailUrl}
+              loading="lazy"
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">

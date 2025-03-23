@@ -1,23 +1,23 @@
-import '@videojs/http-streaming';
-import HlsJs from 'hls.js';
-import shaka from 'shaka-player';
-import videojs from 'video.js';
+import "@videojs/http-streaming";
+import type HlsJs from "hls.js";
+import type shaka from "shaka-player";
 
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
-import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/player_wrapper';
+import { PlayerType } from "@wsh-2025/client/src/features/player/constants/player_type";
+import { PlayerWrapper } from "@wsh-2025/client/src/features/player/interfaces/player_wrapper";
 
 class ShakaPlayerWrapper implements PlayerWrapper {
-  readonly videoElement = Object.assign(document.createElement('video'), {
+  readonly videoElement = Object.assign(document.createElement("video"), {
     autoplay: true,
     controls: false,
     muted: true,
     volume: 0.25,
   });
-  private _player = new shaka.Player();
+  private _player: shaka.Player;
   readonly playerType: PlayerType.ShakaPlayer;
 
-  constructor(playerType: PlayerType.ShakaPlayer) {
+  constructor(playerType: PlayerType.ShakaPlayer, shakaModule: typeof shaka) {
     this.playerType = playerType;
+    this._player = new shakaModule.Player(this.videoElement);
     this._player.configure({
       streaming: {
         bufferingGoal: 50,
@@ -65,20 +65,21 @@ class ShakaPlayerWrapper implements PlayerWrapper {
 }
 
 class HlsJSPlayerWrapper implements PlayerWrapper {
-  readonly videoElement = Object.assign(document.createElement('video'), {
+  readonly videoElement = Object.assign(document.createElement("video"), {
     autoplay: true,
     controls: false,
     muted: true,
     volume: 0.25,
   });
-  private _player = new HlsJs({
-    enableWorker: false,
-    maxBufferLength: 50,
-  });
+  private _player: HlsJs;
   readonly playerType: PlayerType.HlsJS;
 
-  constructor(playerType: PlayerType.HlsJS) {
+  constructor(playerType: PlayerType.HlsJS, HlsJsModule: typeof HlsJs) {
     this.playerType = playerType;
+    this._player = new HlsJsModule({
+      enableWorker: false,
+      maxBufferLength: 50,
+    });
   }
 
   get currentTime(): number {
@@ -124,20 +125,21 @@ interface VhsConfig {
 }
 
 class VideoJSPlayerWrapper implements PlayerWrapper {
-  readonly videoElement = Object.assign(document.createElement('video'), {
+  readonly videoElement = Object.assign(document.createElement("video"), {
     autoplay: true,
     controls: false,
     muted: true,
     volume: 0.25,
   });
-  private _player = videojs(this.videoElement);
+  private _player: any;
   readonly playerType: PlayerType.VideoJS;
 
-  constructor(playerType: PlayerType.VideoJS) {
+  constructor(playerType: PlayerType.VideoJS, videojs: any) {
+    this.playerType = playerType;
     const vhsConfig = (videojs as unknown as { Vhs: VhsConfig }).Vhs;
     vhsConfig.GOAL_BUFFER_LENGTH = 50;
     vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
-    this.playerType = playerType;
+    this._player = videojs(this.videoElement);
   }
 
   get currentTime(): number {
@@ -157,7 +159,7 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
     this.videoElement.loop = options.loop;
     this._player.src({
       src: playlistUrl,
-      type: 'application/x-mpegURL',
+      type: "application/x-mpegURL",
     });
   }
   play(): void {
@@ -177,20 +179,25 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
   }
 }
 
-export const createPlayer = (playerType: PlayerType): PlayerWrapper => {
+export const createPlayer = async (
+  playerType: PlayerType,
+): Promise<PlayerWrapper> => {
   switch (playerType) {
     case PlayerType.ShakaPlayer: {
-      return new ShakaPlayerWrapper(playerType);
+      const { default: shaka } = await import("shaka-player");
+      return new ShakaPlayerWrapper(playerType, shaka);
     }
     case PlayerType.HlsJS: {
-      return new HlsJSPlayerWrapper(playerType);
+      const { default: HlsJs } = await import("hls.js");
+      return new HlsJSPlayerWrapper(playerType, HlsJs);
     }
     case PlayerType.VideoJS: {
-      return new VideoJSPlayerWrapper(playerType);
+      const { default: videojs } = await import("video.js");
+      return new VideoJSPlayerWrapper(playerType, videojs);
     }
     default: {
       playerType satisfies never;
-      throw new Error('Invalid player type.');
+      throw new Error("Invalid player type.");
     }
   }
 };

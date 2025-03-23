@@ -12,11 +12,18 @@ export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(function tick() {
+    const resizeObserver = new ResizeObserver(() => {
       forceUpdate();
-    }, 1000);
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
     return () => {
-      clearInterval(interval);
+      if (containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
     };
   }, []);
 
@@ -24,7 +31,7 @@ export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
   const height = (width * ratioHeight) / ratioWidth;
 
   return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
+    <div ref={containerRef} className="relative w-full" style={{ height: `${height}px` }}>
       {children}
     </div>
   );
