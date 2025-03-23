@@ -13,7 +13,8 @@ import { createStaticHandler } from 'react-router';
 export function registerSsr(app: FastifyInstance): void {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   app.register(compress, {
-    customTypes: /^(|text\/css|text\/javascript|application\/javascript)$/,
+    customTypes:
+      /^(|text\/css|text\/javascript|application\/javascript|image\/avif|video\/mp2t|application\/vnd.apple.mpegurl)$/,
     global: true,
     threshold: 0,
   });

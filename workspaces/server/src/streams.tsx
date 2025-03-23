@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import compress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import dedent from 'dedent';
 import type { FastifyInstance } from 'fastify';
@@ -17,6 +18,12 @@ function getTime(d: Date): number {
 }
 
 export function registerStreams(app: FastifyInstance): void {
+  app.register(compress, {
+    customTypes:
+      /^(|text\/css|text\/javascript|application\/javascript|image\/avif|video\/mp2t|application\/vnd.apple.mpegurl|application\/x-mpegurl|video\/mp2t|application\/octet-stream)$/,
+    global: true,
+    threshold: 0,
+  });
   app.register(fastifyStatic, {
     prefix: '/streams/',
     root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../streams'),
