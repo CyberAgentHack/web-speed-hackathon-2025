@@ -30,7 +30,7 @@ const batcher = batshit.create({
     return data;
   },
   resolver(items, query: { episodeId: string }) {
-    const item = items.find((item) => item.id === query.episodeId);
+    const item = items.find((item) => item.id === query.episodeId); // itemsから
     if (item == null) {
       throw new Error('Episode is not found.');
     }
