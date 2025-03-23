@@ -71,7 +71,13 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 ref={imageRef}
                 alt=""
                 className="pointer-events-none aspect-video w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-                loading="lazy"
+                loading={
+                  program.startAt.includes('T00') ||
+                  program.startAt.includes('T01:') ||
+                  program.startAt.includes('T02:')
+                    ? 'eager'
+                    : 'lazy'
+                }
                 src={program.thumbnailUrl}
                 width={254}
               />
