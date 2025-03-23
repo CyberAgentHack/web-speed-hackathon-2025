@@ -450,6 +450,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     },
   });
 
+  let recCached: Map<string, any> = new Map();
   api.route({
     method: 'GET',
     url: '/recommended/:referenceId',
@@ -508,7 +509,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       //     },
       //   },
       // });
-
+      const cached = recCached.get(req.params.referenceId);
+      if (cached) {
+        console.log('cache hit');
+        return reply.code(200).send(cached);
+      }
       const modules = await database.query.recommendedModule.findMany({
         orderBy(module, { asc }) {
           return asc(module.order);
@@ -550,7 +555,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
-
+      recCached.set(req.params.referenceId, modules);
       reply.code(200).send(modules);
     },
   });
