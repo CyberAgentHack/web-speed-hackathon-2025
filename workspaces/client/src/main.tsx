@@ -1,6 +1,6 @@
-import '@wsh-2025/client/src/setups/polyfills';
-import '@wsh-2025/client/src/setups/luxon';
+// import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
+import '@wsh-2025/client/src/setups/polyfills';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -29,4 +29,8 @@ function main() {
   );
 }
 
-document.addEventListener('DOMContentLoaded', main);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', main);
+} else {
+  requestIdleCallback(main);
+}

@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-import TerserPlugin from 'terser-webpack-plugin';
+// import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -53,15 +53,14 @@ const config = {
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: 'chunk-[name].js',
     chunkFormat: false,
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
   ],
   resolve: {
     alias: {
@@ -70,24 +69,8 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        parallel: 4,
-        terserOptions: {
-          compress: {
-            ecma: 5,
-            comparisons: false,
-            inline: 2,
-            passes: 2,
-          },
-          mangle: true,
-          
-        }
-      }),
-    ]
-  }
+
+  target: 'web'
 };
 
 export default config;

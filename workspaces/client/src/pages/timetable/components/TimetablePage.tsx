@@ -1,6 +1,5 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { DateTime } from 'luxon';
 import invariant from 'tiny-invariant';
 import { ArrayValues } from 'type-fest';
 
@@ -11,14 +10,20 @@ import { NewTimetableFeatureDialog } from '@wsh-2025/client/src/pages/timetable/
 import { ProgramList } from '@wsh-2025/client/src/pages/timetable/components/ProgramList';
 import { TimelineYAxis } from '@wsh-2025/client/src/pages/timetable/components/TimelineYAxis';
 import { useShownNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useShownNewFeatureDialog';
+import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
+  const now = new Date();
+  const since = new Date(now);
+  since.setHours(0, 0, 0, 0);
+  const until = new Date(now);
+  until.setHours(23, 59, 59, 999);
 
   const channels = await store.getState().features.channel.fetchChannels();
-  const programs = await store.getState().features.timetable.fetchTimetable({ since, until });
+  const programs = await store.getState().features.timetable.fetchTimetable({ 
+    since: since.toISOString(),
+    until: until.toISOString(),
+  });
   return { channels, programs };
 };
 
@@ -46,10 +51,29 @@ export const TimetablePage = () => {
       };
     };
   };
-  invariant(hydrationData.loaderData?.["0-4"]?.channels, 'Expected hydration data to include channels');
-  invariant(hydrationData.loaderData["0-4"].programs, 'Expected hydration data to include programs');
-  const channels: Channel[] = hydrationData.loaderData["0-4"].channels;
-  const programs: Program[] = hydrationData.loaderData["0-4"].programs;
+
+  let channels_: Channel[] = []
+  let programs_: Program[] = []
+  
+  if (hydrationData.loaderData) {
+    channels_ = hydrationData.loaderData["0-4"]?.channels ?? [];
+    programs_ = hydrationData.loaderData["0-4"]?.programs ?? [];
+  }
+  else {
+    const state = useStore((s) => s);
+    
+    const now = new Date();
+    const since = new Date(now);
+    since.setHours(0, 0, 0, 0);
+    const until = new Date(now);
+    until.setHours(23, 59, 59, 999);
+
+    channels_ = Object.values(state.features.channel.channels);
+    programs_ = Object.values(state.features.timetable.programs);
+  }
+
+  const channels: Channel[] = channels_;
+  const programs: Program[] = programs_;
 
   // chennelsのIdの順に、各チャンネルに分ける
   const programLists = channels.map((channel) => {
