@@ -8,7 +8,6 @@ import invariant from 'tiny-invariant';
 import { ArrayValues } from 'type-fest';
 
 import { Player } from '../../player/components/Player';
-import { PlayerType } from '../../player/constants/player_type';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
@@ -24,7 +23,7 @@ export const JumbotronSection = ({ module }: Props) => {
   invariant(episode);
 
   return (
-    <Hoverable classNames={{ hovered: 'opacity-50' }}>
+    <Hoverable classNames={{ hovered: 'hover:opacity-50' }}>
       <NavLink
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
@@ -48,7 +47,6 @@ export const JumbotronSection = ({ module }: Props) => {
                     loop
                     className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.ShakaPlayer}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
                 </div>

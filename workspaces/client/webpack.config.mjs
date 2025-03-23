@@ -1,19 +1,18 @@
 import path from 'node:path';
 
+import UnoCSS from '@unocss/webpack';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
         exclude: [/node_modules\/video\.js/, /node_modules\/@videojs/],
-        resolve: {
-          fullySpecified: false,
-        },
         test: /\.(?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$/,
         use: {
           loader: 'babel-loader',
@@ -23,9 +22,7 @@ const config = {
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
-                  useBuiltIns: 'entry',
+                  targets: { chrome: '134' },
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
@@ -36,7 +33,7 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/inline',
+        type: 'asset/resource',
       },
       {
         resourceQuery: /raw/,
@@ -51,16 +48,19 @@ const config = {
       },
     ],
   },
+  optimization: {
+    realContentHash: true,
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+    UnoCSS(),
   ],
   resolve: {
     alias: {

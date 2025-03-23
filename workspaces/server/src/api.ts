@@ -8,7 +8,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 import * as schema from '@wsh-2025/schema/src/openapi/schema';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import type { FastifyInstance } from 'fastify';
 import {
   fastifyZodOpenApiPlugin,
@@ -96,15 +96,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const channels = await database.query.channel.findMany({
-        orderBy(channel, { asc }) {
-          return asc(channel.id);
-        },
         where(channel, { inArray }) {
           if (req.query.channelIds != null) {
             const channelIds = req.query.channelIds.split(',');
             return inArray(channel.id, channelIds);
           }
           return void 0;
+        },
+        orderBy(channel, { asc }) {
+          return asc(channel.id);
         },
       });
       reply.code(200).send(channels);
@@ -162,15 +162,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const episodes = await database.query.episode.findMany({
-        orderBy(episode, { asc }) {
-          return asc(episode.id);
-        },
         where(episode, { inArray }) {
           if (req.query.episodeIds != null) {
             const episodeIds = req.query.episodeIds.split(',');
             return inArray(episode.id, episodeIds);
           }
           return void 0;
+        },
+        orderBy(episode, { asc }) {
+          return asc(episode.id);
         },
         with: {
           series: {
@@ -250,15 +250,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const series = await database.query.series.findMany({
-        orderBy(series, { asc }) {
-          return asc(series.id);
-        },
         where(series, { inArray }) {
           if (req.query.seriesIds != null) {
             const seriesIds = req.query.seriesIds.split(',');
             return inArray(series.id, seriesIds);
           }
           return void 0;
+        },
+        orderBy(series, { asc }) {
+          return asc(series.id);
         },
         with: {
           episodes: {
@@ -336,9 +336,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
         where(program, { between, sql }) {
           // 競技のため、時刻のみで比較する
           return between(
@@ -346,6 +343,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             sql`time(${req.query.since}, '+9 hours')`,
             sql`time(${req.query.until}, '+9 hours')`,
           );
+        },
+        orderBy(program, { asc }) {
+          return asc(program.startAt);
         },
       });
       reply.code(200).send(programs);
@@ -372,15 +372,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
         where(program, { inArray }) {
           if (req.query.programIds != null) {
             const programIds = req.query.programIds.split(',');
             return inArray(program.id, programIds);
           }
           return void 0;
+        },
+        orderBy(program, { asc }) {
+          return asc(program.startAt);
         },
         with: {
           channel: true,
@@ -470,11 +470,11 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const modules = await database.query.recommendedModule.findMany({
-        orderBy(module, { asc }) {
-          return asc(module.order);
-        },
         where(module, { eq }) {
           return eq(module.referenceId, req.params.referenceId);
+        },
+        orderBy(module, { asc }) {
+          return asc(module.order);
         },
         with: {
           items: {

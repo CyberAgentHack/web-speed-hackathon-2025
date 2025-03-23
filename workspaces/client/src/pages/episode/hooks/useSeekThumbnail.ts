@@ -4,11 +4,34 @@ import * as schema from '@wsh-2025/schema/src/api/schema';
 import { Parser } from 'm3u8-parser';
 import { use } from 'react';
 
+let ffmpegInstance: FFmpeg | null = null;
+const urlCache = new Map<string, string>();
+const thumbnailCache = new Map<string, Promise<string>>();
+
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
+async function getFFmpegInstance(): Promise<FFmpeg> {
+  if (!ffmpegInstance) {
+    ffmpegInstance = new FFmpeg();
+    await ffmpegInstance.load({
+      coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
+        return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
+      }),
+      wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+        return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
+      }),
+    });
+  }
+  return ffmpegInstance;
+}
+
 async function getSeekThumbnail({ episode }: Params) {
+  if (urlCache.has(episode.id)) {
+    return urlCache.get(episode.id) as string;
+  }
+
   // HLS のプレイリストを取得
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
   const parser = new Parser();
@@ -16,15 +39,7 @@ async function getSeekThumbnail({ episode }: Params) {
   parser.end();
 
   // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  const ffmpeg = await getFFmpegInstance();
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
@@ -64,13 +79,14 @@ async function getSeekThumbnail({ episode }: Params) {
   const output = await ffmpeg.readFile('preview.jpg');
   ffmpeg.terminate();
 
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
+  const url = URL.createObjectURL(new Blob([output], { type: 'image/avif' }));
+  urlCache.set(episode.id, url);
+
+  return url;
 }
 
-const weakMap = new WeakMap<object, Promise<string>>();
-
 export const useSeekThumbnail = ({ episode }: Params): string => {
-  const promise = weakMap.get(episode) ?? getSeekThumbnail({ episode });
-  weakMap.set(episode, promise);
+  const promise = thumbnailCache.get(episode.id) ?? getSeekThumbnail({ episode });
+  thumbnailCache.set(episode.id, promise);
   return use(promise);
 };

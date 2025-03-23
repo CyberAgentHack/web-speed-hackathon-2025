@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -15,7 +14,7 @@ import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
 
 interface Props {
-  hydrationData?: unknown;
+  hydrationData?: object;
 }
 
 export const createStore = ({ hydrationData }: Props) => {
@@ -39,7 +38,7 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  store.setState((prev) => ({ ...prev, ...hydrationData }));
 
   return store;
 };

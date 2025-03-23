@@ -8,7 +8,6 @@ import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useProgramById';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
@@ -101,7 +100,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -118,7 +117,6 @@ export const ProgramPage = () => {
                 <Player
                   className="size-full"
                   playerRef={playerRef}
-                  playerType={PlayerType.VideoJS}
                   playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
                 />
                 <div className="absolute inset-x-0 bottom-0">
@@ -127,7 +125,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

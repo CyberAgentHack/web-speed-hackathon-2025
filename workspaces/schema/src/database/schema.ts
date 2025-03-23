@@ -98,7 +98,7 @@ export const episode = table(
       .references(() => stream.id),
     premium: t.integer({ mode: 'boolean' }).notNull(),
   },
-  () => [],
+  (table) => [t.index('idx_episode_seriesId').on(table.seriesId), t.index('idx_episode_streamId').on(table.streamId)],
 );
 export const episodeRelation = relations(episode, ({ one }) => ({
   series: one(series, {
@@ -139,7 +139,11 @@ export const program = table(
       .notNull()
       .references(() => episode.id),
   },
-  () => [],
+  (table) => [
+    t.index('idx_program_channelId').on(table.channelId),
+    t.index('idx_program_episodeId').on(table.episodeId),
+    t.index('idx_program_startAt').on(table.startAt),
+  ],
 );
 export const programRelation = relations(program, ({ one }) => ({
   channel: one(channel, {
@@ -164,7 +168,11 @@ export const recommendedItem = table(
     seriesId: t.text().references(() => series.id),
     episodeId: t.text().references(() => episode.id),
   },
-  () => [],
+  (table) => [
+    t.index('idx_recommendedItem_moduleId').on(table.moduleId),
+    t.index('idx_recommendedItem_seriesId').on(table.seriesId),
+    t.index('idx_recommendedItem_episodeId').on(table.episodeId),
+  ],
 );
 export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
   module: one(recommendedModule, {
@@ -190,7 +198,7 @@ export const recommendedModule = table(
     referenceId: t.text().notNull(),
     type: t.text().notNull(),
   },
-  () => [],
+  (table) => [t.index('idx_recommendedModule_referenceId').on(table.referenceId)],
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
   items: many(recommendedItem),
@@ -203,5 +211,5 @@ export const user = table(
     email: t.text().notNull().unique(),
     password: t.text().notNull(),
   },
-  () => [],
+  (table) => [t.index('idx_user_email').on(table.email)],
 );
