@@ -41,7 +41,7 @@ const config = {
         //     maxSize: 4 * 1024, // 4KB以下はインライン化
         //   },
         // },
-        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        test: /\.(png|jpe?g|gif|svg)$/i,
         type: 'asset',
       },
       {
