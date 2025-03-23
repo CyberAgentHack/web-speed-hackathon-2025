@@ -54,6 +54,8 @@
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
     "@iconify/types": "2.0.0",
+    "@rspack/cli": "1.2.8",
+    "@rspack/core": "1.2.8",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
     "@types/m3u8-parser": "7.2.0",
@@ -80,7 +82,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "rspack",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
@@ -89,7 +91,13 @@
       ],
       "output": [
         "./dist/**/*"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": {
+          "external": true,
+          "default": "production"
+        }
+      }
     },
     "format": {
       "command": "pnpm run format:eslint && pnpm run format:prettier"

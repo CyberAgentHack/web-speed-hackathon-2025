@@ -4,6 +4,7 @@
   "scripts": {
     "database:migrate": "wireit",
     "database:reset": "wireit",
+    "dev": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit",
@@ -62,6 +63,25 @@
     },
     "database:reset": {
       "command": "tsx ./tools/seed.ts"
+    },
+    "dev": {
+      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "service": true,
+      "env": {
+        "API_BASE_URL": {
+          "external": true,
+          "default": "http://localhost:8000/api"
+        },
+        "PORT": {
+          "external": true,
+          "default": "8000"
+        }
+      },
+      "files": [
+        "../../pnpm-lock.yaml",
+        "../schema/src/**/*",
+        "./src/**/*"
+      ]
     },
     "start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
