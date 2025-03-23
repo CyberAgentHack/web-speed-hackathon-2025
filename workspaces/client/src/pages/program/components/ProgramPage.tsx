@@ -72,7 +72,7 @@ export const ProgramPage = () => {
           forceUpdate();
         }
       }
-    }, 1000);
+    }, 250);
 
     return () => {
       clearInterval(interval);
