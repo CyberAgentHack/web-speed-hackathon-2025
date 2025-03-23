@@ -80,9 +80,6 @@
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*"
-      ],
-      "dependencies": [
-        "../client:build"
       ]
     },
     "heroku-start": {

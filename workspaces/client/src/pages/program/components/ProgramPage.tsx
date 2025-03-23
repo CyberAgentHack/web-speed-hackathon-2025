@@ -24,12 +24,19 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const since = now.startOf('day').toISO();
   const until = now.endOf('day').toISO();
 
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+  const [
+    program,
+    channels,
+    timetable,
+    modules,
+  ] = await Promise.all([
+    store.getState().features.program.fetchProgramById({ programId }),
+    store.getState().features.channel.fetchChannels(),
+    store.getState().features.timetable.fetchTimetable({ since, until }),
+    store
+      .getState()
+      .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId })
+  ])
   return { channels, modules, program, timetable };
 };
 
@@ -101,7 +108,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -118,7 +125,7 @@ export const ProgramPage = () => {
                 <Player
                   className="size-full"
                   playerRef={playerRef}
-                  playerType={PlayerType.VideoJS}
+                  playerType={PlayerType.ShakaPlayer}
                   playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
                 />
                 <div className="absolute inset-x-0 bottom-0">
@@ -127,7 +134,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={program.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

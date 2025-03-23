@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react'
 import { Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
@@ -19,10 +20,12 @@ import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
-  const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+  const [episode, modules] = await Promise.all([
+    store.getState().features.episode.fetchEpisodeById({ episodeId }),
+    store
+      .getState()
+      .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId })
+  ])
   return { episode, modules };
 };
 
@@ -51,7 +54,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" loading="lazy" src={episode.thumbnailUrl} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -71,13 +74,13 @@ export const EpisodePage = () => {
                 fallback={
                   <AspectRatio ratioHeight={9} ratioWidth={16}>
                     <div className="grid size-full">
-                      <img
-                        alt=""
+                      <img alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
+                        loading="lazy"
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <Icon className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" icon="line-md:loading-twotone-loop" />
                     </div>
                   </AspectRatio>
                 }
@@ -86,7 +89,7 @@ export const EpisodePage = () => {
                   <Player
                     className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.HlsJS}
+                    playerType={PlayerType.ShakaPlayer}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
 
