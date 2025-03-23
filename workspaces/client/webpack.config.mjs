@@ -2,11 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+import Terser from 'terser-webpack-plugin';
+
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -57,6 +59,22 @@ const config = {
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new Terser({
+        terserOptions: {
+          compress: {
+            drop_console: true,
+          },
+          format: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
