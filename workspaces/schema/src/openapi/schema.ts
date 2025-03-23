@@ -1,226 +1,235 @@
 /* eslint-disable sort/object-properties */
-import 'zod-openapi/extend';
-
-import { createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
+//ZotをValibotへ変更
+import { v } from 'valibot';
 
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 
-function assertSchema<T>(_actual: z.ZodType<NoInfer<T>>, _expected: z.ZodType<T>): void {}
+function assertSchema<T>(_actual: v.BaseSchema<T>, _expected: v.BaseSchema<T>): void {}
 
-const channel = z.object({
-  id: z.string().openapi({ format: 'uuid' }),
-  logoUrl: z.string().openapi({ example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png' }),
-  name: z.string().openapi({ example: 'AREMA NEWS' }),
-});
-assertSchema(channel, createSelectSchema(databaseSchema.channel));
+const schemaCache = new Map();
 
-const episode = z.object({
-  id: z.string().openapi({ format: 'uuid' }),
-  title: z.string().openapi({ example: '第1話 吾輩は猫である' }),
-  description: z.string().openapi({
-    example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
-  }),
-  order: z.number().openapi({ example: 1 }),
-  seriesId: z.string().openapi({ format: 'uuid' }),
-  streamId: z.string().openapi({ format: 'uuid' }),
-  thumbnailUrl: z.string().openapi({
-    example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
-  }),
-  premium: z.boolean().openapi({ example: false }),
-});
-assertSchema(episode, createSelectSchema(databaseSchema.episode));
+function getCachedSchema<T>(key: string, schemaFn: () => v.BaseSchema<T>): v.BaseSchema<T> {
+  if (!schemaCache.has(key)) {
+    schemaCache.set(key, schemaFn());
+  }
+  return schemaCache.get(key);
+}
 
-const series = z.object({
-  id: z.string().openapi({ format: 'uuid' }),
-  title: z.string().openapi({ example: '吾輩は猫である' }),
-  description: z.string().openapi({
-    example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
-  }),
-  thumbnailUrl: z.string().openapi({
-    example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
-  }),
-});
-assertSchema(series, createSelectSchema(databaseSchema.series));
+const channel = getCachedSchema('channel', () => v.object({
+  id: v.string([v.uuid()]),
+  logoUrl: v.string(),
+  name: v.string(),
+}));
+assertSchema(channel, databaseSchema.channel);
 
-const program = z.object({
-  id: z.string().openapi({ format: 'uuid' }),
-  title: z.string().openapi({ example: '吾輩は猫である' }),
-  description: z.string().openapi({
-    example:
-      '『吾輩は猫である』（わがはいはねこである）は、夏目漱石の長編小説であり、処女小説である。1905年（明治38年）1月、『ホトトギス』にて発表されたのだが、好評を博したため、翌1906年（明治39年）8月まで継続した。上、1906年10月刊、中、1906年11月刊、下、1907年5月刊。この文章は、クリエイティブ・コモンズ 表示-継承 4.0 国際 パブリック・ライセンスのもとで公表されたウィキペディアの項目「吾輩は猫である」（https://ja.wikipedia.org/wiki/吾輩は猫である）を素材として二次利用しています。',
-  }),
-  startAt: z.string().openapi({ format: 'date-time' }),
-  endAt: z.string().openapi({ format: 'date-time' }),
-  thumbnailUrl: z.string().openapi({
-    example: 'https://image.example.com/assets/d13d2e22-a7ff-44ba-94a3-5f025f2b63cd.png',
-  }),
-  channelId: z.string().openapi({ format: 'uuid' }),
-  episodeId: z.string().openapi({ format: 'uuid' }),
-});
-assertSchema(program, createSelectSchema(databaseSchema.program));
+const episode = getCachedSchema('episode', () => v.object({
+  id: v.string([v.uuid()]),
+  title: v.string(),
+  description: v.string(),
+  order: v.number(),
+  seriesId: v.string([v.uuid()]),
+  streamId: v.string([v.uuid()]),
+  thumbnailUrl: v.string(),
+  premium: v.boolean(),
+}));
+assertSchema(episode, databaseSchema.episode);
 
-const recommendedModule = z.object({
-  id: z.string().openapi({ format: 'uuid' }),
-  order: z.number().openapi({ example: 1 }),
-  title: z.string().openapi({ example: '『チャンスの時間』を見ていたあなたにオススメ' }),
-  referenceId: z.string().openapi({ format: 'uuid' }),
-  type: z.enum(['carousel', 'jumbotron']).openapi({ example: 'carousel' }),
-});
-assertSchema(recommendedModule, createSelectSchema(databaseSchema.recommendedModule));
+const series = getCachedSchema('series', () => v.object({
+  id: v.string([v.uuid()]),
+  title: v.string(),
+  description: v.string(),
+  thumbnailUrl: v.string(),
+}));
+assertSchema(series, databaseSchema.series);
 
-const recommendedItem = z.object({
-  id: z.string().openapi({ format: 'uuid' }),
-  order: z.number().openapi({ example: 1 }),
-  seriesId: z.string().nullable().openapi({ format: 'uuid' }),
-  episodeId: z.string().nullable().openapi({ format: 'uuid' }),
-  moduleId: z.string().openapi({ format: 'uuid' }),
-});
-assertSchema(recommendedItem, createSelectSchema(databaseSchema.recommendedItem));
+const program = getCachedSchema('program', () => v.object({
+  id: v.string([v.uuid()]),
+  title: v.string(),
+  description: v.string(),
+  startAt: v.string([v.datetime()]),
+  endAt: v.string([v.datetime()]),
+  thumbnailUrl: v.string(),
+  channelId: v.string([v.uuid()]),
+  episodeId: v.string([v.uuid()]),
+}));
+assertSchema(program, databaseSchema.program);
 
-const user = z.object({
-  id: z.number().openapi({ format: '0' }),
-  email: z.string().openapi({ example: 'user123' }),
-  password: z.string().openapi({ example: 'password123' }),
-});
-assertSchema(user, createSelectSchema(databaseSchema.user));
+const recommendedModule = getCachedSchema('recommendedModule', () => v.object({
+  id: v.string([v.uuid()]),
+  order: v.number(),
+  title: v.string(),
+  referenceId: v.string([v.uuid()]),
+  type: v.union([v.literal('carousel'), v.literal('jumbotron')]),
+}));
+assertSchema(recommendedModule, databaseSchema.recommendedModule);
+
+const recommendedItem = getCachedSchema('recommendedItem', () => v.object({
+  id: v.string([v.uuid()]),
+  order: v.number(),
+  seriesId: v.nullable(v.string([v.uuid()])),
+  episodeId: v.nullable(v.string([v.uuid()])),
+  moduleId: v.string([v.uuid()]),
+}));
+assertSchema(recommendedItem, databaseSchema.recommendedItem);
+
+const user = getCachedSchema('user', () => v.object({
+  id: v.number(),
+  email: v.string([v.email()]),
+  password: v.string(),
+}));
+assertSchema(user, databaseSchema.user);
 
 // GET /channels
-export const getChannelsRequestQuery = z.object({
-  channelIds: z.string().optional(),
+export const getChannelsRequestQuery = v.object({
+  channelIds: v.optional(v.string()),
 });
-export const getChannelsResponse = z.array(channel.extend({}));
+export const getChannelsResponse = v.array(channel);
 
 // GET /channels/:channelId
-export const getChannelByIdRequestParams = z.object({
-  channelId: z.string(),
+export const getChannelByIdRequestParams = v.object({
+  channelId: v.string([v.uuid()]),
 });
-export const getChannelByIdResponse = channel.extend({});
+export const getChannelByIdResponse = channel;
 
 // GET /episodes
-export const getEpisodesRequestQuery = z.object({
-  episodeIds: z.string().optional(),
+export const getEpisodesRequestQuery = v.object({
+  episodeIds: v.optional(v.string()),
 });
-export const getEpisodesResponse = z.array(
-  episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
+export const getEpisodesResponse = v.array(
+  v.object({
+    ...episode.definition,
+    series: v.object({
+      ...series.definition,
+      episodes: v.array(episode),
     }),
-  }),
+  })
 );
 
 // GET /episodes/:episodeId
-export const getEpisodeByIdRequestParams = z.object({
-  episodeId: z.string(),
+export const getEpisodeByIdRequestParams = v.object({
+  episodeId: v.string([v.uuid()]),
 });
-export const getEpisodeByIdResponse = episode.extend({
-  series: series.extend({
-    episodes: z.array(episode.extend({})),
+export const getEpisodeByIdResponse = v.object({
+  ...episode.definition,
+  series: v.object({
+    ...series.definition,
+    episodes: v.array(episode),
   }),
 });
 
 // GET /series
-export const getSeriesRequestQuery = z.object({
-  seriesIds: z.string().optional(),
+export const getSeriesRequestQuery = v.object({
+  seriesIds: v.optional(v.string()),
 });
-export const getSeriesResponse = z.array(
-  series.extend({
-    episodes: z.array(episode.extend({})),
-  }),
+export const getSeriesResponse = v.array(
+  v.object({
+    ...series.definition,
+    episodes: v.array(episode),
+  })
 );
 
 // GET /series/:seriesId
-export const getSeriesByIdRequestParams = z.object({
-  seriesId: z.string(),
+export const getSeriesByIdRequestParams = v.object({
+  seriesId: v.string([v.uuid()]),
 });
-export const getSeriesByIdResponse = series.extend({
-  episodes: z.array(episode.extend({})),
+export const getSeriesByIdResponse = v.object({
+  ...series.definition,
+  episodes: v.array(episode),
 });
 
 // GET /timetable
-export const getTimetableRequestQuery = z.object({
-  since: z.coerce.string().openapi({ format: 'date-time' }),
-  until: z.coerce.string().openapi({ format: 'date-time' }),
+export const getTimetableRequestQuery = v.object({
+  since: v.string([v.datetime()]),
+  until: v.string([v.datetime()]),
 });
-export const getTimetableResponse = z.array(program.extend({}));
+export const getTimetableResponse = v.array(program);
 
 // GET /programs
-export const getProgramsRequestQuery = z.object({
-  programIds: z.string().optional(),
+export const getProgramsRequestQuery = v.object({
+  programIds: v.optional(v.string()),
 });
-export const getProgramsResponse = z.array(
-  program.extend({
-    channel: channel.extend({}),
-    episode: episode.extend({
-      series: series.extend({
-        episodes: z.array(episode.extend({})),
+export const getProgramsResponse = v.array(
+  v.object({
+    ...program.definition,
+    channel: channel,
+    episode: v.object({
+      ...episode.definition,
+      series: v.object({
+        ...series.definition,
+        episodes: v.array(episode),
       }),
     }),
-  }),
+  })
 );
 
 // GET /programs/:programId
-export const getProgramByIdRequestParams = z.object({
-  programId: z.string(),
+export const getProgramByIdRequestParams = v.object({
+  programId: v.string([v.uuid()]),
 });
-export const getProgramByIdResponse = program.extend({
-  channel: channel.extend({}),
-  episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
+export const getProgramByIdResponse = v.object({
+  ...program.definition,
+  channel: channel,
+  episode: v.object({
+    ...episode.definition,
+    series: v.object({
+      ...series.definition,
+      episodes: v.array(episode),
     }),
   }),
 });
 
 // GET /recommended/:referenceId
-export const getRecommendedModulesRequestParams = z.object({
-  referenceId: z.string(),
+export const getRecommendedModulesRequestParams = v.object({
+  referenceId: v.string([v.uuid()]),
 });
-export const getRecommendedModulesResponse = z.array(
-  recommendedModule.extend({
-    items: z.array(
-      recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
+export const getRecommendedModulesResponse = v.array(
+  v.object({
+    ...recommendedModule.definition,
+    items: v.array(
+      v.object({
+        ...recommendedItem.definition,
+        series: v.nullable(
+          v.object({
+            ...series.definition,
+            episodes: v.array(episode),
           })
-          .nullable(),
-        episode: episode
-          .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
+        ),
+        episode: v.nullable(
+          v.object({
+            ...episode.definition,
+            series: v.object({
+              ...series.definition,
+              episodes: v.array(episode),
             }),
           })
-          .nullable(),
-      }),
+        ),
+      })
     ),
-  }),
+  })
 );
 
 // POST /signIn
-export const signInRequestBody = z.object({
-  email: z.string(),
-  password: z.string(),
+export const signInRequestBody = v.object({
+  email: v.string([v.email()]),
+  password: v.string(),
 });
-export const signInResponse = z.object({
-  id: z.number(),
-  email: z.string(),
+export const signInResponse = v.object({
+  id: v.number(),
+  email: v.string([v.email()]),
 });
 
 // POST /signUp
-export const signUpRequestBody = z.object({
-  email: z.string(),
-  password: z.string(),
+export const signUpRequestBody = v.object({
+  email: v.string([v.email()]),
+  password: v.string(),
 });
-export const signUpResponse = z.object({
-  id: z.number(),
-  email: z.string(),
+export const signUpResponse = v.object({
+  id: v.number(),
+  email: v.string([v.email()]),
 });
 
 // GET /users/me
-export const getUserResponse = z.object({
-  id: z.number(),
-  email: z.string(),
+export const getUserResponse = v.object({
+  id: v.number(),
+  email: v.string([v.email()]),
 });
