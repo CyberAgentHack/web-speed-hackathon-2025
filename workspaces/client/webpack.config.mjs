@@ -1,12 +1,17 @@
 import path from 'node:path';
-
+import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
+
+// __dirnameの代わりにimport.meta.urlを使用
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -18,6 +23,8 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
+            configFile: true,
             presets: [
               [
                 '@babel/preset-env',
@@ -39,6 +46,10 @@ const config = {
         type: 'asset/inline',
       },
       {
+        test: /\.avif$/, // 追加: AVIF ファイルの処理
+        type: 'asset/resource',
+      },
+      {
         resourceQuery: /raw/,
         type: 'asset/source',
       },
@@ -49,17 +60,31 @@ const config = {
           loader: 'arraybuffer-loader',
         },
       },
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'node_modules/@ffmpeg/ffmpeg'),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: 'chunk-[name].[contenthash].js',
     chunkFormat: false,
-    filename: 'main.js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
+    clean: true,
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 15 }),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 10000
+    }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {
@@ -68,6 +93,58 @@ const config = {
       '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
+  },
+  target: 'browserslist', // 追加
+  optimization: { // 追加: 最適化オプション
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            ecma: 2020,
+          },
+          compress: {
+            ecma: 5,
+            comparisons: false,
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
+    splitChunks: {
+      chunks: 'all',
+      maxInitialRequests: 5, // 初期リクエスト数を制限
+      minSize: 20000,
+      cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'vendor.react',
+          chunks: 'initial', // 初期ロードのみ
+          priority: 40,
+        },
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: -10,
+        }
+      },
+    },
+    runtimeChunk: 'single',
+  },
+
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
 };
 

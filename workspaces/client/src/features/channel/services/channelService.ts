@@ -17,13 +17,26 @@ const $fetch = createFetch({
   throw: true,
 });
 
+// チャンネルデータのキャッシュ
+let channelsCache: StandardSchemaV1.InferOutput<typeof schema.getChannelsResponse> | null = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5分
+let lastFetchTime = 0;
+
 const batcher = batshit.create({
   async fetcher(queries: { channelId: string }[]) {
+    // キャッシュが有効な場合はそれを使用
+    if (channelsCache && Date.now() - lastFetchTime < CACHE_DURATION) {
+      return channelsCache;
+    }
+
     const data = await $fetch('/channels', {
       query: {
         channelIds: queries.map((q) => q.channelId).join(','),
       },
     });
+    // キャッシュを更新
+    channelsCache = data;
+    lastFetchTime = Date.now();
     return data;
   },
   resolver(items, query: { channelId: string }) {
@@ -35,7 +48,7 @@ const batcher = batshit.create({
   },
   scheduler: batshit.windowedFiniteBatchScheduler({
     maxBatchSize: 100,
-    windowMs: 1000,
+    windowMs: 100,
   }),
 });
 
@@ -48,11 +61,23 @@ interface ChannelService {
 
 export const channelService: ChannelService = {
   async fetchChannelById({ channelId }) {
+    // キャッシュがある場合はそこから直接取得
+    if (channelsCache && Date.now() - lastFetchTime < CACHE_DURATION) {
+      const channel = channelsCache.find(item => item.id === channelId);
+      if (channel) return channel;
+    }
     const channel = await batcher.fetch({ channelId });
     return channel;
   },
   async fetchChannels() {
+    // キャッシュが有効な場合はそれを返す
+    if (channelsCache && Date.now() - lastFetchTime < CACHE_DURATION) {
+      return channelsCache;
+    }
+
     const data = await $fetch('/channels', { query: {} });
+    channelsCache = data;
+    lastFetchTime = Date.now();
     return data;
   },
 };
