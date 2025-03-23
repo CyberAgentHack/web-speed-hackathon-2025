@@ -1,6 +1,6 @@
 import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
-import { useId, memo } from 'react';
+import { useId, memo, useMemo } from 'react';
 import { Field, Form } from 'react-final-form';
 import { z } from 'zod';
 
@@ -20,29 +20,33 @@ interface Props {
   onOpenSignUp: () => void;
 }
 
+// バリデーションスキーマは外部に定義しておく
+const schema = z.object({
+  email: z
+    .string({ required_error: 'メールアドレスを入力してください' })
+    .refine(isValidEmail, { message: 'メールアドレスが正しくありません' }),
+  password: z
+    .string({ required_error: 'パスワードを入力してください' })
+    .refine(isValidPassword, { message: 'パスワードが正しくありません' })
+});
+
 export const SignInDialog = memo(function SignInDialog({
   isOpen,
   onClose,
-  onOpenSignUp
+  onOpenSignUp,
 }: Props) {
   const authActions = useAuthActions();
   const emailId = useId();
   const passwordId = useId();
 
-  // バリデーションスキーマを外に出しておき、再レンダリングごとの再定義を回避
-  const schema = z.object({
-    email: z
-      .string({ required_error: 'メールアドレスを入力してください' })
-      .refine(isValidEmail, { message: 'メールアドレスが正しくありません' }),
-    password: z
-      .string({ required_error: 'パスワードを入力してください' })
-      .refine(isValidPassword, { message: 'パスワードが正しくありません' })
-  });
-
-  const validate = (values: SignInFormValues) => {
-    const result = schema.safeParse(values);
-    return result.success ? undefined : result.error.formErrors.fieldErrors;
-  };
+  // validate 関数は useMemo でメモ化
+  const validate = useMemo(
+    () => (values: SignInFormValues) => {
+      const result = schema.safeParse(values);
+      return result.success ? undefined : result.error.formErrors.fieldErrors;
+    },
+    []
+  );
 
   const onSubmit = async (values: SignInFormValues) => {
     try {
@@ -61,7 +65,6 @@ export const SignInDialog = memo(function SignInDialog({
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          {/* プレースホルダーで読み込みをスムーズに */}
           <img
             alt="AremaTVロゴ"
             className="object-contain"
@@ -82,8 +85,10 @@ export const SignInDialog = memo(function SignInDialog({
                   <div className="mb-[24px]">
                     <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
                       <label htmlFor={emailId}>メールアドレス</label>
-                      {meta.modified && meta.error && Array.isArray(meta.error) && (
-                        <span className="text-[#F0163A]">{meta.error[0]}</span>
+                      {meta.modified && meta.error && (
+                        <span className="text-[#F0163A]">
+                          {Array.isArray(meta.error) ? meta.error[0] : meta.error}
+                        </span>
                       )}
                     </div>
                     <input
@@ -103,8 +108,10 @@ export const SignInDialog = memo(function SignInDialog({
                   <div className="mb-[24px]">
                     <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
                       <label htmlFor={passwordId}>パスワード</label>
-                      {meta.modified && meta.error && Array.isArray(meta.error) && (
-                        <span className="text-[#F0163A]">{meta.error[0]}</span>
+                      {meta.modified && meta.error && (
+                        <span className="text-[#F0163A]">
+                          {Array.isArray(meta.error) ? meta.error[0] : meta.error}
+                        </span>
                       )}
                     </div>
                     <input
