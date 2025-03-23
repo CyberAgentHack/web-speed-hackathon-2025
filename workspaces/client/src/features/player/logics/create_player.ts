@@ -48,9 +48,23 @@ class ShakaPlayerWrapper implements PlayerWrapper {
 
   load(playlistUrl: string, options: { loop: boolean }): void {
     void (async () => {
-      await this._player.attach(this.videoElement);
-      this.videoElement.loop = options.loop;
-      await this._player.load(playlistUrl);
+      try {
+        await this._player.attach(this.videoElement);
+        this.videoElement.loop = options.loop;
+        await this._player.load(playlistUrl);
+
+        // loadeddataイベントを発火させて、ローディング状態を更新
+        const event = new Event('loadeddata');
+        this.videoElement.dispatchEvent(event);
+      } catch (error) {
+        console.error('Shaka Player error:', error);
+
+        // エラーイベントを発火させて、ローディング状態を更新
+        const errorEvent = new ErrorEvent('error', {
+          message: error instanceof Error ? error.message : String(error)
+        });
+        this.videoElement.dispatchEvent(errorEvent);
+      }
     })();
   }
   play(): void {
@@ -112,6 +126,28 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   }
 
   load(playlistUrl: string, options: { loop: boolean }): void {
+    // イベントハンドラの設定
+    this._player.once(HlsJs.Events.MEDIA_ATTACHED, () => {
+      console.log('Media attached');
+    });
+
+    this._player.once(HlsJs.Events.MANIFEST_PARSED, () => {
+      console.log('Manifest parsed, media ready to play');
+      // loadeddataイベントを発火させて、ローディング状態を更新
+      const event = new Event('loadeddata');
+      this.videoElement.dispatchEvent(event);
+    });
+
+    this._player.once(HlsJs.Events.ERROR, (_, data) => {
+      console.error('HLS.js error:', data);
+      if (data.fatal) {
+        // エラーイベントを発火させて、ローディング状態を更新
+        const event = new ErrorEvent('error', { message: `HLS.js fatal error: ${data.type}` });
+        this.videoElement.dispatchEvent(event);
+      }
+    });
+
+    // メディアのアタッチとソースのロード
     this._player.attachMedia(this.videoElement);
     this.videoElement.loop = options.loop;
     this._player.loadSource(playlistUrl);
@@ -182,6 +218,25 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
 
   load(playlistUrl: string, options: { loop: boolean }): void {
     this.videoElement.loop = options.loop;
+
+    // loadeddataイベントのリスナーを追加
+    const loadedDataHandler = () => {
+      console.log('Video.js: Media loaded');
+      // loadeddataイベントを発火させて、ローディング状態を更新
+      const event = new Event('loadeddata');
+      this.videoElement.dispatchEvent(event);
+      this.videoElement.removeEventListener('loadeddata', loadedDataHandler);
+    };
+
+    // errorイベントのリスナーを追加
+    const errorHandler = (error: Event) => {
+      console.error('Video.js error:', error);
+      this.videoElement.removeEventListener('error', errorHandler);
+    };
+
+    this.videoElement.addEventListener('loadeddata', loadedDataHandler);
+    this.videoElement.addEventListener('error', errorHandler);
+
     this._player.src({
       src: playlistUrl,
       type: 'application/x-mpegURL',

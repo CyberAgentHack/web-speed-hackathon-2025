@@ -1,4 +1,4 @@
-import { Ref, useEffect, useRef } from 'react';
+import { Ref, useEffect, useRef, useState } from 'react';
 import invariant from 'tiny-invariant';
 import { assignRef } from 'use-callback-ref';
 
@@ -15,6 +15,7 @@ interface Props {
 
 export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const mountElement = mountRef.current;
@@ -28,6 +29,23 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
         return;
       }
       player = createPlayer(playerType);
+
+      // 読み込み状態の監視
+      player.videoElement.addEventListener('loadeddata', () => {
+        console.log('Player: Media loaded');
+        setIsLoading(false);
+      }, { signal: abortController.signal });
+
+      player.videoElement.addEventListener('playing', () => {
+        console.log('Player: Media playing');
+        setIsLoading(false);
+      }, { signal: abortController.signal });
+
+      player.videoElement.addEventListener('error', (e) => {
+        console.error('Player: Media error', e);
+        setIsLoading(false);
+      }, { signal: abortController.signal });
+
       player.load(playlistUrl, { loop: loop ?? false });
       mountElement.appendChild(player.videoElement);
       assignRef(playerRef, player);
@@ -40,6 +58,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
         player.destory();
       }
       assignRef(playerRef, null);
+      setIsLoading(true); // リセット
     };
   }, [playerType, playlistUrl, loop]);
 
@@ -48,10 +67,11 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
       <div className="relative size-full">
         <div ref={mountRef} className="size-full" />
 
-        <div className="absolute inset-0 z-[-10] grid place-content-center">
-          <img className="size-[48px]"  loading="lazy" src="/public/svg/loading.svg" />
-          {/* <div className="i-line-md:loading-twotone-loop size-[48px] text-[#ffffff]" /> */}
-        </div>
+        {isLoading && (
+          <div className="absolute inset-0 z-10 grid place-content-center bg-[#00000077]">
+            <img className="size-[48px]" loading="lazy" src="/public/svg/loading.svg" />
+          </div>
+        )}
       </div>
     </div>
   );
