@@ -1,7 +1,12 @@
 import path from 'node:path';
-
+import { fileURLToPath } from 'node:url';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'; // 追加
+import TerserPlugin from 'terser-webpack-plugin';
+
+// __dirnameの代わりにimport.meta.urlを使用
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -19,6 +24,8 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
+            configFile: true,
             presets: [
               [
                 '@babel/preset-env',
@@ -54,14 +61,25 @@ const config = {
           loader: 'arraybuffer-loader',
         },
       },
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'node_modules/@ffmpeg/ffmpeg'),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
     ],
   },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: 'chunk-[name].[contenthash].js',
     chunkFormat: false,
-    filename: 'main.js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
+    clean: true,
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 15 }),
@@ -81,20 +99,53 @@ const config = {
   target: 'browserslist', // 追加
   optimization: { // 追加: 最適化オプション
     minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            ecma: 2020,
+          },
+          compress: {
+            ecma: 5,
+            comparisons: false,
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
     splitChunks: {
       chunks: 'all',
       maxInitialRequests: 10,
       minSize: 20000,
       cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'vendor.react',
+          chunks: 'all',
+        },
+        videojs: {
+          test: /[\\/]node_modules[\\/](video\.js|@videojs)[\\/]/,
+          name: 'vendor.videojs',
+          chunks: 'all',
+        },
+        ffmpeg: {
+          test: /[\\/]node_modules[\\/]@ffmpeg[\\/]/,
+          name: 'vendor.ffmpeg',
+          chunks: 'all',
+          priority: 10,
+        },
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          // @ts-ignore
-          name(module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return `vendor.${packageName.replace('@', '')}`;
-          },
+          name: 'vendors',
+          chunks: 'all',
           priority: -10,
           reuseExistingChunk: true,
         },
