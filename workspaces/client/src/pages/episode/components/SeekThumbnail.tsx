@@ -29,8 +29,9 @@ export const SeekThumbnail = ({ episode }: Props) => {
   return (
     <div
       ref={ref}
-      className={`absolute bottom-0 h-[90px] w-[160px] translate-x-[-50%] bg-[url(/streams/${episode.streamId}/thumbnail.jpg)] bg-[size:auto_100%]`}
+      className="absolute bottom-0 h-[90px] w-[160px] translate-x-[-50%] bg-[size:auto_100%]"
       style={{
+        backgroundImage: `url(/streams/${episode.streamId}/thumbnail.jpg)`,
         backgroundPositionX: -1 * SEEK_THUMBNAIL_WIDTH * Math.floor(pointedTime),
         left: Math.max(MIN_LEFT, Math.min(relativeX, MAX_LEFT)),
       }}
