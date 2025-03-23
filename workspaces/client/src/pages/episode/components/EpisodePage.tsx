@@ -81,14 +81,14 @@ export const EpisodePage = () => {
                       <svg className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" viewBox="0 0 24 24">
                         <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
                           <path
+                            d="M12 3c4.97 0 9 4.03 9 9"
                             strokeDasharray="16"
                             strokeDashoffset="16"
-                            d="M12 3c4.97 0 9 4.03 9 9"
                           >
                             <animate
-                              fill="freeze"
                               attributeName="stroke-dashoffset"
                               dur="0.3s"
+                              fill="freeze"
                               values="16;0"
                             />
                             <animateTransform
@@ -100,15 +100,15 @@ export const EpisodePage = () => {
                             />
                           </path>
                           <path
+                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
                             strokeDasharray="64"
                             strokeDashoffset="64"
                             strokeOpacity=".3"
-                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
                           >
                             <animate
-                              fill="freeze"
                               attributeName="stroke-dashoffset"
                               dur="1.2s"
+                              fill="freeze"
                               values="64;0"
                             />
                           </path>

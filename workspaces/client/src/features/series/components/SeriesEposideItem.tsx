@@ -32,10 +32,10 @@ export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
                   {/* play-arrow-rounded */}
                   <svg
                     className="absolute bottom-[4px] left-[4px] m-[4px] block size-[20px] text-[#ffffff]"
-                    viewBox="0 0 24 24"
                     fill="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <path fill="currentColor" d="M8 17.175V6.825q0-.425.3-.713t.7-.287q.125 0 .263.037t.262.113l8.15 5.175q.225.15.338.375t.112.475t-.112.475t-.338.375l-8.15 5.175q-.125.075-.262.113T9 18.175q-.4 0-.7-.288t-.3-.712" />
+                    <path d="M8 17.175V6.825q0-.425.3-.713t.7-.287q.125 0 .263.037t.262.113l8.15 5.175q.225.15.338.375t.112.475t-.112.475t-.338.375l-8.15 5.175q-.125.075-.262.113T9 18.175q-.4 0-.7-.288t-.3-.712" fill="currentColor" />
                   </svg>
                   {episode.premium ? (
                     <span className="absolute bottom-[8px] right-[4px] inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
