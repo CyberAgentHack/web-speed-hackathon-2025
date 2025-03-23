@@ -70,6 +70,7 @@
     "hls.js": "1.5.17",
     "postcss": "8.5.3",
     "postcss-loader": "8.1.1",
+    "postcss-preset-env": "10.1.5",
     "shaka-player": "4.12.5",
     "style-loader": "4.0.0",
     "typescript": "5.7.2",
