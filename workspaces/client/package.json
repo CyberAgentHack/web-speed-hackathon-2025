@@ -2,7 +2,6 @@
   "name": "@wsh-2025/client",
   "private": true,
   "scripts": {
-    "analyze": "wireit",
     "build": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
@@ -70,14 +69,12 @@
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
+    "rollup-plugin-visualizer": "5.14.0",
     "terser": "5.39.0",
     "typescript": "5.7.2",
     "wireit": "0.14.9"
   },
   "wireit": {
-    "analyze": {
-      "command": "echo 'TODO: Implement bundle analysis'"
-    },
     "build": {
       "command": "vite build",
       "files": [
