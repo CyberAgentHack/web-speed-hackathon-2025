@@ -108,9 +108,6 @@
     "heroku-start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
       "service": true,
-      "dependencies": [
-        "database:migrate"
-      ],
       "env": {
         "NODE_ENV": {
           "external": true,
