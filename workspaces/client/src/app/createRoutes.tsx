@@ -97,12 +97,12 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             //   import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
             //   minLazyDelay,
             // );
-            const { NotFoundPage } = await import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage');
+            const { NotFoundPage, prefetch } = await import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage');
             return {
               Component: NotFoundPage,
-              // async loader() {
-              //   return await prefetch(store);
-              // },
+              async loader() {
+                return await prefetch(store);
+              },
             };
           },
           path: '*',
