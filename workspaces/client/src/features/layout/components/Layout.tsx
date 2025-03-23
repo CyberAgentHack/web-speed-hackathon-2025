@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
@@ -31,24 +31,30 @@ export const Layout = ({ children }: Props) => {
   const authDialogType = useAuthDialogType();
   const user = useAuthUser();
 
-  const [scrollTopOffset, setScrollTopOffset] = useState(0);
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
+
+  const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollTopOffset(window.scrollY);
+      if (!headerRef.current) {
+        return;
+      }
+
+      if (scrollY > 80 && !headerRef.current.classList.contains('to-transparent')) {
+        setShouldHeaderBeTransparent(true);
+      }
+
+      if (scrollY <= 80 && headerRef.current.classList.contains('to-transparent')) {
+        setShouldHeaderBeTransparent(false);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
-  }, [scrollTopOffset]);
+  });
 
   const isSignedIn = user != null;
 
@@ -56,6 +62,7 @@ export const Layout = ({ children }: Props) => {
     <>
       <div className="grid h-auto min-h-[100vh] w-full grid-cols-[188px_minmax(0,1fr)] grid-rows-[80px_calc(100vh-80px)_minmax(0,1fr)] flex-col [grid-template-areas:'a1_b1''a2_b2''a3_b3']">
         <header
+          ref={headerRef}
           className={classNames(
             'sticky top-[0px] z-10 order-1 flex h-[80px] w-full flex-row [grid-area:a1/a1/b1/b1]',
             !isLoading && shouldHeaderBeTransparent
