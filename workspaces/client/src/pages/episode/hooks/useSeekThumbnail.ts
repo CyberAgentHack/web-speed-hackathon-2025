@@ -51,11 +51,11 @@ async function getSeekThumbnail({ episode }: Params) {
     ].flat(),
   );
 
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
+  // 240 フレームごとにサムネイルを生成
   await ffmpeg.exec(
     [
       ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
+      ['-vf', "fps=240,select='not(mod(n\\,240))',scale=160:90,tile=250x1"],
       ['-frames:v', '1'],
       'preview.jpg',
     ].flat(),
