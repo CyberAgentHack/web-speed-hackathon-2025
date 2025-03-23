@@ -1,17 +1,43 @@
 /* グローバルスタイル */
-body {
+html, body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  min-height: 100%;
+  height: auto;
+  background-color: #000;
+  color: #fff;
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
+}
+
+#app-container {
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* テスト用にスクロール動作を調整 */
+.full-page-content {
+  display: block;
+  height: auto; 
+  min-height: 100%;
+  padding-bottom: 100px; /* 十分なスクロール余地を確保 */
+}
+
+/* スクロール可能なコンテンツ領域 */
+main {
+  overflow-y: visible;
+  overflow-x: hidden;
 }
 
 /* ベースとなるユーティリティクラス */
