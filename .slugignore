@@ -1,0 +1,6 @@
+*.test.js
+*.spec.js
+tests/
+__tests__/
+docs/
+.github/

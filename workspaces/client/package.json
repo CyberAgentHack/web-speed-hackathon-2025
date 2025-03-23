@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",
-    "build:nocheck": "vite build",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "heroku-build": "pnpm run build:nocheck"
+    "heroku-build": "pnpm run build"
+  },
+  "engines": {
+    "node": "22.x"
   },
   "dependencies": {
     "@babel/core": "^7.26.0",

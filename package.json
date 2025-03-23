@@ -37,7 +37,7 @@
     },
     "build": {
       "dependencies": [
-        "./workspaces/client:build:nocheck"
+        "./workspaces/client:build"
       ]
     },
     "heroku-build": {
