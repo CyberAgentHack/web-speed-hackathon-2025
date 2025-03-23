@@ -23,7 +23,7 @@ export const ProgramList = ({ channelId, programList }: Props): ReactElement => 
 
           return (
             <div key={program.id} className="shrink-0 grow-0">
-              <Program height={duration * 3} program={program} />
+              <Program height={duration * 8} program={program} />
             </div>
           );
         })}

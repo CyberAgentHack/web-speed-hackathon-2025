@@ -12,12 +12,7 @@ import { createStaticHandler } from 'react-router';
 
 export function registerSsr(app: FastifyInstance): void {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  app.register(compress, {
-    customTypes:
-      /^(|text\/css|text\/javascript|application\/javascript|image\/avif|video\/mp2t|application\/vnd.apple.mpegurl)$/,
-    global: true,
-    threshold: 0,
-  });
+  app.register(compress);
 
   app.register(fastifyStatic, {
     prefix: '/public/',
@@ -47,6 +42,7 @@ export function registerSsr(app: FastifyInstance): void {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="/public/styles.css" rel="stylesheet">
+        <link href="/public/timetable.css" rel="stylesheet">
         <title>AremaTV</title>
         <script src="/public/main.js"></script>
         <script>
