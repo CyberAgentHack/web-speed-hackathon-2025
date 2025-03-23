@@ -27,16 +27,19 @@ import {
   initializeDatabase,
 } from "@wsh-2025/server/src/drizzle/database";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cache = new Map<string, any>();
 const getRecommendedModulesFromDatabase = async (referenceId: string) => {
   if (cache.has(referenceId)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return cache.get(referenceId);
   }
   const database = getDatabase();
 
   const modules = await database.query.recommendedModule.findMany({
+    columns: {
+      id: true,
+      title: true,
+      type: true,
+    },
     orderBy(module, { asc }) {
       return asc(module.order);
     },
@@ -45,30 +48,50 @@ const getRecommendedModulesFromDatabase = async (referenceId: string) => {
     },
     with: {
       items: {
+        columns: {
+          id: true,
+        },
         orderBy(item, { asc }) {
           return asc(item.order);
         },
         with: {
           episode: {
+            columns: {
+              description: true,
+              id: true,
+              premium: true,
+              thumbnailUrl: true,
+              title: true,
+            },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+                columns: {
+                  id: true,
+                  thumbnailUrl: true,
+                  title: true,
                 },
+                // with: {
+                //   episodes: {
+                //     orderBy(episode, { asc }) {
+                //       return asc(episode.order);
+                //     },
+                //   },
+                // },
               },
             },
           },
           series: {
+            columns: {
+              id: true,
+              thumbnailUrl: true,
+              title: true,
+            },
             with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
-                },
-              },
+              // episodes: {
+              //   orderBy(episode, { asc }) {
+              //     return asc(episode.order);
+              //   },
+              // },
             },
           },
         },
@@ -524,7 +547,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const modules = await getRecommendedModulesFromDatabase(
         req.params.referenceId,
       );
