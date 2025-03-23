@@ -33,6 +33,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
         <img
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+          loading="lazy"
           src={program.thumbnailUrl.replace("jpeg", "avif").split("?")[0]}
         />
 
@@ -47,6 +48,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
             <img
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
               src={episode.thumbnailUrl.replace("jpeg", "avif").split("?")[0]}
             />
           </>
