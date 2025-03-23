@@ -2,10 +2,12 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 import TerserPlugin from 'terser-webpack-plugin';
+import UnoCSS from '@unocss/webpack';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: process.env['NODE_ENV'] === 'production' ? 'source-map' : 'inline-source-map',
+  //devtool: process.env['NODE_ENV'] === 'production' ? 'source-map' : 'eval',
+  devtool: false,
   entry: {
     main: './src/main.tsx'
   },
@@ -36,6 +38,10 @@ const config = {
             ],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.png$/,
@@ -160,6 +166,7 @@ const config = {
   },
   plugins: [
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api' }),
+    UnoCSS(),
   ],
   resolve: {
     alias: {

@@ -69,16 +69,6 @@ export function registerSsr(app: FastifyInstance): void {
           <script src="/public/main.js" defer></script>
         </head>
         <body>
-          <!-- 初期ローディング表示（First Contentful Paint向上） -->
-          <div id="initial-loading" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;">
-            <div style="width: 48px; height: 48px; border: 5px solid #f3f3f3; border-top: 5px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-          </div>
-          <style>
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          </style>
         </body>
       </html>
     `);
