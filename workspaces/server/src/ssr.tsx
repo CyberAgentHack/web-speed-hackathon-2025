@@ -14,7 +14,7 @@ export function registerSsr(app: FastifyInstance): void {
   });
 
   app.get('/favicon.ico', (_, reply) => {
-    reply.status(404).send();
+    reply.sendFile('favicon.ico', path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'));
   });
 
   app.get('/*', async (_, reply) => {
