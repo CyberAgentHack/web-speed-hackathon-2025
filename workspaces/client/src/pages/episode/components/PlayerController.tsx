@@ -1,6 +1,7 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
+import classNames from 'classnames';
 import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
@@ -10,7 +11,6 @@ import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurr
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 import { useMuted } from '@wsh-2025/client/src/pages/episode/hooks/useMuted';
 import { usePlaying } from '@wsh-2025/client/src/pages/episode/hooks/usePlaying';
-import classNames from 'classnames';
 
 interface Props {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
