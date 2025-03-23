@@ -1,12 +1,17 @@
 import path from 'node:path';
 
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
+const isProduction = process.env[ 'NODE_ENV' ] === 'production';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: isProduction ? false : 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       {
@@ -51,16 +56,58 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: isProduction,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: isProduction,
+          },
+          format: {
+            comments: false,
+          },
+        },
+      }),
+      new CssMinimizerPlugin(),
+    ],
+    splitChunks: {
+      cacheGroups: {
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+        defaultVendors: {
+          priority: -10,
+          reuseExistingChunk: true,
+          test: /[\\/]node_modules[\\/]/,
+        },
+      },
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      minChunks: 1,
+      minSize: 20000,
+    },
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: isProduction ? 'chunk-[contenthash].js' : '[name].js',
     chunkFormat: false,
-    filename: 'main.js',
+    clean: true,
+    filename: '[name].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
+  performance: {
+    hints: isProduction ? 'warning' : false,
+  },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: 'bundle-report.html',
+    }),
   ],
   resolve: {
     alias: {

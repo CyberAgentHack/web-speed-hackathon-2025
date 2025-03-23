@@ -1,4 +1,3 @@
-import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -13,17 +12,58 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
-
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
+const imagePaths = [
+  '/public/images/001.jpeg',
+  '/public/images/002.jpeg',
+  '/public/images/003.jpeg',
+  '/public/images/004.jpeg',
+  '/public/images/005.jpeg',
+  '/public/images/006.jpeg',
+  '/public/images/007.jpeg',
+  '/public/images/008.jpeg',
+  '/public/images/009.jpeg',
+  '/public/images/010.jpeg',
+  '/public/images/011.jpeg',
+  '/public/images/012.jpeg',
+  '/public/images/013.jpeg',
+  '/public/images/014.jpeg',
+  '/public/images/015.jpeg',
+  '/public/images/016.jpeg',
+  '/public/images/017.jpeg',
+  '/public/images/018.jpeg',
+  '/public/images/019.jpeg',
+  '/public/images/020.jpeg',
+  '/public/images/021.jpeg',
+  '/public/images/022.jpeg',
+  '/public/images/023.jpeg',
+  '/public/images/024.jpeg',
+  '/public/images/025.jpeg',
+  '/public/images/026.jpeg',
+  '/public/images/027.jpeg',
+  '/public/images/028.jpeg',
+  '/public/images/029.jpeg',
+  '/public/images/030.jpeg',
+  '/public/images/031.jpeg',
+  '/public/images/032.jpeg',
+  '/public/images/033.jpeg',
+  '/public/images/034.jpeg',
+  '/public/images/035.jpeg',
+  '/public/images/036.jpeg',
+  '/public/images/037.jpeg',
+  '/public/animations/001.gif',
+  '/public/logos/anime.svg',
+  '/public/logos/documentary.svg',
+  '/public/logos/drama.svg',
+  '/public/logos/fightingsports.svg',
+  '/public/logos/mahjong.svg',
+  '/public/logos/music.svg',
+  '/public/logos/news.svg',
+  '/public/logos/reality.svg',
+  '/public/logos/shogi.svg',
+  '/public/logos/soccer.svg',
+  '/public/logos/sumo.svg',
+  '/public/logos/variety.svg',
+];
 
 export function registerSsr(app: FastifyInstance): void {
   app.register(fastifyStatic, {
@@ -58,13 +98,6 @@ export function registerSsr(app: FastifyInstance): void {
         </StoreProvider>
       </StrictMode>,
     );
-
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
-    ].flat();
 
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>

@@ -17,14 +17,7 @@ async function getSeekThumbnail({ episode }: Params) {
 
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  await ffmpeg.load();
 
   // 動画のセグメントファイルを取得
   const segmentFiles = await Promise.all(
