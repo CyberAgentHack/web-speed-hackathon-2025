@@ -108,7 +108,14 @@
     "heroku-start": {
       "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
       "service": true,
+      "dependencies": [
+        "database:migrate"
+      ],
       "env": {
+        "NODE_ENV": {
+          "external": true,
+          "default": "production"
+        },
         "API_BASE_URL": {
           "external": true,
           "default": "http://localhost:8000/api"
