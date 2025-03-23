@@ -10,12 +10,23 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const Document = () => {
+  //add
+  const { title, description } = useLoaderData() as {
+    title?: string;
+    description?: string;
+  }; // ✅ loader() で返されたデータを取得
+  // AfterChange
   return (
     <html className="size-full" lang="ja">
       <head>
         <meta charSet="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <script src="/public/main.js"></script>
+
+        {/* ✅ ページごとのタイトルと説明を挿入 */}
+        {title && <title>{title}</title>}
+        {description && <meta name="description" content={description} />}
+
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
         <Suspense>

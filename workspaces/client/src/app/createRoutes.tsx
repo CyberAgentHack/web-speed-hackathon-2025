@@ -42,22 +42,22 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               10,//1000→10
             );
             // --backup
-            return {
-              Component: EpisodePage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
-            };
             // return {
             //   Component: EpisodePage,
             //   async loader({ params }) {
-            //     await prefetch(store, params);
-            //     return {
-            //       title: `エピソード詳細 - ${params.episodeId}`, // 👈 追加
-            //       description: '番組のエピソード詳細ページです。', // 👈 追加
-            //     };
+            //     return await prefetch(store, params);
             //   },
             // };
+            return {
+              Component: EpisodePage,
+              async loader({ params }) {
+                await prefetch(store, params);
+                return {
+                  title: `エピソード詳細 - ${params.episodeId}`, // 👈 追加
+                  description: '番組のエピソード詳細ページです。', // 👈 追加
+                };
+              },
+            };
             //AfterChange
           },
           path: '/episodes/:episodeId',
@@ -69,22 +69,22 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               10,//1000→10
             );
             // --backup
-            return {
-              Component: ProgramPage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
-            };
             // return {
             //   Component: ProgramPage,
             //   async loader({ params }) {
-            //     await prefetch(store, params);
-            //     return {
-            //       title: `番組詳細 - ${params.programId}`, // 👈 追加
-            //       description: '番組の詳細情報と関連エピソードが確認できます。', // 👈 追加
-            //     };
+            //     return await prefetch(store, params);
             //   },
             // };
+            return {
+              Component: ProgramPage,
+              async loader({ params }) {
+                await prefetch(store, params);
+                return {
+                  title: `番組詳細 - ${params.programId}`, // 👈 追加
+                  description: '番組の詳細情報と関連エピソードが確認できます。', // 👈 追加
+                };
+              },
+            };
             //AfterChange
           },
           path: '/programs/:programId',
@@ -96,22 +96,22 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
               10,//1000→10
             );
             // --backup
-            return {
-              Component: SeriesPage,
-              async loader({ params }) {
-                return await prefetch(store, params);
-              },
-            };
             // return {
             //   Component: SeriesPage,
             //   async loader({ params }) {
-            //     await prefetch(store, params);
-            //     return {
-            //       title: `シリーズ詳細 - ${params.seriesId}`, // 👈 追加
-            //       description: 'アニメ・番組シリーズの情報をまとめて確認できます。', // 👈 追加
-            //     };
+            //     return await prefetch(store, params);
             //   },
             // };
+            return {
+              Component: SeriesPage,
+              async loader({ params }) {
+                await prefetch(store, params);
+                return {
+                  title: `シリーズ詳細 - ${params.seriesId}`, // 👈 追加
+                  description: 'アニメ・番組シリーズの情報をまとめて確認できます。', // 👈 追加
+                };
+              },
+            };
             //AfterChange
           },
           path: '/series/:seriesId',
