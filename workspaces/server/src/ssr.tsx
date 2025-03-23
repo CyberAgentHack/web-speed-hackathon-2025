@@ -25,6 +25,19 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <link rel="stylesheet" href="/public/styles.css" />
+          <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+          <style type="text/tailwindcss">
+            @theme {
+              @keyframes fade-in {
+                from {
+                  opacity: 0;
+                }
+                to {
+                  opacity: 1;
+                }
+              }
+            }
+          </style>
           <script src="/public/main.js"></script>
         </head>
         <body>

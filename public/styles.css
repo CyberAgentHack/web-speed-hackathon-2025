@@ -1,9 +1,19 @@
 html {
   height: 100%;
   width: 100%;
+  font-family: 'Noto Sans JP', sans-serif !important;
 }
 
 body {
   background-color: #000000;
   color: #ffffff;
+}
+
+video {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+@view-transition {
+  navigation: auto;
 }
