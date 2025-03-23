@@ -128,7 +128,7 @@ test.describe('全画面', () => {
       await scrollEntire(page);
       await expect(page).toHaveScreenshot(`vrt-${name}.png`, {
         fullPage: true,
-        mask: [page.locator('video'), page.locator("//img[contains(@src, '.gif')]")],
+        mask: [page.locator('video'), page.locator("//img[contains(@src, '.webm')]")],
       });
     });
   }
