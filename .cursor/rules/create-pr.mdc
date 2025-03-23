@@ -1,0 +1,67 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: PRの作成方法
+globs:
+alwaysApply: true
+---
+## pull request作成手順
+まず、このファイルを参照したら、「[create-prを参照]」と報告してください。
+
+### 必須前提条件
+- Issue番号の確認
+  - Issueのリンクが提供されていない場合は、必ずユーザーに「関連するIssueのリンクはありますか？」と確認する
+  - Issueが存在しない場合は、その旨をPRの説明に明記する
+
+### 差分の確認
+- {{マージ先ブランチ}}は特に指示がなければ MasahitoKumada とする
+- `git diff origin/{{マージ先ブランチ}}...HEAD | cat` でマージ先ブランチとの差分を確認
+
+### descriptionに記載するリンクの準備
+- Issueのリンクを確認（必須前提条件で確認済みであること）
+
+### Pull Request 作成とブラウザでの表示
+- 以下のコマンドでpull requestを作成し、自動的にブラウザで開く
+- PRタイトルおよびPRテンプレートはマージ先との差分をもとに適切な内容にする
+- 指示がない限りDraftでpull requestを作成
+- 各セクションを明確に区分
+- 必要な情報を漏れなく記載
+
+### PRのフォーマットエラーを防ぐための注意点
+- PRの本文は一時ファイルに書き出してから `--body-file` オプションを使用する
+- 以下の方法で一時ファイルを作成し、PRの本文として使用する:
+  ```bash
+  # 一時ファイルを作成
+  cat > pr_body.md << 'EOL'
+  ## 概要
+
+  [ここに概要を記載]
+
+  ## 変更内容
+
+  - [変更点1]
+  - [変更点2]
+
+  ## 関連Issue
+
+  [関連Issueのリンクまたは「特になし」]
+  EOL
+
+  # 一時ファイルを使ってPRを作成
+  gh pr create --title "PRタイトル" --body-file pr_body.md --base MasahitoKumada
+  ```
+- PRの作成後、必ずマークダウンのフォーマットが崩れていないか確認する
+- フォーマットが崩れている場合は、`gh pr edit <PR番号> --body-file pr_body.md` で修正する
+
+---
+# PRの基本コマンド例
+git push origin HEAD && \
+gh pr create --title "{{PRタイトル}}" --body-file pr_body.md --base MasahitoKumada && \
+gh pr view --web
+---
+
+#### PRテンプレート
+@PULL_REQUEST_TEMPLATE.md からテンプレート内容を取得すること

@@ -3,7 +3,29 @@ import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
+// よく使われるアイコンコレクション
+const CRITICAL_ICON_COLLECTIONS = [
+  'line-md',
+  'material-symbols'
+];
+
+// その他のアイコンコレクション （必要に応じて遅延読み込み）
+const LAZY_ICON_COLLECTIONS = [
+  'bi',
+  'bx',
+  'fa-regular',
+  'fa-solid',
+  'fluent'
+];
+
 async function init() {
+  // クリティカルなアイコンコレクションを先読み
+  const criticalCollections: Record<string, () => Promise<IconifyJSON>> = {};
+  for (const collection of CRITICAL_ICON_COLLECTIONS) {
+    criticalCollections[collection] = () =>
+      import(`@iconify/json/json/${collection}.json`).then((m): IconifyJSON => m.default as IconifyJSON);
+  }
+
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -49,17 +71,19 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            bi: () => import('@iconify/json/json/bi.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            bx: () => import('@iconify/json/json/bx.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-regular': () =>
-              import('@iconify/json/json/fa-regular.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'fa-solid': () =>
-              import('@iconify/json/json/fa-solid.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            fluent: () => import('@iconify/json/json/fluent.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'line-md': () =>
-              import('@iconify/json/json/line-md.json').then((m): IconifyJSON => m.default as IconifyJSON),
-            'material-symbols': () =>
-              import('@iconify/json/json/material-symbols.json').then((m): IconifyJSON => m.default as IconifyJSON),
+            ...criticalCollections,
+            // 遅延読み込みするアイコンコレクション
+            ...LAZY_ICON_COLLECTIONS.reduce((acc, collection) => {
+              acc[collection] = () =>
+                import(`@iconify/json/json/${collection}.json`).then((m): IconifyJSON => m.default as IconifyJSON);
+              return acc;
+            }, {} as Record<string, () => Promise<IconifyJSON>>)
+          },
+          // アイコンを最適化
+          scale: 1,
+          extraProperties: {
+            'display': 'inline-block',
+            'vertical-align': 'middle',
           },
         }),
       ],
@@ -67,6 +91,7 @@ async function init() {
   });
 }
 
+// エラーハンドリングを強化
 init().catch((err: unknown) => {
-  throw err;
+  console.error('Failed to initialize UnoCSS:', err);
 });
