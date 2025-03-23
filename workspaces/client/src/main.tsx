@@ -25,7 +25,7 @@ function main() {
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
       </StoreProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 }
 

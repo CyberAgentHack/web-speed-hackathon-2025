@@ -14,7 +14,7 @@ async function main() {
   const app = fastify();
 
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    reply.header('cache-control', 'private'); //TODO:要検討
   });
   app.register(cors, {
     origin: true,
