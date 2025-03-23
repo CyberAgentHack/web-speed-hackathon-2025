@@ -336,6 +336,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
+        columns: {
+          id: true,
+          channelId: true,
+          title: true,
+          startAt: true,
+          endAt: true,
+          thumbnailUrl: true,
+        },
         orderBy(program, { asc }) {
           return asc(program.startAt);
         },
