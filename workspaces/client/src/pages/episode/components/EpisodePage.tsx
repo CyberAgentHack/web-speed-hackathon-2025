@@ -16,7 +16,7 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
-
+import { Icon } from '@iconify/react/dist/iconify.js';
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
   const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
@@ -48,10 +48,10 @@ export const EpisodePage = () => {
 
       <div className="px-[24px] py-[48px]">
         <Flipped stagger flipId={`episode-${episode.id}`}>
-          <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
+          <div className="m-auto mb-[16px] aspect-[16/9] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} loading="lazy" />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -75,9 +75,13 @@ export const EpisodePage = () => {
                         alt=""
                         className="size-full place-self-stretch [grid-area:1/-1]"
                         src={episode.thumbnailUrl}
+                        loading="lazy"
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <Icon
+                        icon="line-md:loading-twotone-loop"
+                        className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]"
+                      />
                     </div>
                   </AspectRatio>
                 }

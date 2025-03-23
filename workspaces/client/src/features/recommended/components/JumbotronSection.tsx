@@ -1,5 +1,4 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
@@ -12,9 +11,10 @@ import { PlayerType } from '../../player/constants/player_type';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
 
 interface Props {
-  module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  module: ArrayValues<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;
 }
 
 export const JumbotronSection = ({ module }: Props) => {
@@ -26,14 +26,14 @@ export const JumbotronSection = ({ module }: Props) => {
   return (
     <Hoverable classNames={{ hovered: 'opacity-50' }}>
       <NavLink
-        viewTransition
+        // viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"
         to={`/episodes/${episode.id}`}
       >
         {({ isTransitioning }) => {
           return (
             <>
-              <div className="grow-1 shrink-1 p-[24px]">
+              <div className="shrink-1 grow-1 p-[24px]">
                 <div className="mb-[16px] w-full text-center text-[22px] font-bold text-[#ffffff]">
                   <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
                 </div>

@@ -115,11 +115,34 @@ export const getEpisodesResponse = z.array(
 export const getEpisodeByIdRequestParams = z.object({
   episodeId: z.string(),
 });
-export const getEpisodeByIdResponse = episode.extend({
-  series: series.extend({
-    episodes: z.array(episode.extend({})),
-  }),
-});
+export const getEpisodeByIdResponse = episode
+  .pick({
+    id: true,
+    title: true,
+    premium: true,
+    thumbnailUrl: true,
+    description: true,
+  })
+  .extend({
+    series: series
+      .pick({
+        title: true,
+      })
+      .extend({
+        episodes: z.array(
+          episode
+            .pick({
+              description: true,
+              id: true,
+              order: true,
+              premium: true,
+              thumbnailUrl: true,
+              title: true,
+            })
+            .extend({}),
+        ),
+      }),
+  });
 
 // GET /series
 export const getSeriesRequestQuery = z.object({
@@ -165,38 +188,89 @@ export const getProgramsResponse = z.array(
 export const getProgramByIdRequestParams = z.object({
   programId: z.string(),
 });
-export const getProgramByIdResponse = program.extend({
-  channel: channel.extend({}),
-  episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
-  }),
-});
+export const getProgramByIdResponse = program
+  .pick({
+    startAt: true,
+    endAt: true,
+    title: true,
+    id: true,
+    thumbnailUrl: true,
+    description: true,
+  })
+  .extend({
+    channel: channel
+      .pick({
+        id: true,
+      })
+      .extend({}),
+    episode: episode
+      .pick({
+        id: true,
+      })
+      .extend({
+        series: series
+          .pick({
+            title: true,
+          })
+          .extend({
+            episodes: z.array(
+              episode
+                .pick({
+                  id: true,
+                  title: true,
+                  description: true,
+                  order: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                })
+                .extend({}),
+            ),
+          }),
+      }),
+  });
 
 // GET /recommended/:referenceId
 export const getRecommendedModulesRequestParams = z.object({
   referenceId: z.string(),
 });
 export const getRecommendedModulesResponse = z.array(
-  recommendedModule.extend({
-    items: z.array(
-      recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
+  recommendedModule
+    .pick({
+      id: true,
+      type: true,
+      title: true,
+    })
+    .extend({
+      items: z.array(
+        recommendedItem
+          .pick({
+            id: true,
           })
-          .nullable(),
-        episode: episode
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
-          })
-          .nullable(),
-      }),
-    ),
-  }),
+            series: series
+              .pick({
+                id: true,
+                title: true,
+                thumbnailUrl: true,
+              })
+              .nullable(),
+            episode: episode
+              .pick({
+                id: true,
+                title: true,
+                description: true,
+                thumbnailUrl: true,
+                premium: true,
+              })
+              .extend({
+                series: series.pick({
+                  title: true,
+                }),
+              })
+              .nullable(),
+          }),
+      ),
+    }),
 );
 
 // POST /signIn

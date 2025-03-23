@@ -1,14 +1,14 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
+import { getTimetableResponse } from '@wsh-2025/schema/src/openapi/schema';
 
 type ChannelId = string;
-type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof getTimetableResponse>>;
 
 interface TimetablePageState {
   columnWidthRecord: Record<ChannelId, number>;

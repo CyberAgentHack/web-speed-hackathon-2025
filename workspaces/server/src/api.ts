@@ -22,7 +22,7 @@ import {
 import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
-import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+import { getDatabase, initializeDatabase, getCachedQuery } from '@wsh-2025/server/src/drizzle/database';
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -54,7 +54,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
-  /* eslint-disable sort/object-properties */
   api.route({
     method: 'POST',
     url: '/initialize',
@@ -94,19 +93,22 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannels(req, reply) {
       const database = getDatabase();
+      const cacheKey = `channels:${req.query.channelIds || 'all'}`;
 
-      const channels = await database.query.channel.findMany({
-        orderBy(channel, { asc }) {
-          return asc(channel.id);
-        },
-        where(channel, { inArray }) {
-          if (req.query.channelIds != null) {
-            const channelIds = req.query.channelIds.split(',');
-            return inArray(channel.id, channelIds);
-          }
-          return void 0;
-        },
-      });
+      const channels = await getCachedQuery(cacheKey, () =>
+        database.query.channel.findMany({
+          orderBy(channel, { asc }) {
+            return asc(channel.id);
+          },
+          where(channel, { inArray }) {
+            if (req.query.channelIds != null) {
+              const channelIds = req.query.channelIds.split(',');
+              return inArray(channel.id, channelIds);
+            }
+            return void 0;
+          },
+        }),
+      );
       reply.code(200).send(channels);
     },
   });
@@ -129,12 +131,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannelById(req, reply) {
       const database = getDatabase();
+      const cacheKey = `channel:${req.params.channelId}`;
 
-      const channel = await database.query.channel.findFirst({
-        where(channel, { eq }) {
-          return eq(channel.id, req.params.channelId);
-        },
-      });
+      const channel = await getCachedQuery(cacheKey, () =>
+        database.query.channel.findFirst({
+          where(channel, { eq }) {
+            return eq(channel.id, req.params.channelId);
+          },
+        }),
+      );
+
       if (channel == null) {
         return reply.code(404).send();
       }
@@ -160,30 +166,34 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodes(req, reply) {
       const database = getDatabase();
+      const cacheKey = `episodes:${req.query.episodeIds || 'all'}`;
 
-      const episodes = await database.query.episode.findMany({
-        orderBy(episode, { asc }) {
-          return asc(episode.id);
-        },
-        where(episode, { inArray }) {
-          if (req.query.episodeIds != null) {
-            const episodeIds = req.query.episodeIds.split(',');
-            return inArray(episode.id, episodeIds);
-          }
-          return void 0;
-        },
-        with: {
-          series: {
-            with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
+      const episodes = await getCachedQuery(cacheKey, () =>
+        database.query.episode.findMany({
+          orderBy(episode, { asc }) {
+            return asc(episode.id);
+          },
+          where(episode, { inArray }) {
+            if (req.query.episodeIds != null) {
+              const episodeIds = req.query.episodeIds.split(',');
+              return inArray(episode.id, episodeIds);
+            }
+            return void 0;
+          },
+          with: {
+            series: {
+              with: {
+                episodes: {
+                  orderBy(episode, { asc }) {
+                    return asc(episode.order);
+                  },
                 },
               },
             },
           },
-        },
-      });
+        }),
+      );
+
       reply.code(200).send(episodes);
     },
   });
@@ -206,27 +216,50 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodeById(req, reply) {
       const database = getDatabase();
+      const cacheKey = `episode:${req.params.episodeId}`;
 
-      const episode = await database.query.episode.findFirst({
-        where(episode, { eq }) {
-          return eq(episode.id, req.params.episodeId);
-        },
-        with: {
-          series: {
-            with: {
-              episodes: {
-                orderBy(episode, { asc }) {
-                  return asc(episode.order);
+      const episode = await getCachedQuery(cacheKey, () =>
+        database.query.episode.findFirst({
+          where(episode, { eq }) {
+            return eq(episode.id, req.params.episodeId);
+          },
+          with: {
+            series: {
+              with: {
+                episodes: {
+                  orderBy(episode, { asc }) {
+                    return asc(episode.order);
+                  },
                 },
               },
             },
           },
-        },
-      });
+        }),
+      );
+
       if (episode == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(episode);
+
+      reply.code(200).send({
+        id: episode.id,
+        title: episode.title,
+        description: episode.description?.length > 400 ? episode.description.substring(0, 400) : episode.description,
+        thumbnailUrl: episode.thumbnailUrl,
+        premium: episode.premium,
+        series: {
+          title: episode.series.title,
+          episodes: episode.series.episodes.map((episode) => ({
+            id: episode.id,
+            order: episode.order,
+            title: episode.title,
+            description:
+              episode.description?.length > 400 ? episode.description.substring(0, 400) : episode.description,
+            thumbnailUrl: episode.thumbnailUrl,
+            premium: episode.premium,
+          })),
+        },
+      });
     },
   });
 
@@ -248,29 +281,33 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getSeries(req, reply) {
       const database = getDatabase();
+      const cacheKey = `series:${req.query.seriesIds || 'all'}`;
 
-      const series = await database.query.series.findMany({
-        orderBy(series, { asc }) {
-          return asc(series.id);
-        },
-        where(series, { inArray }) {
-          if (req.query.seriesIds != null) {
-            const seriesIds = req.query.seriesIds.split(',');
-            return inArray(series.id, seriesIds);
-          }
-          return void 0;
-        },
-        with: {
-          episodes: {
-            orderBy(episode, { asc }) {
-              return asc(episode.order);
-            },
-            with: {
-              series: true,
+      const series = await getCachedQuery(cacheKey, () =>
+        database.query.series.findMany({
+          orderBy(series, { asc }) {
+            return asc(series.id);
+          },
+          where(series, { inArray }) {
+            if (req.query.seriesIds != null) {
+              const seriesIds = req.query.seriesIds.split(',');
+              return inArray(series.id, seriesIds);
+            }
+            return void 0;
+          },
+          with: {
+            episodes: {
+              orderBy(episode, { asc }) {
+                return asc(episode.order);
+              },
+              with: {
+                series: true,
+              },
             },
           },
-        },
-      });
+        }),
+      );
+
       reply.code(200).send(series);
     },
   });
@@ -293,22 +330,25 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getProgramById(req, reply) {
       const database = getDatabase();
+      const cacheKey = `series:${req.params.seriesId}`;
 
-      const series = await database.query.series.findFirst({
-        where(series, { eq }) {
-          return eq(series.id, req.params.seriesId);
-        },
-        with: {
-          episodes: {
-            orderBy(episode, { asc }) {
-              return asc(episode.order);
-            },
-            with: {
-              series: true,
+      const series = await getCachedQuery(cacheKey, () =>
+        database.query.series.findFirst({
+          where(series, { eq }) {
+            return eq(series.id, req.params.seriesId);
+          },
+          with: {
+            episodes: {
+              orderBy(episode, { asc }) {
+                return asc(episode.order);
+              },
+              with: {
+                series: true,
+              },
             },
           },
-        },
-      });
+        }),
+      );
       if (series == null) {
         return reply.code(404).send();
       }
@@ -334,21 +374,30 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getTimetable(req, reply) {
       const database = getDatabase();
+      // 番組表は時間範囲に基づくため、キャッシュキーにも時間範囲を含める
+      const cacheKey = `timetable:${req.query.since}-${req.query.until}`;
 
-      const programs = await database.query.program.findMany({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { between, sql }) {
-          // 競技のため、時刻のみで比較する
-          return between(
-            program.startAt,
-            sql`time(${req.query.since}, '+9 hours')`,
-            sql`time(${req.query.until}, '+9 hours')`,
-          );
-        },
-      });
-      reply.code(200).send(programs);
+      const programs = await getCachedQuery(cacheKey, () =>
+        database.query.program.findMany({
+          orderBy(program, { asc }) {
+            return asc(program.startAt);
+          },
+          where(program, { between, sql }) {
+            // 競技のため、時刻のみで比較する
+            return between(
+              program.startAt,
+              sql`time(${req.query.since}, '+9 hours')`,
+              sql`time(${req.query.until}, '+9 hours')`,
+            );
+          },
+        }),
+      );
+      reply.code(200).send(
+        programs.map((program) => ({
+          ...program,
+          description: program.description?.length > 400 ? program.description.substring(0, 400) : program.description,
+        })),
+      );
     },
   });
 
@@ -370,35 +419,38 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getPrograms(req, reply) {
       const database = getDatabase();
+      const cacheKey = `programs:${req.query.programIds || 'all'}`;
 
-      const programs = await database.query.program.findMany({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { inArray }) {
-          if (req.query.programIds != null) {
-            const programIds = req.query.programIds.split(',');
-            return inArray(program.id, programIds);
-          }
-          return void 0;
-        },
-        with: {
-          channel: true,
-          episode: {
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
+      const programs = await getCachedQuery(cacheKey, () =>
+        database.query.program.findMany({
+          orderBy(program, { asc }) {
+            return asc(program.startAt);
+          },
+          where(program, { inArray }) {
+            if (req.query.programIds != null) {
+              const programIds = req.query.programIds.split(',');
+              return inArray(program.id, programIds);
+            }
+            return void 0;
+          },
+          with: {
+            channel: true,
+            episode: {
+              with: {
+                series: {
+                  with: {
+                    episodes: {
+                      orderBy(episode, { asc }) {
+                        return asc(episode.order);
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      });
+        }),
+      );
       reply.code(200).send(programs);
     },
   });
@@ -421,32 +473,61 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getProgramById(req, reply) {
       const database = getDatabase();
+      const cacheKey = `program:${req.params.programId}`;
 
-      const program = await database.query.program.findFirst({
-        where(program, { eq }) {
-          return eq(program.id, req.params.programId);
-        },
-        with: {
-          channel: true,
-          episode: {
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
+      const program = await getCachedQuery(cacheKey, () =>
+        database.query.program.findFirst({
+          where(program, { eq }) {
+            return eq(program.id, req.params.programId);
+          },
+          with: {
+            channel: true,
+            episode: {
+              with: {
+                series: {
+                  with: {
+                    episodes: {
+                      orderBy(episode, { asc }) {
+                        return asc(episode.order);
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      });
+        }),
+      );
+
       if (program == null) {
         return reply.code(404).send();
       }
-      reply.code(200).send(program);
+      reply.code(200).send({
+        startAt: program.startAt,
+        endAt: program.endAt,
+        title: program.title,
+        id: program.id,
+        thumbnailUrl: program.thumbnailUrl,
+        description: program.description?.length > 400 ? program.description.substring(0, 400) : program.description,
+        channel: {
+          id: program.channel.id,
+        },
+        episode: {
+          id: program.episode.id,
+          series: {
+            title: program.episode.series.title,
+            episodes: program.episode.series.episodes.map((episode) => ({
+              id: episode.id,
+              order: episode.order,
+              title: episode.title,
+              description:
+                episode.description?.length > 400 ? episode.description.substring(0, 400) : episode.description,
+              thumbnailUrl: episode.thumbnailUrl,
+              premium: episode.premium,
+            })),
+          },
+        },
+      });
     },
   });
 
@@ -468,50 +549,120 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
       const database = getDatabase();
+      const cacheKey = `recommended:${req.params.referenceId}`;
 
-      const modules = await database.query.recommendedModule.findMany({
-        orderBy(module, { asc }) {
-          return asc(module.order);
-        },
-        where(module, { eq }) {
-          return eq(module.referenceId, req.params.referenceId);
-        },
-        with: {
-          items: {
-            orderBy(item, { asc }) {
-              return asc(item.order);
-            },
-            with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
+      // 複雑なクエリとデータ処理全体をキャッシュ
+      const result = await getCachedQuery(cacheKey, async () => {
+        const modules = await database.query.recommendedModule.findMany({
+          orderBy(module, { asc }) {
+            return asc(module.order);
+          },
+          where(module, { eq }) {
+            return eq(module.referenceId, req.params.referenceId);
+          },
+          with: {
+            items: {
+              orderBy(item, { asc }) {
+                return asc(item.order);
               },
             },
           },
-        },
+          // entranceの場合は全て取得し、それ以外の場合は最初の1つだけを取得
+          ...(req.params.referenceId !== 'entrance' ? { limit: 1 } : {}),
+        });
+
+        const seriesIds = new Set<string>();
+        const episodeIds = new Set<string>();
+
+        for (const module of modules) {
+          for (const item of module.items) {
+            if (item.seriesId) seriesIds.add(item.seriesId);
+            if (item.episodeId) episodeIds.add(item.episodeId);
+          }
+        }
+
+        // 必要なデータのみ一度に取得するよう最適化
+        let seriesMap = new Map();
+        let episodeMap = new Map();
+
+        if (seriesIds.size > 0 || episodeIds.size > 0) {
+          await Promise.all([
+            (async () => {
+              if (seriesIds.size === 0) return;
+
+              const seriesArray = await database.query.series.findMany({
+                where(series, { inArray }) {
+                  return inArray(series.id, [...seriesIds]);
+                },
+              });
+
+              seriesMap = new Map(seriesArray.map((series) => [series.id, series]));
+            })(),
+
+            (async () => {
+              if (episodeIds.size === 0) return;
+
+              const episodeArray = await database.query.episode.findMany({
+                where(episode, { inArray }) {
+                  return inArray(episode.id, [...episodeIds]);
+                },
+                with: {
+                  series: true,
+                },
+              });
+
+              episodeArray.forEach((episode) => {
+                if (episode.description && episode.description.length > 400) {
+                  episode.description = episode.description.substring(0, 400);
+                }
+              });
+
+              episodeMap = new Map(episodeArray.map((episode) => [episode.id, episode]));
+            })(),
+          ]);
+        }
+
+        return modules.map((module) => ({
+          id: module.id,
+          type: module.type,
+          title: module.title,
+          items: module.items.map((item) => {
+            const series = item.seriesId ? seriesMap.get(item.seriesId) : null;
+            const episode = item.episodeId ? episodeMap.get(item.episodeId) : null;
+
+            return {
+              id: item.id,
+              series: series
+                ? {
+                    id: series.id,
+                    title: series.title,
+                    thumbnailUrl: series.thumbnailUrl,
+                  }
+                : null,
+              episode: episode
+                ? {
+                    id: episode.id,
+                    title: episode.title,
+                    description: episode.description,
+                    thumbnailUrl: episode.thumbnailUrl,
+                    premium: episode.premium,
+                    series: episode.series
+                      ? {
+                          title: episode.series.title,
+                        }
+                      : null,
+                  }
+                : null,
+            };
+          }),
+        }));
       });
-      reply.code(200).send(modules);
+
+      reply.code(200).send(result);
     },
   });
 
+  // 認証関連のエンドポイントはキャッシュしない
   api.route({
     method: 'POST',
     url: '/signIn',
@@ -645,6 +796,4 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send();
     },
   });
-
-  /* eslint-enable sort/object-properties */
 }

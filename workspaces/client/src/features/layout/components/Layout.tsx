@@ -12,6 +12,7 @@ import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useA
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
+import { Icon } from '@iconify/react';
 
 interface Props {
   children: ReactNode;
@@ -64,7 +65,7 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} loading="lazy" />
           </Link>
         </header>
 
@@ -75,8 +76,9 @@ export const Layout = ({ children }: Props) => {
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
+              <Icon
+                icon={isSignedIn ? 'fa-solid:sign-out-alt' : 'fa-solid:user'}
+                className="m-[4px] size-[20px] shrink-0 grow-0"
               />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
@@ -87,7 +89,7 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/"
             >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
+              <Icon icon="bi:house-fill" className="m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
             </Link>
 
@@ -95,7 +97,7 @@ export const Layout = ({ children }: Props) => {
               className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
               to="/timetable"
             >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
+              <Icon icon="fa-solid:calendar" className="m-[4px] size-[20px] shrink-0 grow-0" />
               <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
             </Link>
           </nav>

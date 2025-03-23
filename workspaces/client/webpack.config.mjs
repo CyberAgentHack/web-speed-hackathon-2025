@@ -1,12 +1,43 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: process.env['NODE_ENV'] === 'production' ? false : 'cheap-module-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
+  optimization: {
+    usedExports: true,
+    sideEffects: true,
+    minimize: process.env['NODE_ENV'] === 'production',
+    moduleIds: 'deterministic',
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          parse: {
+            ecma: 2017,
+          },
+          compress: {
+            ecma: 5,
+            comparisons: false,
+            inline: 2,
+            drop_console: process.env['NODE_ENV'] === 'production',
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            ascii_only: true,
+          },
+        },
+        parallel: true,
+      }),
+    ],
+  },
   module: {
     rules: [
       {
@@ -18,6 +49,7 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
+            cacheDirectory: true,
             presets: [
               [
                 '@babel/preset-env',
@@ -58,15 +90,8 @@ const config = {
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
-  plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
-  ],
+  plugins: [new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' })],
   resolve: {
-    alias: {
-      '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
-      '@ffmpeg/core/wasm$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.wasm'),
-    },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
 };
