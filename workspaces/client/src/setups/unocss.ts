@@ -1,4 +1,3 @@
-// import { IconifyJSON } from '@iconify/types';
 import presetIcons from '@unocss/preset-icons/browser';
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
@@ -48,15 +47,22 @@ async function init() {
       presets: [
         presetWind3(),
         presetIcons({
-          collections: {
-            bi: () => import('@iconify-json/bi/icons.json').then(m => m.default as IconifyJSON),
-            bx: () => import('@iconify-json/bx/icons.json').then(m => m.default as IconifyJSON),
-            'fa-regular': () => import('@iconify-json/fa-regular/icons.json').then(m => m.default as IconifyJSON),
-            'fa-solid': () => import('@iconify-json/fa-solid/icons.json').then(m => m.default as IconifyJSON),
-            fluent: () => import('@iconify-json/fluent/icons.json').then(m => m.default as IconifyJSON),
-            'line-md': () => import('@iconify-json/line-md/icons.json').then(m => m.default as IconifyJSON),
-            'material-symbols': () => import('@iconify-json/material-symbols/icons.json').then(m => m.default as IconifyJSON),
+          scale: 1.2,
+          cdn: 'https://esm.sh/',
+          extraProperties: {
+            'display': 'inline-block',
+            'vertical-align': 'middle',
           },
+          collections: {
+            'bi': undefined,
+            'bx': undefined,
+            'fa-regular': undefined,
+            'fa-solid': undefined,
+            'fluent': undefined,
+            'line-md': undefined,
+            'material-symbols': undefined,
+          },
+          autoInstall: true,
         }),
       ],
     }),
