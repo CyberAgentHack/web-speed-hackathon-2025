@@ -16,11 +16,16 @@ import { optimize } from 'svgo';
 
 const gzipPromise = promisify(gzip);
 
+// パス正規化のユーティリティ関数を追加
+function normalizePath(inputPath: string): string {
+  return inputPath.split(path.sep).join('/');
+}
+
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
   return dirents
     .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
+    .map((dirent) => normalizePath(path.join(parent, dirent.name)));
 }
 
 interface Channel {
@@ -140,7 +145,7 @@ async function optimizeAndCompressSvgFiles() {
 
   const svgFiles = readdirSync(logosDir)
     .filter(file => file.endsWith('.svg'))
-    .map(file => path.join(logosDir, file));
+    .map(file => normalizePath(path.join(logosDir, file)));
 
   for (const file of svgFiles) {
     await optimizeAndCompressSvg(file);
@@ -161,7 +166,7 @@ async function main() {
     }),
   });
 
-  const rootDir = path.resolve(__dirname, '../../..');
+  const rootDir = normalizePath(path.resolve(__dirname, '../../..'));
   const files = await getFiles(path.resolve(rootDir, 'public/images'));
   const imagePaths = files.map((file) => path.join('/', path.relative(rootDir, file)));
 
