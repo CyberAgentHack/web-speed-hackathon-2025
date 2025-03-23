@@ -1,8 +1,10 @@
+import 'setimmediate';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
 
 import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
+import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
 
 const SEEK_THUMBNAIL_WIDTH = 160;
@@ -12,6 +14,8 @@ interface Props {
 }
 
 export const SeekThumbnail = ({ episode }: Props) => {
+  useSubscribePointer();
+
   const ref = useRef<HTMLDivElement>(null);
   const pointer = usePointer();
   const duration = useDuration();

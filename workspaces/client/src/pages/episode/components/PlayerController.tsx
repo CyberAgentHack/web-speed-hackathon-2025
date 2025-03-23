@@ -62,7 +62,6 @@ export const PlayerController = ({ episode }: Props) => {
                 {playing ? (
                   <img
                     className="m-[14px] block size-[20px] shrink-0 grow-0"
-                    loading="lazy"
                     src="/public/icons/material-symbols--pause-rounded.svg"
                   />
                 ) : (

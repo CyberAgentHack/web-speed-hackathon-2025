@@ -535,7 +535,7 @@ video {
   margin: 0 -24px;
   display: inline-grid;
   grid-template-columns: repeat(auto-fill, minmax(276px, 1fr));
-  gap-x: 12px;
+  gap: 12px;
   overflow-x: auto; 
   overflow-y: hidden;
   padding-left: 24px;
