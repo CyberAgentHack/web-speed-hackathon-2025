@@ -25,7 +25,7 @@ export const SeriesItem = ({ series }: Props) => {
                     alt=""
                     className="h-auto w-full"
                     loading="lazy"
-                    src={series.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
+                    src={series.thumbnailUrl.replace(/\.(jpe?g)$/i, '.webp')}
                   />
                 </Flipped>
               </div>

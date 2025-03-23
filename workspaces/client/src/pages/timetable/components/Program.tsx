@@ -74,7 +74,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 loading="lazy"
-                src={program.thumbnailUrl.replace(/\.(jpe?g)(\?.*)?$/i, '.webp$2')}
+                src={program.thumbnailUrl.replace(/\.(jpe?g)$/i, '.webp')}
               />
             </div>
           </div>
