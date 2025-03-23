@@ -162,20 +162,20 @@ async function main() {
     }
 
     // エピソードごとにサムネイルを生成し、サムネイルURLを更新
-    console.log('Generating thumbnails for episodes...');
+    // console.log('Generating thumbnails for episodes...');
 
-    const streams = ['caminandes2', 'dailydweebs', 'glasshalf', 'wing-it'];
-    for (const stream of streams) {
-      try {
-        await generateThumbnailForEpisode(stream);
+    // const streams = ['caminandes2', 'dailydweebs', 'glasshalf', 'wing-it'];
+    // for (const stream of streams) {
+    //   try {
+    //     await generateThumbnailForEpisode(stream);
 
-        //　このサムネイルとthumbnailUrlは別物
+    //     //　このサムネイルとthumbnailUrlは別物
 
-        console.log(`Generated and updated thumbnail for episode ${stream}`);
-      } catch (error) {
-        console.error(`Error generating thumbnail for episode ${stream}:`, error);
-      }
-    }
+    //     console.log(`Generated and updated thumbnail for episode ${stream}`);
+    //   } catch (error) {
+    //     console.error(`Error generating thumbnail for episode ${stream}:`, error);
+    //   }
+    // }
 
     // Create programs
     console.log('Creating programs...');
