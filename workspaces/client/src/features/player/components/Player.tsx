@@ -1,4 +1,4 @@
-import { Ref, useEffect, useRef } from 'react';
+import { Ref, useEffect, useRef, useState } from 'react';
 import invariant from 'tiny-invariant';
 import { assignRef } from 'use-callback-ref';
 
@@ -15,6 +15,7 @@ interface Props {
 
 export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: Props) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [isInViewport, setIsInViewport] = useState(false);
 
   useEffect(() => {
     const mountElement = mountRef.current;
@@ -23,25 +24,41 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
-      if (abortController.signal.aborted) {
-        return;
-      }
-      player = createPlayer(playerType);
-      player.load(playlistUrl, { loop: loop ?? false });
-      mountElement.appendChild(player.videoElement);
-      assignRef(playerRef, player);
-    });
+    // Use Intersection Observer to detect when the player is in viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          setIsInViewport(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(mountElement);
+
+    // Only load the player when it's in viewport
+    if (isInViewport) {
+      void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
+        if (abortController.signal.aborted) {
+          return;
+        }
+        player = createPlayer(playerType);
+        player.load(playlistUrl, { loop: loop ?? false });
+        mountElement.appendChild(player.videoElement);
+        assignRef(playerRef, player);
+      });
+    }
 
     return () => {
       abortController.abort();
+      observer.disconnect();
       if (player != null) {
         mountElement.removeChild(player.videoElement);
         player.destory();
       }
       assignRef(playerRef, null);
     };
-  }, [playerType, playlistUrl, loop]);
+  }, [playerType, playlistUrl, loop, isInViewport]);
 
   return (
     <div className={className}>
