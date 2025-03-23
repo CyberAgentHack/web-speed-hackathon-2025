@@ -173,10 +173,20 @@ export const getProgramByIdRequestParams = z.object({
   programId: z.string(),
 });
 export const getProgramByIdResponse = program.extend({
-  channel: channel.extend({}),
-  episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
+  episode: episode.pick({
+    id: true,
+  }).extend({
+    series: series.pick({
+      title: true,
+    }).extend({
+      episodes: z.array(episode.pick({
+        id: true,
+        title: true,
+        order: true,
+        description: true,
+        thumbnailUrl: true,
+        premium: true,
+      })),
     }),
   }),
 });

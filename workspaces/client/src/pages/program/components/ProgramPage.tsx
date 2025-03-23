@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
+import { useUpdate } from 'react-use';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
@@ -16,6 +17,10 @@ import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useT
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
+
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
@@ -23,18 +28,17 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const since = now.startOf('day').toISO();
   const until = now.endOf('day').toISO();
 
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+  // 並列化: 複数の非同期リクエストを並列に処理
+  const [program, channels, timetable, modules] = await Promise.all([
+    store.getState().features.program.fetchProgramById({ programId }),
+    store.getState().features.channel.fetchChannels(),
+    store.getState().features.timetable.fetchTimetable({ since, until }),
+    store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId }),
+  ]);
+
   return { channels, modules, program, timetable };
 };
-// thumbnailUrl の拡張子を .webp に変更
-function changeImageExtension(url: string) {
-  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
-}
+
 export const ProgramPage = () => {
   const { programId } = useParams();
   invariant(programId);
@@ -43,42 +47,44 @@ export const ProgramPage = () => {
   invariant(program);
 
   const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  });
+  const nextProgram = useMemo(() => {
+    return timetable[program.channelId]?.find((p) => {
+      return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
+    });
+  }, [program.channelId, program.endAt, timetable]);
 
   const modules = useRecommended({ referenceId: programId });
 
   const playerRef = usePlayerRef();
 
+  const forceUpdate = useUpdate();
   const navigate = useNavigate();
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
-  
-  // 放送開始前は画面を更新し続ける
+
   useEffect(() => {
     if (isArchivedRef.current) {
       return;
     }
-  
+
+    // 放送前であれば、放送開始になるまで画面を更新し続ける
     if (!isBroadcastStarted) {
-      // 放送開始前に定期的に更新し続ける
       let timeout = setTimeout(function tick() {
-        // 状態更新なしで再レンダリングさせない
-        timeout = setTimeout(tick, 250);
-      }, 250);
+        forceUpdate();
+        timeout = setTimeout(tick, 2500);
+      }, 2500);
       return () => {
         clearTimeout(timeout);
       };
     }
-  
-    // 放送終了後に次の番組に切り替える
+
+    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
+        timeout = setTimeout(tick, 2500);
         return;
       }
-  
+
       if (nextProgram?.id) {
         void navigate(`/programs/${nextProgram.id}`, {
           preventScrollReset: true,
@@ -87,10 +93,9 @@ export const ProgramPage = () => {
         });
       } else {
         isArchivedRef.current = true;
-        // 状態更新なしで強制的な再レンダリングを行わない
+        forceUpdate();
       }
-    }, 250);
-  
+    }, 2500);
     return () => {
       clearTimeout(timeout);
     };
@@ -106,7 +111,6 @@ export const ProgramPage = () => {
             {isArchivedRef.current ? (
               <div className="relative size-full">
                 <img alt="" className="h-auto w-full" src={changeImageExtension(program.thumbnailUrl)} />
-
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
                   <Link
@@ -123,7 +127,7 @@ export const ProgramPage = () => {
                   className="size-full"
                   playerRef={playerRef}
                   playerType={PlayerType.HlsJS}
-                  playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
+                  playlistUrl={`/streams/channel/${program.channelId}/playlist.m3u8`}
                 />
                 <div className="absolute inset-x-0 bottom-0">
                   <PlayerController />
@@ -131,8 +135,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={changeImageExtension(program.thumbnailUrl)} />
-
+                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
                     この番組は {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')} に放送予定です
