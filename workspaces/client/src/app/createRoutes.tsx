@@ -18,7 +18,11 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             return {
               Component: HomePage,
               async loader() {
-                return await prefetch(store);
+                const data = await prefetch(store);
+                if (!data) {
+                  throw new Response("Not Found", { status: 404 });
+                }
+                return data;
               },
             };
           },
@@ -32,7 +36,11 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             return {
               Component: EpisodePage,
               async loader({ params }) {
-                return await prefetch(store, params);
+                const data = await prefetch(store, params);
+                if (!data || !data.episode) {
+                  throw new Response("Not Found", { status: 404 });
+                }
+                return data;
               },
             };
           },
@@ -47,7 +55,11 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             return {
               Component: ProgramPage,
               async loader({ params }) {
-                return await prefetch(store, params);
+                const data = await prefetch(store, params);
+                if (!data || !data.program) {
+                  throw new Response("Not Found", { status: 404 });
+                }
+                return data;
               },
             };
           },
@@ -62,7 +74,11 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             return {
               Component: SeriesPage,
               async loader({ params }) {
-                return await prefetch(store, params);
+                const data = await prefetch(store, params);
+                if (!data || !data.series) {
+                  throw new Response("Not Found", { status: 404 });
+                }
+                return data;
               },
             };
           },
@@ -77,7 +93,11 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             return {
               Component: TimetablePage,
               async loader() {
-                return await prefetch(store);
+                const data = await prefetch(store);
+                if (!data) {
+                  throw new Response("Not Found", { status: 404 });
+                }
+                return data;
               },
             };
           },
@@ -104,6 +124,10 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
         return await prefetch(store);
       },
       path: '/',
+      errorElement: lazy(
+        import('@wsh-2025/client/src/pages/not_found/components/NotFoundPage'),
+        1000,
+      ).then(module => ({ element: <module.NotFoundPage /> })),
     },
   ];
 }
