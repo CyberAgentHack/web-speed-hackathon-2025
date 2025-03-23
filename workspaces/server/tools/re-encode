@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -xve
+
+thumb_count=25
+
+for f in $(find "$(dirname "$0")/../streams" -type f -name 'playlist-rel.m3u8'); do
+  id="$(basename "$(dirname "$f")")"
+  out="${f/streams/streams-o}"
+  odir="$(dirname "$out")"
+  rm -r "$odir"
+  mkdir -p "$odir"
+
+  duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -i "$f" | sed 's/\..*//')"
+
+  ffmpeg -i "$f" -y -vf fps=$thumb_count/$duration,scale=160:90 "$odir/thumb_%03d.jpg"
+  convert +append $odir/thumb_*.jpg "$odir/thumb.jpg"
+
+  avifenc -q 90 -a end-usage=q -a cq-level=33 -a tune=ssim --jobs 8 --speed 2 "$odir/thumb.jpg" "$odir/thumb.avif"
+
+  rm $odir/*.jpg
+
+  ffmpeg -i "$f" -y \
+    -c:v libsvtav1 -c:a libopus \
+    -b:v 920k \
+    -b:a 24k \
+    -f hls -hls_segment_type fmp4 -hls_time 25 -hls_list_size 9000 \
+    -hls_segment_filename "$(dirname "$out")/%03d.ts" \
+    "$out"
+
+  grep -v EXT-X-MAP "$out" | sed "s/^\\([0-9]*.ts\\)/\\/streams\\/$id\\/\\1/g"  > "${out/-rel/}"
+done

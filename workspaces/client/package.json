@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "wireit",
+    "start": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit"
@@ -16,6 +17,7 @@
     "@headlessui/react": "2.2.0",
     "@radix-ui/react-slider": "1.2.3",
     "@standard-schema/spec": "1.0.0",
+    "@ungap/with-resolvers": "0.1.0",
     "@wsh-2025/client": "workspace:*",
     "@wsh-2025/schema": "workspace:*",
     "@yornaath/batshit": "0.10.1",
@@ -28,7 +30,6 @@
     "p-min-delay": "4.0.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-ellipsis-component": "1.1.11",
     "react-final-form": "6.5.9",
     "react-flip-toolkit": "7.2.4",
     "react-router": "7.0.2",
@@ -54,11 +55,13 @@
     "@ffmpeg/util": "0.12.2",
     "@iconify/json": "2.2.317",
     "@iconify/types": "2.0.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.5.15",
     "@types/lodash": "4.17.16",
     "@types/luxon": "3.4.2",
     "@types/m3u8-parser": "7.2.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
+    "@types/webpack-bundle-analyzer": "4.7.0",
     "@types/wicg-task-scheduling": "2024.1.0",
     "@unocss/preset-icons": "66.1.0-beta.5",
     "@unocss/preset-wind3": "66.1.0-beta.5",
@@ -69,6 +72,7 @@
     "babel-loader": "9.2.1",
     "core-js": "3.41.0",
     "hls.js": "1.5.17",
+    "react-refresh": "0.16.0",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",
     "video.js": "8.21.0",
@@ -89,7 +93,15 @@
       ],
       "output": [
         "./dist/**/*"
-      ]
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "start": {
+      "command": "webpack-dev-server",
+      "service": true,
+      "daemon": true
     },
     "format": {
       "command": "pnpm run format:eslint && pnpm run format:prettier"

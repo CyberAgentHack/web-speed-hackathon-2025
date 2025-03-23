@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -xve
+
+thumb_count=25
+
+for f in $(find "$(dirname "$0")/../streams" -type f -name 'playlist-rel.m3u8'); do
+  id="$(basename "$(dirname "$f")")"
+  dir="$(dirname "$f")"
+
+  duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -i "$f" | sed 's/\..*//')"
+
+  ffmpeg -i "$f" -y -vf fps=$thumb_count/$duration,scale=160:90 "$dir/thumb_%03d.jpg"
+  convert +append $dir/thumb_*.jpg "$dir/thumb.jpg"
+
+  avifenc -q 90 -a end-usage=q -a cq-level=33 -a tune=ssim --jobs 8 --speed 2 "$dir/thumb.jpg" "$dir/thumb.avif"
+
+  rm $dir/*.jpg
+done

@@ -34,6 +34,12 @@ export function registerSsr(app: FastifyInstance): void {
     ],
   });
 
+  if (process.env['NODE_ENV'] === 'development') {
+    app.get('/public/main.js', async (__, reply) => {
+      reply.redirect('http://localhost:8080/main.js');
+    });
+  }
+
   app.get('/favicon.ico', (_, reply) => {
     reply.status(404).send();
   });
@@ -59,11 +65,11 @@ export function registerSsr(app: FastifyInstance): void {
       </StrictMode>,
     );
 
-    const rootDir = path.resolve(__dirname, '../../../');
-    const imagePaths = [
-      getFilePaths('public/images', rootDir),
-      getFilePaths('public/animations', rootDir),
-      getFilePaths('public/logos', rootDir),
+    // const rootDir = path.resolve(__dirname, '../../../');
+    const imagePaths: string[] = [
+      // getFilePaths('public/images', rootDir),
+      // getFilePaths('public/animations', rootDir),
+      // getFilePaths('public/logos', rootDir),
     ].flat();
 
     reply.type('text/html').send(/* html */ `

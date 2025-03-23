@@ -64,7 +64,7 @@
       "command": "tsx ./tools/seed.ts"
     },
     "start": {
-      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx ./src/index.ts",
       "service": true,
       "env": {
         "API_BASE_URL": {
@@ -82,11 +82,11 @@
         "./src/**/*"
       ],
       "dependencies": [
-        "../client:build"
+        "../client:start"
       ]
     },
     "heroku-start": {
-      "command": "tsx -r ./loaders/png.cjs ./src/index.ts",
+      "command": "tsx ./src/index.ts",
       "service": true,
       "env": {
         "API_BASE_URL": {
@@ -96,6 +96,10 @@
         "PORT": {
           "external": true,
           "default": "8000"
+        },
+        "STREAM_BASE_URL": {
+          "external": true,
+          "default": "https://deqdfv99n42lf.cloudfront.net/streams/"
         }
       }
     },

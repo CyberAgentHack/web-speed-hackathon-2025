@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -9,6 +8,7 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
+import { Ellipsis } from '@wsh-2025/client/src/features/layout/components/Ellipsis';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
@@ -19,10 +19,24 @@ import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayer
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
-  const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+  const state = store.getState();
+  
+  let episode = state.features.episode.episodes[episodeId];
+  if (!episode) {
+    episode = await state.features.episode.fetchEpisodeById({ episodeId });
+  }
+  const moduleIds = state.features.recommended.references[episodeId];
+
+  let modules = (moduleIds ?? [])
+    .map((moduleId) => state.features.recommended.recommendedModules[moduleId])
+    .filter((m) => m != null);
+  
+  if (modules.length === 0) {
+    modules = await store
+      .getState()
+      .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+  }
+  
   return { episode, modules };
 };
 
@@ -51,7 +65,11 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img
+                  alt=""
+                  className="h-auto w-full"
+                  src={`https://deqdfv99n42lf.cloudfront.net${episode.thumbnailUrl}`}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

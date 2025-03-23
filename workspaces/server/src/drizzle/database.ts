@@ -1,6 +1,7 @@
 import fsp from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { env } from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { createClient } from '@libsql/client';
@@ -11,6 +12,8 @@ const SQLITE_PATH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 
 let database: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
+const debug = env['DEBUG']?.split(',').includes('drizzle');
+
 export function getDatabase() {
   if (database == null) {
     throw new Error('database is initializing.');
@@ -19,6 +22,8 @@ export function getDatabase() {
 }
 
 export async function initializeDatabase(): Promise<void> {
+  if (debug) console.debug('initializeDatabase');
+
   database?.$client.close();
   database = null;
 
@@ -30,6 +35,7 @@ export async function initializeDatabase(): Promise<void> {
       syncInterval: 1000,
       url: `file:${TEMP_PATH}`,
     }),
+    logger: debug ? true : undefined,
     schema,
   });
 }
