@@ -1,14 +1,12 @@
 import 'zod-openapi/extend';
 
-import { randomBytes } from 'node:crypto';
-
 import fastifyCookie from '@fastify/cookie';
 import fastifySession from '@fastify/session';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 import * as schema from '@wsh-2025/schema/src/openapi/schema';
-import * as bcrypt from 'bcrypt';
+import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import {
   fastifyZodOpenApiPlugin,
@@ -23,6 +21,27 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+//import { fa } from '@faker-js/faker';
+
+export function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString('hex');
+  const hash = scryptSync(password, salt, 64) as Buffer;
+  return `${salt}:${hash.toString('hex')}`;
+}
+
+export function verifyPassword(password: string, hashedPassword: string): boolean {
+  if (!hashedPassword) return false;
+  const [salt, storedHash] = hashedPassword.split(':');
+  if (!salt || !storedHash) return false; 
+  const hashBuffer = scryptSync(password, salt ?? '', 64) as Buffer;
+  const storedBuffer = Buffer.from(storedHash ?? '', 'hex');
+
+  if (hashBuffer.length !== storedBuffer.length) {
+    return false;
+  }
+  return timingSafeEqual(storedBuffer, hashBuffer);
+}
+
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -536,7 +555,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return eq(user.email, req.body.email);
         },
       });
-      if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+      if (!user || !verifyPassword(req.body.password, user.password)) {
         return reply.code(401).send();
       }
 
@@ -575,11 +594,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(400).send();
       }
 
+      const hashedPassword = hashPassword(req.body.password);
+
       const users = await database
         .insert(databaseSchema.user)
         .values({
           email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
+          password: hashedPassword,
         })
         .returning();
 
@@ -591,7 +612,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const ret = schema.signUpResponse.parse({ id: user.id, email: user.email });
 
       req.session.set('id', ret.id.toString());
-      reply.code(200).send(ret);
+      reply.code(200).send({id: user.id, email: user.email });
     },
   });
 
