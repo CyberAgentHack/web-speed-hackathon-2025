@@ -19,26 +19,39 @@ interface ChannelActions {
 }
 
 export const createChannelStoreSlice = () => {
-  return lens<ChannelState & ChannelActions>((set) => ({
+  return lens<ChannelState & ChannelActions>((set, get) => ({
     channels: {},
     fetchChannelById: async ({ channelId }) => {
+      // ローカルストアをまず確認
+      const existingChannel = get().channels[channelId];
+      if (existingChannel) {
+        return existingChannel;
+      }
+
       const channel = await channelService.fetchChannelById({ channelId });
-      set((state) => {
-        return produce(state, (draft) => {
-          draft.channels[channel.id] = channel;
-        });
-      });
+      set((state) => ({
+        ...state,
+        channels: {
+          ...state.channels,
+          [channel.id]: channel
+        }
+      }));
       return channel;
     },
     fetchChannels: async () => {
+      // すでに全チャンネルがキャッシュされているか確認
+      const currentChannels = Object.values(get().channels);
+      if (currentChannels.length > 0) {
+          return currentChannels;
+      }
+
       const channels = await channelService.fetchChannels();
-      set((state) => {
-        return produce(state, (draft) => {
-          for (const channel of channels) {
-            draft.channels[channel.id] = channel;
-          }
-        });
-      });
+      // 複数のチャンネルを一括更新する場合はproduceを使用
+      set((state) => produce(state, (draft) => {
+        for (const channel of channels) {
+          draft.channels[channel.id] = channel;
+        }
+      }));
       return channels;
     },
   }));
