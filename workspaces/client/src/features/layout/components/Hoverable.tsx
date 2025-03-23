@@ -1,8 +1,6 @@
 import classNames from 'classnames';
-import { Children, cloneElement, ReactElement, Ref, useRef } from 'react';
+import { Children, cloneElement, ReactElement, Ref, useRef, useState } from 'react';
 import { useMergeRefs } from 'use-callback-ref';
-
-import { usePointer } from '@wsh-2025/client/src/features/layout/hooks/usePointer';
 
 interface Props {
   children: ReactElement<{ className?: string; ref?: Ref<unknown> }>;
@@ -13,27 +11,28 @@ interface Props {
 }
 
 export const Hoverable = (props: Props) => {
+  const [isHovered, setIsHovered] = useState(false);
   const child = Children.only(props.children);
   const elementRef = useRef<HTMLDivElement>(null);
 
   const mergedRef = useMergeRefs([elementRef, child.props.ref].filter((v) => v != null));
 
-  const pointer = usePointer();
-  const elementRect = elementRef.current?.getBoundingClientRect();
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
 
-  const hovered =
-    elementRect != null &&
-    elementRect.left <= pointer.x &&
-    pointer.x <= elementRect.right &&
-    elementRect.top <= pointer.y &&
-    pointer.y <= elementRect.bottom;
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return cloneElement(child, {
     className: classNames(
       child.props.className,
       'cursor-pointer',
-      hovered ? props.classNames.hovered : props.classNames.default,
+      isHovered ? props.classNames.hovered : props.classNames.default,
     ),
     ref: mergedRef,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
   });
 };
