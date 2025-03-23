@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useCallback } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
@@ -62,23 +62,8 @@ export const ProgramPage = () => {
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
 
-  useEffect(() => {
-    if (isArchivedRef.current) {
-      return;
-    }
-
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
-    if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
-        forceUpdate();
-        timeout = setTimeout(tick, 2500);
-      }, 2500);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
+  // メモ化したタイムアウト関数
+  const startNextProgram = useCallback(() => {
     let timeout = setTimeout(function tick() {
       if (DateTime.now() < DateTime.fromISO(program.endAt)) {
         timeout = setTimeout(tick, 2500);
@@ -96,10 +81,28 @@ export const ProgramPage = () => {
         forceUpdate();
       }
     }, 2500);
+
+    return timeout;
+  }, [program.endAt, nextProgram?.id, navigate, forceUpdate]);
+
+  useEffect(() => {
+    if (isArchivedRef.current) return;
+
+    if (!isBroadcastStarted) {
+      let timeout = setTimeout(function tick() {
+        forceUpdate();
+        timeout = setTimeout(tick, 2500);
+      }, 2500);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+
+    const timeout = startNextProgram();
     return () => {
       clearTimeout(timeout);
     };
-  }, [isBroadcastStarted, nextProgram?.id]);
+  }, [isBroadcastStarted, startNextProgram, forceUpdate]);
 
   return (
     <>
