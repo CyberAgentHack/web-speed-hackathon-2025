@@ -7,7 +7,7 @@ import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 const batcher = batshit.create({
   async fetcher(queries: { channelId: string }[]) {
     const data = await fetchApiJson(
-      `/channels${new URLSearchParams({ channelIds: queries.map((q) => q.channelId).join(',') })}`,
+      `/channels?${new URLSearchParams({ channelIds: queries.map((q) => q.channelId).join(',') })}`,
     );
     return data as StandardSchemaV1.InferOutput<typeof schema.getChannelsResponse>;
   },

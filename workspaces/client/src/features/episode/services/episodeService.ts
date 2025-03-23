@@ -7,7 +7,7 @@ import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 const batcher = batshit.create({
   async fetcher(queries: { episodeId: string }[]) {
     const data = await fetchApiJson(
-      `/episodes${new URLSearchParams({ episodeIds: queries.map((q) => q.episodeId).join(',') })}`,
+      `/episodes?${new URLSearchParams({ episodeIds: queries.map((q) => q.episodeId).join(',') })}`,
     );
     return data as StandardSchemaV1.InferOutput<typeof schema.getEpisodesResponse>;
   },
