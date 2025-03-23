@@ -13,8 +13,13 @@ async function main() {
 
   const app = fastify();
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  app.addHook('onSend', async (req, reply) => {
+    if (req.url.startsWith('/api') && !req.url.includes('/api/static')) {
+      reply.header('cache-control', 'no-store');
+    } else {
+      // 静的コンテンツには適切なキャッシュ設定を行う
+      reply.header('cache-control', 'max-age=3600, stale-while-revalidate=86400');
+    }
   });
   app.register(cors, {
     origin: true,
