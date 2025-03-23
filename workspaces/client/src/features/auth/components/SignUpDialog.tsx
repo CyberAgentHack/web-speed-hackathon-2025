@@ -1,6 +1,6 @@
 import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
-import { useId, memo } from 'react';
+import { useId, memo, useMemo, useCallback } from 'react';
 import { Field, Form } from 'react-final-form';
 import { z } from 'zod';
 
@@ -9,7 +9,7 @@ import { isValidEmail } from '@/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@/features/auth/logics/isValidPassword';
 import { Dialog } from '@/features/dialog/components/Dialog';
 
-interface SignInFormValues {
+interface SignUpFormValues {
   email: string;
   password: string;
 }
@@ -20,31 +20,35 @@ interface Props {
   onOpenSignIn: () => void;
 }
 
+// バリデーションスキーマはコンポーネント外で一度だけ定義
+const signUpSchema = z.object({
+  email: z
+    .string({ required_error: 'メールアドレスを入力してください' })
+    .refine(isValidEmail, { message: 'メールアドレスが正しくありません' }),
+  password: z
+    .string({ required_error: 'パスワードを入力してください' })
+    .refine(isValidPassword, { message: 'パスワードが正しくありません' })
+});
+
 export const SignUpDialog = memo(function SignUpDialog({
   isOpen,
   onClose,
-  onOpenSignIn
+  onOpenSignIn,
 }: Props) {
   const authActions = useAuthActions();
   const emailId = useId();
   const passwordId = useId();
 
-  // バリデーションスキーマをコンポーネント外で定義してもOK
-  const schema = z.object({
-    email: z
-      .string({ required_error: 'メールアドレスを入力してください' })
-      .refine(isValidEmail, { message: 'メールアドレスが正しくありません' }),
-    password: z
-      .string({ required_error: 'パスワードを入力してください' })
-      .refine(isValidPassword, { message: 'パスワードが正しくありません' })
-  });
+  // validate 関数を useMemo でメモ化
+  const validate = useMemo(() => {
+    return (values: SignUpFormValues) => {
+      const result = signUpSchema.safeParse(values);
+      return result.success ? undefined : result.error.formErrors.fieldErrors;
+    };
+  }, []);
 
-  const validate = (values: SignInFormValues) => {
-    const result = schema.safeParse(values);
-    return result.success ? undefined : result.error.formErrors.fieldErrors;
-  };
-
-  const onSubmit = async (values: SignInFormValues) => {
+  // onSubmit を useCallback でメモ化
+  const onSubmit = useCallback(async (values: SignUpFormValues) => {
     try {
       await authActions.signUp({ email: values.email, password: values.password });
       alert('新規会員登録に成功しました');
@@ -55,12 +59,12 @@ export const SignUpDialog = memo(function SignUpDialog({
       }
       return { [FORM_ERROR]: '不明なエラーが発生しました' };
     }
-  };
+  }, [authActions, onClose]);
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
-        <div className="mb-[16px] flex w-full flex-row justify-center">
+        <div className="mb-[16px] flex w-full justify-center">
           <img
             alt="AremaTVロゴ"
             className="object-contain"
@@ -79,10 +83,12 @@ export const SignUpDialog = memo(function SignUpDialog({
               <Field name="email">
                 {({ input, meta }) => (
                   <div className="mb-[24px]">
-                    <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
+                    <div className="mb-[8px] flex items-center justify-between text-[14px] font-bold">
                       <label htmlFor={emailId}>メールアドレス</label>
-                      {meta.modified && meta.error && Array.isArray(meta.error) && (
-                        <span className="text-[#F0163A]">{meta.error[0]}</span>
+                      {meta.modified && meta.error && (
+                        <span className="text-[#F0163A]">
+                          {Array.isArray(meta.error) ? meta.error[0] : meta.error}
+                        </span>
                       )}
                     </div>
                     <input
@@ -100,10 +106,12 @@ export const SignUpDialog = memo(function SignUpDialog({
               <Field name="password">
                 {({ input, meta }) => (
                   <div className="mb-[24px]">
-                    <div className="mb-[8px] flex flex-row items-center justify-between text-[14px] font-bold">
+                    <div className="mb-[8px] flex items-center justify-between text-[14px] font-bold">
                       <label htmlFor={passwordId}>パスワード</label>
-                      {meta.modified && meta.error && Array.isArray(meta.error) && (
-                        <span className="text-[#F0163A]">{meta.error[0]}</span>
+                      {meta.modified && meta.error && (
+                        <span className="text-[#F0163A]">
+                          {Array.isArray(meta.error) ? meta.error[0] : meta.error}
+                        </span>
                       )}
                     </div>
                     <input
@@ -119,13 +127,13 @@ export const SignUpDialog = memo(function SignUpDialog({
               </Field>
 
               {submitError && (
-                <div className="mb-[8px] flex w-full flex-row items-center rounded-[4px] border-[2px] border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
+                <div className="mb-[8px] flex w-full items-center rounded-[4px] border-[2px] border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
                   <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
                   <span>{submitError}</span>
                 </div>
               )}
 
-              <div className="flex flex-row justify-center">
+              <div className="flex justify-center">
                 <button
                   type="submit"
                   disabled={submitting || hasValidationErrors}
@@ -138,7 +146,7 @@ export const SignUpDialog = memo(function SignUpDialog({
           )}
         </Form>
 
-        <div className="flex flex-row justify-center">
+        <div className="flex justify-center">
           <button
             type="button"
             onClick={onOpenSignIn}
