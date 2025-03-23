@@ -1,11 +1,10 @@
 services:
   - type: web
+    runtime: node
     name: wsh-2025-server
-    env: node
     buildCommand: pnpm install
     startCommand: pnpm start
+    rootDir: workspaces/server
     envVars:
       - key: NODE_ENV
         value: production
-    port: 8000
-    rootDirectory: workspaces/server
