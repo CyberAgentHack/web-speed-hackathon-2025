@@ -10,7 +10,7 @@ import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
 import htmlescape from 'htmlescape';
 import { StrictMode } from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToPipeableStream } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
 function getFiles(parent: string): string[] {
@@ -51,14 +51,7 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
-        </StoreProvider>
-      </StrictMode>,
-    );
-
+    
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
       getFilePaths('public/images', rootDir),
@@ -66,8 +59,7 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/logos', rootDir),
     ].flat();
 
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
+    const htmlStart = `<!DOCTYPE html>
       <html lang="ja">
         <head>
           <meta charSet="UTF-8" />
@@ -75,14 +67,55 @@ export function registerSsr(app: FastifyInstance): void {
           <script src="/public/main.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
-        <body></body>
+        <body>`;
+
+    const htmlEnd = `</body>
       </html>
       <script>
         window.__staticRouterHydrationData = ${htmlescape({
           actionData: context.actionData,
           loaderData: context.loaderData,
         })};
-      </script>
-    `);
+      </script>`;
+
+    reply.type('text/html');
+    
+    let didError = false;
+
+    const { pipe, abort } = renderToPipeableStream(
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <StaticRouterProvider context={context} hydrate={false} router={router} />
+        </StoreProvider>
+      </StrictMode>,
+      {
+        onShellReady() {
+          reply.raw.write(htmlStart);
+          pipe(reply.raw);
+          reply.raw.write(htmlEnd);
+          reply.raw.end();
+        },
+        onAllReady() {
+        },
+        onError(err) {
+          didError = true;
+          console.error('ストリーミングレンダリングエラー:', err);
+          abort();
+          reply.status(500).send('Internal Server Error');
+        }
+      }
+    );
+
+    const timeoutId = setTimeout(() => {
+      abort();
+      if (!reply.sent) {
+        reply.status(500).send('Rendering timed out');
+      }
+    }, 10000);
+
+    reply.raw.on('close', () => {
+      clearTimeout(timeoutId);
+      abort();
+    });
   });
 }
