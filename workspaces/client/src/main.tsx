@@ -20,7 +20,7 @@ function main() {
 
   createRoot(container).render(
     <StoreProvider createStore={() => store}>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
     </StoreProvider>
   );
 }

@@ -161,7 +161,8 @@ const EpisodePage = ({ store } : { store: ReturnType<typeof createStore> }) => {
 
         <div className="mt-[24px]">
           <h2 className="mb-[12px] text-[22px] font-bold text-[#ffffff]">エピソード</h2>
-          <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} />
+          {/* <SeriesEpisodeList episodes={episode.series.episodes} selectedEpisodeId={episode.id} /> */}
+          <SeriesEpisodeList episodes={episode.series?.episodes ?? []} selectedEpisodeId={episode.id} />
         </div>
       </div>
     </>

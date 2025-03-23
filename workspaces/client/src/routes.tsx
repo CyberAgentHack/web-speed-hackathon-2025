@@ -1,5 +1,7 @@
 import { lazy } from "react";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import { createStore } from "@wsh-2025/client/src/app/createStore";
+import { Layout } from '@wsh-2025/client/src/features/layout/components/Layout';
 
 const HomePage = lazy(() => import("@wsh-2025/client/src/pages/home/components/HomePage"));
 const EpisodePage = lazy(() => import("@wsh-2025/client/src/pages/episode/components/EpisodePage"));
@@ -9,10 +11,23 @@ const TimetablePage = lazy(() => import("@wsh-2025/client/src/pages/timetable/co
 const NotFoundPage = lazy(() => import("@wsh-2025/client/src/pages/not_found/components/NotFoundPage"));
 
 export const routes = (store: ReturnType<typeof createStore>) => [
-  { path: "/", element: <HomePage store={store} /> },
-  { path: "/episodes/:episodeId", element: <EpisodePage store={store} /> },
-  { path: "/programs/:programId", element: <ProgramPage store={store} /> },
-  { path: "/series/:seriesId", element: <SeriesPage store={store} /> },
-  { path: "/timetable", element: <TimetablePage store={store} /> },
-  { path: "*", element: <NotFoundPage store={store} /> },
+  {
+    // この親ルートで全体をラップする
+    element: (
+      <>
+        <Layout>
+          <Outlet />
+        </Layout>
+        <ScrollRestoration />
+      </>
+    ),
+    children: [
+      { path: "/", element: <HomePage store={store} /> },
+      { path: "/episodes/:episodeId", element: <EpisodePage store={store} /> },
+      { path: "/programs/:programId", element: <ProgramPage store={store} /> },
+      { path: "/series/:seriesId", element: <SeriesPage store={store} /> },
+      { path: "/timetable", element: <TimetablePage store={store} /> },
+      { path: "*", element: <NotFoundPage store={store} /> },
+    ],
+  },
 ];
