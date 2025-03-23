@@ -9,7 +9,12 @@ import { fetchAnimeList } from '@wsh-2025/server/tools/fetch_anime_list';
 import { fetchLoremIpsumWordList } from '@wsh-2025/server/tools/fetch_lorem_ipsum_word_list';
 import * as bcrypt from 'bcrypt';
 import path from 'node:path';
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { gzip } from 'node:zlib';
+import { promisify } from 'node:util';
+import { optimize } from 'svgo';
+
+const gzipPromise = promisify(gzip);
 
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
@@ -73,6 +78,74 @@ const CHANNEL_NAME_LIST: Channel[] = [
     name: 'サッカー',
   },
 ];
+async function optimizeAndCompressSvg(filePath: string) {
+  const svgString = readFileSync(filePath, 'utf8');
+  const fileName = path.basename(filePath);
+  const compressedFilePath = path.join(path.dirname(filePath), `${fileName}.gz`);
+
+  try {
+    // Optimize SVG
+    const optimizedResult = optimize(svgString, {
+      path: filePath,
+      multipass: true,
+      plugins: [
+        {
+          name: 'preset-default',
+          params: {
+            overrides: {
+              removeViewBox: false,
+              removeHiddenElems: {
+                isHidden: true,
+                displayNone: true,
+                opacity0: true,
+              },
+              removeEmptyAttrs: false,
+              removeEmptyText: { text: true, tspan: true, tref: true },
+              removeEmptyContainers: false,
+              removeUselessDefs: false,
+              removeTitle: false,
+              removeDesc: { removeAny: false },
+            },
+          },
+        },
+        'removeXMLNS',
+        'sortAttrs',
+        'removeDimensions',
+        {
+          name: 'removeAttrs',
+          params: { attrs: '(data-name|data-old-color)' },
+        },
+      ],
+    });
+
+    if (!('data' in optimizedResult)) {
+      console.log(`Failed to optimize SVG: ${fileName}`);
+      return;
+    }
+
+    // Compress SVG
+    const compressedData = await gzipPromise(optimizedResult.data);
+    writeFileSync(compressedFilePath, compressedData);
+
+    console.log(`Optimized and Compressed SVG: ${fileName}`);
+  } catch (error) {
+    console.error(`Failed to optimize and compress SVG: ${fileName}`, error);
+  }
+}
+
+async function optimizeAndCompressSvgFiles() {
+  console.log('Optimizing and Compressing SVG files...');
+  const rootDir = path.resolve(__dirname, '../../../');
+  const logosDir = path.resolve(rootDir, 'public/logos');
+
+  const svgFiles = readdirSync(logosDir)
+    .filter(file => file.endsWith('.svg'))
+    .map(file => path.join(logosDir, file));
+
+  for (const file of svgFiles) {
+    await optimizeAndCompressSvg(file);
+  }
+}
 
 async function main() {
   const faker = new Faker({
@@ -111,13 +184,14 @@ async function main() {
       ])
       .returning();
 
+    await optimizeAndCompressSvgFiles();
     // Create channels
     console.log('Creating channels...');
     const channelList: (typeof schema.channel.$inferSelect)[] = [];
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
         id: faker.string.uuid(),
-        logoUrl: `/public/logos/${id}.svg`,
+        logoUrl: `/public/logos/${id}.svg.gz`, // 圧縮されたSVGを使用
         name,
       }));
       const result = await database.insert(schema.channel).values(data).returning();
