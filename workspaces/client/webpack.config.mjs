@@ -1,14 +1,14 @@
 import path from 'node:path';
-import os from 'node:os'; // Added import for 'os'
+import os from 'node:os';
 
 import webpack from 'webpack';
-import webpackBundleAnalyzer from 'webpack-bundle-analyzer';
+// import webpackBundleAnalyzer from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -34,7 +34,7 @@ const config = {
                   {
                     corejs: '3.41',
                     forceAllTransforms: true,
-                    targets: 'defaults',
+                    targets: 'last 2 Chrome versions',
                     useBuiltIns: 'entry',
                   },
                 ],
@@ -62,15 +62,23 @@ const config = {
       },
     ],
   },
+  // TODO: Add splitChunks optimization
+  // optimization: {
+  //   splitChunks: {
+  //     chunks: 'all',
+  //     minSize: 20000,
+  //     maxSize: 500000,
+  //   },
+  // },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
+    chunkFilename: '[name]-[contenthash].js',
     chunkFormat: false,
     filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
     // new webpackBundleAnalyzer.BundleAnalyzerPlugin(),
   ],
