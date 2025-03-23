@@ -51,6 +51,13 @@ const config = {
       },
     ],
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 20000,
+      maxSize: 50000,
+    },
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
