@@ -12,18 +12,16 @@ class ShakaPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
-  private _player!: shaka.Player;
+  private _player: shaka.Player;
   readonly playerType: PlayerType.ShakaPlayer;
 
-  constructor(playerType: PlayerType.ShakaPlayer) {
+  constructor(playerType: PlayerType.ShakaPlayer, shakaModule: typeof shaka) {
     this.playerType = playerType;
-    void import("shaka-player").then(({ default: shaka }) => {
-      this._player = new shaka.Player(this.videoElement);
-      this._player.configure({
-        streaming: {
-          bufferingGoal: 50,
-        },
-      });
+    this._player = new shakaModule.Player(this.videoElement);
+    this._player.configure({
+      streaming: {
+        bufferingGoal: 50,
+      },
     });
   }
 
@@ -73,16 +71,14 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
-  private _player!: HlsJs;
+  private _player: HlsJs;
   readonly playerType: PlayerType.HlsJS;
 
-  constructor(playerType: PlayerType.HlsJS) {
+  constructor(playerType: PlayerType.HlsJS, HlsJsModule: typeof HlsJs) {
     this.playerType = playerType;
-    void import("hls.js").then(({ default: HlsJs }) => {
-      this._player = new HlsJs({
-        enableWorker: false,
-        maxBufferLength: 50,
-      });
+    this._player = new HlsJsModule({
+      enableWorker: false,
+      maxBufferLength: 50,
     });
   }
 
@@ -135,18 +131,15 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _player!: any;
+  private _player: any;
   readonly playerType: PlayerType.VideoJS;
 
-  constructor(playerType: PlayerType.VideoJS) {
+  constructor(playerType: PlayerType.VideoJS, videojs: any) {
     this.playerType = playerType;
-    void import("video.js").then(({ default: videojs }) => {
-      const vhsConfig = (videojs as unknown as { Vhs: VhsConfig }).Vhs;
-      vhsConfig.GOAL_BUFFER_LENGTH = 50;
-      vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
-      this._player = videojs(this.videoElement);
-    });
+    const vhsConfig = (videojs as unknown as { Vhs: VhsConfig }).Vhs;
+    vhsConfig.GOAL_BUFFER_LENGTH = 50;
+    vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
+    this._player = videojs(this.videoElement);
   }
 
   get currentTime(): number {
@@ -186,16 +179,21 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
   }
 }
 
-export const createPlayer = (playerType: PlayerType): PlayerWrapper => {
+export const createPlayer = async (
+  playerType: PlayerType,
+): Promise<PlayerWrapper> => {
   switch (playerType) {
     case PlayerType.ShakaPlayer: {
-      return new ShakaPlayerWrapper(playerType);
+      const { default: shaka } = await import("shaka-player");
+      return new ShakaPlayerWrapper(playerType, shaka);
     }
     case PlayerType.HlsJS: {
-      return new HlsJSPlayerWrapper(playerType);
+      const { default: HlsJs } = await import("hls.js");
+      return new HlsJSPlayerWrapper(playerType, HlsJs);
     }
     case PlayerType.VideoJS: {
-      return new VideoJSPlayerWrapper(playerType);
+      const { default: videojs } = await import("video.js");
+      return new VideoJSPlayerWrapper(playerType, videojs);
     }
     default: {
       playerType satisfies never;
