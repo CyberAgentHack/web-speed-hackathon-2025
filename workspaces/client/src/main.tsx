@@ -4,7 +4,8 @@ import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+import type { HydrationState } from 'react-router';
 
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
@@ -16,17 +17,30 @@ declare global {
 }
 
 function main() {
-  const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  // ストアとルーターの作成を先に行う
+  const store = createStore({ hydrationData: window.__zustandHydrationData });
+  const router = createBrowserRouter(createRoutes(store), {
+    hydrationData: window.__staticRouterHydrationData,
+  });
 
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <StoreProvider createStore={() => store}>
-        <RouterProvider router={router} />
-      </StoreProvider>
-    </StrictMode>,
-  );
+  // Progressive Hydrationのために、コンテンツが表示された後にハイドレーションを実行
+  const startHydration = () => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <RouterProvider router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
+  };
+
+  window.requestIdleCallback(startHydration, { timeout: 2000 });
 }
 
-document.addEventListener('DOMContentLoaded', main);
+// DOMの準備ができたら実行
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', main);
+} else {
+  main();
+}
