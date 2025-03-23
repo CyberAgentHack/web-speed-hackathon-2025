@@ -94,9 +94,9 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             );
             return {
               Component: NotFoundPage,
-              async loader() {
-                return await prefetch(store);
-              },
+              // async loader() {
+              //   return await prefetch(store);
+              // },
             };
           },
           path: '*',
