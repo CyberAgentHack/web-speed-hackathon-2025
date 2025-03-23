@@ -2,9 +2,9 @@ import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import { ReactElement, useEffect, useRef, useState } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
+import { CustomEllipsis } from '@wsh-2025/client/src/features/layout/components/CustomEllipsis';
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
@@ -65,7 +65,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
               <div
                 className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
               >
-                <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
+                <CustomEllipsis maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
             <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
