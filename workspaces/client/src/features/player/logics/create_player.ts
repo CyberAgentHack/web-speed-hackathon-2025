@@ -1,5 +1,5 @@
 import '@videojs/http-streaming';
-import HlsJs from 'hls.js';
+import HlsJs from 'hls.js/dist/hls.light.min.js';
 import shaka from 'shaka-player';
 import videojs from 'video.js';
 
