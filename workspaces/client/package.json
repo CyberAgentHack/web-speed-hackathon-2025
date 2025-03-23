@@ -74,7 +74,7 @@
   },
   "wireit": {
     "build": {
-      "command": "webpack",
+      "command": "webpack --mode=production",
       "files": [
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
