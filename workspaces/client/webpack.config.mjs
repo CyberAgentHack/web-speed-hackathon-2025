@@ -20,9 +20,9 @@ const plugins =
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: process.env['NODE_ENV'] === 'production' ? false : 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
+  mode: 'production',
   module: {
     rules: [
       {
