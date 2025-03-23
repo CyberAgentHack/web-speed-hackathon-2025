@@ -54,41 +54,28 @@ export const ProgramPage = () => {
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
   useEffect(() => {
-    if (isArchivedRef.current) {
-      return;
-    }
+    if (isArchivedRef.current) return;
 
-    // 放送前であれば、放送開始になるまで画面を更新し続ける
-    if (!isBroadcastStarted) {
-      let timeout = setTimeout(function tick() {
+    const interval = setInterval(() => {
+      if (!isBroadcastStarted) {
         forceUpdate();
-        timeout = setTimeout(tick, 250);
-      }, 250);
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    // 放送中に次の番組が始まったら、画面をそのままにしつつ、情報を次の番組にする
-    let timeout = setTimeout(function tick() {
-      if (DateTime.now() < DateTime.fromISO(program.endAt)) {
-        timeout = setTimeout(tick, 250);
-        return;
-      }
-
-      if (nextProgram?.id) {
-        void navigate(`/programs/${nextProgram.id}`, {
-          preventScrollReset: true,
-          replace: true,
-          state: { loading: 'none' },
-        });
-      } else {
-        isArchivedRef.current = true;
-        forceUpdate();
+      } else if (DateTime.now() >= DateTime.fromISO(program.endAt)) {
+        clearInterval(interval);
+        if (nextProgram?.id) {
+          void navigate(`/programs/${nextProgram.id}`, {
+            preventScrollReset: true,
+            replace: true,
+            state: { loading: 'none' },
+          });
+        } else {
+          isArchivedRef.current = true;
+          forceUpdate();
+        }
       }
     }, 250);
+
     return () => {
-      clearTimeout(timeout);
+      clearInterval(interval);
     };
   }, [isBroadcastStarted, nextProgram?.id]);
 
@@ -101,7 +88,7 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={program.thumbnailUrl.replace(/\.(jpe?g)$/i, '.webp')} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
@@ -127,7 +114,7 @@ export const ProgramPage = () => {
               </div>
             ) : (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={program.thumbnailUrl.replace(/\.(jpe?g)$/i, '.webp')} />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">

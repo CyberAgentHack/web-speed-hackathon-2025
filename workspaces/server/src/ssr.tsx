@@ -51,13 +51,6 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
-        </StoreProvider>
-      </StrictMode>,
-    );
 
     const rootDir = path.resolve(__dirname, '../../../');
     const imagePaths = [
@@ -66,23 +59,43 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/logos', rootDir),
     ].flat();
 
-    reply.type('text/html').send(/* html */ `
-      <!DOCTYPE html>
-      <html lang="ja">
-        <head>
-          <meta charSet="UTF-8" />
-          <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
-        </head>
-        <body></body>
-      </html>
+    const preloadLinks = imagePaths
+      .map((imagePath) => `<link as="image" href="${imagePath}" rel="prefetch" />`)
+      .join('\n');
+
+    // SSRのHTMLをレンダリング
+    const html = renderToString(
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <StaticRouterProvider context={context} hydrate={true} router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
+
+    const hydrateScript = `
       <script>
         window.__staticRouterHydrationData = ${htmlescape({
           actionData: context.actionData,
           loaderData: context.loaderData,
         })};
       </script>
-    `);
+    `;
+
+    // 完全なHTMLを構築
+    const fullHtml = `<!DOCTYPE html>
+    <html lang="ja" class="size-full">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        ${preloadLinks}
+      </head>
+      <body class="size-full bg-[#000000] text-[#ffffff]">
+        <div id="root">${html}</div>
+        ${hydrateScript}
+        <script src="/public/main.js" defer></script>
+      </body>
+    </html>`;
+
+    reply.type('text/html').send(fullHtml);
   });
 }

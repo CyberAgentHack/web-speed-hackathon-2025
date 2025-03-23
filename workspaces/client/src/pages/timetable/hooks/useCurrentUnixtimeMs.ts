@@ -1,16 +1,49 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useStore } from '@wsh-2025/client/src/app/StoreContext';
+// グローバルな更新間隔を1秒に設定
+const UPDATE_INTERVAL = 1000;
+
+let subscribers = new Set<(time: number) => void>();
+let intervalId: ReturnType<typeof setInterval> | null = null;
+
+function setupGlobalInterval() {
+  if (intervalId) return;
+
+  intervalId = setInterval(() => {
+    const currentTime = Date.now();
+    subscribers.forEach((callback) => {
+      callback(currentTime);
+    });
+  }, UPDATE_INTERVAL);
+}
+
+function cleanupGlobalInterval() {
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
+}
 
 export function useCurrentUnixtimeMs(): number {
-  const state = useStore((s) => s);
+  const [currentTime, setCurrentTime] = useState(Date.now());
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      state.pages.timetable.refreshCurrentUnixtimeMs();
-    }, 250);
+    const callback = (time: number) => {
+      setCurrentTime(time);
+    };
+    subscribers.add(callback);
+
+    if (subscribers.size === 1) {
+      setupGlobalInterval();
+    }
+
     return () => {
-      clearInterval(interval);
+      subscribers.delete(callback);
+      if (subscribers.size === 0) {
+        cleanupGlobalInterval();
+      }
     };
   }, []);
-  return state.pages.timetable.currentUnixtimeMs;
+
+  return currentTime;
 }

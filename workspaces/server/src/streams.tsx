@@ -17,6 +17,9 @@ function getTime(d: Date): number {
   return d.getTime() - DateTime.fromJSDate(d).startOf('day').toMillis();
 }
 
+// 短いランダム文字列を生成する関数
+const generateRandomId = () => randomBytes(8).toString('base64');
+
 export function registerStreams(app: FastifyInstance): void {
   app.register(fastifyStatic, {
     prefix: '/streams/',
@@ -68,6 +71,36 @@ export function registerStreams(app: FastifyInstance): void {
     const firstSequence = Math.floor(Date.now() / SEQUENCE_DURATION_MS) - SEQUENCE_COUNT_PER_PLAYLIST;
     const playlistStartAt = new Date(firstSequence * SEQUENCE_DURATION_MS);
 
+    // チャンネルIDから現在の番組を1回のクエリで取得
+    const currentTime = new Date();
+    const programs = await database.query.program.findMany({
+      orderBy(program, { asc }) {
+        return asc(program.startAt);
+      },
+      where(program, { and, eq, sql }) {
+        const currentTimeSQL = sql`time(${currentTime.toISOString()}, '+9 hours')`;
+        return and(
+          eq(program.channelId, req.params.channelId),
+          // 現在時刻を含む番組を取得
+          sql`${program.startAt} <= ${currentTimeSQL}`,
+          sql`${program.endAt} >= ${currentTimeSQL}`,
+        );
+      },
+      with: {
+        episode: {
+          with: {
+            stream: true,
+          },
+        },
+      },
+    });
+
+    if (programs.length === 0) {
+      reply.status(404).send({ error: 'No programs found for this channel' });
+      return;
+    }
+
+    // プレイリストヘッダーを構築
     const playlist = [
       dedent`
         #EXTM3U
@@ -78,38 +111,22 @@ export function registerStreams(app: FastifyInstance): void {
       `,
     ];
 
+    // 現在のプログラムを使用
+    const currentProgram = programs[0];
+    if (!currentProgram || !currentProgram.episode || !currentProgram.episode.stream) {
+      reply.status(500).send({ error: 'Invalid program data' });
+      return;
+    }
+
+    const stream = currentProgram.episode.stream;
+
+    // プレイリストセグメントを構築
     for (let idx = 0; idx < SEQUENCE_COUNT_PER_PLAYLIST; idx++) {
       const sequence = firstSequence + idx;
       const sequenceStartAt = new Date(sequence * SEQUENCE_DURATION_MS);
 
-      const program = await database.query.program.findFirst({
-        orderBy(program, { asc }) {
-          return asc(program.startAt);
-        },
-        where(program, { and, eq, lt, lte, sql }) {
-          // 競技のため、時刻のみで比較する
-          return and(
-            lte(program.startAt, sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`),
-            lt(sql`time(${sequenceStartAt.toISOString()}, '+9 hours')`, program.endAt),
-            eq(program.channelId, req.params.channelId),
-          );
-        },
-        with: {
-          episode: {
-            with: {
-              stream: true,
-            },
-          },
-        },
-      });
-
-      if (program == null) {
-        break;
-      }
-
-      const stream = program.episode.stream;
       const sequenceInStream = Math.floor(
-        (getTime(sequenceStartAt) - getTime(new Date(program.startAt))) / SEQUENCE_DURATION_MS,
+        (getTime(sequenceStartAt) - getTime(new Date(currentProgram.startAt))) / SEQUENCE_DURATION_MS,
       );
       const chunkIdx = sequenceInStream % stream.numberOfChunks;
 
@@ -122,7 +139,7 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${generateRandomId()}"`,
           ].join(',')}
         `,
       );

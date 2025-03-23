@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -13,33 +12,89 @@ import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetab
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+import { deepMerge } from '@wsh-2025/client/src/utils/deepMerge';
 
 interface Props {
   hydrationData?: unknown;
 }
 
+const createLazyCreator = <T extends object>(sliceCreator: () => T) => {
+  let slice: T | null = null;
+  return () => {
+    if (!slice) {
+      slice = sliceCreator();
+    }
+    return slice;
+  };
+};
+
 export const createStore = ({ hydrationData }: Props) => {
+  const coreSlices = {
+    auth: createAuthStoreSlice(),
+    layout: createLayoutStoreSlice(),
+  };
+
+  const lazyPageSlices = {
+    episode: createLazyCreator(createEpisodePageStoreSlice),
+    program: createLazyCreator(createProgramPageStoreSlice),
+    timetable: createLazyCreator(createTimetablePageStoreSlice),
+  };
+
+  const lazyFeatureSlices = {
+    channel: createLazyCreator(createChannelStoreSlice),
+    episode: createLazyCreator(createEpisodeStoreSlice),
+    program: createLazyCreator(createProgramStoreSlice),
+    recommended: createLazyCreator(createRecommendedStoreSlice),
+    series: createLazyCreator(createSeriesStoreSlice),
+    timetable: createLazyCreator(createTimetableStoreSlice),
+  };
+
   const store = createZustandStore(
-    withLenses(() => ({
-      features: {
-        auth: createAuthStoreSlice(),
-        channel: createChannelStoreSlice(),
-        episode: createEpisodeStoreSlice(),
-        layout: createLayoutStoreSlice(),
-        program: createProgramStoreSlice(),
-        recommended: createRecommendedStoreSlice(),
-        series: createSeriesStoreSlice(),
-        timetable: createTimetableStoreSlice(),
-      },
-      pages: {
-        episode: createEpisodePageStoreSlice(),
-        program: createProgramPageStoreSlice(),
-        timetable: createTimetablePageStoreSlice(),
-      },
-    })),
+    withLenses(() => {
+      return {
+        features: {
+          ...coreSlices,
+          get channel() {
+            return lazyFeatureSlices.channel();
+          },
+          get episode() {
+            return lazyFeatureSlices.episode();
+          },
+          get program() {
+            return lazyFeatureSlices.program();
+          },
+          get recommended() {
+            return lazyFeatureSlices.recommended();
+          },
+          get series() {
+            return lazyFeatureSlices.series();
+          },
+          get timetable() {
+            return lazyFeatureSlices.timetable();
+          },
+        },
+        pages: {
+          // 同様に getter
+          get episode() {
+            return lazyPageSlices.episode();
+          },
+          get program() {
+            return lazyPageSlices.program();
+          },
+          get timetable() {
+            return lazyPageSlices.timetable();
+          },
+        },
+      };
+    }),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  if (hydrationData) {
+    const isServer = typeof window === 'undefined';
+    if (!isServer) {
+      store.setState((s) => deepMerge(s, hydrationData as typeof s));
+    }
+  }
 
   return store;
 };

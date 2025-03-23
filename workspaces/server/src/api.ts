@@ -24,6 +24,45 @@ import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
 
+// サーバーサイドキャッシュの実装
+const CACHE_TTL = 300000; // 5分
+interface CacheItem<T> {
+  data: T;
+  timestamp: number;
+}
+
+class SimpleCache<T> {
+  private cache = new Map<string, CacheItem<T>>();
+
+  get(key: string): T | null {
+    const item = this.cache.get(key);
+    if (!item) return null;
+
+    // TTLチェック
+    if (Date.now() - item.timestamp > CACHE_TTL) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return item.data;
+  }
+
+  set(key: string, data: T): void {
+    this.cache.set(key, { data, timestamp: Date.now() });
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+}
+
+// キャッシュのインスタンス化
+const channelsCache = new SimpleCache<unknown>();
+const seriesCache = new SimpleCache<unknown>();
+const episodeCache = new SimpleCache<unknown>();
+const programCache = new SimpleCache<unknown>();
+const recommendedCache = new SimpleCache<unknown>();
+
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
@@ -93,6 +132,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getChannels(req, reply) {
+      const cacheKey = req.query.channelIds || 'all';
+      const cachedData = channelsCache.get(cacheKey);
+      if (cachedData) {
+        return reply.code(200).send(cachedData);
+      }
+
       const database = getDatabase();
 
       const channels = await database.query.channel.findMany({
@@ -107,6 +152,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return void 0;
         },
       });
+
+      channelsCache.set(cacheKey, channels);
       reply.code(200).send(channels);
     },
   });
@@ -159,6 +206,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getEpisodes(req, reply) {
+      const cacheKey = req.query.episodeIds || 'all';
+      const cachedData = episodeCache.get(cacheKey);
+      if (cachedData) {
+        return reply.code(200).send(cachedData);
+      }
+
       const database = getDatabase();
 
       const episodes = await database.query.episode.findMany({
@@ -184,6 +237,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+
+      episodeCache.set(cacheKey, episodes);
       reply.code(200).send(episodes);
     },
   });
@@ -247,6 +302,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getSeries(req, reply) {
+      const cacheKey = req.query.seriesIds || 'all';
+      const cachedData = seriesCache.get(cacheKey);
+      if (cachedData) {
+        return reply.code(200).send(cachedData);
+      }
+
       const database = getDatabase();
 
       const series = await database.query.series.findMany({
@@ -271,6 +332,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+
+      seriesCache.set(cacheKey, series);
       reply.code(200).send(series);
     },
   });
@@ -369,6 +432,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getPrograms(req, reply) {
+      const cacheKey = req.query.programIds || 'all';
+      const cachedData = programCache.get(cacheKey);
+      if (cachedData) {
+        return reply.code(200).send(cachedData);
+      }
+
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
@@ -399,6 +468,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+
+      programCache.set(cacheKey, programs);
       reply.code(200).send(programs);
     },
   });
@@ -467,6 +538,12 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async function getRecommendedModules(req, reply) {
+      const cacheKey = req.params.referenceId;
+      const cachedData = recommendedCache.get(cacheKey);
+      if (cachedData) {
+        return reply.code(200).send(cachedData);
+      }
+
       const database = getDatabase();
 
       const modules = await database.query.recommendedModule.findMany({
@@ -508,6 +585,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           },
         },
       });
+
+      recommendedCache.set(cacheKey, modules);
       reply.code(200).send(modules);
     },
   });

@@ -57,14 +57,14 @@ async function getSeekThumbnail({ episode }: Params) {
       ['-i', 'concat.mp4'],
       ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
       ['-frames:v', '1'],
-      'preview.jpg',
+      'preview.webp',
     ].flat(),
   );
 
-  const output = await ffmpeg.readFile('preview.jpg');
+  const output = await ffmpeg.readFile('preview.webp');
   ffmpeg.terminate();
 
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
+  return URL.createObjectURL(new Blob([output], { type: 'image/webp' }));
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();
