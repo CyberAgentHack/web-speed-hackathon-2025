@@ -1,6 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import fastifyCompress from "@fastify/compress";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import fastify from "fastify";
@@ -32,6 +33,7 @@ async function main() {
   app.register(registerApi, { prefix: "/api" });
   app.register(registerStreams);
   app.register(registerSsr);
+  app.register(fastifyCompress);
 
   await app.ready();
   const address = await app.listen({
