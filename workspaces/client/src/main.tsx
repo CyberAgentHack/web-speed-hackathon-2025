@@ -2,30 +2,26 @@ import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
-import { StrictMode } from 'react';
-import { hydrateRoot } from 'react-dom/client';
-import { createBrowserRouter, HydrationState, RouterProvider } from 'react-router';
-
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
-import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
-
-declare global {
-  var __zustandHydrationData: unknown;
-  var __staticRouterHydrationData: HydrationState;
-}
+import { routes } from '@wsh-2025/client/src/routes';
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const container = document.getElementById('root');
 
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <StoreProvider createStore={() => store}>
+  if (!container) {
+    throw new Error('Root container not found');
+  }
+
+  const router = createBrowserRouter(routes(store));
+
+  createRoot(container).render(
+    <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
-      </StoreProvider>
-    </StrictMode>,
+    </StoreProvider>
   );
 }
 

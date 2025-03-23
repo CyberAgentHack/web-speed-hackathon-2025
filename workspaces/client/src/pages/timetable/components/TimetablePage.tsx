@@ -8,6 +8,7 @@ import { NewTimetableFeatureDialog } from '@wsh-2025/client/src/pages/timetable/
 import { ProgramList } from '@wsh-2025/client/src/pages/timetable/components/ProgramList';
 import { TimelineYAxis } from '@wsh-2025/client/src/pages/timetable/components/TimelineYAxis';
 import { useShownNewFeatureDialog } from '@wsh-2025/client/src/pages/timetable/hooks/useShownNewFeatureDialog';
+import { useEffect } from 'react';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const now = DateTime.now();
@@ -19,12 +20,30 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
   return { channels, programs };
 };
 
-export const TimetablePage = () => {
+const fetchTimeTableDatas = async (store: ReturnType<typeof createStore>) => {  
+  const channels = await store.getState().features.channel.fetchChannels();
+
+  const now = DateTime.now();
+  const since = now.startOf('day').toISO();
+  const until = now.endOf('day').toISO();
+  const programs = await store.getState().features.timetable.fetchTimetable({ since, until });
+  return { channels, programs };
+}
+
+const TimetablePage = ({ store }: { store : ReturnType<typeof createStore> }) => {
   const record = useTimetable();
   const shownNewFeatureDialog = useShownNewFeatureDialog();
 
   const channelIds = Object.keys(record);
-  const programLists = Object.values(record);
+  const programLists = Object.values(record);    
+
+  useEffect(() => {
+    (async () => await fetchTimeTableDatas(store))();
+  }, []);
+
+  if (!channelIds.length) {
+    return <div></div>;
+  }
 
   return (
     <>
@@ -43,15 +62,18 @@ export const TimetablePage = () => {
           <TimelineYAxis />
         </div>
         <div className="flex flex-row [grid-area:content]">
-          {programLists.map((programList, index) => {
-            const channelId = channelIds[index];
-            invariant(channelId);
-            return (
-              <div key={channelIds[index]} className="shrink-0 grow-0">
-                <ProgramList channelId={channelId} programList={programList} />
-              </div>
-            );
-          })}
+          {programLists &&
+            programLists.length > 0 && 
+            programLists.map((programList, index) => {
+              const channelId = channelIds[index];
+              invariant(channelId);
+              return (
+                <div key={channelIds[index]} className="shrink-0 grow-0">
+                  <ProgramList channelId={channelId} programList={programList} />
+                </div>
+              );
+            })
+          }
         </div>
       </div>
 
@@ -59,3 +81,5 @@ export const TimetablePage = () => {
     </>
   );
 };
+
+export default TimetablePage;

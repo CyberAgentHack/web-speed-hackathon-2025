@@ -1,76 +1,83 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Parser } from 'm3u8-parser';
 import { use } from 'react';
 
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
-async function getSeekThumbnail({ episode }: Params) {
-  // HLS のプレイリストを取得
+async function getSeekThumbnail({ episode }: Params): Promise<string> {
   const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
-  const parser = new Parser();
-  parser.push(await fetch(playlistUrl).then((res) => res.text()));
-  parser.end();
 
-  // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
-  });
+  // <video> 要素を作成
+  const video = document.createElement('video');
+  video.src = playlistUrl;
+  video.crossOrigin = 'anonymous';
+  video.muted = true;
+  video.playsInline = true;
+  video.style.position = 'absolute';
+  video.style.left = '-9999px';
+  document.body.appendChild(video);
 
-  // 動画のセグメントファイルを取得
-  const segmentFiles = await Promise.all(
-    parser.manifest.segments.map((s) => {
-      return fetch(s.uri).then(async (res) => {
-        const binary = await res.arrayBuffer();
-        return { binary, id: Math.random().toString(36).slice(2) };
+  try {
+    // メタデータのロードを待つ
+    await new Promise<void>((resolve, reject) => {
+      video.addEventListener('loadedmetadata', () => resolve(), { once: true });
+      video.addEventListener('error', (e) => reject(e), { once: true });
+    });
+
+    const duration = Math.floor(video.duration);
+    const maxFrames = 250;
+    const frameCount = Math.min(duration, maxFrames);
+    const tileWidth = 160;
+    const tileHeight = 90;
+
+    // Canvas を作成
+    const canvas = document.createElement('canvas');
+    canvas.width = tileWidth * frameCount;
+    canvas.height = tileHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Failed to get canvas context.');
+    }
+
+    // 1秒おきにシークして Canvas に描画
+    for (let i = 0; i < frameCount; i++) {
+      video.currentTime = i;
+      await new Promise<void>((resolve) => {
+        video.addEventListener('seeked', () => resolve(), { once: true });
       });
-    }),
-  );
-  // FFmpeg にセグメントファイルを追加
-  for (const file of segmentFiles) {
-    await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
+      ctx.drawImage(video, i * tileWidth, 0, tileWidth, tileHeight);
+    }
+
+    // Canvas を Blob に変換
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((b) => resolve(b), 'image/jpeg');
+    });
+    if (!blob) {
+      throw new Error('Failed to generate thumbnail blob.');
+    }
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error('getSeekThumbnail error:', error);
+    // エラー発生時はプレースホルダー画像などの URL を返す
+    return '/fallback-thumbnail.jpg';
+  } finally {
+    // video 要素を必ず削除
+    video.remove();
   }
-
-  // セグメントファイルをひとつの mp4 動画に結合
-  await ffmpeg.exec(
-    [
-      ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
-      ['-c:v', 'copy'],
-      ['-map', '0:v:0'],
-      ['-f', 'mp4'],
-      'concat.mp4',
-    ].flat(),
-  );
-
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
-  await ffmpeg.exec(
-    [
-      ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
-      ['-frames:v', '1'],
-      'preview.jpg',
-    ].flat(),
-  );
-
-  const output = await ffmpeg.readFile('preview.jpg');
-  ffmpeg.terminate();
-
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();
 
+/**
+ * React 18 の Suspense 機能用に、Promise を使ってサムネイル画像の URL を取得するカスタムフック
+ */
 export const useSeekThumbnail = ({ episode }: Params): string => {
-  const promise = weakMap.get(episode) ?? getSeekThumbnail({ episode });
-  weakMap.set(episode, promise);
+  let promise = weakMap.get(episode);
+  if (!promise) {
+    promise = getSeekThumbnail({ episode });
+    weakMap.set(episode, promise);
+  }
   return use(promise);
 };

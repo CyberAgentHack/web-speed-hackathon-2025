@@ -23,6 +23,9 @@ import { z } from 'zod';
 import type { ZodOpenApiVersion } from 'zod-openapi';
 
 import { getDatabase, initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
+import path from 'node:path';
+import fastifyStatic from '@fastify/static';
+import { fileURLToPath } from 'node:url';
 
 export async function registerApi(app: FastifyInstance): Promise<void> {
   app.setValidatorCompiler(validatorCompiler);
@@ -36,6 +39,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     cookieName: 'wsh-2025-session',
     secret: randomBytes(32).toString('base64'),
   });
+
+  // public配下の静的ファイルをキャッシュする
+  app.register(fastifyStatic, {
+    root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
+    prefix: '/public/',
+    setHeaders(res) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    },
+  });
+
   await app.register(fastifyZodOpenApiPlugin);
   await app.register(fastifySwagger, {
     openapi: {
@@ -303,9 +316,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             orderBy(episode, { asc }) {
               return asc(episode.order);
             },
-            with: {
-              series: true,
-            },
           },
         },
       });
@@ -347,6 +357,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             sql`time(${req.query.until}, '+9 hours')`,
           );
         },
+        with: {
+          episode: true,
+        }
       });
       reply.code(200).send(programs);
     },
@@ -428,15 +441,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           channel: true,
-          episode: {
+          // episode: {
+          //   with: {
+          //     series: {
+          //       with: {
+          //         episodes: {
+          //           orderBy(episode, { asc }) {
+          //             return asc(episode.order);
+          //           },
+          //         },
+          //       },
+          //     },
+          //   },
+          // },
+          series: {
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+              episodes: {
+                orderBy(episode, { asc }) {
+                  return asc(episode.order);
                 },
               },
             },
@@ -482,28 +504,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
-              episode: {
-                with: {
-                  series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
-                    },
-                  },
-                },
-              },
+              series: {},
+              episode: {},
             },
           },
         },

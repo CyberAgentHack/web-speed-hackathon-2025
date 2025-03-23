@@ -59,6 +59,7 @@ const program = z.object({
   }),
   channelId: z.string().openapi({ format: 'uuid' }),
   episodeId: z.string().openapi({ format: 'uuid' }),
+  seriesId: z.string().openapi({ format: 'uuid' }),
 });
 assertSchema(program, createSelectSchema(databaseSchema.program));
 
@@ -144,7 +145,9 @@ export const getTimetableRequestQuery = z.object({
   since: z.coerce.string().openapi({ format: 'date-time' }),
   until: z.coerce.string().openapi({ format: 'date-time' }),
 });
-export const getTimetableResponse = z.array(program.extend({}));
+export const getTimetableResponse = z.array(program.extend({
+  episode: episode.extend({}),
+}));
 
 // GET /programs
 export const getProgramsRequestQuery = z.object({
@@ -167,10 +170,8 @@ export const getProgramByIdRequestParams = z.object({
 });
 export const getProgramByIdResponse = program.extend({
   channel: channel.extend({}),
-  episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
-    }),
+  series: series.extend({
+    episodes: z.array(episode.extend({})),
   }),
 });
 
@@ -183,16 +184,8 @@ export const getRecommendedModulesResponse = z.array(
     items: z.array(
       recommendedItem.extend({
         series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
           .nullable(),
         episode: episode
-          .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
-          })
           .nullable(),
       }),
     ),

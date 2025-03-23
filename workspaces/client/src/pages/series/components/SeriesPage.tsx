@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
+import { Helmet } from 'react-helmet';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
@@ -9,27 +10,34 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 
-export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
-  invariant(seriesId);
-  const series = await store.getState().features.series.fetchSeriesById({ seriesId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
-  return { modules, series };
-};
+const fetchSeriesDatas = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
+  await store.getState().features.series.fetchSeriesById({ seriesId: seriesId ?? '' });
+  await store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId ?? '' });
+}
 
-export const SeriesPage = () => {
+const SeriesPage = ({ store } : { store : ReturnType<typeof createStore>}) => {
+  const [isLoading, setIsLoading] = useState(true);
   const { seriesId } = useParams();
-  invariant(seriesId);
+  // invariant(seriesId);
 
-  const series = useSeriesById({ seriesId });
-  invariant(series);
+  // Hooks はトップレベルで呼び出す
+  const series = useSeriesById({ seriesId: seriesId ?? '' });
+  const modules = useRecommended({ referenceId: seriesId ?? '' });
 
-  const modules = useRecommended({ referenceId: seriesId });
+  useEffect(() => {
+    (async () => await fetchSeriesDatas(store, { seriesId }))()
+      .finally(() => setIsLoading(false));
+  }, [seriesId, store]);
+
+  if (!series || isLoading) {
+    return <div></div>;
+  }
 
   return (
     <>
-      <title>{`${series.title} - AremaTV`}</title>
+      <Helmet>
+        <title>{`${series.title} - AremaTV`}</title>
+      </Helmet>
 
       <div className="m-auto px-[24px] py-[48px]">
         <header className="mb-[24px] flex w-full flex-row items-start justify-between gap-[24px]">
@@ -37,7 +45,7 @@ export const SeriesPage = () => {
             <img
               alt=""
               className="h-auto w-[400px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={series.thumbnailUrl}
+              src={series.thumbnailUrl.replace('jpeg', 'webp')}
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
@@ -64,3 +72,5 @@ export const SeriesPage = () => {
     </>
   );
 };
+
+export default SeriesPage;

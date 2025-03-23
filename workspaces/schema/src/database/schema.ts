@@ -138,6 +138,9 @@ export const program = table(
       .text()
       .notNull()
       .references(() => episode.id),
+    seriesId: t
+      .text()
+      .references(() => series.id),
   },
   () => [],
 );
@@ -149,6 +152,10 @@ export const programRelation = relations(program, ({ one }) => ({
   episode: one(episode, {
     fields: [program.episodeId],
     references: [episode.id],
+  }),
+  series: one(series, {
+    fields: [program.seriesId],
+    references: [series.id],
   }),
 }));
 

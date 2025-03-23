@@ -1,17 +1,32 @@
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { useEffect } from 'react';
 
-export const prefetch = async (store: ReturnType<typeof createStore>) => {
-  const modules = await store
+// export const prefetch = async (store: ReturnType<typeof createStore>) => {
+//   const modules = await store
+//     .getState()
+//     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
+//   return { modules };
+// };
+
+const fetchRecommends = async (store: ReturnType<typeof createStore>) => {
+  await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: 'error' });
-  return { modules };
-};
+}
 
-export const NotFoundPage = () => {
+const NotFoundPage = ({ store } : { store : ReturnType<typeof createStore> }) => {
   const modules = useRecommended({ referenceId: 'error' });
   const module = modules.at(0);
+
+  useEffect(() => {
+    (async () => await fetchRecommends(store))();
+  }, []);
+
+  if (module == null) {
+    return <div></div>;
+  }
 
   return (
     <>
@@ -28,3 +43,5 @@ export const NotFoundPage = () => {
     </>
   );
 };
+
+export default NotFoundPage;

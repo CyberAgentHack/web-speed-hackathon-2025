@@ -2,11 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
+
   module: {
     rules: [
       {
@@ -51,16 +53,21 @@ const config = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: 'async',
+    },
+  },
   output: {
-    chunkFilename: 'chunk-[contenthash].js',
-    chunkFormat: false,
-    filename: 'main.js',
+    chunkFilename: '[name]-[contenthash].js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
-    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 9999 }),
+    new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: 'production' }),
+    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     alias: {

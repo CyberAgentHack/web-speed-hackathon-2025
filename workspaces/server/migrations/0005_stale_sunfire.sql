@@ -1,0 +1,1 @@
+ALTER TABLE `program` ADD `seriesId` text REFERENCES series(id);
