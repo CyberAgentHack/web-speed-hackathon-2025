@@ -8,7 +8,6 @@ import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useProgramById';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
@@ -118,7 +117,7 @@ export const ProgramPage = () => {
                 <Player
                   className="size-full"
                   playerRef={playerRef}
-                  playerType={PlayerType.VideoJS}
+                  playerType={'hls.js'}
                   playlistUrl={`/streams/channel/${program.channel.id}/playlist.m3u8`}
                 />
                 <div className="absolute inset-x-0 bottom-0">

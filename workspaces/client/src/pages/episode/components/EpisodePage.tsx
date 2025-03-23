@@ -10,7 +10,6 @@ import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUse
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
@@ -86,7 +85,7 @@ export const EpisodePage = () => {
                   <Player
                     className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.HlsJS}
+                    playerType={'hls.js'}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
 
