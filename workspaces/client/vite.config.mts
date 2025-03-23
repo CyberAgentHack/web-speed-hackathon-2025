@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
     "process.env.API_BASE_URL": JSON.stringify("/api"),
     "process.env.NODE_ENV": JSON.stringify(mode),
   },
-  plugins: [react(), tsconfigPaths(), UnoCSS()],
+  plugins: [react(), UnoCSS(), tsconfigPaths()],
   resolve: {
     extensions: [".js", ".cjs", ".mjs", ".ts", ".cts", ".mts", ".tsx", ".jsx"],
   },
