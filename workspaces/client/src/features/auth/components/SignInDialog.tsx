@@ -1,9 +1,9 @@
-import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
 import { useId } from 'react';
 import { Field, Form } from 'react-final-form';
 import { z } from 'zod';
 
+import { ApiError } from '@wsh-2025/client/src/features/requests/fetchApi';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
@@ -36,7 +36,7 @@ export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
       onClose();
       return;
     } catch (e) {
-      if (e instanceof BetterFetchError && e.status === 401) {
+      if (e instanceof ApiError && e.status === 401) {
         return { [FORM_ERROR]: 'アカウントが存在しないか入力した情報が間違っています' };
       }
       return { [FORM_ERROR]: '不明なエラーが発生しました' };

@@ -1,34 +1,15 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import * as batshit from '@yornaath/batshit';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
-const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
-  schema: createSchema({
-    '/programs': {
-      output: schema.getProgramsResponse,
-      query: schema.getProgramsRequestQuery,
-    },
-    '/programs/:episodeId': {
-      output: schema.getProgramByIdResponse,
-      params: schema.getProgramByIdRequestParams,
-    },
-  }),
-  throw: true,
-});
+import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 
 const batcher = batshit.create({
   async fetcher(queries: { programId: string }[]) {
-    const data = await $fetch('/programs', {
-      query: {
-        programIds: queries.map((q) => q.programId).join(','),
-      },
-    });
-    return data;
+    const data = await fetchApiJson(
+      `/programs${new URLSearchParams({ programIds: queries.map((q) => q.programId).join(',') })}`,
+    );
+    return data as StandardSchemaV1.InferOutput<typeof schema.getProgramsResponse>;
   },
   resolver(items, query: { programId: string }) {
     const item = items.find((item) => item.id === query.programId);
@@ -51,12 +32,6 @@ interface ProgramService {
 }
 
 export const programService: ProgramService = {
-  async fetchProgramById({ programId }) {
-    const channel = await batcher.fetch({ programId });
-    return channel;
-  },
-  async fetchPrograms() {
-    const data = await $fetch('/programs', { query: {} });
-    return data;
-  },
+  fetchProgramById: async ({ programId }) => await batcher.fetch({ programId }),
+  fetchPrograms: async () => await fetchApiJson('/programs'),
 };

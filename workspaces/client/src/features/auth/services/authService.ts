@@ -1,28 +1,7 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
-const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
-  schema: createSchema({
-    '/signIn': {
-      input: schema.signInRequestBody,
-      output: schema.signInResponse,
-    },
-    '/signOut': {},
-    '/signUp': {
-      input: schema.signUpRequestBody,
-      output: schema.signUpResponse,
-    },
-    '/users/me': {
-      output: schema.getUserResponse,
-    },
-  }),
-  throw: true,
-});
+import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 
 interface AuthService {
   fetchSignIn: (
@@ -36,19 +15,8 @@ interface AuthService {
 }
 
 export const authService: AuthService = {
-  async fetchSignIn({ email, password }) {
-    const data = await $fetch('/signIn', { body: { email, password }, method: 'POST' });
-    return data;
-  },
-  async fetchSignOut() {
-    await $fetch('/signOut', { method: 'POST' });
-  },
-  async fetchSignUp({ email, password }) {
-    const data = await $fetch('/signUp', { body: { email, password }, method: 'POST' });
-    return data;
-  },
-  async fetchUser() {
-    const data = await $fetch('/users/me');
-    return data;
-  },
+  fetchSignIn: async ({ email, password }) => await fetchApiJson('/signIn', { email, password }, { method: 'POST' }),
+  fetchSignOut: async () => void (await fetchApiJson('/signOut', { method: 'POST' })),
+  fetchSignUp: async ({ email, password }) => await fetchApiJson('/signUp', { email, password }, { method: 'POST' }),
+  fetchUser: async () => await fetchApiJson('/users/me'),
 };

@@ -1,30 +1,15 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import * as batshit from '@yornaath/batshit';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
-const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
-  schema: createSchema({
-    '/channels': {
-      output: schema.getChannelsResponse,
-      query: schema.getChannelsRequestQuery,
-    },
-  }),
-  throw: true,
-});
+import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 
 const batcher = batshit.create({
   async fetcher(queries: { channelId: string }[]) {
-    const data = await $fetch('/channels', {
-      query: {
-        channelIds: queries.map((q) => q.channelId).join(','),
-      },
-    });
-    return data;
+    const data = await fetchApiJson(
+      `/channels${new URLSearchParams({ channelIds: queries.map((q) => q.channelId).join(',') })}`,
+    );
+    return data as StandardSchemaV1.InferOutput<typeof schema.getChannelsResponse>;
   },
   resolver(items, query: { channelId: string }) {
     const item = items.find((item) => item.id === query.channelId);
@@ -47,12 +32,6 @@ interface ChannelService {
 }
 
 export const channelService: ChannelService = {
-  async fetchChannelById({ channelId }) {
-    const channel = await batcher.fetch({ channelId });
-    return channel;
-  },
-  async fetchChannels() {
-    const data = await $fetch('/channels', { query: {} });
-    return data;
-  },
+  fetchChannelById: async ({ channelId }) => await batcher.fetch({ channelId }),
+  fetchChannels: async () => await fetchApiJson('/channels'),
 };

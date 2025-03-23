@@ -1,20 +1,7 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
-const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
-  schema: createSchema({
-    '/timetable': {
-      output: schema.getTimetableResponse,
-      query: schema.getTimetableRequestQuery,
-    },
-  }),
-  throw: true,
-});
+import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 
 interface TimetableService {
   fetchTimetable: (
@@ -23,10 +10,5 @@ interface TimetableService {
 }
 
 export const timetableService: TimetableService = {
-  async fetchTimetable({ since, until }) {
-    const data = await $fetch('/timetable', {
-      query: { since, until },
-    });
-    return data;
-  },
+  fetchTimetable: async ({ since, until }) => await fetchApiJson(`/timetable?${new URLSearchParams({ since, until })}`),
 };

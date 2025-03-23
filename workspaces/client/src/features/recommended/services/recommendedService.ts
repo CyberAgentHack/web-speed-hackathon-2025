@@ -1,19 +1,7 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 
-import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
-
-const $fetch = createFetch({
-  baseURL: process.env['API_BASE_URL'] ?? '/api',
-  plugins: [schedulePlugin],
-  schema: createSchema({
-    '/recommended/:referenceId': {
-      output: schema.getRecommendedModulesResponse,
-    },
-  }),
-  throw: true,
-});
+import { fetchApiJson } from '@wsh-2025/client/src/features/requests/fetchApi';
 
 interface RecommendedService {
   fetchRecommendedModulesByReferenceId: (params: {
@@ -22,10 +10,5 @@ interface RecommendedService {
 }
 
 export const recommendedService: RecommendedService = {
-  async fetchRecommendedModulesByReferenceId({ referenceId }) {
-    const data = await $fetch('/recommended/:referenceId', {
-      params: { referenceId },
-    });
-    return data;
-  },
+  fetchRecommendedModulesByReferenceId: async ({ referenceId }) => await fetchApiJson(`/recommended/${referenceId}`),
 };
