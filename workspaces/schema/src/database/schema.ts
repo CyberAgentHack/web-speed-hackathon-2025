@@ -99,6 +99,7 @@ export const episode = table(
     premium: t.integer({ mode: 'boolean' }).notNull(),
   }, (table) => [
     index("seriesIdIndex").on(table.seriesId),
+    index("orderIndex").on(table.order),
   ],
 );
 export const episodeRelation = relations(episode, ({ one }) => ({
