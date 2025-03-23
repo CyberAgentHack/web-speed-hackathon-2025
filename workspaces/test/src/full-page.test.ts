@@ -62,28 +62,55 @@ const PAGES = [
       await waitForVideoToLoad(page.locator('video').first());
     },
   },
+  //episode page for フリーミアムユーザー
   {
-    name: 'プログラム（放送前）',
-    path: '/programs/e34e75d8-e07f-4517-ba3d-9c09eba2bd3a',
+    name: 'エピソードページ (フリーミアム - フリーミアムユーザー)',
+    path: '/episodes/89895c59-0c51-42f4-abb6-53fa86bdc4a2',
     wait: async (page: Page) => {
-      await waitForImageToLoad(page.locator('main img').first());
-    },
-  },
-  {
-    name: 'プログラム（放送中）',
-    path: '/programs/5f8521b0-1aaf-4949-a54d-e2da710dc972',
-    wait: async (page: Page) => {
+      // コンフリクトしないようにテスト用のメールアドレスを生成
+      const email = `test.${Date.now()}@example.com`;
+      const sidebar = page.getByRole('complementary');
+      await sidebar.getByRole('button', { name: 'ログイン' }).click();
+
+      const signInDialog = page.getByRole('dialog');
+      const signUpLink = signInDialog.getByRole('button', { name: 'アカウントを新規登録する' });
+      await signUpLink.click();
+
+      const signUpDialog = page.getByRole('dialog');
+      const signUpDialogPanel = signUpDialog.locator('>div');
+
+      const emailInput = signUpDialogPanel.getByLabel('メールアドレス');
+      await emailInput.fill(email);
+      const passwordInput = signUpDialogPanel.getByLabel('パスワード');
+      await passwordInput.fill('test');
+      await signUpDialog.getByRole('button', { name: 'アカウント作成' }).click();
+
       await waitForImageToLoad(page.locator('main img').first());
       await waitForVideoToLoad(page.locator('video').first());
     },
   },
   {
-    name: 'プログラム（放送後）',
-    path: '/programs/d3c78d58-bf4f-4445-9577-af9759a4af78',
+    name: 'プログラムページ (放送前)',
+    path: '/programs/1',
     wait: async (page: Page) => {
       await waitForImageToLoad(page.locator('main img').first());
     },
   },
+  {
+    name: 'プログラムページ (放送中)',
+    path: '/programs/2',
+    wait: async (page: Page) => {
+      await waitForImageToLoad(page.locator('main img').first());
+    },
+  },
+  {
+    name: 'プログラムページ (放送後)',
+    path: '/programs/3',
+    wait: async (page: Page) => {
+      await waitForImageToLoad(page.locator('main img').first());
+    },
+  },
+
   {
     name: '番組表',
     path: '/timetable',
