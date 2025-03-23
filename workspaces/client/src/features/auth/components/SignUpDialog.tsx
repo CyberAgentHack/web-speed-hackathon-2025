@@ -29,10 +29,10 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [isEmailModified, setIsEmailModified] = useState(false);
+  const [isPasswordModified, setIsPasswordModified] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>('メールアドレスを入力してください');
+  const [passwordError, setPasswordError] = useState<string | null>('パスワードを入力してください');
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,7 +53,10 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
-    if (emailTouched) {
+    if (!isEmailModified) {
+      setIsEmailModified(true);
+    }
+    if (isEmailModified) {
       setEmailError(validateField('email', newEmail));
     }
   };
@@ -61,19 +64,12 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-    if (passwordTouched) {
+    if (!isPasswordModified) {
+      setIsPasswordModified(true);
+    }
+    if (isPasswordModified) {
       setPasswordError(validateField('password', newPassword));
     }
-  };
-
-  const handleEmailBlur = () => {
-    setEmailTouched(true);
-    setEmailError(validateField('email', email));
-  };
-
-  const handlePasswordBlur = () => {
-    setPasswordTouched(true);
-    setPasswordError(validateField('password', password));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,7 +121,7 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
             <label className="shrink-0 grow-0" htmlFor={emailId}>
               メールアドレス
             </label>
-            {emailTouched && emailError && (
+            {isEmailModified && emailError && (
               <span className="shrink-0 grow-0 text-[#F0163A]">{emailError}</span>
             )}
           </div>
@@ -137,7 +133,6 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
             type="email"
             value={email}
             onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
           />
         </div>
 
@@ -146,7 +141,7 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
             <label className="shrink-0 grow-0" htmlFor={passwordId}>
               パスワード
             </label>
-            {passwordTouched && passwordError && (
+            {isPasswordModified && passwordError && (
               <span className="shrink-0 grow-0 text-[#F0163A]">{passwordError}</span>
             )}
           </div>
@@ -158,7 +153,6 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
             type="password"
             value={password}
             onChange={handlePasswordChange}
-            onBlur={handlePasswordBlur}
           />
         </div>
 
@@ -172,7 +166,7 @@ const _SignUpDialog = ({ onClose, onOpenSignIn }: Omit<Props, 'isOpen'>) => {
         <div className="flex flex-row justify-center">
           <button
             className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
-            disabled={isSubmitting || Boolean(emailError) || Boolean(passwordError)}
+            disabled={isSubmitting || Boolean(emailError) || Boolean(passwordError) || !isEmailModified || !isPasswordModified}
             type="submit"
             aria-label='アカウント作成'
           >
@@ -202,3 +196,4 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
     </Dialog>
   );
 }
+
