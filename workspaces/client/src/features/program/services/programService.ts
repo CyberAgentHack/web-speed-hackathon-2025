@@ -21,6 +21,8 @@ const $fetch = createFetch({
   throw: true,
 });
 
+const immediateScheduler: batshit.BatcherScheduler = () => 'immediate';
+
 const batcher = batshit.create({
   async fetcher(queries: { programId: string }[]) {
     const data = await $fetch('/programs', {
@@ -37,10 +39,7 @@ const batcher = batshit.create({
     }
     return item;
   },
-  scheduler: batshit.windowedFiniteBatchScheduler({
-    maxBatchSize: 100,
-    windowMs: 1000,
-  }),
+  scheduler: immediateScheduler,
 });
 
 interface ProgramService {

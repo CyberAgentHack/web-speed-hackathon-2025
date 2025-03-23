@@ -9,9 +9,7 @@ export const schedulePlugin = {
         return await scheduler.postTask(() => request);
       } else {
         return await new Promise<typeof request>((resolve) => {
-          queueMicrotask(() => {
-            resolve(request);
-          });
+          resolve(request);
         });
       }
     },
