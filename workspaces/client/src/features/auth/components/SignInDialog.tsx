@@ -4,6 +4,7 @@ import { useId } from 'react';
 import { Field, Form } from 'react-final-form';
 import { z } from 'zod';
 
+import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
@@ -14,14 +15,14 @@ interface SignInFormValues {
   password: string;
 }
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  onOpenSignUp: () => void;
-}
 
-export const SignInDialog = ({ isOpen, onClose, onOpenSignUp }: Props) => {
+export const SignInDialog = () => {
   const authActions = useAuthActions();
+  const {
+    isOpen,
+    onClose,
+  } = useStore(s => s.features.auth.signInDialogState);
+  const onOpenSignUp = useStore(s => s.features.auth.signUpDialogState.onOpen);
   const emailId = useId();
   const passwordId = useId();
 

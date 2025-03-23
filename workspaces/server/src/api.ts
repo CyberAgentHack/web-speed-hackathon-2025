@@ -385,6 +385,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         with: {
           channel: true,
           episode: {
+            // columns: {
+            //   description: false,
+            // },
             with: {
               series: {
                 with: {
@@ -429,6 +432,9 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         with: {
           channel: true,
           episode: {
+            // columns: {
+            //   description: false,
+            // },
             with: {
               series: {
                 with: {
@@ -483,22 +489,37 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
+                // columns: {
+                //   description: false
+                // },
                 with: {
                   episodes: {
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
+                    // columns: {
+                    //   description: false,
+                    // },
                   },
                 },
               },
               episode: {
+                // columns: {
+                //   description: false
+                // },
                 with: {
                   series: {
+                    // columns: {
+                    //   description: false
+                    // },
                     with: {
                       episodes: {
                         orderBy(episode, { asc }) {
                           return asc(episode.order);
                         },
+                        // columns: {
+                        //   description: false,
+                        // },
                       },
                     },
                   },

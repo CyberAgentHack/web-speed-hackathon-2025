@@ -8,24 +8,68 @@ import { ArrayValues } from 'type-fest';
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 
 type ChannelId = string;
-type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
 
 interface TimetablePageState {
-  columnWidthRecord: Record<ChannelId, number>;
-  currentUnixtimeMs: number;
-  selectedProgramId: string | null;
-  shownNewFeatureDialog: boolean;
-}
-
-interface TimetablePageActions {
-  changeColumnWidth: (params: { channelId: string; delta: number }) => void;
-  closeNewFeatureDialog: () => void;
-  refreshCurrentUnixtimeMs: () => void;
-  selectProgram: (program: Program | null) => void;
+  columnWidthRecord: ReturnType<typeof createColumnWidthRecordSlice>;
+  currentUnixTimeMs: ReturnType<typeof createCurrentUnixTimeMsSlice>;
+  selectProgram: ReturnType<typeof createSelectedProgramSlice>;
+  shownNewFeatureDialog: ReturnType<typeof createShownNewFeatureDialogSlice>;
 }
 
 export const createTimetablePageStoreSlice = () => {
-  return lens<TimetablePageState & TimetablePageActions>((set, _get) => ({
+  return lens<TimetablePageState>((_set, _get) => ({
+    columnWidthRecord: createColumnWidthRecordSlice(),
+    currentUnixTimeMs: createCurrentUnixTimeMsSlice(),
+    selectProgram: createSelectedProgramSlice(),
+    shownNewFeatureDialog: createShownNewFeatureDialogSlice(),
+  }));
+};
+
+type SelectProgramState = {
+  selectedProgramId: string | null;
+}
+type Program = ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
+
+const createSelectedProgramSlice = () => {
+  return lens<SelectProgramState & {
+    selectProgram: (program: Program | null) => void;
+  }>((set) => ({
+    selectedProgramId: null,
+    selectProgram: (program: Program | null) => {
+      set(() => ({
+        selectedProgramId: program?.id ?? null,
+      }));
+    }
+  }))
+};
+
+type currentUnixTimeMsState = {
+  currentUnixTimeMs: number;
+}
+type currentUnixTimeMsActions = {
+  refreshCurrentUnixTimeMs: () => void;
+}
+
+const createCurrentUnixTimeMsSlice = () => {
+  return lens<currentUnixTimeMsState & currentUnixTimeMsActions>((set) => ({
+    currentUnixTimeMs: Date.now(),
+    refreshCurrentUnixTimeMs: _.debounce(() => {
+      set(() => ({
+        currentUnixTimeMs: Date.now(),
+      }));
+    }, 50),
+  }));
+};
+
+type columnWidthRecordState = {
+  columnWidthRecord: Record<ChannelId, number>;
+}
+type columnWidthRecordActions = {
+  changeColumnWidth: (params: { channelId: string; delta: number }) => void;
+}
+
+const createColumnWidthRecordSlice = () => {
+  return lens<columnWidthRecordState & columnWidthRecordActions>((set) => ({
     changeColumnWidth: (params: { channelId: string; delta: number }) => {
       set((state) => {
         return produce(state, (draft) => {
@@ -34,22 +78,23 @@ export const createTimetablePageStoreSlice = () => {
         });
       });
     },
+    columnWidthRecord: {},
+  }));
+};
+
+type shownNewFeatureDialogState = {
+  shownNewFeatureDialog: boolean;
+}
+
+type shownNewFeatureDialogActions = {
+  closeNewFeatureDialog: () => void;
+}
+
+const createShownNewFeatureDialogSlice = () => {
+  return lens<shownNewFeatureDialogState & shownNewFeatureDialogActions>((set) => ({
     closeNewFeatureDialog: () => {
       set(() => ({
         shownNewFeatureDialog: false,
-      }));
-    },
-    columnWidthRecord: {},
-    currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
-      set(() => ({
-        currentUnixtimeMs: Date.now(),
-      }));
-    }, 50),
-    selectedProgramId: null,
-    selectProgram: (program: Program | null) => {
-      set(() => ({
-        selectedProgramId: program?.id ?? null,
       }));
     },
     shownNewFeatureDialog: true,

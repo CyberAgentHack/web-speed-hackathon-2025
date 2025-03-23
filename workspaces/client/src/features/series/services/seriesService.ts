@@ -27,6 +27,7 @@ const batcher = batshit.create({
         seriesIds: queries.map((q) => q.seriesId).join(','),
       },
     });
+    console.log('batcher', data);
     return data;
   },
   resolver(items, query: { seriesId: string }) {
@@ -52,10 +53,12 @@ interface SeriesService {
 export const seriesService: SeriesService = {
   async fetchSeries() {
     const data = await $fetch('/series', { query: {} });
+    console.log('fetchSeries', data);
     return data;
   },
   async fetchSeriesById({ seriesId }) {
     const data = await batcher.fetch({ seriesId });
+    console.log('fetchSeriesById', data);
     return data;
   },
 };

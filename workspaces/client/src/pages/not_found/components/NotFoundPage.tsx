@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
@@ -10,7 +12,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const NotFoundPage = () => {
-  const modules = useRecommended({ referenceId: 'error' });
+  const { modules } = useRecommended({ referenceId: 'error' });
   const module = modules.at(0);
 
   return (
@@ -23,7 +25,9 @@ export const NotFoundPage = () => {
           <p>あなたが見ようとしたページは、残念ながら見つけられませんでした。</p>
           <img alt="" className="h-auto w-[640px]" src="/public/animations/001.gif" />
         </section>
-        <section>{module != null ? <RecommendedSection module={module} /> : null}</section>
+        <Suspense>
+          <section>{module != null ? <RecommendedSection module={module} /> : null}</section>
+        </Suspense>
       </div>
     </>
   );

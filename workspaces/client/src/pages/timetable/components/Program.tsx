@@ -1,22 +1,32 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import { HEIGHT_ONE_HOUR } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 import { useCurrentUnixtimeMs } from '@wsh-2025/client/src/pages/timetable/hooks/useCurrentUnixtimeMs';
 import { useSelectedProgramId } from '@wsh-2025/client/src/pages/timetable/hooks/useSelectedProgramId';
 
 interface Props {
-  height: number;
   program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
 }
 
-export const Program = ({ height, program }: Props): ReactElement => {
+export const Program = ({ program }: Props): ReactElement => {
+  console.log('Program', {
+    channelId: program.channelId,
+    programId: program.id
+  });
+
+  const startAt = DateTime.fromISO(program.startAt);
+  const endAt = DateTime.fromISO(program.endAt);
+  const duration = endAt.diff(startAt, 'minutes').minutes;
+  const height = HEIGHT_ONE_HOUR * (duration / 60);
+
   const width = useColumnWidth(program.channelId);
 
   const [selectedProgramId, setProgram] = useSelectedProgramId();
@@ -34,17 +44,17 @@ export const Program = ({ height, program }: Props): ReactElement => {
   const titleRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const imageHeight = imageRef.current?.clientHeight ?? 0;
-      const titleHeight = titleRef.current?.clientHeight ?? 0;
-      setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [height]);
+  const [shouldImageBeVisible] = useState<boolean>(false);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const imageHeight = imageRef.current?.clientHeight ?? 0;
+  //     const titleHeight = titleRef.current?.clientHeight ?? 0;
+  //     setShouldImageBeVisible(imageHeight <= height - titleHeight);
+  //   }, 250);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [height]);
 
   return (
     <>

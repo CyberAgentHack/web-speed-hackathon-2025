@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
@@ -10,42 +10,46 @@ import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { useProgramById } from '@wsh-2025/client/src/features/program/hooks/useProgramById';
+import { useProgramList } from '@wsh-2025/client/src/features/program/hooks/useProgramList';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
-import { useTimetable } from '@wsh-2025/client/src/features/timetable/hooks/useTimetable';
 import { PlayerController } from '@wsh-2025/client/src/pages/program/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
+  const program = store.getState().features.program.fetchProgramById({ programId });
+  const channels = store.getState().features.channel.fetchChannels();
 
-  const program = await store.getState().features.program.fetchProgramById({ programId });
-  const channels = await store.getState().features.channel.fetchChannels();
-  const timetable = await store.getState().features.timetable.fetchTimetable({ since, until });
-  const modules = await store
+  const modules = store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
-  return { channels, modules, program, timetable };
+  const [a, b, c] = await Promise.all([
+    channels,
+    modules,
+    program,
+  ])
+  return {
+    channels: a,
+    modules: b,
+    program: c,
+  }
 };
 
 export const ProgramPage = () => {
   const { programId } = useParams();
   invariant(programId);
 
-  const program = useProgramById({ programId });
-  invariant(program);
+  const { program } = useProgramById({ programId });
+  const { programList } = useProgramList();
 
-  const timetable = useTimetable();
-  const nextProgram = timetable[program.channel.id]?.find((p) => {
-    return DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt));
-  });
+  const nextProgram = programList
+    .filter((p) => p.channelId === program.channelId)
+    .find((p) => DateTime.fromISO(program.endAt).equals(DateTime.fromISO(p.startAt)));
 
-  const modules = useRecommended({ referenceId: programId });
+  const { modules } = useRecommended({ referenceId: programId });
 
   const playerRef = usePlayerRef();
 
@@ -93,7 +97,7 @@ export const ProgramPage = () => {
   }, [isBroadcastStarted, nextProgram?.id]);
 
   return (
-    <>
+    <Suspense>
       <title>{`${program.title} - ${program.episode.series.title} - AremaTV`}</title>
 
       <div className="px-[24px] py-[48px]">
@@ -167,6 +171,6 @@ export const ProgramPage = () => {
           <SeriesEpisodeList episodes={program.episode.series.episodes} selectedEpisodeId={program.episode.id} />
         </div>
       </div>
-    </>
+    </Suspense>
   );
 };

@@ -1,18 +1,16 @@
-import invariant from 'tiny-invariant';
-
-import { useChannelById } from '@wsh-2025/client/src/features/channel/hooks/useChannelById';
 import { Gutter } from '@wsh-2025/client/src/pages/timetable/components/Gutter';
 import { useColumnWidth } from '@wsh-2025/client/src/pages/timetable/hooks/useColumnWidth';
 
 interface Props {
-  channelId: string;
+  channel: {
+    id: string;
+    logoUrl: string;
+    name: string;
+  }
 }
 
-export const ChannelTitle = ({ channelId }: Props) => {
-  const channel = useChannelById({ channelId });
-  invariant(channel);
-
-  const width = useColumnWidth(channelId);
+export const ChannelTitle = ({ channel }: Props) => {
+  const width = useColumnWidth(channel.id);
 
   return (
     <div className="relative">
@@ -21,7 +19,7 @@ export const ChannelTitle = ({ channelId }: Props) => {
       </div>
 
       <div className="absolute inset-y-0 right-[-4px] z-10 w-[8px]">
-        <Gutter channelId={channelId} />
+        <Gutter channelId={channel.id} />
       </div>
     </div>
   );

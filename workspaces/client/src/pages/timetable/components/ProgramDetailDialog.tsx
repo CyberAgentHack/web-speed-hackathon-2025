@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { ReactElement } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { Link } from 'react-router';
 import { ArrayValues } from 'type-fest';
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement => {
-  const episode = useEpisode(program.episodeId);
+  const { episode } = useEpisode(program.episodeId);
   const [, setProgram] = useSelectedProgramId();
 
   const onClose = () => {
@@ -36,21 +36,23 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
           src={program.thumbnailUrl}
         />
 
-        {episode != null ? (
-          <>
-            <h3 className="mb-[24px] text-center text-[24px] font-bold">番組で放送するエピソード</h3>
+        <Suspense>
+          {(
+            <>
+              <h3 className="mb-[24px] text-center text-[24px] font-bold">番組で放送するエピソード</h3>
 
-            <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{episode.title}</p>
-            <div className="mb-[16px] text-[14px] text-[#999999]">
-              <div className="line-clamp-5">{episode.description}</div>
-            </div>
-            <img
-              alt=""
-              className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={episode.thumbnailUrl}
-            />
-          </>
-        ) : null}
+              <p className="mb-[8px] text-[14px] font-bold text-[#ffffff]">{episode.title}</p>
+              <div className="mb-[16px] text-[14px] text-[#999999]">
+                <div className="line-clamp-5">{episode.description}</div>
+              </div>
+              <img
+                alt=""
+                className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+                src={episode.thumbnailUrl}
+              />
+            </>
+          )}
+        </Suspense>
 
         <div className="flex flex-row justify-center">
           <Link

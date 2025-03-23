@@ -38,17 +38,21 @@ interface AuthService {
 export const authService: AuthService = {
   async fetchSignIn({ email, password }) {
     const data = await $fetch('/signIn', { body: { email, password }, method: 'POST' });
+    console.log('fetchSignIn', data);
     return data;
   },
   async fetchSignOut() {
-    await $fetch('/signOut', { method: 'POST' });
+    const data = await $fetch('/signOut', { method: 'POST' });
+    console.log('fetchSignOut', data);
   },
   async fetchSignUp({ email, password }) {
     const data = await $fetch('/signUp', { body: { email, password }, method: 'POST' });
+    console.log('fetchSignUp', data);
     return data;
   },
   async fetchUser() {
     const data = await $fetch('/users/me');
+    console.log('fetchUser', data);
     return data;
   },
 };

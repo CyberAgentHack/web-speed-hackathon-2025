@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import * as databaseSchema from '@wsh-2025/schema/src/database/schema';
 
-function assertSchema<T>(_actual: z.ZodType<NoInfer<T>>, _expected: z.ZodType<T>): void {}
+function assertSchema<T>(_actual: z.ZodType<NoInfer<T>>, _expected: z.ZodType<T>): void { }
 
 const channel = z.object({
   id: z.string().openapi({ format: 'uuid' }),
@@ -144,7 +144,9 @@ export const getTimetableRequestQuery = z.object({
   since: z.coerce.string().openapi({ format: 'date-time' }),
   until: z.coerce.string().openapi({ format: 'date-time' }),
 });
-export const getTimetableResponse = z.array(program.extend({}));
+export const getTimetableResponse = z.array(program.extend({
+  // description: z.string().optional(),
+}));
 
 // GET /programs
 export const getProgramsRequestQuery = z.object({
@@ -152,8 +154,10 @@ export const getProgramsRequestQuery = z.object({
 });
 export const getProgramsResponse = z.array(
   program.extend({
+    // description: z.string().optional(),
     channel: channel.extend({}),
     episode: episode.extend({
+      // description: z.string().optional(),
       series: series.extend({
         episodes: z.array(episode.extend({})),
       }),
@@ -168,6 +172,7 @@ export const getProgramByIdRequestParams = z.object({
 export const getProgramByIdResponse = program.extend({
   channel: channel.extend({}),
   episode: episode.extend({
+    // description: z.string().optional(),
     series: series.extend({
       episodes: z.array(episode.extend({})),
     }),
@@ -184,13 +189,20 @@ export const getRecommendedModulesResponse = z.array(
       recommendedItem.extend({
         series: series
           .extend({
-            episodes: z.array(episode.extend({})),
+            // description: z.string().optional(),
+            episodes: z.array(episode.extend({
+              // description: z.string().optional(),
+            })),
           })
           .nullable(),
         episode: episode
           .extend({
+            description: z.string().optional(),
             series: series.extend({
-              episodes: z.array(episode.extend({})),
+              // description: z.string().optional(),
+              episodes: z.array(episode.extend({
+                // description: z.string().optional(),
+              })),
             }),
           })
           .nullable(),
