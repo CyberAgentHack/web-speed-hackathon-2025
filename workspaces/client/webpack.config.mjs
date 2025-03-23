@@ -24,8 +24,8 @@ const config = {
                 '@babel/preset-env',
                 {
                   corejs: '3.41',
-                  forceAllTransforms: true,
-                  targets: 'defaults',
+                  // forceAllTransforms: true,
+                  targets: {"chrome": "134",},
                   useBuiltIns: 'entry',
                 },
               ],
@@ -52,6 +52,9 @@ const config = {
       },
     ],
   },
+  optimization:{
+    minimize:true //デフォルトでtrue
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: false,
@@ -61,7 +64,7 @@ const config = {
   },
   plugins: [
     ...(process.env['ANALYZE'] ? [new BundleAnalyzerPlugin()] : []),
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {
