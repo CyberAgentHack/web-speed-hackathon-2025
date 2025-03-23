@@ -8,7 +8,6 @@ import { createEpisodeStoreSlice } from '@wsh-2025/client/src/features/episode/s
 import { createProgramStoreSlice } from '@wsh-2025/client/src/features/program/stores/createProgramStoreSlice';
 import { createRecommendedStoreSlice } from '@wsh-2025/client/src/features/recommended/stores/createRecomendedStoreSlice';
 import { createSeriesStoreSlice } from '@wsh-2025/client/src/features/series/stores/createSeriesStoreSlice';
-import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetable/stores/createTimetableStoreSlice';
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
@@ -21,7 +20,6 @@ export type StoreState = {
     program: ReturnType<typeof createProgramStoreSlice>;
     recommended: ReturnType<typeof createRecommendedStoreSlice>;
     series: ReturnType<typeof createSeriesStoreSlice>;
-    timetable: ReturnType<typeof createTimetableStoreSlice>;
   };
   pages: {
     episode: ReturnType<typeof createEpisodePageStoreSlice>;
@@ -46,7 +44,6 @@ export const createStore = ({ hydrationData }: Props) => {
         program: createProgramStoreSlice(),
         recommended: createRecommendedStoreSlice(),
         series: createSeriesStoreSlice(),
-        timetable: createTimetableStoreSlice(),
       },
       pages: {
         episode: createEpisodePageStoreSlice(),
