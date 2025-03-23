@@ -1,7 +1,7 @@
 import '@unocss/reset/tailwind.css';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/polyfills';
-import 'virtual:uno.css';
+// import 'virtual:uno.css';
 import './index.css';
 
 import { StrictMode } from 'react';
