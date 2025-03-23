@@ -348,9 +348,6 @@ importers:
       '@wsh-2025/server':
         specifier: workspace:*
         version: 'link:'
-      bcrypt:
-        specifier: 5.1.1
-        version: 5.1.1
       bcryptjs:
         specifier: 3.0.2
         version: 3.0.2
@@ -8281,14 +8278,6 @@ snapshots:
   base64-js@1.5.1: {}
 
   batch@0.6.1: {}
-
-  bcrypt@5.1.1:
-    dependencies:
-      '@mapbox/node-pre-gyp': 1.0.11
-      node-addon-api: 5.1.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
 
   bcryptjs@3.0.2: {}
 

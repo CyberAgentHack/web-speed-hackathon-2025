@@ -61,7 +61,7 @@
   ],
   "wireit": {
     "build": {
-      "command": "webpack --mode production --no-devtool",
+      "command": "webpack --mode production",
       "env": {
         "NODE_ENV": "production",
         "BABEL_ENV": "production"
