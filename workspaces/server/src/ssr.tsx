@@ -1,29 +1,25 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import fastifyStatic from '@fastify/static';
-import { StoreProvider } from '@wsh-2025/client/src/app/StoreContext';
 import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import type { FastifyInstance } from 'fastify';
 import { createStandardRequest } from 'fastify-standard-request-reply';
-import htmlescape from 'htmlescape';
-import { StrictMode } from 'react';
-import { renderToString } from 'react-dom/server';
-import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
+import { createStaticHandler } from 'react-router';
 
-function getFiles(parent: string): string[] {
-  const dirents = readdirSync(parent, { withFileTypes: true });
-  return dirents
-    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
-    .map((dirent) => path.join(parent, dirent.name));
-}
+//function getFiles(parent: string): string[] {
+//  const dirents = readdirSync(parent, { withFileTypes: true });
+//  return dirents
+//    .filter((dirent) => dirent.isFile() && !dirent.name.startsWith('.'))
+//    .map((dirent) => path.join(parent, dirent.name));
+//}
 
-function getFilePaths(relativePath: string, rootDir: string): string[] {
-  const files = getFiles(path.resolve(rootDir, relativePath));
-  return files.map((file) => path.join('/', path.relative(rootDir, file)));
-}
+//function getFilePaths(relativePath: string, rootDir: string): string[] {
+//  const files = getFiles(path.resolve(rootDir, relativePath));
+//  return files.map((file) => path.join('/', path.relative(rootDir, file)));
+//}
 
 export function registerSsr(app: FastifyInstance): void {
   const indexHtml = readFileSync(
@@ -56,14 +52,14 @@ export function registerSsr(app: FastifyInstance): void {
       return reply.send(context);
     }
 
-    const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
-        </StoreProvider>
-      </StrictMode>,
-    );
+    //const router = createStaticRouter(handler.dataRoutes, context);
+    //renderToString(
+    //  <StrictMode>
+    //    <StoreProvider createStore={() => store}>
+    //      <StaticRouterProvider context={context} hydrate={false} router={router} />
+    //    </StoreProvider>
+    //  </StrictMode>,
+    //);
 
     const rootDir = path.resolve(__dirname, '../../../');
     const preloadImagePaths: string[] = [
@@ -79,8 +75,7 @@ export function registerSsr(app: FastifyInstance): void {
           '</head>',
           preloadImagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n') +
             '</head>',
-        ) +
-          `<script>window.__staticRouterHydrationData = ${htmlescape({ actionData: context.actionData, loaderData: context.loaderData })};</script>`,
+        ),
       );
   });
 }
