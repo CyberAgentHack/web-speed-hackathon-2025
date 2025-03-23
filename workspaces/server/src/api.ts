@@ -476,6 +476,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         where(module, { eq }) {
           return eq(module.referenceId, req.params.referenceId);
         },
+        limit: req.params.limit,
         with: {
           items: {
             orderBy(item, { asc }) {

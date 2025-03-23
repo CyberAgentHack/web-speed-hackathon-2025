@@ -19,6 +19,7 @@ interface RecommendedState {
 
 interface RecommendedActions {
   fetchRecommendedModulesByReferenceId: (params: {
+    limit?: number;
     referenceId: ReferenceId;
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
 }

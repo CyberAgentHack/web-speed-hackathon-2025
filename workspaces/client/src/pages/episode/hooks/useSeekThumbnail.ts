@@ -21,9 +21,9 @@ async function getSeekThumbnail({ episode }: Params) {
     coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
       return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
     }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
+    // wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
+    //   return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
+    // }),
   });
 
   // 動画のセグメントファイルを取得

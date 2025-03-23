@@ -9,6 +9,7 @@ import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuth
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
 import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
+import { Spinner } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
@@ -22,7 +23,7 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
   const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
   const modules = await store
     .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+    .features.recommended.fetchRecommendedModulesByReferenceId({ limit: 1, referenceId: episodeId });
   return { episode, modules };
 };
 
@@ -36,7 +37,7 @@ export const EpisodePage = () => {
   const episode = useEpisodeById({ episodeId });
   invariant(episode);
 
-  const modules = useRecommended({ referenceId: episodeId });
+  const modules = useRecommended({ limit: 1, referenceId: episodeId });
 
   const playerRef = usePlayerRef();
 
@@ -51,7 +52,14 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img
+                  alt=""
+                  className="h-auto w-full"
+                  height={316}
+                  loading="lazy"
+                  src={episode.thumbnailUrl}
+                  width={177.75}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -77,7 +85,9 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <div className="place-self-center text-[#ffffff] [grid-area:1/-1]">
+                        <Spinner color="#FFFFFF" size={48} />
+                      </div>
                     </div>
                   </AspectRatio>
                 }

@@ -101,12 +101,20 @@ export const ProgramPage = () => {
           <div className="m-auto mb-[16px] max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isArchivedRef.current ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={program.thumbnailUrl} />
+                <img
+                  alt=""
+                  className="h-auto w-full"
+                  height={316}
+                  loading="lazy"
+                  src={program.thumbnailUrl}
+                  width={177.75}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">この番組は放送が終了しました</p>
                   <Link
                     className="block flex w-[160px] flex-row items-center justify-center rounded-[4px] bg-[#1c43d1] p-[12px] text-[14px] font-bold text-[#ffffff] disabled:opacity-50"
+                    rel="preload"
                     to={`/episodes/${program.episode.id}`}
                   >
                     見逃し視聴する

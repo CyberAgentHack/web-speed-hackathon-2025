@@ -1,6 +1,7 @@
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 interface Params {
+  limit?: number;
   referenceId: string;
 }
 
