@@ -31,7 +31,7 @@ export const ProgramList = ({ channelId, programList }: Props): ReactElement => 
         })}
       </div>
 
-      <div className="absolute inset-y-0 right-[-4px] z-10 w-[8px]">
+      <div className="absolute inset-y-0 right-[-4px] z-10 w-2">
         <Gutter channelId={channelId} />
       </div>
     </div>

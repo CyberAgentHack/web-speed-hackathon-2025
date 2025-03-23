@@ -50,20 +50,20 @@ export const Program = ({ height, program }: Props): ReactElement => {
     <>
       <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
         <button
-          className={`h-[${height}px] w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100}`}
+          className={`h-[${height}px] w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-3 py-2 text-left opacity-${isArchived ? 50 : 100}`}
           style={{ width }}
           type="button"
           onClick={onClick}
         >
           <div className="flex size-full flex-col overflow-hidden">
-            <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
+            <div ref={titleRef} className="mb-2 flex flex-row items-start justify-start">
               <span
-                className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
+                className={`text-3.5 mr-2 shrink-0 grow-0 font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
               >
                 {DateTime.fromISO(program.startAt).toFormat('mm')}
               </span>
               <div
-                className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
+                className={`grow-1 shrink-1 text-3.5 overflow-hidden font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
               >
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
@@ -72,7 +72,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
               <img
                 ref={imageRef}
                 alt=""
-                className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+                className="border-0.5 rounded-2 pointer-events-none w-full border-solid border-[#FFFFFF1F]"
                 src={program.thumbnailUrl}
               />
             </div>

@@ -14,7 +14,7 @@ export const Dialog = ({ children, isOpen, onClose }: Props) => {
       open={isOpen}
       onClose={onClose}
     >
-      <HeadlessUi.DialogPanel className="w-[480px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F] bg-[#171717] px-[16px] py-[32px]">
+      <HeadlessUi.DialogPanel className="border-0.5 rounded-2 w-[480px] shrink-0 grow-0 border-solid border-[#FFFFFF1F] bg-[#171717] px-4 py-8">
         {children}
       </HeadlessUi.DialogPanel>
     </HeadlessUi.Dialog>

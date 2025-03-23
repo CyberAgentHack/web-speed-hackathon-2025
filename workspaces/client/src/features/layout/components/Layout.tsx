@@ -63,40 +63,32 @@ export const Layout = ({ children }: Props) => {
               : 'bg-gradient-to-b from-[#171717] to-[#171717]',
           )}
         >
-          <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+          <Link className="block flex w-[188px] items-center justify-center px-2" to="/">
+            <img alt="AREMA" className="object-contain" height={36} loading="lazy" src="/public/arema.svg" width={98} />
           </Link>
         </header>
 
         <aside className="sticky top-[0px] flex h-[100vh] flex-col items-center bg-[#171717] pt-[80px] [grid-area:a1/a1/a2/a2]">
           <nav>
             <button
-              className="block flex h-[56px] w-[188px] items-center justify-center bg-transparent pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
+              className="block flex h-14 w-[188px] items-center justify-center bg-transparent px-5 py-2"
               type="button"
               onClick={isSignedIn ? authActions.openSignOutDialog : authActions.openSignInDialog}
             >
-              <div
-                className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-[20px] shrink-0 grow-0`}
-              />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">
+              <div className={`i-fa-solid:${isSignedIn ? 'sign-out-alt' : 'user'} m-[4px] size-5 shrink-0 grow-0`} />
+              <span className="grow-1 shrink-1 text-3.5 ml-4 text-left font-bold">
                 {isSignedIn ? 'ログアウト' : 'ログイン'}
               </span>
             </button>
 
-            <Link
-              className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              to="/"
-            >
-              <div className="i-bi:house-fill m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">ホーム</span>
+            <Link className="block flex h-14 w-[188px] items-center justify-center px-5 py-2" to="/">
+              <div className="i-bi:house-fill m-[4px] size-5 shrink-0 grow-0" />
+              <span className="grow-1 shrink-1 text-3.5 ml-4 text-left font-bold">ホーム</span>
             </Link>
 
-            <Link
-              className="block flex h-[56px] w-[188px] items-center justify-center pb-[8px] pl-[20px] pr-[8px] pt-[8px]"
-              to="/timetable"
-            >
-              <div className="i-fa-solid:calendar m-[4px] size-[20px] shrink-0 grow-0" />
-              <span className="grow-1 shrink-1 ml-[16px] text-left text-[14px] font-bold">番組表</span>
+            <Link className="block flex h-14 w-[188px] items-center justify-center px-5 py-2" to="/timetable">
+              <div className="i-fa-solid:calendar m-[4px] size-5 shrink-0 grow-0" />
+              <span className="grow-1 shrink-1 text-3.5 ml-4 text-left font-bold">番組表</span>
             </Link>
           </nav>
         </aside>
