@@ -10,21 +10,8 @@ interface Params {
 }
 
 const USE_SEGMENT_NUM = 30;
-// const ffmpegCache: { instance: FFmpeg | null } = { instance: null };
 
 async function getSeekThumbnail({ episode }: Params) {
-  // if (ffmpeg == null) {
-  //   const ffmpeg = new FFmpeg();
-  //   await ffmpeg.load({
-  //     coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-  //       return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-  //     }),
-  //     wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-  //       return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-  //     }),
-  //   });
-  //   ffmpeg = ffmpeg;
-  // }
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
     coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
