@@ -57,7 +57,7 @@ async function getSeekThumbnail({ episode }: Params) {
       ['-frames:v', '1'],
       'preview.jpg',
     ].flat()
-  );
+  ); 
 
   const output = await ffmpeg.readFile('preview.jpg');
   ffmpeg.terminate();
