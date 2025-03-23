@@ -34,21 +34,21 @@ export const Layout = ({ children }: Props) => {
   const [scrollTopOffset, setScrollTopOffset] = useState(0);
   const [shouldHeaderBeTransparent, setShouldHeaderBeTransparent] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollTopOffset(window.scrollY);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setScrollTopOffset(window.scrollY);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    setShouldHeaderBeTransparent(scrollTopOffset > 80);
-  }, [scrollTopOffset]);
+  // useEffect(() => {
+  //   setShouldHeaderBeTransparent(scrollTopOffset > 80);
+  // }, [scrollTopOffset]);
 
   const isSignedIn = user != null;
 

@@ -6,17 +6,17 @@ const GAP = 12;
 
 // repeat(auto-fill, minmax(276px, 1fr)) を計算で求める
 export function useCarouselItemWidth() {
-  const forceUpdate = useUpdate();
+  // const forceUpdate = useUpdate();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 250);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(function tick() {
+  //     forceUpdate();
+  //   }, 250);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
   if (containerRef.current == null) {
     return { ref: containerRef, width: MIN_WIDTH };
