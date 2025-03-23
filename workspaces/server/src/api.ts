@@ -530,3 +530,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send(trimmedModules);
     },
   });
+
+   /* eslint-enable sort/object-properties */
+}
