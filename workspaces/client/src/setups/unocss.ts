@@ -1,7 +1,14 @@
 import presetWind3 from '@unocss/preset-wind3';
 import initUnocssRuntime, { defineConfig } from '@unocss/runtime';
 
-async function init() {
+function init() {
+  // Load UnoCSS asynchronously
+  setTimeout(() => {
+    void loadUnoCSS();
+  }, 0);
+}
+
+async function loadUnoCSS() {
   await initUnocssRuntime({
     defaults: defineConfig({
       layers: {
@@ -50,6 +57,5 @@ async function init() {
   });
 }
 
-init().catch((err: unknown) => {
-  throw err;
-});
+// Initialize UnoCSS
+init();
