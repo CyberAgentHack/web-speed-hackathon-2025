@@ -19,22 +19,14 @@ function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store));
 
-  const rootElement = document.getElementById('root');
-  if (rootElement) {
-    createRoot(rootElement).render(
-      <StrictMode>
-        <StoreProvider createStore={() => store}>
-          <RouterProvider router={router} />
-        </StoreProvider>
-      </StrictMode>,
-    );
-  } else {
-    console.error('Root element not found');
-  }
+  createRoot(document.body).render(
+    <StrictMode>
+      <StoreProvider createStore={() => store}>
+        <RouterProvider router={router} />
+      </StoreProvider>
+    </StrictMode>,
+  );
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', main);
-} else {
-  main();
-}
+main();
+
