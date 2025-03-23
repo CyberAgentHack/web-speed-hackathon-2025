@@ -17,7 +17,7 @@ interface Props {
 
 export const SeriesEpisodeItem = ({ episode, selected }: Props) => {
   return (
-    <Hoverable classNames={{ hovered: 'opacity-75' }}>
+    <Hoverable style={{ hovered: { opacity: 0.75 } }}>
       <NavLink
         viewTransition
         className="block flex w-full flex-row items-start justify-between gap-x-[16px]"

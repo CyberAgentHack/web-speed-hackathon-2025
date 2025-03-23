@@ -24,7 +24,7 @@ export const JumbotronSection = ({ module }: Props) => {
   invariant(episode);
 
   return (
-    <Hoverable classNames={{ hovered: 'opacity-50' }}>
+    <Hoverable style={{ hovered: { opacity: 0.5 } }}>
       <NavLink
         viewTransition
         className="block flex h-[260px] w-full flex-row items-center justify-center overflow-hidden rounded-[8px] bg-[#171717]"

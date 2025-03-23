@@ -6,7 +6,7 @@ import { useMergeRefs } from 'use-callback-ref';
 
 import { EpisodeItem } from '@wsh-2025/client/src/features/recommended/components/EpisodeItem';
 import { SeriesItem } from '@wsh-2025/client/src/features/recommended/components/SeriesItem';
-import { useCarouselItemWidth } from '@wsh-2025/client/src/features/recommended/hooks/useCarouselItemWidth';
+// import { useCarouselItemWidth } from '@wsh-2025/client/src/features/recommended/hooks/useCarouselItemWidth';
 import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/useScrollSnap';
 
 interface Props {
@@ -15,8 +15,8 @@ interface Props {
 
 export const CarouselSection = ({ module }: Props) => {
   const containerRefForScrollSnap = useScrollSnap({ scrollPadding: 24 });
-  const { ref: containerRefForItemWidth, width: itemWidth } = useCarouselItemWidth();
-  const mergedRef = useMergeRefs([containerRefForItemWidth, containerRefForScrollSnap]);
+  // const { ref: containerRefForItemWidth, width: itemWidth } = useCarouselItemWidth();
+  // const mergedRef = useMergeRefs([containerRefForItemWidth, containerRefForScrollSnap]);
 
   return (
     <>
@@ -24,12 +24,12 @@ export const CarouselSection = ({ module }: Props) => {
         <h2 className="mb-[16px] w-full text-[22px] font-bold">{module.title}</h2>
         <div
           key={module.id}
-          ref={mergedRef}
-          className={`relative mx-[-24px] flex flex-row gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]`}
+          ref={containerRefForScrollSnap}
+          className="relative mx-[-24px] grid auto-cols-[minmax(276px,1fr)] grid-flow-col gap-x-[12px] overflow-x-auto overflow-y-hidden pl-[24px] pr-[56px]"
           data-scroll-restore={`carousel-${module.id}`}
         >
           {module.items.map((item) => (
-            <div key={item.id} className={`w-[${itemWidth}px] shrink-0 grow-0`}>
+            <div key={item.id} className="shrink-0 grow-0">
               {item.series != null ? <SeriesItem series={item.series} /> : null}
               {item.episode != null ? <EpisodeItem episode={item.episode} /> : null}
             </div>

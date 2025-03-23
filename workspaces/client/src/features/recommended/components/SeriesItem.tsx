@@ -14,7 +14,7 @@ interface Props {
 
 export const SeriesItem = ({ series }: Props) => {
   return (
-    <Hoverable classNames={{ hovered: 'opacity-75' }}>
+    <Hoverable style={{ hovered: { opacity: 0.75 } }}>
       <NavLink viewTransition className="block w-full overflow-hidden" to={`/series/${series.id}`}>
         {({ isTransitioning }) => {
           return (

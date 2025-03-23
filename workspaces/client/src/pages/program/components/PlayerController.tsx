@@ -16,7 +16,7 @@ export const PlayerController = () => {
           </div>
 
           <div className="flex flex-row items-center">
-            <Hoverable classNames={{ default: 'bg-transparent', hovered: 'bg-[#FFFFFF1F]' }}>
+            <Hoverable style={{ default: {}, hovered: { backgroundColor: '#FFFFFF1F' } }}>
               <button
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"
