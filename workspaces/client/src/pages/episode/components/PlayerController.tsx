@@ -1,8 +1,3 @@
-import pauseRoundedIcon from '@iconify/icons-material-symbols/pause-rounded';
-import playArrowRoundedIcon from '@iconify/icons-material-symbols/play-arrow-rounded';
-import volumeOffRoundedIcon from '@iconify/icons-material-symbols/volume-off-rounded';
-import volumeUpRoundedIcon from '@iconify/icons-material-symbols/volume-up-rounded';
-import { Icon } from '@iconify/react';
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
@@ -66,11 +61,8 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <Icon
-                    className="m-[14px] block shrink-0 grow-0 text-[#FFFFFF]"
-                    height={20}
-                    icon={playing ? pauseRoundedIcon : playArrowRoundedIcon}
-                    width={20}
+                  <span
+                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
                   />
                 </button>
               </Hoverable>
@@ -89,15 +81,12 @@ export const PlayerController = ({ episode }: Props) => {
                 aria-label={muted ? 'ミュート解除する' : 'ミュートする'}
                 className="block rounded-[4px]"
                 type="button"
-                onClick={() => {
-                  toggleMuted();
-                }}
               >
-                <Icon
-                  className="m-[14px] block shrink-0 grow-0 text-[#FFFFFF]"
-                  height={20}
-                  icon={muted ? volumeOffRoundedIcon : volumeUpRoundedIcon}
-                  width={20}
+                <span
+                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  onClick={() => {
+                    toggleMuted();
+                  }}
                 />
               </button>
             </Hoverable>
