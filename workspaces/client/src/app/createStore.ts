@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -39,7 +38,38 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  store.setState((s) => {
+    if (hydrationData) {
+      return { ...s, ...deepMerge(s, hydrationData) };
+    }
+    return s;
+  });
 
   return store;
 };
+
+type DeepMergeable = Record<string, unknown>;
+
+function deepMerge<T extends DeepMergeable>(target: T, source: unknown): T {
+  if (!source || typeof source !== 'object') return { ...target };
+
+  const result = { ...target } as { [K in keyof T]: unknown };
+  const typedSource = source as DeepMergeable;
+
+  Object.keys(typedSource).forEach((key) => {
+    if (key in result) {
+      const targetValue = result[key as keyof T];
+      const sourceValue = typedSource[key];
+
+      if (targetValue && sourceValue && typeof targetValue === 'object' && typeof sourceValue === 'object') {
+        result[key as keyof T] = deepMerge(targetValue as DeepMergeable, sourceValue) as unknown;
+      } else if (sourceValue !== undefined) {
+        result[key as keyof T] = sourceValue;
+      }
+    } else if (typedSource[key] !== undefined) {
+      (result as DeepMergeable)[key] = typedSource[key];
+    }
+  });
+
+  return result as T;
+}
