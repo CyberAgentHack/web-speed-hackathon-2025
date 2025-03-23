@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wsh2025-service
+  namespace: wsh2025
+spec:
+  selector:
+    app: wsh2025
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+---
