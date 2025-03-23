@@ -144,7 +144,14 @@ export const getTimetableRequestQuery = z.object({
   since: z.coerce.string().openapi({ format: 'date-time' }),
   until: z.coerce.string().openapi({ format: 'date-time' }),
 });
-export const getTimetableResponse = z.array(program.extend({}));
+export const getTimetableResponse = z.array(program.pick({
+  id: true,
+  title: true,
+  startAt: true,
+  endAt: true,
+  channelId: true,
+  thumbnailUrl: true,
+}).extend({}));
 
 // GET /programs
 export const getProgramsRequestQuery = z.object({
@@ -166,10 +173,20 @@ export const getProgramByIdRequestParams = z.object({
   programId: z.string(),
 });
 export const getProgramByIdResponse = program.extend({
-  channel: channel.extend({}),
-  episode: episode.extend({
-    series: series.extend({
-      episodes: z.array(episode.extend({})),
+  episode: episode.pick({
+    id: true,
+  }).extend({
+    series: series.pick({
+      title: true,
+    }).extend({
+      episodes: z.array(episode.pick({
+        id: true,
+        title: true,
+        order: true,
+        description: true,
+        thumbnailUrl: true,
+        premium: true,
+      })),
     }),
   }),
 });
@@ -182,16 +199,21 @@ export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
+        series: series.pick({
+          id: true,
+          title: true,
+          thumbnailUrl: true,
+        })
           .nullable(),
-        episode: episode
+        episode: episode.pick({
+          id: true,
+          title: true,
+          thumbnailUrl: true,
+          premium: true,
+          description: true,
+        })
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
-            }),
+            series: series.pick({ title: true })
           })
           .nullable(),
       }),

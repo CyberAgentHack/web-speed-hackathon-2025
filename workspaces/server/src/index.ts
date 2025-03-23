@@ -1,7 +1,7 @@
 import '@wsh-2025/server/src/setups/luxon';
-
 import cors from '@fastify/cors';
 import fastify from 'fastify';
+import fastifyCompress from '@fastify/compress';
 
 import { registerApi } from '@wsh-2025/server/src/api';
 import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
@@ -12,15 +12,23 @@ async function main() {
   await initializeDatabase();
 
   const app = fastify();
-
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+  
+  app.addHook('onSend', async (req, reply) => {
+    if (req.raw.url?.match(/\.(png|jpg|jpeg|gif|svg)$/)) {
+      reply.header('Cache-Control', 'public, max-age=31536000'); // 1年間キャッシュ
+    } else {
+      reply.header('Cache-Control', 'public, max-age=3600'); // 1時間キャッシュ
+    }
   });
+  
   app.register(cors, {
     origin: true,
   });
   app.register(registerApi, { prefix: '/api' });
   app.register(registerStreams);
+  app.register(fastifyCompress, { 
+    global: true ,
+  });
   app.register(registerSsr);
 
   await app.ready();

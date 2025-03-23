@@ -336,6 +336,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const programs = await database.query.program.findMany({
+        columns: {
+          id: true,
+          channelId: true,
+          title: true,
+          startAt: true,
+          endAt: true,
+          thumbnailUrl: true,
+        },
         orderBy(program, { asc }) {
           return asc(program.startAt);
         },
@@ -427,10 +435,15 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return eq(program.id, req.params.programId);
         },
         with: {
-          channel: true,
           episode: {
+            columns: {
+              id: true,
+            },
             with: {
               series: {
+                columns: {
+                  title: true,
+                },
                 with: {
                   episodes: {
                     orderBy(episode, { asc }) {
@@ -483,23 +496,24 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
             },
             with: {
               series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
                 },
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                  description: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      title: true,
                     },
                   },
                 },

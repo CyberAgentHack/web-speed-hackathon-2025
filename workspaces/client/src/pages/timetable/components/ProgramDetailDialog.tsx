@@ -12,7 +12,10 @@ interface Props {
   isOpen: boolean;
   program: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>>;
 }
-
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement => {
   const episode = useEpisode(program.episodeId);
   const [, setProgram] = useSelectedProgramId();
@@ -33,7 +36,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
         <img
           alt=""
           className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-          src={program.thumbnailUrl}
+          src={changeImageExtension(program.thumbnailUrl)}
         />
 
         {episode != null ? (
@@ -47,7 +50,7 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
             <img
               alt=""
               className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
-              src={episode.thumbnailUrl}
+              src={changeImageExtension(episode.thumbnailUrl)}
             />
           </>
         ) : null}

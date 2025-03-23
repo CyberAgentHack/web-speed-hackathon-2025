@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
@@ -16,15 +16,25 @@ import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
+import { Icon } from '@iconify/react';
+import loadingTwotoneLoop from '@iconify/icons-line-md/loading-twotone-loop';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { episodeId }: Params) => {
   invariant(episodeId);
-  const episode = await store.getState().features.episode.fetchEpisodeById({ episodeId });
-  const modules = await store
-    .getState()
-    .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId });
+
+  // 並列で非同期リクエストを実行
+  const [episode, modules] = await Promise.all([
+    store.getState().features.episode.fetchEpisodeById({ episodeId }),
+    store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: episodeId })
+  ]);
+
   return { episode, modules };
 };
+
+// thumbnailUrl の拡張子を .webp に変更
+function changeImageExtension(url: string) {
+  return url.replace(/(\.\w+)(\?.*)?$/, '_400w.webp$2');
+}
 
 export const EpisodePage = () => {
   const authActions = useAuthActions();
@@ -33,14 +43,15 @@ export const EpisodePage = () => {
   const { episodeId } = useParams();
   invariant(episodeId);
 
+  // memoize episode and modules
   const episode = useEpisodeById({ episodeId });
-  invariant(episode);
-
   const modules = useRecommended({ referenceId: episodeId });
+
+  invariant(episode);
 
   const playerRef = usePlayerRef();
 
-  const isSignInRequired = episode.premium && user == null;
+  const isSignInRequired = useMemo(() => episode.premium && user == null, [episode.premium, user]);
 
   return (
     <>
@@ -51,7 +62,7 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img alt="" className="h-auto w-full" src={changeImageExtension(episode.thumbnailUrl)} loading="lazy" />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -77,7 +88,9 @@ export const EpisodePage = () => {
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <div className="absolute inset-0 z-[-10] grid place-content-center">
+                        <Icon icon={loadingTwotoneLoop} width="48px" height="48px" className="text-[#ffffff]" />
+                      </div>
                     </div>
                   </AspectRatio>
                 }
