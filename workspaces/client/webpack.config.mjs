@@ -34,7 +34,7 @@ const config = {
                   {
                     corejs: '3.41',
                     forceAllTransforms: true,
-                    targets: '> 0.25%, not dead',
+                    targets: 'last 2 Chrome versions',
                     useBuiltIns: 'entry',
                   },
                 ],
@@ -48,11 +48,6 @@ const config = {
       {
         test: /\.png$/,
         type: 'asset/inline',
-      },
-      {
-        test: /\.json$/,
-        include: path.resolve(import.meta.dirname, './assets/icons'),
-        type: 'json',
       },
       {
         resourceQuery: /raw/,
@@ -78,7 +73,7 @@ const config = {
   output: {
     chunkFilename: '[name]-[contenthash].js',
     chunkFormat: false,
-    filename: '[name].[contenthash].js',
+    filename: 'main.js',
     path: path.resolve(import.meta.dirname, './dist'),
     publicPath: 'auto',
   },

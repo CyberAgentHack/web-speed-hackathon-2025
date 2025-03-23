@@ -54,7 +54,6 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
 
   const api = app.withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
-  /* eslint-disable sort/object-properties */
   api.route({
     method: 'POST',
     url: '/initialize',
@@ -645,6 +644,4 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       reply.code(200).send();
     },
   });
-
-  /* eslint-enable sort/object-properties */
 }
