@@ -2,13 +2,16 @@
   "name": "@wsh-2025/server",
   "private": true,
   "scripts": {
+    "build": "tsc",
     "database:migrate": "wireit",
     "database:reset": "wireit",
     "format": "wireit",
     "format:eslint": "wireit",
     "format:prettier": "wireit",
     "heroku-start": "wireit",
-    "start": "wireit"
+    "start": "wireit",
+    "start-render": "node ./dist/index.js",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@fastify/cookie": "11.0.2",
@@ -80,9 +83,6 @@
         "../../pnpm-lock.yaml",
         "../schema/src/**/*",
         "./src/**/*"
-      ],
-      "dependencies": [
-        "../client:build"
       ]
     },
     "heroku-start": {

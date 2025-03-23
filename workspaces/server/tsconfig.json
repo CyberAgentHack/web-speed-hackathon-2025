@@ -17,7 +17,7 @@
     "sourceMap": true,
     "target": "ESNext"
   },
-  "exclude": ["./dist", "./streams", "../client/dist"],
+  "exclude": ["./dist", "./streams", "../client/dist", "**/*.mjs"],
   "extends": "@wsh-2025/configs/tsconfig.json",
-  "include": ["tools/**/*", "./src/**/*", "**/*.mjs", "drizzle.config.ts", "../client/**/*"]
+  "include": ["tools/**/*", "./src/**/*", "**/*.mjs", "drizzle.config.ts"]
 }
