@@ -51,9 +51,14 @@ async function init() {
         presetWind3(),
         presetIcons({
           collections: {
-            // 実際に使用されているアイコンのみをインポート
             bi: async () => {
               return import('@iconify/json/json/bi.json').then((m) => m.default as IconifyJSON);
+            },
+            bx: async () => {
+              return import('@iconify/json/json/bx.json').then((m) => m.default as IconifyJSON);
+            },
+            'fa-regular': async () => {
+              return import('@iconify/json/json/fa-regular.json').then((m) => m.default as IconifyJSON);
             },
             'fa-solid': async () => {
               return import('@iconify/json/json/fa-solid.json').then((m) => m.default as IconifyJSON);
