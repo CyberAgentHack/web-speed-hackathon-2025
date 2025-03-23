@@ -1,10 +1,10 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
 import { ArrayValues } from 'type-fest';
 
 import { recommendedService } from '@wsh-2025/client/src/features/recommended/services/recommendedService';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
 
 type ReferenceId = string;
 type RecommendedModuleId = string;
@@ -12,7 +12,7 @@ type RecommendedModuleId = string;
 interface RecommendedState {
   recommendedModules: Record<
     RecommendedModuleId,
-    ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>
+    ArrayValues<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>
   >;
   references: Record<ReferenceId, RecommendedModuleId[]>;
 }
@@ -20,7 +20,7 @@ interface RecommendedState {
 interface RecommendedActions {
   fetchRecommendedModulesByReferenceId: (params: {
     referenceId: ReferenceId;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;
 }
 
 export const createRecommendedStoreSlice = () => {

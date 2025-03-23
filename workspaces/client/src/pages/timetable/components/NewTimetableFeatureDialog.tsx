@@ -13,7 +13,7 @@ export const NewTimetableFeatureDialog = ({ isOpen }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
+          <img className="object-contain" height={36} src="/public/arema.svg" width={98} loading="lazy" />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">拡大・縮小機能を新しく追加</h2>

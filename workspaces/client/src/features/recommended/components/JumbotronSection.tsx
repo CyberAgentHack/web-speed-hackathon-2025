@@ -1,5 +1,4 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
@@ -12,9 +11,10 @@ import { PlayerType } from '../../player/constants/player_type';
 import { PlayerWrapper } from '../../player/interfaces/player_wrapper';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/openapi/schema';
 
 interface Props {
-  module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  module: ArrayValues<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;
 }
 
 export const JumbotronSection = ({ module }: Props) => {
