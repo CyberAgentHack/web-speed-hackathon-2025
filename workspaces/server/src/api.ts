@@ -468,6 +468,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const modules = await database.query.recommendedModule.findMany({
+        limit: 1,
         orderBy(module, { asc }) {
           return asc(module.order);
         },
