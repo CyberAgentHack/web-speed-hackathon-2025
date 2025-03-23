@@ -11,6 +11,10 @@ const config = {
   // devtool: 'inline-source-map',
   entry: './src/main.tsx',
   mode: 'production',
+  optimization: {
+    minimize: true, // コード最小化
+    splitChunks: { chunks: 'all' }, // コード分割
+  },
   module: {
     rules: [
       {
