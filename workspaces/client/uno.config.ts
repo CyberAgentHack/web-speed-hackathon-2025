@@ -28,18 +28,18 @@ export default defineConfig({
           }
         `,
     },
-    {
-      getCSS: () => /* css */ `
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-        `,
-    },
+    // {
+    //   getCSS: () => /* css */ `
+    //       @keyframes fade-in {
+    //         from {
+    //           opacity: 0;
+    //         }
+    //         to {
+    //           opacity: 1;
+    //         }
+    //       }
+    //     `,
+    // },
   ],
   presets: [
     presetWind3(),

@@ -1,7 +1,8 @@
 // @unocss-include
 export const classes = {
-  active: 'bg-primary text-white',
+  active: 'bg-primary text-white bg-[#212121] bg-[#000000]',
   inactive: 'bg-gray-200 text-gray-500',
+  // 'bg-',
 };
 import './main.css';
 import '@wsh-2025/client/src/setups/polyfills';
