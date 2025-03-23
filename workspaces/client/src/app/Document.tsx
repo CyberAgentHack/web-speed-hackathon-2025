@@ -18,14 +18,16 @@ export const Document = () => {
       </head>
       <body className="size-full bg-[#000000] text-[#ffffff]">
         <div id="root">
-          <Suspense>
-            <Layout>
-              <Outlet />
-            </Layout>
-          </Suspense>
+          {/* SSRの場合はコンテンツがここに挿入される */}
+          {typeof window !== 'undefined' && (
+            <Suspense>
+              <Layout>
+                <Outlet />
+              </Layout>
+            </Suspense>
+          )}
         </div>
         <ScrollRestoration />
-        <script src="/public/main.js"></script>
       </body>
     </html>
   );

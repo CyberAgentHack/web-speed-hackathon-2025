@@ -63,33 +63,39 @@ export function registerSsr(app: FastifyInstance): void {
       .map((imagePath) => `<link as="image" href="${imagePath}" rel="prefetch" />`)
       .join('\n');
 
-    const markup = renderToString(
+    // SSRのHTMLをレンダリング
+    const html = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
-          <StaticRouterProvider context={context} hydrate={false} router={router} />
+          <StaticRouterProvider context={context} hydrate={true} router={router} />
         </StoreProvider>
       </StrictMode>,
     );
 
-    const html = `<!DOCTYPE html>
-    <html className="size-full" lang="ja">
+    const hydrateScript = `
+      <script>
+        window.__staticRouterHydrationData = ${htmlescape({
+          actionData: context.actionData,
+          loaderData: context.loaderData,
+        })};
+      </script>
+    `;
+
+    // 完全なHTMLを構築
+    const fullHtml = `<!DOCTYPE html>
+    <html lang="ja" class="size-full">
       <head>
-        <meta charSet="UTF-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         ${preloadLinks}
       </head>
-      <body className="size-full bg-[#000000] text-[#ffffff]">
-        <div id="root">${markup}</div>
-        <script>
-          window.__staticRouterHydrationData = ${htmlescape({
-            actionData: context.actionData,
-            loaderData: context.loaderData,
-          })};
-        </script>
-        <script src="/public/main.js"></script>
+      <body class="size-full bg-[#000000] text-[#ffffff]">
+        <div id="root">${html}</div>
+        ${hydrateScript}
+        <script src="/public/main.js" defer></script>
       </body>
     </html>`;
 
-    reply.type('text/html').send(html);
+    reply.type('text/html').send(fullHtml);
   });
 }
