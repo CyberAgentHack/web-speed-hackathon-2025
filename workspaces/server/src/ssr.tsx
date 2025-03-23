@@ -32,6 +32,7 @@ export function registerSsr(app: FastifyInstance): void {
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
       path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
     ],
+    maxAge: '31536000', // 31536000 秒 = 1 年間キャッシュ AfterChange
   });
 
   app.get('/favicon.ico', (_, reply) => {
@@ -106,7 +107,9 @@ export function registerSsr(app: FastifyInstance): void {
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <script src="/public/main.js"></script>
-          ${convertedImagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          ${convertedImagePaths.slice(0, 5) // ← 先頭5枚のみ preload , Backup// ${convertedImagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+            .map((imagePath) => `<link as="image" type="image/webp" href="${imagePath}" rel="preload" />`)
+            .join('\n')}
         </head>
         <body></body>
       </html>
