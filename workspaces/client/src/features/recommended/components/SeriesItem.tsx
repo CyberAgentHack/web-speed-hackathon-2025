@@ -1,7 +1,6 @@
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
-
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 
 interface Props {
