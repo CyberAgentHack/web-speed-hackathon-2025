@@ -20,17 +20,18 @@ import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayer
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
   invariant(programId);
 
-  const now = DateTime.now();
-  const since = now.startOf('day').toISO();
-  const until = now.endOf('day').toISO();
+  // const now = DateTime.now();
+  // const since = now.startOf('day').toISO();
+  // const until = now.endOf('day').toISO();
 
-  const [program, channels, timetable, modules] = await Promise.all([
+  // const [program, channels, timetable, modules] = await Promise.all([
+  const [program] = await Promise.all([
     store.getState().features.program.fetchProgramById({ programId }),
-    store.getState().features.channel.fetchChannels(),
-    store.getState().features.timetable.fetchTimetable({ since, until }),
-    store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId })
+    // store.getState().features.channel.fetchChannels(),
+    // store.getState().features.timetable.fetchTimetable({ since, until }),
+    // store.getState().features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId })
   ]);
-  return { channels, modules, program, timetable };
+  return { program};
 };
 
 export const ProgramPage = () => {
