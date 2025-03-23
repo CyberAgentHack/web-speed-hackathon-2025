@@ -3,6 +3,9 @@ import { lazy, ReactNode, Suspense, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
 
+import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
+import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
+import { SignUpDialog } from '@wsh-2025/client/src/features/auth/components/SignUpDialog';
 import { AuthDialogType } from '@wsh-2025/client/src/features/auth/constants/auth_dialog_type';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthDialogType } from '@wsh-2025/client/src/features/auth/hooks/useAuthDialogType';
@@ -11,21 +14,21 @@ import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading
 import { debounce } from '@wsh-2025/client/src/utils/debounce';
 
 // ダイアログコンポーネントを遅延ロード
-const SignInDialog = lazy(() =>
-  import('@wsh-2025/client/src/features/auth/components/SignInDialog').then((module) => ({
-    default: module.SignInDialog,
-  })),
-);
-const SignUpDialog = lazy(() =>
-  import('@wsh-2025/client/src/features/auth/components/SignUpDialog').then((module) => ({
-    default: module.SignUpDialog,
-  })),
-);
-const SignOutDialog = lazy(() =>
-  import('@wsh-2025/client/src/features/auth/components/SignOutDialog').then((module) => ({
-    default: module.SignOutDialog,
-  })),
-);
+// const SignInDialog = lazy(() =>
+//   import('@wsh-2025/client/src/features/auth/components/SignInDialog').then((module) => ({
+//     default: module.SignInDialog,
+//   })),
+// );
+// const SignUpDialog = lazy(() =>
+//   import('@wsh-2025/client/src/features/auth/components/SignUpDialog').then((module) => ({
+//     default: module.SignUpDialog,
+//   })),
+// );
+// const SignOutDialog = lazy(() =>
+//   import('@wsh-2025/client/src/features/auth/components/SignOutDialog').then((module) => ({
+//     default: module.SignOutDialog,
+//   })),
+// );
 
 interface Props {
   children: ReactNode;
