@@ -2,7 +2,7 @@
 import '@wsh-2025/schema/src/setups/luxon';
 
 import { relations } from 'drizzle-orm';
-import { sqliteTable as table } from 'drizzle-orm/sqlite-core';
+import { sqliteTable as table, index } from 'drizzle-orm/sqlite-core';
 import * as t from 'drizzle-orm/sqlite-core';
 import { DateTime } from 'luxon';
 
@@ -97,8 +97,10 @@ export const episode = table(
       .notNull()
       .references(() => stream.id),
     premium: t.integer({ mode: 'boolean' }).notNull(),
-  },
-  () => [],
+  }, (table) => [
+    index("seriesIdIndex").on(table.seriesId),
+    index("orderIndex").on(table.order),
+  ],
 );
 export const episodeRelation = relations(episode, ({ one }) => ({
   series: one(series, {
@@ -138,8 +140,11 @@ export const program = table(
       .text()
       .notNull()
       .references(() => episode.id),
-  },
-  () => [],
+  }, (table) => [
+    index("startAtIndex").on(table.startAt),
+    index("channelIdIndex").on(table.channelId),
+    index("episodeIdIndex").on(table.episodeId),
+  ],
 );
 export const programRelation = relations(program, ({ one }) => ({
   channel: one(channel, {
@@ -163,8 +168,11 @@ export const recommendedItem = table(
       .references(() => recommendedModule.id),
     seriesId: t.text().references(() => series.id),
     episodeId: t.text().references(() => episode.id),
-  },
-  () => [],
+  }, (table) => [
+    index("moduleIdIndex").on(table.moduleId),
+    index("seriesIdIndex").on(table.seriesId),
+    index("episodeIdIndex").on(table.episodeId),
+  ],
 );
 export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
   module: one(recommendedModule, {
@@ -189,8 +197,10 @@ export const recommendedModule = table(
     title: t.text().notNull(),
     referenceId: t.text().notNull(),
     type: t.text().notNull(),
-  },
-  () => [],
+  }, (table) => [
+    index("orderIndex").on(table.order),
+    index("referenceIdIndex").on(table.referenceId),
+  ],
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
   items: many(recommendedItem),
