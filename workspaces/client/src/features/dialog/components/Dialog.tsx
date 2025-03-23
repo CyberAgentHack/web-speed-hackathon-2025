@@ -1,5 +1,4 @@
-import * as HeadlessUi from '@headlessui/react';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -8,15 +7,36 @@ interface Props {
 }
 
 export const Dialog = ({ children, isOpen, onClose }: Props) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (isOpen) {
+      dialog.showModal();
+      // スクロール防止
+      document.body.style.overflow = 'hidden';
+    } else {
+      dialog.close();
+      // スクロール復帰
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   return (
-    <HeadlessUi.Dialog
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000077]"
-      open={isOpen}
-      onClose={onClose}
+    <dialog
+      ref={dialogRef}
+      className="m-auto w-[480px] rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F] bg-[#171717] px-[16px] py-[32px] text-[#ffffff]"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      <HeadlessUi.DialogPanel className="w-[480px] shrink-0 grow-0 rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F] bg-[#171717] px-[16px] py-[32px]">
-        {children}
-      </HeadlessUi.DialogPanel>
-    </HeadlessUi.Dialog>
+      {children}
+    </dialog>
   );
 };

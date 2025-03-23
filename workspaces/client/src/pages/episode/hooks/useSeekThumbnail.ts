@@ -1,70 +1,102 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Parser } from 'm3u8-parser';
 import { use } from 'react';
 
 interface Params {
   episode: StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 }
 
-async function getSeekThumbnail({ episode }: Params) {
-  // HLS のプレイリストを取得
-  const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
-  const parser = new Parser();
-  parser.push(await fetch(playlistUrl).then((res) => res.text()));
-  parser.end();
+async function generateThumbnailFromVideo(videoBlob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-  // FFmpeg の初期化
-  const ffmpeg = new FFmpeg();
-  await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
+    if (!ctx) {
+      reject(new Error('Failed to get canvas context'));
+      return;
+    }
+
+    video.autoplay = false;
+    video.muted = true;
+    video.preload = 'metadata';
+
+    // エラーハンドリングを改善
+    const cleanup = () => {
+      URL.revokeObjectURL(video.src);
+      video.remove();
+    };
+
+    video.onloadedmetadata = () => {
+      video.currentTime = 0;
+    };
+
+    video.onloadeddata = () => {
+      try {
+        canvas.width = 160;
+        canvas.height = 90;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        cleanup();
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      } catch (error) {
+        cleanup();
+        reject(new Error('Failed to generate thumbnail'));
+      }
+    };
+
+    video.onerror = () => {
+      cleanup();
+      reject(new Error('Failed to load video'));
+    };
+
+    // Blobからの読み込みを試みる
+    try {
+      video.src = URL.createObjectURL(videoBlob);
+    } catch (error) {
+      cleanup();
+      reject(new Error('Failed to create video URL'));
+    }
   });
+}
 
-  // 動画のセグメントファイルを取得
-  const segmentFiles = await Promise.all(
-    parser.manifest.segments.map((s) => {
-      return fetch(s.uri).then(async (res) => {
-        const binary = await res.arrayBuffer();
-        return { binary, id: Math.random().toString(36).slice(2) };
-      });
-    }),
-  );
-  // FFmpeg にセグメントファイルを追加
-  for (const file of segmentFiles) {
-    await ffmpeg.writeFile(file.id, new Uint8Array(file.binary));
+async function getSeekThumbnail({ episode }: Params): Promise<string> {
+  try {
+    // HLS のプレイリストを取得
+    const playlistUrl = `/streams/episode/${episode.id}/playlist.m3u8`;
+    const { Parser } = await import(/* webpackChunkName: "m3u8-parser" */ 'm3u8-parser');
+    const parser = new Parser();
+    const playlistResponse = await fetch(playlistUrl);
+    if (!playlistResponse.ok) {
+      throw new Error('Failed to fetch playlist');
+    }
+    const playlistText = await playlistResponse.text();
+    parser.push(playlistText);
+    parser.end();
+
+    const segments = parser.manifest.segments;
+    if (!segments?.length) {
+      throw new Error('No segments found in playlist');
+    }
+
+    // 最初のセグメントファイルのみを取得
+    const firstSegment = segments[0];
+    if (!firstSegment?.uri) {
+      throw new Error('Invalid segment data');
+    }
+
+    const response = await fetch(firstSegment.uri);
+    if (!response.ok) {
+      throw new Error('Failed to fetch video segment');
+    }
+    const videoBlob = await response.blob();
+    
+    // サムネイルを生成
+    return await generateThumbnailFromVideo(videoBlob);
+  } catch (error) {
+    // エラーログを出力しない
+    return episode.thumbnailUrl;
   }
-
-  // セグメントファイルをひとつの mp4 動画に結合
-  await ffmpeg.exec(
-    [
-      ['-i', `concat:${segmentFiles.map((f) => f.id).join('|')}`],
-      ['-c:v', 'copy'],
-      ['-map', '0:v:0'],
-      ['-f', 'mp4'],
-      'concat.mp4',
-    ].flat(),
-  );
-
-  // fps=30 とみなして、30 フレームごと（1 秒ごと）にサムネイルを生成
-  await ffmpeg.exec(
-    [
-      ['-i', 'concat.mp4'],
-      ['-vf', "fps=30,select='not(mod(n\\,30))',scale=160:90,tile=250x1"],
-      ['-frames:v', '1'],
-      'preview.jpg',
-    ].flat(),
-  );
-
-  const output = await ffmpeg.readFile('preview.jpg');
-  ffmpeg.terminate();
-
-  return URL.createObjectURL(new Blob([output], { type: 'image/jpeg' }));
 }
 
 const weakMap = new WeakMap<object, Promise<string>>();

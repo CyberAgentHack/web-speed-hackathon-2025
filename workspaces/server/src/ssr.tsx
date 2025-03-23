@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -13,6 +13,10 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from 'react-router';
 
+interface WebpackManifest {
+  [key: string]: string;
+}
+
 function getFiles(parent: string): string[] {
   const dirents = readdirSync(parent, { withFileTypes: true });
   return dirents
@@ -26,12 +30,32 @@ function getFilePaths(relativePath: string, rootDir: string): string[] {
 }
 
 export function registerSsr(app: FastifyInstance): void {
+  const clientDistPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist');
+  const publicPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public');
+  
+  // マニフェストファイルを読み込む
+  const manifestPath = path.join(clientDistPath, 'manifest.json');
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8')) as WebpackManifest;
+
   app.register(fastifyStatic, {
     prefix: '/public/',
-    root: [
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist'),
-      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../public'),
-    ],
+    root: [clientDistPath, publicPath],
+    setHeaders: (res, path) => {
+      // 画像ファイルに対してのみキャッシュヘッダーを設定
+      if (path.endsWith('.webp') || path.endsWith('.jpg') || path.endsWith('.jpeg') || 
+          path.endsWith('.png') || path.endsWith('.gif') || path.endsWith('.svg')) {
+        // キャッシュ制御
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        res.setHeader('Vary', 'Accept, Accept-Encoding');
+        res.setHeader('Accept-CH', 'DPR, Width, Viewport-Width');
+        // Keep-Alive の設定
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('Keep-Alive', 'timeout=3000, max=1000');
+      }
+    },
+    cacheControl: true,
+    immutable: true,
+    maxAge: '1y'
   });
 
   app.get('/favicon.ico', (_, reply) => {
@@ -51,7 +75,7 @@ export function registerSsr(app: FastifyInstance): void {
     }
 
     const router = createStaticRouter(handler.dataRoutes, context);
-    renderToString(
+    const content = renderToString(
       <StrictMode>
         <StoreProvider createStore={() => store}>
           <StaticRouterProvider context={context} hydrate={false} router={router} />
@@ -66,14 +90,58 @@ export function registerSsr(app: FastifyInstance): void {
       getFilePaths('public/logos', rootDir),
     ].flat();
 
+    // JavaScriptファイルの読み込み順序を制御
+    const criticalJsFiles = [
+      manifest['runtime.js'] || '',  // ランタイムを最初に
+      manifest['main.js'] || '',     // メインバンドル
+    ].filter(Boolean);
+
+    const deferredJsFiles = Object.entries(manifest)
+      .filter(([key]) => key.startsWith('vendor.') || key.startsWith('common.'))
+      .map(([, value]) => value)
+      .filter(Boolean);
+
     reply.type('text/html').send(/* html */ `
       <!DOCTYPE html>
       <html lang="ja">
         <head>
           <meta charSet="UTF-8" />
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-          <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
+          <meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width" />
+          <link rel="preconnect" href="/public/" />
+          <script>
+            // UnoCSS/Tailwindのスタイルを即時適用
+            (function() {
+              const style = document.createElement('style');
+              style.textContent = \`
+                .line-clamp-1 {
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                }
+                .line-clamp-2 {
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                }
+                .line-clamp-3 {
+                  display: -webkit-box;
+                  -webkit-line-clamp: 3;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                }
+              \`;
+              document.head.appendChild(style);
+            })();
+          </script>
+          ${criticalJsFiles.map(file => `<script src="${file}"></script>`).join('\n')}
+          ${deferredJsFiles.map(file => `<script src="${file}" defer></script>`).join('\n')}
+          ${imagePaths
+            .filter(path => path.match(/\.(webp|jpe?g)$/))
+            .map(() => '')
+            .join('\n')}
         </head>
         <body></body>
       </html>

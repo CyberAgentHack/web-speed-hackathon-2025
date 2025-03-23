@@ -1,31 +1,47 @@
-import { useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import { useEffect, useRef, useState } from 'react';
 
 const MIN_WIDTH = 276;
 const GAP = 12;
 
 // repeat(auto-fill, minmax(276px, 1fr)) を計算で求める
 export function useCarouselItemWidth() {
-  const forceUpdate = useUpdate();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [itemWidth, setItemWidth] = useState(MIN_WIDTH);
 
-  useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 250);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  function updateWidth() {
+    if (containerRef.current == null) {
+      setItemWidth(MIN_WIDTH);
+      return;
+    }
 
-  if (containerRef.current == null) {
-    return { ref: containerRef, width: MIN_WIDTH };
+    const styles = window.getComputedStyle(containerRef.current);
+    const innerWidth = containerRef.current.clientWidth - parseInt(styles.paddingLeft) - parseInt(styles.paddingRight);
+    const itemCount = Math.max(0, Math.floor((innerWidth + GAP) / (MIN_WIDTH + GAP)));
+    const newWidth = Math.floor((innerWidth + GAP) / itemCount - GAP);
+    
+    // 前回と同じ幅の場合は更新をスキップ
+    if (newWidth !== itemWidth) {
+      setItemWidth(newWidth);
+    }
   }
 
-  const styles = window.getComputedStyle(containerRef.current);
-  const innerWidth = containerRef.current.clientWidth - parseInt(styles.paddingLeft) - parseInt(styles.paddingRight);
-  const itemCount = Math.max(0, Math.floor((innerWidth + GAP) / (MIN_WIDTH + GAP)));
-  const itemWidth = Math.floor((innerWidth + GAP) / itemCount - GAP);
+  useEffect(() => {
+    // ResizeObserverを使用してコンテナのサイズ変更を監視
+    const observer = new ResizeObserver(() => {
+      updateWidth();
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    // 初回実行
+    updateWidth();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return { ref: containerRef, width: itemWidth };
 }

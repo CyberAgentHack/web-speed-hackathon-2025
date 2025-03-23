@@ -6,10 +6,15 @@ import { episodeService } from '@wsh-2025/client/src/features/episode/services/e
 
 type Episode = StandardSchemaV1.InferOutput<typeof schema.getEpisodeByIdResponse>;
 
-export function useEpisode(episodeId: string) {
+export function useEpisode(episodeId: string | null) {
   const [episode, setEpisode] = useState<Episode | null>(null);
 
   useEffect(() => {
+    if (!episodeId) {
+      setEpisode(null);
+      return;
+    }
+
     episodeService
       .fetchEpisodeById({ episodeId })
       .then(setEpisode)

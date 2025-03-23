@@ -1,5 +1,5 @@
-import '@wsh-2025/client/src/setups/polyfills';
-import '@wsh-2025/client/src/setups/luxon';
+// import '@wsh-2025/client/src/setups/polyfills';
+// import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';

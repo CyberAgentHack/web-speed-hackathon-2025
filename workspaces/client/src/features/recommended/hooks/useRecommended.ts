@@ -4,14 +4,40 @@ interface Params {
   referenceId: string;
 }
 
-export function useRecommended({ referenceId }: Params) {
+interface RecommendedItem {
+  episode: {
+    description: string;
+    id: string;
+    premium: boolean;
+    thumbnailUrl: string;
+    title: string;
+  } | null;
+  id: string;
+  series: {
+    id: string;
+    thumbnailUrl: string;
+    title: string;
+  } | null;
+}
+
+interface RecommendedModule {
+  id: string;
+  items: RecommendedItem[];
+  title: string;
+  type: 'carousel' | 'jumbotron';
+}
+
+export function useRecommended({ referenceId }: Params): RecommendedModule[] {
   const state = useStore((s) => s);
 
+  // 2回目以降の呼び出しはキャッシュを使わない
   const moduleIds = state.features.recommended.references[referenceId];
+  if (!moduleIds) {
+    return [];
+  }
 
-  const modules = (moduleIds ?? [])
+  // キャッシュを使わずに毎回新しい配列を生成
+  return moduleIds
     .map((moduleId) => state.features.recommended.recommendedModules[moduleId])
-    .filter(<T>(m: T): m is NonNullable<T> => m != null);
-
-  return modules;
+    .filter(<T>(m: T): m is NonNullable<T> => m != null) as RecommendedModule[];
 }

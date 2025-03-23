@@ -14,7 +14,8 @@ async function main() {
   const app = fastify();
 
   app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+    reply.header('cache-control', 'public, max-age=3600, stale-while-revalidate=86400');
+    reply.header('vary', 'accept-encoding');
   });
   app.register(cors, {
     origin: true,

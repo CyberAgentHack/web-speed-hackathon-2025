@@ -19,7 +19,7 @@ export const HomePage = () => {
       <div className="w-full py-[48px]">
         {modules.map((module) => {
           return (
-            <div key={module.id} className="mb-[24px] px-[24px]">
+            <div key={module.id} className="mb-[24px] px-[24px] min-h-[250px] flex">
               <RecommendedSection module={module} />
             </div>
           );

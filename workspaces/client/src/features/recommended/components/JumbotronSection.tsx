@@ -1,7 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { useRef } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { NavLink } from 'react-router';
 import invariant from 'tiny-invariant';
@@ -33,22 +32,21 @@ export const JumbotronSection = ({ module }: Props) => {
         {({ isTransitioning }) => {
           return (
             <>
-              <div className="grow-1 shrink-1 p-[24px]">
-                <div className="mb-[16px] w-full text-center text-[22px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
-                </div>
-                <div className="w-full text-center text-[14px] font-bold text-[#ffffff]">
-                  <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
+              <div className="flex min-w-0 grow basis-3/5 flex-col justify-center p-[24px]">
+                <h2 className="mb-[16px] min-h-[66px] w-full text-center text-[22px] font-bold text-[#ffffff] line-clamp-2 overflow-hidden text-ellipsis">
+                  {episode.title}
+                </h2>
+                <div className="min-h-[63px] w-full text-center text-[14px] font-bold text-[#ffffff] line-clamp-3 overflow-hidden text-ellipsis">
+                  {episode.description}
                 </div>
               </div>
 
               <Flipped stagger flipId={isTransitioning ? `episode-${episode.id}` : 0}>
-                <div className="h-full w-auto shrink-0 grow-0">
+                <div className="aspect-video h-[260px] w-[462px] shrink-0">
                   <Player
                     loop
-                    className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.ShakaPlayer}
+                    playerType={PlayerType.HlsJS}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
                 </div>

@@ -176,6 +176,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           series: {
             with: {
               episodes: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  order: true,
+                  seriesId: true,
+                  streamId: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                },
                 orderBy(episode, { asc }) {
                   return asc(episode.order);
                 },
@@ -215,6 +225,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           series: {
             with: {
               episodes: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  order: true,
+                  seriesId: true,
+                  streamId: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                },
                 orderBy(episode, { asc }) {
                   return asc(episode.order);
                 },
@@ -389,6 +409,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               series: {
                 with: {
                   episodes: {
+                    columns: {
+                      id: true,
+                      title: true,
+                      description: true,
+                      order: true,
+                      seriesId: true,
+                      streamId: true,
+                      thumbnailUrl: true,
+                      premium: true,
+                    },
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
@@ -433,6 +463,16 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               series: {
                 with: {
                   episodes: {
+                    columns: {
+                      id: true,
+                      title: true,
+                      description: true,
+                      order: true,
+                      seriesId: true,
+                      streamId: true,
+                      thumbnailUrl: true,
+                      premium: true,
+                    },
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
@@ -470,6 +510,13 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
       const database = getDatabase();
 
       const modules = await database.query.recommendedModule.findMany({
+        columns: {
+          id: true,
+          title: true,
+          type: true,
+          order: true,
+          referenceId: true,
+        },
         orderBy(module, { asc }) {
           return asc(module.order);
         },
@@ -478,29 +525,80 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         },
         with: {
           items: {
+            columns: {
+              id: true,
+              order: true,
+              seriesId: true,
+              episodeId: true,
+              moduleId: true,
+            },
             orderBy(item, { asc }) {
               return asc(item.order);
             },
             with: {
               series: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  thumbnailUrl: true,
+                },
                 with: {
                   episodes: {
+                    columns: {
+                      id: true,
+                      title: true,
+                      // description: true,
+                      order: true,
+                      seriesId: true,
+                      streamId: true,
+                      thumbnailUrl: true,
+                      premium: true,
+                    },
                     orderBy(episode, { asc }) {
                       return asc(episode.order);
                     },
+                    limit: 1,
                   },
                 },
               },
               episode: {
+                columns: {
+                  id: true,
+                  title: true,
+                  description: true,
+                  order: true,
+                  seriesId: true,
+                  streamId: true,
+                  thumbnailUrl: true,
+                  premium: true,
+                },
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      id: true,
+                      title: true,
+                      description: true,
+                      thumbnailUrl: true,
                     },
+                    // with: {
+                    //   episodes: {
+                    //     columns: {
+                    //       id: true,
+                    //       title: true,
+                    //       description: true,
+                    //       order: true,
+                    //       seriesId: true,
+                    //       streamId: true,
+                    //       thumbnailUrl: true,
+                    //       premium: true,
+                    //     },
+                    //     orderBy(episode, { asc }) {
+                    //       return asc(episode.order);
+                    //     },
+                    //     limit: 1,
+                    //   },
+                    // },
                   },
                 },
               },
@@ -642,7 +740,7 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
         return reply.code(401).send();
       }
       req.session.set('id', void 0);
-      reply.code(200).send();
+      reply.code(204).send();
     },
   });
 
