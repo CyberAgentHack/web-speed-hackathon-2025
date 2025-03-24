@@ -15,12 +15,15 @@ export function useSubscribePointer(): void {
     };
     window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
 
-    let immediate = setImmediate(function tick() {
+    let animationFrameId: number;
+    const tick = () => {
       s.features.layout.updatePointer({ ...current });
-      immediate = setImmediate(tick);
-    });
+      animationFrameId = requestAnimationFrame(tick);
+    };
+    animationFrameId = requestAnimationFrame(tick);
+
     abortController.signal.addEventListener('abort', () => {
-      clearImmediate(immediate);
+      cancelAnimationFrame(animationFrameId);
     });
 
     return () => {

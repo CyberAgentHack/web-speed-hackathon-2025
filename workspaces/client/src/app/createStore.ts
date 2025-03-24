@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -13,6 +12,30 @@ import { createTimetableStoreSlice } from '@wsh-2025/client/src/features/timetab
 import { createEpisodePageStoreSlice } from '@wsh-2025/client/src/pages/episode/stores/createEpisodePageStoreSlice';
 import { createProgramPageStoreSlice } from '@wsh-2025/client/src/pages/program/stores/createProgramPageStoreSlice';
 import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timetable/stores/createTimetablePageStoreSlice';
+
+type DeepMergeable = Record<string, unknown>;
+
+function isObject(value: unknown): value is DeepMergeable {
+  return value != null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function deepMerge<T extends DeepMergeable, U extends DeepMergeable>(target: T, source: U): T & U {
+  if (!isObject(source)) return source as T & U;
+  if (!isObject(target)) return source as T & U;
+
+  const merged = { ...target } as T & U;
+  for (const key in source) {
+    if (isObject(source[key]) && key in target && isObject(target[key])) {
+      merged[key] = deepMerge(target[key] as DeepMergeable, source[key] as DeepMergeable) as (T & U)[Extract<
+        keyof U,
+        string
+      >];
+    } else {
+      merged[key] = source[key] as (T & U)[Extract<keyof U, string>];
+    }
+  }
+  return merged;
+}
 
 interface Props {
   hydrationData?: unknown;
@@ -39,7 +62,9 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  if (hydrationData && isObject(hydrationData)) {
+    store.setState((s) => deepMerge(s, hydrationData));
+  }
 
   return store;
 };
