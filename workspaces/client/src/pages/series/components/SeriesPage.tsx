@@ -1,31 +1,33 @@
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Params, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
+import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { useSeriesById } from '@wsh-2025/client/src/features/series/hooks/useSeriesById';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { seriesId }: Params) => {
-  invariant(seriesId);
+  if (!seriesId) throw new Error('Series ID is required');
+
   const series = await store.getState().features.series.fetchSeriesById({ seriesId });
   const modules = await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: seriesId });
+
   return { modules, series };
 };
 
 export const SeriesPage = () => {
   const { seriesId } = useParams();
-  invariant(seriesId);
 
-  const series = useSeriesById({ seriesId });
-  invariant(series);
+  const series = useSeriesById({ seriesId: seriesId || '' });
+  const modules = useRecommended({ referenceId: seriesId || '' });
 
-  const modules = useRecommended({ referenceId: seriesId });
+  if (!seriesId || !series) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -41,12 +43,8 @@ export const SeriesPage = () => {
             />
           </Flipped>
           <div className="grow-1 shrink-1 overflow-hidden">
-            <h1 className="mb-[16px] text-[32px] font-bold text-[#ffffff]">
-              <Ellipsis ellipsis reflowOnResize maxLine={2} text={series.title} visibleLine={2} />
-            </h1>
-            <div className="text-[14px] text-[#999999]">
-              <Ellipsis ellipsis reflowOnResize maxLine={3} text={series.description} visibleLine={3} />
-            </div>
+            <h1 className="mb-[16px] line-clamp-2 text-[32px] font-bold text-[#ffffff]">{series.title}</h1>
+            <div className="line-clamp-3 text-[14px] text-[#999999]">{series.description}</div>
           </div>
         </header>
 
@@ -55,11 +53,11 @@ export const SeriesPage = () => {
           <SeriesEpisodeList episodes={series.episodes} selectedEpisodeId={null} />
         </div>
 
-        {modules[0] != null ? (
+        {modules[0] && (
           <div>
             <RecommendedSection module={modules[0]} />
           </div>
-        ) : null}
+        )}
       </div>
     </>
   );

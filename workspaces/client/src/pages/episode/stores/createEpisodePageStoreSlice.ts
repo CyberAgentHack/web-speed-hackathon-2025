@@ -46,6 +46,7 @@ export const createEpisodePageStoreSlice = () => {
           },
           { signal: abortController.signal },
         );
+
         player.videoElement.addEventListener(
           'pause',
           () => {
@@ -54,14 +55,20 @@ export const createEpisodePageStoreSlice = () => {
           { signal: abortController.signal },
         );
 
-        const interval = setInterval(function tick() {
+        let rafId: number | null = null;
+        const updatePlayerState = () => {
           set(() => ({
             currentTime: player.currentTime,
             duration: player.duration,
           }));
-        }, 250);
+
+          rafId = requestAnimationFrame(updatePlayerState);
+        };
+
+        rafId = requestAnimationFrame(updatePlayerState);
+
         abortController.signal.addEventListener('abort', () => {
-          clearInterval(interval);
+          if (rafId) cancelAnimationFrame(rafId);
         });
 
         set(() => ({

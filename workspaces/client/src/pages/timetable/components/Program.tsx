@@ -1,9 +1,8 @@
-import { StandardSchemaV1 } from '@standard-schema/spec';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { DateTime } from 'luxon';
 import { ReactElement, useEffect, useRef, useState } from 'react';
-import Ellipsis from 'react-ellipsis-component';
-import { ArrayValues } from 'type-fest';
+import type { ArrayValues } from 'type-fest';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
 import { ProgramDetailDialog } from '@wsh-2025/client/src/pages/timetable/components/ProgramDetailDialog';
@@ -35,14 +34,22 @@ export const Program = ({ height, program }: Props): ReactElement => {
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    let rafId: number | null = null;
+
+    const checkImageVisibility = () => {
       const imageHeight = imageRef.current?.clientHeight ?? 0;
       const titleHeight = titleRef.current?.clientHeight ?? 0;
       setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
+
+      rafId = requestAnimationFrame(checkImageVisibility);
+    };
+
+    rafId = requestAnimationFrame(checkImageVisibility);
+
     return () => {
-      clearInterval(interval);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [height]);
 
@@ -65,7 +72,11 @@ export const Program = ({ height, program }: Props): ReactElement => {
               <div
                 className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
               >
-                <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
+                <div
+                  className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}] line-clamp-3`}
+                >
+                  {program.title}
+                </div>
               </div>
             </div>
             <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>

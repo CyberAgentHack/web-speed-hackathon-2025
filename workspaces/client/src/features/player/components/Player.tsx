@@ -1,5 +1,4 @@
 import { Ref, useEffect, useRef } from 'react';
-import invariant from 'tiny-invariant';
 import { assignRef } from 'use-callback-ref';
 
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
@@ -18,20 +17,32 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
 
   useEffect(() => {
     const mountElement = mountRef.current;
-    invariant(mountElement);
+    if (!mountElement) return;
 
     const abortController = new AbortController();
     let player: PlayerWrapper | null = null;
 
-    void import('@wsh-2025/client/src/features/player/logics/create_player').then(({ createPlayer }) => {
-      if (abortController.signal.aborted) {
-        return;
+    void (async () => {
+      try {
+        const { createPlayer } = await import('@wsh-2025/client/src/features/player/logics/create_player');
+
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        player = await createPlayer(playerType);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        player.load(playlistUrl, { loop: loop ?? false });
+        mountElement.appendChild(player.videoElement);
+        assignRef(playerRef, player);
+      } catch (error) {
+        console.error('Error loading player:', error);
       }
-      player = createPlayer(playerType);
-      player.load(playlistUrl, { loop: loop ?? false });
-      mountElement.appendChild(player.videoElement);
-      assignRef(playerRef, player);
-    });
+    })();
 
     return () => {
       abortController.abort();

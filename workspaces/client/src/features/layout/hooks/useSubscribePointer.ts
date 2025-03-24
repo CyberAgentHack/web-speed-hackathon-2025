@@ -10,8 +10,14 @@ export function useSubscribePointer(): void {
 
     const current = { x: 0, y: 0 };
     const handlePointerMove = (ev: MouseEvent) => {
-      current.x = ev.clientX;
-      current.y = ev.clientY;
+      if (current.x !== ev.clientX || current.y !== ev.clientY) {
+        current.x = ev.clientX;
+        current.y = ev.clientY;
+
+        requestAnimationFrame(() => {
+          s.features.layout.updatePointer({ x: current.x, y: current.y });
+        });
+      }
     };
     window.addEventListener('pointermove', handlePointerMove, { signal: abortController.signal });
 

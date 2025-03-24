@@ -1,10 +1,8 @@
 import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
 import { Link, Params, useNavigate, useParams } from 'react-router';
 import { useUpdate } from 'react-use';
-import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
@@ -18,7 +16,7 @@ import { PlayerController } from '@wsh-2025/client/src/pages/program/components/
 import { usePlayerRef } from '@wsh-2025/client/src/pages/program/hooks/usePlayerRef';
 
 export const prefetch = async (store: ReturnType<typeof createStore>, { programId }: Params) => {
-  invariant(programId);
+  if (!programId) throw new Error('Program ID is required');
 
   const now = DateTime.now();
   const since = now.startOf('day').toISO();
@@ -30,15 +28,16 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { programI
   const modules = await store
     .getState()
     .features.recommended.fetchRecommendedModulesByReferenceId({ referenceId: programId });
+
   return { channels, modules, program, timetable };
 };
 
 export const ProgramPage = () => {
   const { programId } = useParams();
-  invariant(programId);
+  if (!programId) return null;
 
   const program = useProgramById({ programId });
-  invariant(program);
+  if (!program) return null;
 
   const timetable = useTimetable();
   const nextProgram = timetable[program.channel.id]?.find((p) => {
@@ -51,8 +50,10 @@ export const ProgramPage = () => {
 
   const forceUpdate = useUpdate();
   const navigate = useNavigate();
+
   const isArchivedRef = useRef(DateTime.fromISO(program.endAt) <= DateTime.now());
   const isBroadcastStarted = DateTime.fromISO(program.startAt) <= DateTime.now();
+
   useEffect(() => {
     if (isArchivedRef.current) {
       return;
@@ -140,20 +141,14 @@ export const ProgramPage = () => {
         </Flipped>
 
         <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={program.episode.series.title} visibleLine={1} />
-          </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={program.title} visibleLine={2} />
-          </h1>
+          <div className="line-clamp-1 text-[16px] text-[#ffffff]">{program.episode.series.title}</div>
+          <h1 className="mt-[8px] line-clamp-2 text-[22px] font-bold text-[#ffffff]">{program.title}</h1>
           <div className="mt-[8px] text-[16px] text-[#999999]">
             {DateTime.fromISO(program.startAt).toFormat('L月d日 H:mm')}
             {' 〜 '}
             {DateTime.fromISO(program.endAt).toFormat('L月d日 H:mm')}
           </div>
-          <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.description} visibleLine={3} />
-          </div>
+          <div className="mt-[16px] line-clamp-3 text-[16px] text-[#999999]">{program.description}</div>
         </div>
 
         {modules[0] != null ? (

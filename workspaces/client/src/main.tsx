@@ -1,4 +1,4 @@
-import '@wsh-2025/client/src/setups/polyfills';
+import 'setimmediate';
 import '@wsh-2025/client/src/setups/luxon';
 import '@wsh-2025/client/src/setups/unocss';
 
@@ -11,22 +11,28 @@ import { createRoutes } from '@wsh-2025/client/src/app/createRoutes';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 
 declare global {
-  var __zustandHydrationData: unknown;
   var __staticRouterHydrationData: HydrationState;
 }
 
 function main() {
   const store = createStore({});
-  const router = createBrowserRouter(createRoutes(store), {});
+  const router = createBrowserRouter(createRoutes(store), {
+    hydrationData: window.__staticRouterHydrationData,
+  });
 
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <StoreProvider createStore={() => store}>
-        <RouterProvider router={router} />
-      </StoreProvider>
-    </StrictMode>,
-  );
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    hydrateRoot(
+      rootElement,
+      <StrictMode>
+        <StoreProvider createStore={() => store}>
+          <RouterProvider router={router} />
+        </StoreProvider>
+      </StrictMode>,
+    );
+  } else {
+    console.error('Root element not found');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', main);

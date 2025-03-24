@@ -24,8 +24,8 @@ export function useScrollSnap({ scrollPadding }: { scrollPadding: number }) {
       isScrolling.current = false;
     };
 
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    let interval = setInterval(() => {
+    let rafId: number | null = null;
+    const checkAndSnapScroll = () => {
       if (!containerRef.current) {
         return;
       }
@@ -33,6 +33,7 @@ export function useScrollSnap({ scrollPadding }: { scrollPadding: number }) {
       const childElements = Array.from(containerRef.current.children) as HTMLElement[];
       const childScrollPositions = childElements.map((element) => element.offsetLeft);
       const scrollPosition = containerRef.current.scrollLeft;
+
       const childIndex = childScrollPositions.reduce((prev, curr, index) => {
         return Math.abs(curr - scrollPosition) < Math.abs((childScrollPositions[prev] ?? 0) - scrollPosition)
           ? index
@@ -40,10 +41,12 @@ export function useScrollSnap({ scrollPadding }: { scrollPadding: number }) {
       }, 0);
 
       if (isScrolling.current) {
+        rafId = requestAnimationFrame(checkAndSnapScroll);
         return;
       }
 
       if (isSnapping.current) {
+        rafId = requestAnimationFrame(checkAndSnapScroll);
         return;
       }
 
@@ -53,10 +56,19 @@ export function useScrollSnap({ scrollPadding }: { scrollPadding: number }) {
         left: (childScrollPositions[childIndex] ?? 0) - scrollPadding,
       });
 
-      timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         isSnapping.current = false;
       }, 1000);
-    });
+
+      rafId = requestAnimationFrame(checkAndSnapScroll);
+
+      return () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        clearTimeout(timer);
+      };
+    };
+
+    const initialRafId = requestAnimationFrame(checkAndSnapScroll);
 
     containerRef.current.addEventListener('scroll', handleScroll);
     containerRef.current.addEventListener('scrollend', handleScrollend);
@@ -64,12 +76,10 @@ export function useScrollSnap({ scrollPadding }: { scrollPadding: number }) {
     return () => {
       containerRef.current?.removeEventListener('scroll', handleScroll);
       containerRef.current?.removeEventListener('scrollend', handleScrollend);
-      clearInterval(interval);
-      if (timer) {
-        clearTimeout(timer);
-      }
+
+      if (initialRafId) cancelAnimationFrame(initialRafId);
     };
-  }, []);
+  }, [scrollPadding]);
 
   return containerRef;
 }

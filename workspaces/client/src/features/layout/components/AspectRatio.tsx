@@ -1,5 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import { ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -8,24 +7,11 @@ interface Props {
 }
 
 export const AspectRatio = ({ children, ratioHeight, ratioWidth }: Props) => {
-  const forceUpdate = useUpdate();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  const width = containerRef.current?.getBoundingClientRect().width ?? 0;
-  const height = (width * ratioHeight) / ratioWidth;
+  const paddingTop = `${(ratioHeight / ratioWidth) * 100}%`;
 
   return (
-    <div ref={containerRef} className={`h-[${height}px] relative w-full`}>
-      {children}
+    <div className="relative w-full" style={{ paddingTop }}>
+      <div className="absolute inset-0">{children}</div>
     </div>
   );
 };
