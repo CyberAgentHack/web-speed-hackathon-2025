@@ -75,9 +75,6 @@ importers:
       m3u8-parser:
         specifier: 7.2.0
         version: 7.2.0
-      p-min-delay:
-        specifier: 4.0.2
-        version: 4.0.2
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -4160,10 +4157,6 @@ packages:
     resolution: {integrity: sha512-wPrq66Llhl7/4AGC6I+cqxT07LhXvWL08LNXz1fENOw0Ap4sRZZ/gZpTTJ5jpurzzzfS2W/Ge9BY3LgLjCShcw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  p-min-delay@4.0.2:
-    resolution: {integrity: sha512-7hJcTq/MGF5pNHbQ2akrpPy1N43YYlB4RPECDSbPRn4xP/dsgP0I6ls7NvSUQ5k88o+CyATMOrQiZ/PK4aQR9w==}
-    engines: {node: '>=12'}
-
   p-retry@6.2.1:
     resolution: {integrity: sha512-hEt02O4hUct5wtwg4H4KcWgDdm+l1bOaEy/hWzd8xtXB9BqxTWBBhb+2ImAtH4Cv4rPjV76xN3Zumqk3k3AhhQ==}
     engines: {node: '>=16.17'}
@@ -5293,10 +5286,6 @@ packages:
   yocto-queue@1.1.1:
     resolution: {integrity: sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g==}
     engines: {node: '>=12.20'}
-
-  yoctodelay@1.2.0:
-    resolution: {integrity: sha512-12y/P9MSig9/5BEhBgylss+fkHiCRZCvYR81eH35NW9uw801cvJt31EAV+WOLcwZRZbLiIQl/hxcdXXXFmGvXg==}
-    engines: {node: '>=4'}
 
   zod-openapi@4.2.0:
     resolution: {integrity: sha512-lnm1e2X5/Ymox5mYxdspy/y52Hb4rPxG1bcwOuHS+YIpxQNEt9s8G4zo34jm0M3+q71TAxgqzcbPLiBXrsfsGA==}
@@ -9270,10 +9259,6 @@ snapshots:
     dependencies:
       p-limit: 4.0.0
 
-  p-min-delay@4.0.2:
-    dependencies:
-      yoctodelay: 1.2.0
-
   p-retry@6.2.1:
     dependencies:
       '@types/retry': 0.12.2
@@ -10490,8 +10475,6 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yocto-queue@1.1.1: {}
-
-  yoctodelay@1.2.0: {}
 
   zod-openapi@4.2.0(zod@3.24.1):
     dependencies:
