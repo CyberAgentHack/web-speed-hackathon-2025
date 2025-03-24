@@ -1,4 +1,5 @@
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import FluentLive24FilledIcon from '@wsh-2025/client/src/pages/program/components/FluentLive24FilledIcon';
 import { useMuted } from '@wsh-2025/client/src/pages/program/hooks/useMuted';
 
 export const PlayerController = () => {
@@ -11,7 +12,7 @@ export const PlayerController = () => {
       <div className="absolute inset-x-0 bottom-0 px-[12px]">
         <div className="flex w-full flex-row items-center justify-between">
           <div className="flex flex-row items-center">
-            <span className="i-fluent:live-24-filled m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]" />
+            <FluentLive24FilledIcon />
             <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">ライブ配信</span>
           </div>
 
