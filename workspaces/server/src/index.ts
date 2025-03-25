@@ -14,8 +14,10 @@ async function main() {
   const app = fastify();
 
   app.addHook('onSend', async (_req, reply) => {
+    // キャッシュを無効化
     reply.header('cache-control', 'no-store');
   });
+  // 全てのオリジンからのリクエストを許可
   app.register(cors, {
     origin: true,
   });
