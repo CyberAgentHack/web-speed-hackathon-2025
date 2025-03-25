@@ -219,3 +219,12 @@ $RECYCLE.BIN/
 
 # Wireit
 .wireit
+
+# direnv
+.direnv/
+
+# webpack-bundle-analyzer
+stats.json
+
+# rollup-plugin-visualizer
+stats.html

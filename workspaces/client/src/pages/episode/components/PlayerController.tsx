@@ -1,6 +1,7 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
+import classNames from 'classnames';
 import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
@@ -62,7 +63,10 @@ export const PlayerController = ({ episode }: Props) => {
                   }}
                 >
                   <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                    className={classNames(
+                      playing ? 'i-material-symbols:pause-rounded' : 'i-material-symbols:play-arrow-rounded',
+                      'm-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]',
+                    )}
                   />
                 </button>
               </Hoverable>
@@ -83,7 +87,10 @@ export const PlayerController = ({ episode }: Props) => {
                 type="button"
               >
                 <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  className={classNames(
+                    muted ? 'i-material-symbols:volume-off-rounded' : 'i-material-symbols:volume-up-rounded',
+                    'm-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]',
+                  )}
                   onClick={() => {
                     toggleMuted();
                   }}

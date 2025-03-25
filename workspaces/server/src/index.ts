@@ -8,14 +8,26 @@ import { initializeDatabase } from '@wsh-2025/server/src/drizzle/database';
 import { registerSsr } from '@wsh-2025/server/src/ssr';
 import { registerStreams } from '@wsh-2025/server/src/streams';
 
+const notPagePrefix = ['/api', '/streams', '/public', '/assets'];
+
 async function main() {
   await initializeDatabase();
 
-  const app = fastify();
+  // for react-router
+  const app = fastify({
+    rewriteUrl: (req) => {
+      if (req.url === undefined) {
+        return '/index.html';
+      }
 
-  app.addHook('onSend', async (_req, reply) => {
-    reply.header('cache-control', 'no-store');
+      if (notPagePrefix.some((prefix) => req.url?.startsWith(prefix))) {
+        return req.url;
+      }
+
+      return '/index.html';
+    },
   });
+
   app.register(cors, {
     origin: true,
   });

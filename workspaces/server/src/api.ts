@@ -450,12 +450,14 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
     },
   });
 
+  // FIXME: 応急処置
   api.route({
     method: 'GET',
     url: '/recommended/:referenceId',
     schema: {
       tags: ['レコメンド'],
-      params: schema.getRecommendedModulesRequestParams,
+      // params: schema.getRecommendedModulesRequestParams,
+      // querystring: schema.getRecommendedModulesRquestQuery,
       response: {
         200: {
           content: {
@@ -474,6 +476,8 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
           return asc(module.order);
         },
         where(module, { eq }) {
+          // @ts-expect-error FIXME: 応急処置
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           return eq(module.referenceId, req.params.referenceId);
         },
         with: {
@@ -482,31 +486,21 @@ export async function registerApi(app: FastifyInstance): Promise<void> {
               return asc(item.order);
             },
             with: {
-              series: {
-                with: {
-                  episodes: {
-                    orderBy(episode, { asc }) {
-                      return asc(episode.order);
-                    },
-                  },
-                },
-              },
               episode: {
                 with: {
                   series: {
-                    with: {
-                      episodes: {
-                        orderBy(episode, { asc }) {
-                          return asc(episode.order);
-                        },
-                      },
+                    columns: {
+                      title: true,
                     },
                   },
                 },
               },
+              series: true,
             },
           },
         },
+        // @ts-expect-error FIXME: 応急処置
+        limit: Number(req.query.limit),
       });
       reply.code(200).send(modules);
     },

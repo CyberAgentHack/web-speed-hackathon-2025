@@ -178,22 +178,21 @@ export const getProgramByIdResponse = program.extend({
 export const getRecommendedModulesRequestParams = z.object({
   referenceId: z.string(),
 });
+export const getRecommendedModulesRquestQuery = z.object({
+  limit: z.number().optional(),
+});
 export const getRecommendedModulesResponse = z.array(
   recommendedModule.extend({
     items: z.array(
       recommendedItem.extend({
-        series: series
-          .extend({
-            episodes: z.array(episode.extend({})),
-          })
-          .nullable(),
         episode: episode
           .extend({
-            series: series.extend({
-              episodes: z.array(episode.extend({})),
+            series: z.object({
+              title: z.string(),
             }),
           })
           .nullable(),
+        series: series.nullable(),
       }),
     ),
   }),

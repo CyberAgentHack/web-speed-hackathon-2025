@@ -19,14 +19,15 @@ interface RecommendedState {
 
 interface RecommendedActions {
   fetchRecommendedModulesByReferenceId: (params: {
+    limit?: number | undefined;
     referenceId: ReferenceId;
   }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
 }
 
 export const createRecommendedStoreSlice = () => {
   return lens<RecommendedState & RecommendedActions>((set) => ({
-    fetchRecommendedModulesByReferenceId: async ({ referenceId }) => {
-      const modules = await recommendedService.fetchRecommendedModulesByReferenceId({ referenceId });
+    fetchRecommendedModulesByReferenceId: async ({ limit, referenceId }) => {
+      const modules = await recommendedService.fetchRecommendedModulesByReferenceId({ limit, referenceId });
       set((state) => {
         return produce(state, (draft) => {
           draft.references[referenceId] = modules.map((module) => module.id);
