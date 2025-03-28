@@ -1,5 +1,5 @@
-import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/luxon';
+import '@wsh-2025/client/src/setups/polyfills';
 import '@wsh-2025/client/src/setups/unocss';
 
 import { StrictMode } from 'react';
@@ -19,8 +19,13 @@ function main() {
   const store = createStore({});
   const router = createBrowserRouter(createRoutes(store), {});
 
+  const root = document.getElementById('root');
+  if (!root) {
+    throw new Error('Root element not found');
+  }
+
   hydrateRoot(
-    document,
+    root,
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
