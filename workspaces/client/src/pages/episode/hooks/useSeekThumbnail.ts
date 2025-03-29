@@ -6,5 +6,5 @@ interface Params {
 }
 
 export const useSeekThumbnail = ({ episode }: Params): string => {
-  return `/public/images/thumbnails/${episode.id}/preview.png`;
+  return `/public/images/thumbnails/${episode.streamId}/preview.jpg`;
 };
