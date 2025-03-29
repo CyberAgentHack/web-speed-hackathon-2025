@@ -1,13 +1,12 @@
 import { Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
-import { Params, useParams } from 'react-router';
+import { Params, useLoaderData, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
-import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
 import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
@@ -27,14 +26,15 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
 };
 
 export const EpisodePage = () => {
+  type PrefetchReturnType = ReturnType<typeof prefetch>;
+  const { episode } = useLoaderData<Awaited<PrefetchReturnType>>();
+  invariant(episode);
+
   const authActions = useAuthActions();
   const user = useAuthUser();
 
   const { episodeId } = useParams();
   invariant(episodeId);
-
-  const episode = useEpisodeById({ episodeId });
-  invariant(episode);
 
   const modules = useRecommended({ referenceId: episodeId });
 
