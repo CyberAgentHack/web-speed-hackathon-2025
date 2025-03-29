@@ -5,6 +5,8 @@ import { Duration } from 'luxon';
 import invariant from 'tiny-invariant';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import { MaterialSymbolsPauseRounded } from '@wsh-2025/client/src/pages/episode/components/MaterialSymbolsPauseRounded';
+import { MaterialSymbolsPlayArrowRounded } from '@wsh-2025/client/src/pages/episode/components/MaterialSymbolsPlayArrowRounded';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
@@ -61,9 +63,7 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  />
+                  {playing ? <MaterialSymbolsPauseRounded /> : <MaterialSymbolsPlayArrowRounded />}
                 </button>
               </Hoverable>
 

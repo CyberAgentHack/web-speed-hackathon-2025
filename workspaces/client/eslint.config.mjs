@@ -4,5 +4,8 @@ export default [
   ...configs,
   {
     ignores: ['dist/*', '.wireit/*'],
+    rules: {
+      "react/jsx-sort-props": "off"
+    }
   },
 ];
