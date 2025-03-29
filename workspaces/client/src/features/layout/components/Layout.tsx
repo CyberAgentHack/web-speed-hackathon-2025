@@ -15,15 +15,12 @@ import FaSolidCalendarIcon from '@wsh-2025/client/src/features/layout/components
 import FaSolidSignOutAltIcon from '@wsh-2025/client/src/features/layout/components/FaSolidSignOutAltIcon';
 import FaSolidUserIcon from '@wsh-2025/client/src/features/layout/components/FaSolidUserIcon';
 import { Loading } from '@wsh-2025/client/src/features/layout/components/Loading';
-import { useSubscribePointer } from '@wsh-2025/client/src/features/layout/hooks/useSubscribePointer';
 
 interface Props {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: Props) => {
-  useSubscribePointer();
-
   const navigation = useNavigation();
   const isLoading =
     navigation.location != null && (navigation.location.state as { loading?: string } | null)?.['loading'] !== 'none';
