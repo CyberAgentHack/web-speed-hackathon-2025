@@ -66,9 +66,6 @@ importers:
       immer:
         specifier: 10.1.1
         version: 10.1.1
-      luxon:
-        specifier: 3.5.0
-        version: 3.5.0
       m3u8-parser:
         specifier: 7.2.0
         version: 7.2.0
@@ -4682,7 +4679,6 @@ packages:
 
   shaka-player@4.12.5:
     resolution: {integrity: sha512-jJEkASLivZ0Eqg+sIfBJWCWFDzo2l4rfG1e2y5apqphKbDZaMrSCX0Z/B14epJCfStSAwGqKyuC1D+K3e4xBEg==}
-    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
