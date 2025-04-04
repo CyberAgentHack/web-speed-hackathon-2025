@@ -20,7 +20,7 @@ class ShakaPlayerWrapper implements PlayerWrapper {
     this.playerType = playerType;
     this._player.configure({
       streaming: {
-        bufferingGoal: 50,
+        // bufferingGoal: 30,
       },
     });
   }
@@ -71,9 +71,10 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     muted: true,
     volume: 0.25,
   });
+  // TODO HlsJsの設定について要見直し
   private _player = new HlsJs({
-    enableWorker: false,
-    maxBufferLength: 50,
+    // enableWorker: false,
+    // maxBufferLength: 10,
   });
   readonly playerType: PlayerType.HlsJS;
 
@@ -135,8 +136,8 @@ class VideoJSPlayerWrapper implements PlayerWrapper {
 
   constructor(playerType: PlayerType.VideoJS) {
     const vhsConfig = (videojs as unknown as { Vhs: VhsConfig }).Vhs;
-    vhsConfig.GOAL_BUFFER_LENGTH = 50;
-    vhsConfig.MAX_GOAL_BUFFER_LENGTH = 50;
+    // vhsConfig.GOAL_BUFFER_LENGTH = 30;
+    // vhsConfig.MAX_GOAL_BUFFER_LENGTH = 30;
     this.playerType = playerType;
   }
 

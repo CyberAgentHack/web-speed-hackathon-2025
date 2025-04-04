@@ -1,6 +1,7 @@
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
+import { useMemo } from 'react';
 
 export const prefetch = async (store: ReturnType<typeof createStore>) => {
   const modules = await store
@@ -10,7 +11,9 @@ export const prefetch = async (store: ReturnType<typeof createStore>) => {
 };
 
 export const NotFoundPage = () => {
+  // TODO メモ化の方法については要変更
   const modules = useRecommended({ referenceId: 'error' });
+  // const modules = useMemo(() => useRecommended({ referenceId: 'error' }), []); 
   const module = modules.at(0);
 
   return (

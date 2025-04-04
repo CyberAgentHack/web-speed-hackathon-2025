@@ -1,5 +1,6 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
+// import { merge } from 'es-toolkit'
+import { merge } from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -39,7 +40,9 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  // TODO:型解決,lodashの排除
+  // store.setState((s) => merge(s, hydrationData));
+  store.setState((s) => merge(s, hydrationData));
 
   return store;
 };
