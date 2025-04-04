@@ -21,7 +21,6 @@
     "classnames": "2.5.1",
     "final-form": "4.20.10",
     "immer": "10.1.1",
-    "lodash": "4.17.21",
     "luxon": "3.5.0",
     "m3u8-parser": "7.2.0",
     "react": "19.0.0",

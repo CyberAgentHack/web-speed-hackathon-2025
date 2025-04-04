@@ -40,7 +40,7 @@ export function registerSsr(app: FastifyInstance): void {
     // @ts-expect-error ................
     const request = createStandardRequest(req, reply);
 
-    const store = createStore({});
+    const store = createStore();
     const handler = createStaticHandler(createRoutes(store));
     const context = await handler.query(request);
 

@@ -15,7 +15,7 @@ declare global {
 }
 
 function main() {
-  const store = createStore({});
+  const store = createStore();
   const router = createBrowserRouter(createRoutes(store), {});
 
   const root = document.getElementById('root');
