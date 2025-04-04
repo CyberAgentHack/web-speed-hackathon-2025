@@ -61,6 +61,7 @@
     "@wsh-2025/configs": "workspace:*",
     "arraybuffer-loader": "1.0.8",
     "babel-loader": "9.2.1",
+    "dayjs": "1.11.13",
     "hls.js": "1.5.17",
     "shaka-player": "4.12.5",
     "typescript": "5.7.2",

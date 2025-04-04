@@ -1,7 +1,7 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Duration } from 'luxon';
+import dayjs from 'dayjs';
 import invariant from 'tiny-invariant';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
@@ -68,9 +68,9 @@ export const PlayerController = ({ episode }: Props) => {
               </Hoverable>
 
               <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
-                {Duration.fromObject({ seconds: currentTime }).toFormat('mm:ss')}
+                {dayjs.duration(currentTime, 'seconds').format('mm:ss')}
                 {' / '}
-                {Duration.fromObject({ seconds: duration }).toFormat('mm:ss')}
+                {dayjs.duration(duration, 'seconds').format('mm:ss')}
               </span>
             </div>
           </div>

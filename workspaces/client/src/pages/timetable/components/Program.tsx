@@ -1,6 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
-import { DateTime } from 'luxon';
+import dayjs from 'dayjs';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { ArrayValues } from 'type-fest';
@@ -27,9 +27,9 @@ export const Program = ({ height, program }: Props): ReactElement => {
 
   const currentUnixtimeMs = useCurrentUnixtimeMs();
   const isBroadcasting =
-    DateTime.fromISO(program.startAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis() &&
-    DateTime.fromMillis(currentUnixtimeMs).toMillis() < DateTime.fromISO(program.endAt).toMillis();
-  const isArchived = DateTime.fromISO(program.endAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis();
+    dayjs(program.startAt).valueOf() <= dayjs(currentUnixtimeMs).valueOf() &&
+    dayjs(currentUnixtimeMs).valueOf() < dayjs(program.endAt).valueOf();
+  const isArchived = dayjs(program.endAt).valueOf() <= dayjs(currentUnixtimeMs).valueOf();
 
   const titleRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -60,7 +60,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
               <span
                 className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
               >
-                {DateTime.fromISO(program.startAt).toFormat('mm')}
+                {dayjs(program.startAt).format('mm')}
               </span>
               <div
                 className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
