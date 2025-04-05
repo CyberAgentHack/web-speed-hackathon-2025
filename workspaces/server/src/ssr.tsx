@@ -64,9 +64,7 @@ export function registerSsr(app: FastifyInstance): void {
           <script src="/public/main.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
-        <body>
-          <div id="root"></div>
-        </body>
+        <body></body>
       </html>
       <script>
         window.__staticRouterHydrationData = ${htmlescape({

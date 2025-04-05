@@ -18,13 +18,8 @@ function main() {
   const store = createStore();
   const router = createBrowserRouter(createRoutes(store), {});
 
-  const root = document.getElementById('root');
-  if (!root) {
-    throw new Error('Root element not found');
-  }
-
   hydrateRoot(
-    root,
+    document,
     <StrictMode>
       <StoreProvider createStore={() => store}>
         <RouterProvider router={router} />
