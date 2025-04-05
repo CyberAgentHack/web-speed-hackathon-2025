@@ -8,11 +8,6 @@ overrides:
   es-abstract: ~1.23.9
   m3u8-parser>@babel/runtime: '-'
 
-patchedDependencies:
-  shaka-player:
-    hash: ztcamgtqc3a62la4l6p3d6w4ae
-    path: patches/shaka-player.patch
-
 importers:
 
   .:
@@ -111,9 +106,6 @@ importers:
       valibot:
         specifier: 1.0.0-rc.3
         version: 1.0.0-rc.3(typescript@5.7.2)
-      zod:
-        specifier: 3.24.1
-        version: 3.24.1
       zustand:
         specifier: 5.0.3
         version: 5.0.3(@types/react@19.0.1)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
