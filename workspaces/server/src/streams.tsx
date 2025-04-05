@@ -1,4 +1,3 @@
-import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -118,12 +117,6 @@ export function registerStreams(app: FastifyInstance): void {
           ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
           #EXTINF:2.000000,
           /streams/${stream.id}/${String(chunkIdx).padStart(3, '0')}.ts
-          #EXT-X-DATERANGE:${[
-            `ID="arema-${sequence}"`,
-            `START-DATE="${sequenceStartAt.toISOString()}"`,
-            `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
-          ].join(',')}
         `,
       );
     }
