@@ -1,6 +1,6 @@
 import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/openapi/schema';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
 
 import { authService } from '../services/authService';
 

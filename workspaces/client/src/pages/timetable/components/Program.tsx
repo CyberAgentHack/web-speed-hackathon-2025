@@ -1,5 +1,5 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/openapi/schema';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
 import dayjs from 'dayjs';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
