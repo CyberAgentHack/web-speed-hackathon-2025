@@ -1,6 +1,6 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import * as schema from '@wsh-2025/schema/src/openapi/schema';
 import dayjs from 'dayjs';
 import invariant from 'tiny-invariant';
 

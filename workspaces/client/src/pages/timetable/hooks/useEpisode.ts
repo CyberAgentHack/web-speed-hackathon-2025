@@ -1,5 +1,5 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import * as schema from '@wsh-2025/schema/src/openapi/schema';
 import { useEffect, useState } from 'react';
 
 import { episodeService } from '@wsh-2025/client/src/features/episode/services/episodeService';

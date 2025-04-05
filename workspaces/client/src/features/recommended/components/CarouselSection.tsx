@@ -1,6 +1,6 @@
 import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import * as schema from '@wsh-2025/schema/src/openapi/schema';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
