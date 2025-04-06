@@ -5,6 +5,7 @@ import { PlayerWrapper } from '@wsh-2025/client/src/features/player/interfaces/p
 class HlsJSPlayerWrapper implements PlayerWrapper {
   readonly videoElement = Object.assign(document.createElement('video'), {
     autoplay: true,
+    className: 'aspect-video',
     controls: false,
     muted: true,
     volume: 0.25,

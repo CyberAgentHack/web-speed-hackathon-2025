@@ -50,7 +50,13 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img
+                  alt=""
+                  className="aspect-video h-auto w-full"
+                  loading="lazy"
+                  decoding="async"
+                  src={episode.thumbnailUrl}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -72,7 +78,9 @@ export const EpisodePage = () => {
                     <div className="grid size-full">
                       <img
                         alt=""
-                        className="size-full place-self-stretch [grid-area:1/-1]"
+                        className="aspect-video size-full place-self-stretch [grid-area:1/-1]"
+                        loading="lazy"
+                        decoding="async"
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
