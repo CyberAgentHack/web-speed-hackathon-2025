@@ -1,6 +1,7 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+import { createFetch } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
 import * as batshit from '@yornaath/batshit';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
@@ -8,22 +9,16 @@ import { schedulePlugin } from '@wsh-2025/client/src/features/requests/scheduleP
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',
   plugins: [schedulePlugin],
-  schema: createSchema({
-    '/channels': {
-      output: schema.getChannelsResponse,
-      query: schema.getChannelsRequestQuery,
-    },
-  }),
   throw: true,
 });
 
 const batcher = batshit.create({
   async fetcher(queries: { channelId: string }[]) {
-    const data = await $fetch('/channels', {
+    const data = (await $fetch('/channels', {
       query: {
         channelIds: queries.map((q) => q.channelId).join(','),
       },
-    });
+    })) as StandardSchemaV1.InferOutput<typeof schema.getChannelsResponse>;
     return data;
   },
   resolver(items, query: { channelId: string }) {
@@ -52,7 +47,9 @@ export const channelService: ChannelService = {
     return channel;
   },
   async fetchChannels() {
-    const data = await $fetch('/channels', { query: {} });
+    const data = (await $fetch('/channels', { query: {} })) as StandardSchemaV1.InferOutput<
+      typeof schema.getChannelsResponse
+    >;
     return data;
   },
 };

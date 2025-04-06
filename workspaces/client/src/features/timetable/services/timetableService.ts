@@ -1,18 +1,13 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+import { createFetch } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
 
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',
   plugins: [schedulePlugin],
-  schema: createSchema({
-    '/timetable': {
-      output: schema.getTimetableResponse,
-      query: schema.getTimetableRequestQuery,
-    },
-  }),
   throw: true,
 });
 
@@ -24,9 +19,9 @@ interface TimetableService {
 
 export const timetableService: TimetableService = {
   async fetchTimetable({ since, until }) {
-    const data = await $fetch('/timetable', {
+    const data = (await $fetch('/timetable', {
       query: { since, until },
-    });
+    })) as StandardSchemaV1.InferOutput<typeof schema.getTimetableResponse>;
     return data;
   },
 };

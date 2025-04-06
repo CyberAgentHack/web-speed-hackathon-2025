@@ -1,10 +1,13 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import { Duration } from 'luxon';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
 import invariant from 'tiny-invariant';
 
 import { Hoverable } from '@wsh-2025/client/src/features/layout/components/Hoverable';
+import { MaterialSymbolsPauseRounded } from '@wsh-2025/client/src/pages/episode/components/MaterialSymbolsPauseRounded';
+import { MaterialSymbolsPlayArrowRounded } from '@wsh-2025/client/src/pages/episode/components/MaterialSymbolsPlayArrowRounded';
 import { SeekThumbnail } from '@wsh-2025/client/src/pages/episode/components/SeekThumbnail';
 import { useCurrentTime } from '@wsh-2025/client/src/pages/episode/hooks/useCurrentTime';
 import { useDuration } from '@wsh-2025/client/src/pages/episode/hooks/useDuration';
@@ -61,16 +64,14 @@ export const PlayerController = ({ episode }: Props) => {
                     togglePlaying();
                   }}
                 >
-                  <span
-                    className={`i-material-symbols:${playing ? 'pause-rounded' : 'play-arrow-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
-                  />
+                  {playing ? <MaterialSymbolsPauseRounded /> : <MaterialSymbolsPlayArrowRounded />}
                 </button>
               </Hoverable>
 
               <span className="ml-[4px] block shrink-0 grow-0 text-[12px] font-bold text-[#FFFFFF]">
-                {Duration.fromObject({ seconds: currentTime }).toFormat('mm:ss')}
+                {dayjs.duration(currentTime, 'seconds').format('mm:ss')}
                 {' / '}
-                {Duration.fromObject({ seconds: duration }).toFormat('mm:ss')}
+                {dayjs.duration(duration, 'seconds').format('mm:ss')}
               </span>
             </div>
           </div>
@@ -83,7 +84,10 @@ export const PlayerController = ({ episode }: Props) => {
                 type="button"
               >
                 <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  className={classNames(
+                    'm-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]',
+                    muted ? 'i-material-symbols:volume-off-rounded' : 'i-material-symbols:volume-up-rounded',
+                  )}
                   onClick={() => {
                     toggleMuted();
                   }}

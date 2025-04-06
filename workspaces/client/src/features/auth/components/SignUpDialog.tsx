@@ -2,8 +2,9 @@ import { BetterFetchError } from '@better-fetch/fetch';
 import { FORM_ERROR } from 'final-form';
 import { useId } from 'react';
 import { Field, Form } from 'react-final-form';
-import { z } from 'zod';
+import * as v from 'valibot';
 
+import MaterialSymbolsErrorOutlineIcon from '@wsh-2025/client/src/features/auth/components/MaterialSymbolsErrorOutlineIcon';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { isValidEmail } from '@wsh-2025/client/src/features/auth/logics/isValidEmail';
 import { isValidPassword } from '@wsh-2025/client/src/features/auth/logics/isValidPassword';
@@ -54,16 +55,29 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
 
         <Form
           validate={(values) => {
-            const schema = z.object({
-              email: z
-                .string({ required_error: 'メールアドレスを入力してください' })
-                .and(z.custom(isValidEmail, { message: 'メールアドレスが正しくありません' })),
-              password: z
-                .string({ required_error: 'パスワードを入力してください' })
-                .and(z.custom(isValidPassword, { message: 'パスワードが正しくありません' })),
+            const schema = v.object({
+              email: v.optional(
+                v.pipe(
+                  v.string('メールアドレスを入力してください'),
+                  v.minLength(1, 'メールアドレスを入力してください'),
+                  v.check(isValidEmail, 'メールアドレスが正しくありません'),
+                ),
+              ),
+              password: v.optional(
+                v.pipe(
+                  v.string('パスワードを入力してください'),
+                  v.minLength(1, 'パスワードを入力してください'),
+                  v.check(isValidPassword, 'パスワードが正しくありません'),
+                ),
+              ),
             });
-            const result = schema.safeParse(values);
-            return result.success ? undefined : result.error.formErrors.fieldErrors;
+            const result = v.safeParse(schema, values);
+            if (result.success) {
+              return undefined;
+            } else {
+              const errors = v.flatten<typeof schema>(result.issues);
+              return errors.nested;
+            }
           }}
           onSubmit={onSubmit}
         >
@@ -121,7 +135,7 @@ export const SignUpDialog = ({ isOpen, onClose, onOpenSignIn }: Props) => {
 
               {submitError ? (
                 <div className="mb-[8px] flex w-full flex-row items-center justify-start rounded-[4px] border-[2px] border-solid border-[#F0163A] bg-[#ffeeee] p-[8px] text-[14px] font-bold text-[#F0163A]">
-                  <div className="i-material-symbols:error-outline m-[4px] size-[20px]" />
+                  <MaterialSymbolsErrorOutlineIcon />
                   <span>{submitError}</span>
                 </div>
               ) : null}

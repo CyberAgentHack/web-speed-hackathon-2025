@@ -1,5 +1,5 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
 import { ReactElement } from 'react';
 import { Link } from 'react-router';
 import { ArrayValues } from 'type-fest';
@@ -32,7 +32,9 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
         </div>
         <img
           alt=""
-          className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+          className="mb-[24px] aspect-video w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+          loading="lazy"
+          decoding="async"
           src={program.thumbnailUrl}
         />
 
@@ -46,7 +48,9 @@ export const ProgramDetailDialog = ({ isOpen, program }: Props): ReactElement =>
             </div>
             <img
               alt=""
-              className="mb-[24px] w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              className="mb-[24px] aspect-video w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
+              loading="lazy"
+              decoding="async"
               src={episode.thumbnailUrl}
             />
           </>

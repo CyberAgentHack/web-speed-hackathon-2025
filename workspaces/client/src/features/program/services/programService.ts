@@ -1,6 +1,7 @@
-import { createFetch, createSchema } from '@better-fetch/fetch';
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+import { createFetch } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import type * as schema from '@wsh-2025/schema/src/openapi/schema';
 import * as batshit from '@yornaath/batshit';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
@@ -8,26 +9,16 @@ import { schedulePlugin } from '@wsh-2025/client/src/features/requests/scheduleP
 const $fetch = createFetch({
   baseURL: process.env['API_BASE_URL'] ?? '/api',
   plugins: [schedulePlugin],
-  schema: createSchema({
-    '/programs': {
-      output: schema.getProgramsResponse,
-      query: schema.getProgramsRequestQuery,
-    },
-    '/programs/:episodeId': {
-      output: schema.getProgramByIdResponse,
-      params: schema.getProgramByIdRequestParams,
-    },
-  }),
   throw: true,
 });
 
 const batcher = batshit.create({
   async fetcher(queries: { programId: string }[]) {
-    const data = await $fetch('/programs', {
+    const data = (await $fetch('/programs', {
       query: {
         programIds: queries.map((q) => q.programId).join(','),
       },
-    });
+    })) as StandardSchemaV1.InferOutput<typeof schema.getProgramsResponse>;
     return data;
   },
   resolver(items, query: { programId: string }) {
@@ -56,7 +47,9 @@ export const programService: ProgramService = {
     return channel;
   },
   async fetchPrograms() {
-    const data = await $fetch('/programs', { query: {} });
+    const data = (await $fetch('/programs', { query: {} })) as StandardSchemaV1.InferOutput<
+      typeof schema.getProgramsResponse
+    >;
     return data;
   },
 };

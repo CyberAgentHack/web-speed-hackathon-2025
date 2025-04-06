@@ -1,16 +1,14 @@
 import { Suspense } from 'react';
 import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
-import { Params, useParams } from 'react-router';
+import { Params, useLoaderData, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
-import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
 import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
 import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
@@ -27,14 +25,15 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
 };
 
 export const EpisodePage = () => {
+  type PrefetchReturnType = ReturnType<typeof prefetch>;
+  const { episode } = useLoaderData<Awaited<PrefetchReturnType>>();
+  invariant(episode);
+
   const authActions = useAuthActions();
   const user = useAuthUser();
 
   const { episodeId } = useParams();
   invariant(episodeId);
-
-  const episode = useEpisodeById({ episodeId });
-  invariant(episode);
 
   const modules = useRecommended({ referenceId: episodeId });
 
@@ -51,7 +50,13 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img
+                  alt=""
+                  className="aspect-video h-auto w-full"
+                  loading="lazy"
+                  decoding="async"
+                  src={episode.thumbnailUrl}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -73,11 +78,46 @@ export const EpisodePage = () => {
                     <div className="grid size-full">
                       <img
                         alt=""
-                        className="size-full place-self-stretch [grid-area:1/-1]"
+                        className="aspect-video size-full place-self-stretch [grid-area:1/-1]"
+                        loading="lazy"
+                        decoding="async"
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
-                      <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
+                      <svg
+                        className="size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        >
+                          <path strokeDasharray="16" strokeDashoffset="16" d="M12 3c4.97 0 9 4.03 9 9">
+                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="16;0" />
+                            <animateTransform
+                              attributeName="transform"
+                              dur="1.5s"
+                              repeatCount="indefinite"
+                              type="rotate"
+                              values="0 12 12;360 12 12"
+                            />
+                          </path>
+                          <path
+                            strokeDasharray="64"
+                            strokeDashoffset="64"
+                            strokeOpacity="0.3"
+                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                          >
+                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="1.2s" values="64;0" />
+                          </path>
+                        </g>
+                      </svg>
                     </div>
                   </AspectRatio>
                 }
@@ -86,7 +126,6 @@ export const EpisodePage = () => {
                   <Player
                     className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.HlsJS}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
 
