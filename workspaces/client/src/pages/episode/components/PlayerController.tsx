@@ -1,6 +1,7 @@
 import * as Slider from '@radix-ui/react-slider';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import type * as schema from '@wsh-2025/schema/src/openapi/schema';
+import classNames from 'classnames';
 import dayjs from 'dayjs';
 import invariant from 'tiny-invariant';
 
@@ -83,7 +84,10 @@ export const PlayerController = ({ episode }: Props) => {
                 type="button"
               >
                 <span
-                  className={`i-material-symbols:${muted ? 'volume-off-rounded' : 'volume-up-rounded'} m-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]`}
+                  className={classNames(
+                    'm-[14px] block size-[20px] shrink-0 grow-0 text-[#FFFFFF]',
+                    muted ? 'i-material-symbols:volume-off-rounded' : 'i-material-symbols:volume-up-rounded',
+                  )}
                   onClick={() => {
                     toggleMuted();
                   }}

@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import UnoCSS from '@unocss/webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
 
 /** @type {import('webpack').Configuration} */
@@ -36,6 +38,10 @@ const config = {
         },
       },
       {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
         test: /\.png$/,
         type: 'asset/inline',
       },
@@ -52,6 +58,9 @@ const config = {
       },
     ],
   },
+  optimization: {
+    realContentHash: true,
+  },
   output: {
     chunkFilename: 'chunk-[contenthash].js',
     chunkFormat: 'module',
@@ -60,6 +69,8 @@ const config = {
     publicPath: 'auto',
   },
   plugins: [
+    UnoCSS(),
+    new MiniCssExtractPlugin(),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
   ],
   resolve: {

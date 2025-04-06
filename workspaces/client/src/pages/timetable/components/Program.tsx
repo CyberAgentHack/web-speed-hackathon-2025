@@ -1,5 +1,6 @@
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import type * as schema from '@wsh-2025/schema/src/openapi/schema';
+import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import Ellipsis from 'react-ellipsis-component';
@@ -50,25 +51,35 @@ export const Program = ({ height, program }: Props): ReactElement => {
     <>
       <Hoverable classNames={{ hovered: isArchived ? 'brightness-200' : 'brightness-125' }}>
         <button
-          className={`h-[${height}px] w-auto border-[1px] border-solid border-[#000000] bg-[${isBroadcasting ? '#FCF6E5' : '#212121'}] px-[12px] py-[8px] text-left opacity-${isArchived ? 50 : 100}`}
-          style={{ width }}
+          className={classNames(
+            'w-auto border-[1px] border-solid border-[#000000] px-[12px] py-[8px] text-left',
+            isBroadcasting ? 'bg-[#FCF6E5]' : 'bg-[#212121]',
+            isArchived ? 'opacity-50' : 'opacity-100',
+          )}
+          style={{ height, width }}
           type="button"
           onClick={onClick}
         >
           <div className="flex size-full flex-col overflow-hidden">
             <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
               <span
-                className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
+                className={classNames(
+                  'mr-[8px] shrink-0 grow-0 text-[14px] font-bold',
+                  isBroadcasting ? 'text-[#767676]' : 'text-[#999999]',
+                )}
               >
                 {dayjs(program.startAt).format('mm')}
               </span>
               <div
-                className={`grow-1 shrink-1 overflow-hidden text-[14px] font-bold text-[${isBroadcasting ? '#212121' : '#ffffff'}]`}
+                className={classNames(
+                  'grow-1 shrink-1 overflow-hidden text-[14px] font-bold',
+                  isBroadcasting ? 'text-[#212121]' : 'text-[#ffffff]',
+                )}
               >
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
-            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+            <div className={classNames('w-full', shouldImageBeVisible ? 'opacity-100' : 'opacity-0')}>
               <img
                 ref={imageRef}
                 alt=""
