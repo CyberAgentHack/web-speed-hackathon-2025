@@ -2,7 +2,7 @@
 import '@wsh-2025/schema/src/setups/luxon';
 
 import { relations } from 'drizzle-orm';
-import { sqliteTable as table } from 'drizzle-orm/sqlite-core';
+import { index,sqliteTable as table } from 'drizzle-orm/sqlite-core';
 import * as t from 'drizzle-orm/sqlite-core';
 import { DateTime } from 'luxon';
 
@@ -98,7 +98,11 @@ export const episode = table(
       .references(() => stream.id),
     premium: t.integer({ mode: 'boolean' }).notNull(),
   },
-  () => [],
+  (table) => [
+    index("idx_order").on(table.order),
+    index('idx_episode_seriesId').on(table.seriesId),
+    index('idx_streamID').on(table.streamId),
+  ],
 );
 export const episodeRelation = relations(episode, ({ one }) => ({
   series: one(series, {
@@ -139,7 +143,10 @@ export const program = table(
       .notNull()
       .references(() => episode.id),
   },
-  () => [],
+  (table) => [
+    index('idx_channelId').on(table.channelId),
+    index('idx_episodeId').on(table.episodeId),
+  ],
 );
 export const programRelation = relations(program, ({ one }) => ({
   channel: one(channel, {
@@ -164,7 +171,12 @@ export const recommendedItem = table(
     seriesId: t.text().references(() => series.id),
     episodeId: t.text().references(() => episode.id),
   },
-  () => [],
+  (table) => [
+    index('idx_order').on(table.order),
+    index('idx_moduleId').on(table.moduleId),
+    index('idx_seriesId').on(table.seriesId),
+    index('idx_episodeId').on(table.episodeId),
+  ],
 );
 export const recommendedItemRelation = relations(recommendedItem, ({ one }) => ({
   module: one(recommendedModule, {
@@ -190,7 +202,10 @@ export const recommendedModule = table(
     referenceId: t.text().notNull(),
     type: t.text().notNull(),
   },
-  () => [],
+  (table) => [
+    index('idx_order').on(table.order),
+    index('idx_referenceId').on(table.referenceId),
+  ],
 );
 export const recommendedModuleRelation = relations(recommendedModule, ({ many }) => ({
   items: many(recommendedItem),
