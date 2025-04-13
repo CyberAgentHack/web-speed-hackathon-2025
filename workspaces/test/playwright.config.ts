@@ -25,6 +25,6 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     headless: true,
-    trace: 'off',
+    trace: 'retain-on-failure',
   },
 });

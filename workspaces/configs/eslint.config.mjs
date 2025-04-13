@@ -2,12 +2,14 @@ import eslint from '@eslint/js';
 import * as eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginReact from 'eslint-plugin-react';
+import * as regexPlugin from 'eslint-plugin-regexp';
 import eslintPluginSort from 'eslint-plugin-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 const configs = [
+  regexPlugin.configs['flat/recommended'],
   {
     files: ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}'],
     languageOptions: {

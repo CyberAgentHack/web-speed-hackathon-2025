@@ -1,18 +1,13 @@
 import { Suspense } from 'react';
-import Ellipsis from 'react-ellipsis-component';
 import { Flipped } from 'react-flip-toolkit';
-import { Params, useParams } from 'react-router';
+import { Params, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { createStore } from '@wsh-2025/client/src/app/createStore';
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { useAuthUser } from '@wsh-2025/client/src/features/auth/hooks/useAuthUser';
-import { useEpisodeById } from '@wsh-2025/client/src/features/episode/hooks/useEpisodeById';
-import { AspectRatio } from '@wsh-2025/client/src/features/layout/components/AspectRatio';
 import { Player } from '@wsh-2025/client/src/features/player/components/Player';
-import { PlayerType } from '@wsh-2025/client/src/features/player/constants/player_type';
 import { RecommendedSection } from '@wsh-2025/client/src/features/recommended/components/RecommendedSection';
-import { useRecommended } from '@wsh-2025/client/src/features/recommended/hooks/useRecommended';
 import { SeriesEpisodeList } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeList';
 import { PlayerController } from '@wsh-2025/client/src/pages/episode/components/PlayerController';
 import { usePlayerRef } from '@wsh-2025/client/src/pages/episode/hooks/usePlayerRef';
@@ -27,16 +22,12 @@ export const prefetch = async (store: ReturnType<typeof createStore>, { episodeI
 };
 
 export const EpisodePage = () => {
-  const authActions = useAuthActions();
-  const user = useAuthUser();
-
-  const { episodeId } = useParams();
-  invariant(episodeId);
-
-  const episode = useEpisodeById({ episodeId });
+  type PrefetchReturnType = ReturnType<typeof prefetch>;
+  const { episode, modules } = useLoaderData<Awaited<PrefetchReturnType>>();
   invariant(episode);
 
-  const modules = useRecommended({ referenceId: episodeId });
+  const authActions = useAuthActions();
+  const user = useAuthUser();
 
   const playerRef = usePlayerRef();
 
@@ -51,7 +42,13 @@ export const EpisodePage = () => {
           <div className="m-auto mb-[16px] h-auto w-full max-w-[1280px] outline outline-[1px] outline-[#212121]">
             {isSignInRequired ? (
               <div className="relative size-full">
-                <img alt="" className="h-auto w-full" src={episode.thumbnailUrl} />
+                <img
+                  alt=""
+                  className="aspect-video h-auto w-full"
+                  // loading="lazy"
+                  // decoding="async"
+                  src={episode.thumbnailUrl}
+                />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#00000077] p-[24px]">
                   <p className="mb-[32px] text-[24px] font-bold text-[#ffffff]">
@@ -69,24 +66,25 @@ export const EpisodePage = () => {
             ) : (
               <Suspense
                 fallback={
-                  <AspectRatio ratioHeight={9} ratioWidth={16}>
+                  <div className="relative aspect-video w-full">
                     <div className="grid size-full">
                       <img
                         alt=""
-                        className="size-full place-self-stretch [grid-area:1/-1]"
+                        className="aspect-video size-full place-self-stretch [grid-area:1/-1]"
+                        // loading="lazy"
+                        // decoding="async"
                         src={episode.thumbnailUrl}
                       />
                       <div className="size-full place-self-stretch bg-[#00000077] [grid-area:1/-1]" />
                       <div className="i-line-md:loading-twotone-loop size-[48px] place-self-center text-[#ffffff] [grid-area:1/-1]" />
                     </div>
-                  </AspectRatio>
+                  </div>
                 }
               >
                 <div className="relative size-full">
                   <Player
                     className="size-full"
                     playerRef={playerRef}
-                    playerType={PlayerType.HlsJS}
                     playlistUrl={`/streams/episode/${episode.id}/playlist.m3u8`}
                   />
 
@@ -100,12 +98,8 @@ export const EpisodePage = () => {
         </Flipped>
 
         <div className="mb-[24px]">
-          <div className="text-[16px] text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={1} text={episode.series.title} visibleLine={1} />
-          </div>
-          <h1 className="mt-[8px] text-[22px] font-bold text-[#ffffff]">
-            <Ellipsis ellipsis reflowOnResize maxLine={2} text={episode.title} visibleLine={2} />
-          </h1>
+          <div className="line-clamp-1 text-[16px] text-[#ffffff]">{episode.series.title}</div>
+          <h1 className="mt-[8px] line-clamp-2 text-[22px] font-bold text-[#ffffff]">{episode.title}</h1>
           {episode.premium ? (
             <div className="mt-[8px]">
               <span className="inline-flex items-center justify-center rounded-[4px] bg-[#1c43d1] p-[4px] text-[10px] text-[#ffffff]">
@@ -113,9 +107,7 @@ export const EpisodePage = () => {
               </span>
             </div>
           ) : null}
-          <div className="mt-[16px] text-[16px] text-[#999999]">
-            <Ellipsis ellipsis reflowOnResize maxLine={3} text={episode.description} visibleLine={3} />
-          </div>
+          <div className="mt-[16px] line-clamp-3 text-[16px] text-[#999999]">{episode.description}</div>
         </div>
 
         {modules[0] != null ? (

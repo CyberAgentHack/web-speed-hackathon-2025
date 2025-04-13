@@ -1,4 +1,4 @@
-import { SeriesEpisodeItem } from '@wsh-2025/client/src/features/series/components/SeriesEposideItem';
+import { SeriesEpisodeItem } from '@wsh-2025/client/src/features/series/components/SeriesEpisodeItem';
 
 interface Props {
   episodes: {

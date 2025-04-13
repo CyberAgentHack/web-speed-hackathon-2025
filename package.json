@@ -23,9 +23,6 @@
     "overrides": {
       "es-abstract": "~1.23.9",
       "m3u8-parser>@babel/runtime": "-"
-    },
-    "patchedDependencies": {
-      "shaka-player": "patches/shaka-player.patch"
     }
   },
   "wireit": {

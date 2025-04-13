@@ -1,5 +1,6 @@
 import '@wsh-2025/server/src/setups/luxon';
 
+import compress from '@fastify/compress';
 import cors from '@fastify/cors';
 import fastify from 'fastify';
 
@@ -15,10 +16,13 @@ async function main() {
 
   app.addHook('onSend', async (_req, reply) => {
     reply.headers({
-      'cache-control': 'no-store',
       'x-robots-tag': 'noindex',
     });
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  await app.register(compress, { global: true });
+  // 全てのオリジンからのリクエストを許可
   app.register(cors, {
     origin: true,
   });
