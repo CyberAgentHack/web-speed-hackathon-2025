@@ -1,10 +1,10 @@
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useMuted() {
-  const state = useStore((s) => s);
-  const muted = state.pages.episode.muted;
+  const episode = useStore((s) => s.pages.episode);
+  const muted = episode.muted;
   const toggleMuted = () => {
-    state.pages.episode.setMuted(!muted);
+    episode.setMuted(!muted);
   };
   return [muted, toggleMuted] as const;
 }

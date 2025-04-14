@@ -1,16 +1,22 @@
 import { useEffect } from 'react';
-
 import { useStore } from '@wsh-2025/client/src/app/StoreContext';
 
 export function useCurrentUnixtimeMs(): number {
-  const state = useStore((s) => s);
+  // zustandセレクタを適切に設定
+  const { currentUnixtimeMs, refreshCurrentUnixtimeMs } = useStore((s) => ({
+    currentUnixtimeMs: s.pages.timetable.currentUnixtimeMs,
+    refreshCurrentUnixtimeMs: s.pages.timetable.refreshCurrentUnixtimeMs,
+  }));
+
   useEffect(() => {
+    // 1秒に変更 (必要に応じて可変)
     const interval = setInterval(() => {
-      state.pages.timetable.refreshCurrentUnixtimeMs();
-    }, 250);
+      refreshCurrentUnixtimeMs();
+    }, 1000);
     return () => {
       clearInterval(interval);
     };
-  }, []);
-  return state.pages.timetable.currentUnixtimeMs;
+  }, [refreshCurrentUnixtimeMs]);
+
+  return currentUnixtimeMs;
 }

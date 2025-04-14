@@ -69,11 +69,11 @@
       "env": {
         "API_BASE_URL": {
           "external": true,
-          "default": "http://localhost:8000/api"
+          "default": "http://localhost:8091/api"
         },
         "PORT": {
           "external": true,
-          "default": "8000"
+          "default": "8091"
         }
       },
       "files": [
@@ -91,11 +91,11 @@
       "env": {
         "API_BASE_URL": {
           "external": true,
-          "default": "http://localhost:8000/api"
+          "default": "http://localhost:8091/api"
         },
         "PORT": {
           "external": true,
-          "default": "8000"
+          "default": "8091"
         }
       }
     },

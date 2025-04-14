@@ -1,31 +1,49 @@
-import { useEffect, useRef } from 'react';
-import { useUpdate } from 'react-use';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const MIN_WIDTH = 276;
 const GAP = 12;
 
-// repeat(auto-fill, minmax(276px, 1fr)) を計算で求める
+/**
+ * レスポンシブなカルーセルのアイテム幅を計算するフック。
+ * ポイント:
+ *  - 250msごとのポーリングではなく、ResizeObserver で監視
+ *  - containerRef の大きさが変わったタイミングでだけ再計算
+ */
 export function useCarouselItemWidth() {
-  const forceUpdate = useUpdate();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [itemWidth, setItemWidth] = useState<number>(MIN_WIDTH);
 
-  useEffect(() => {
-    const interval = setInterval(function tick() {
-      forceUpdate();
-    }, 250);
-    return () => {
-      clearInterval(interval);
-    };
+  // 計算ロジックを関数化
+  const recalcWidth = useCallback(() => {
+    if (!containerRef.current) return;
+    const el = containerRef.current;
+    const styles = window.getComputedStyle(el);
+    const innerWidth = el.clientWidth - parseInt(styles.paddingLeft) - parseInt(styles.paddingRight);
+
+    // 276px + GAP=12px で何個並べられるか
+    const itemCount = Math.max(1, Math.floor((innerWidth + GAP) / (MIN_WIDTH + GAP)));
+    const w = Math.floor((innerWidth + GAP) / itemCount - GAP);
+
+    setItemWidth(w);
   }, []);
 
-  if (containerRef.current == null) {
-    return { ref: containerRef, width: MIN_WIDTH };
-  }
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-  const styles = window.getComputedStyle(containerRef.current);
-  const innerWidth = containerRef.current.clientWidth - parseInt(styles.paddingLeft) - parseInt(styles.paddingRight);
-  const itemCount = Math.max(0, Math.floor((innerWidth + GAP) / (MIN_WIDTH + GAP)));
-  const itemWidth = Math.floor((innerWidth + GAP) / itemCount - GAP);
+    // ResizeObserver が使えるかどうかで分岐 (IEサポートなど)
+    // ここでは対応環境を仮定して実装
+    const observer = new ResizeObserver(() => {
+      recalcWidth();
+    });
+    observer.observe(containerRef.current);
+
+    // 初回計算
+    recalcWidth();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [recalcWidth]);
 
   return { ref: containerRef, width: itemWidth };
 }
