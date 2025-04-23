@@ -11,20 +11,22 @@ export function useTimetable() {
   const channels = Object.values(state.features.channel.channels);
   const programs = Object.values(state.features.timetable.programs);
 
-  const record: Record<ChannelId, ArrayValues<typeof programs>[]> = {};
-
-  for (const channel of channels) {
-    const filteredPrograms = [];
-
-    for (const program of programs) {
-      if (program.channelId === channel.id) {
-        filteredPrograms.push(program);
-      }
+  // Create a map to group programs by channelId in a single pass
+  const programsByChannel = programs.reduce((acc, program) => {
+    if (!acc[program.channelId]) {
+      acc[program.channelId] = [];
     }
-
-    record[channel.id] = filteredPrograms.sort((a, b) => {
-      return DateTime.fromISO(a.startAt).toMillis() - DateTime.fromISO(b.startAt).toMillis();
-    });
+    acc[program.channelId]!.push(program);
+    return acc;
+  }, {} as Record<ChannelId, ArrayValues<typeof programs>[]>);
+  
+  // Sort programs for each channel
+  const record: Record<ChannelId, ArrayValues<typeof programs>[]> = {};
+  for (const channel of channels) {
+    const channelPrograms = programsByChannel[channel.id] || [];
+    record[channel.id] = channelPrograms.sort((a, b) => 
+      DateTime.fromISO(a.startAt).toMillis() - DateTime.fromISO(b.startAt).toMillis()
+    );
   }
 
   return record;

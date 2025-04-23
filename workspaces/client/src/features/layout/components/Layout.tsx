@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { ReactNode, useEffect, useState } from 'react';
 import { Flipper } from 'react-flip-toolkit';
 import { Link, useLocation, useNavigation } from 'react-router';
+import { Image } from '@unpic/react';
 
 import { SignInDialog } from '@wsh-2025/client/src/features/auth/components/SignInDialog';
 import { SignOutDialog } from '@wsh-2025/client/src/features/auth/components/SignOutDialog';
@@ -64,7 +65,12 @@ export const Layout = ({ children }: Props) => {
           )}
         >
           <Link className="block flex w-[188px] items-center justify-center px-[8px]" to="/">
-            <img alt="AREMA" className="object-contain" height={36} src="/public/arema.svg" width={98} />
+            <Image
+              layout="constrained"
+              height={36}
+              src="/public/arema.svg"
+              width={98}
+            />
           </Link>
         </header>
 

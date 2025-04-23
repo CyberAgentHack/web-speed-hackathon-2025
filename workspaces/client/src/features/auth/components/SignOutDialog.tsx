@@ -1,5 +1,6 @@
 import { FORM_ERROR } from 'final-form';
 import { Form } from 'react-final-form';
+import { Image } from '@unpic/react';
 
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
@@ -28,7 +29,12 @@ export const SignOutDialog = ({ isOpen, onClose }: Props) => {
     <Dialog isOpen={isOpen} onClose={onClose}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
-          <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
+          <Image
+            layout="constrained"
+            height={36}
+            src="/public/arema.svg"
+            width={98}
+          />
         </div>
 
         <h2 className="mb-[24px] text-center text-[24px] font-bold">ログアウト</h2>
