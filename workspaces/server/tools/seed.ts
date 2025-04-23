@@ -83,7 +83,6 @@ async function main() {
 
   const database = drizzle({
     client: createClient({
-      syncInterval: 1000,
       url: 'file:./database.sqlite',
     }),
   });

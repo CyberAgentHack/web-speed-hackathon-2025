@@ -6,7 +6,7 @@ export const schedulePlugin = {
       const scheduler = typeof window !== 'undefined' ? window.scheduler : undefined;
 
       if (scheduler) {
-        return await scheduler.postTask(() => request, { delay: 1000 });
+        return await scheduler.postTask(() => request);
       } else {
         return await new Promise<typeof request>((resolve) => {
           queueMicrotask(() => {
