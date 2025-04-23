@@ -1,5 +1,4 @@
 import { withLenses } from '@dhmk/zustand-lens';
-import _ from 'lodash';
 import { createStore as createZustandStore } from 'zustand/vanilla';
 
 import { createAuthStoreSlice } from '@wsh-2025/client/src/features/auth/stores/createAuthStoreSlice';
@@ -16,6 +15,29 @@ import { createTimetablePageStoreSlice } from '@wsh-2025/client/src/pages/timeta
 
 interface Props {
   hydrationData?: unknown;
+}
+
+// Deep merge utility function
+function deepMerge<T extends object>(target: T, source: any): T {
+  if (!source) return target;
+
+  const output = { ...target };
+
+  for (const key in source) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      if (isObject(source[key]) && isObject(output[key])) {
+        output[key] = deepMerge(output[key], source[key]);
+      } else {
+        output[key] = source[key];
+      }
+    }
+  }
+
+  return output;
+}
+
+function isObject(item: any): boolean {
+  return item && typeof item === 'object' && !Array.isArray(item);
 }
 
 export const createStore = ({ hydrationData }: Props) => {
@@ -39,7 +61,7 @@ export const createStore = ({ hydrationData }: Props) => {
     })),
   );
 
-  store.setState((s) => _.merge(s, hydrationData));
+  store.setState((s) => deepMerge(s, hydrationData));
 
   return store;
 };

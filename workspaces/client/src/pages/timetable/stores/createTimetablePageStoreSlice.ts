@@ -2,7 +2,6 @@ import { lens } from '@dhmk/zustand-lens';
 import { StandardSchemaV1 } from '@standard-schema/spec';
 import * as schema from '@wsh-2025/schema/src/api/schema';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { ArrayValues } from 'type-fest';
 
 import { DEFAULT_WIDTH } from '@wsh-2025/client/src/features/timetable/constants/grid_size';
@@ -25,6 +24,9 @@ interface TimetablePageActions {
 }
 
 export const createTimetablePageStoreSlice = () => {
+  // Create debounce function
+  let refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
   return lens<TimetablePageState & TimetablePageActions>((set, _get) => ({
     changeColumnWidth: (params: { channelId: string; delta: number }) => {
       set((state) => {
@@ -41,11 +43,17 @@ export const createTimetablePageStoreSlice = () => {
     },
     columnWidthRecord: {},
     currentUnixtimeMs: 0,
-    refreshCurrentUnixtimeMs: _.debounce(() => {
-      set(() => ({
-        currentUnixtimeMs: Date.now(),
-      }));
-    }, 50),
+    refreshCurrentUnixtimeMs: () => {
+      if (refreshTimeoutId !== null) {
+        clearTimeout(refreshTimeoutId);
+      }
+      refreshTimeoutId = setTimeout(() => {
+        set(() => ({
+          currentUnixtimeMs: Date.now(),
+        }));
+        refreshTimeoutId = null;
+      }, 50);
+    },
     selectedProgramId: null,
     selectProgram: (program: Program | null) => {
       set(() => ({

@@ -1,9 +1,20 @@
 /* eslint-disable */
 
 const Module = require('module');
-const fs = require('fs');
+const path = require('path');
 
 Module._extensions['.png'] = function (module, fn) {
-  const base64 = fs.readFileSync(fn).toString('base64');
-  module._compile('module.exports="data:image/png;base64,' + base64 + '"', fn);
+  const projectRoot = path.resolve(__dirname, '../..');
+  const relativePath = path.relative(projectRoot, fn);
+
+  const normalizedPath = relativePath.replace(/\\/g, '/');
+
+  module._compile(`module.exports="/static/${normalizedPath}"`, fn);
+};
+
+Module._extensions['.webp'] = function (module, fn) {
+  const projectRoot = path.resolve(__dirname, '../..');
+  const relativePath = path.relative(projectRoot, fn);
+  const normalizedPath = relativePath.replace(/\\/g, '/');
+  module._compile(`module.exports="/static/${normalizedPath}"`, fn);
 };

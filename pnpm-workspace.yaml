@@ -4,3 +4,7 @@ packages:
   - ./workspaces/client
   - ./workspaces/server
   - ./workspaces/test
+ignoredBuiltDependencies:
+  - bcrypt
+  - core-js
+  - esbuild

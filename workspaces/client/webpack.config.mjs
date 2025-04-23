@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import webpack from 'webpack';
-
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 /** @type {import('webpack').Configuration} */
 const config = {
   devtool: 'inline-source-map',
@@ -36,7 +36,18 @@ const config = {
       },
       {
         test: /\.png$/,
-        type: 'asset/inline',
+        // type: 'asset/inline', // 古い設定（Base64を使用）
+        type: 'asset/resource', // 新しい設定（ファイルとして扱う）
+        generator: {
+          filename: 'images/[name][ext]', // 出力されるファイルパス
+        },
+      },
+      {
+        test: /\.webp$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name][ext]',
+        },
       },
       {
         resourceQuery: /raw/,
@@ -61,7 +72,30 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: true,
+      reportFilename: 'bundle-report.html',
+    }),
+    // Lodashを使用しないようにする設定
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^lodash$/,
+    }),
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        ffmpeg: {
+          test: /[\\/]node_modules[\\/]@ffmpeg/,
+          name: 'ffmpeg',
+          priority: 10,
+          chunks: 'async',
+        },
+        // 他の大きなライブラリも同様に設定可能
+      },
+    },
+  },
   resolve: {
     alias: {
       '@ffmpeg/core$': path.resolve(import.meta.dirname, 'node_modules', '@ffmpeg/core/dist/umd/ffmpeg-core.js'),
