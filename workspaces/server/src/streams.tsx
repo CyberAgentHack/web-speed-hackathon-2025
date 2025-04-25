@@ -113,6 +113,10 @@ export function registerStreams(app: FastifyInstance): void {
       );
       const chunkIdx = sequenceInStream % stream.numberOfChunks;
 
+      const generateInternalId = () => {
+        // 32バイトで十分なランダム性を確保
+        return randomBytes(32).toString('base64');
+      };
       playlist.push(
         dedent`
           ${chunkIdx === 0 ? '#EXT-X-DISCONTINUITY' : ''}
@@ -122,7 +126,7 @@ export function registerStreams(app: FastifyInstance): void {
             `ID="arema-${sequence}"`,
             `START-DATE="${sequenceStartAt.toISOString()}"`,
             `DURATION=2.0`,
-            `X-AREMA-INTERNAL="${randomBytes(3 * 1024 * 1024).toString('base64')}"`,
+            `X-AREMA-INTERNAL="${generateInternalId()}"`,
           ].join(',')}
         `,
       );

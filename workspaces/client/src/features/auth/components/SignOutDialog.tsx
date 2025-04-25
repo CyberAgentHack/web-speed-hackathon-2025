@@ -3,21 +3,22 @@ import { Form } from 'react-final-form';
 
 import { useAuthActions } from '@wsh-2025/client/src/features/auth/hooks/useAuthActions';
 import { Dialog } from '@wsh-2025/client/src/features/dialog/components/Dialog';
+import { AuthDialogType } from '../constants/auth_dialog_type';
+import { useAuthDialogType } from '../hooks/useAuthDialogType';
 
 interface Props {
-  isOpen: boolean;
-  onClose: () => void;
 }
 
-export const SignOutDialog = ({ isOpen, onClose }: Props) => {
+export const SignOutDialog = () => {
   const authActions = useAuthActions();
+  const authDialogType = useAuthDialogType();
 
   const onSubmit = async () => {
     try {
       await authActions.signOut();
 
       alert('ログアウトしました');
-      onClose();
+      authActions.closeDialog();
       return;
     } catch {
       return { [FORM_ERROR]: '不明なエラーが発生しました' };
@@ -25,7 +26,7 @@ export const SignOutDialog = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
+    <Dialog isOpen={authDialogType === AuthDialogType.SignOut} onClose={authActions.closeDialog}>
       <div className="size-full">
         <div className="mb-[16px] flex w-full flex-row justify-center">
           <img className="object-contain" height={36} src="/public/arema.svg" width={98} />
