@@ -1,6 +1,6 @@
 import { ElementScrollRestoration } from '@epic-web/restore-scroll';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
+import { getRecommendedModulesResponse } from '@wsh-2025/schema/src/api/schema';
 import { ArrayValues } from 'type-fest';
 import { useMergeRefs } from 'use-callback-ref';
 
@@ -10,7 +10,7 @@ import { useCarouselItemWidth } from '@wsh-2025/client/src/features/recommended/
 import { useScrollSnap } from '@wsh-2025/client/src/features/recommended/hooks/useScrollSnap';
 
 interface Props {
-  module: ArrayValues<StandardSchemaV1.InferOutput<typeof schema.getRecommendedModulesResponse>>;
+  module: ArrayValues<StandardSchemaV1.InferOutput<typeof getRecommendedModulesResponse>>;
 }
 
 export const CarouselSection = ({ module }: Props) => {

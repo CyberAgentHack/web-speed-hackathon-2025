@@ -1,7 +1,7 @@
 import { createFetch, createSchema } from '@better-fetch/fetch';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import * as schema from '@wsh-2025/schema/src/api/schema';
-import * as batshit from '@yornaath/batshit';
+import { getChannelsResponse, getChannelsRequestQuery, getChannelByIdResponse} from '@wsh-2025/schema/src/api/schema';
+import { create, windowedFiniteBatchScheduler } from '@yornaath/batshit';
 
 import { schedulePlugin } from '@wsh-2025/client/src/features/requests/schedulePlugin';
 
@@ -10,14 +10,14 @@ const $fetch = createFetch({
   plugins: [schedulePlugin],
   schema: createSchema({
     '/channels': {
-      output: schema.getChannelsResponse,
-      query: schema.getChannelsRequestQuery,
+      output: getChannelsResponse,
+      query: getChannelsRequestQuery,
     },
   }),
   throw: true,
 });
 
-const batcher = batshit.create({
+const batcher = create({
   async fetcher(queries: { channelId: string }[]) {
     const data = await $fetch('/channels', {
       query: {
@@ -33,7 +33,7 @@ const batcher = batshit.create({
     }
     return item;
   },
-  scheduler: batshit.windowedFiniteBatchScheduler({
+  scheduler: windowedFiniteBatchScheduler({
     maxBatchSize: 100,
     windowMs: 1000,
   }),
@@ -42,8 +42,8 @@ const batcher = batshit.create({
 interface ChannelService {
   fetchChannelById: (query: {
     channelId: string;
-  }) => Promise<StandardSchemaV1.InferOutput<typeof schema.getChannelByIdResponse>>;
-  fetchChannels: () => Promise<StandardSchemaV1.InferOutput<typeof schema.getChannelsResponse>>;
+  }) => Promise<StandardSchemaV1.InferOutput<typeof getChannelByIdResponse>>;
+  fetchChannels: () => Promise<StandardSchemaV1.InferOutput<typeof getChannelsResponse>>;
 }
 
 export const channelService: ChannelService = {

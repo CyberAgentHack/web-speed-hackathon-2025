@@ -27,7 +27,7 @@ export const Player = ({ className, loop, playerRef, playerType, playlistUrl }: 
       if (abortController.signal.aborted) {
         return;
       }
-      player = createPlayer(playerType);
+      player = createPlayer();
       player.load(playlistUrl, { loop: loop ?? false });
       mountElement.appendChild(player.videoElement);
       assignRef(playerRef, player);
