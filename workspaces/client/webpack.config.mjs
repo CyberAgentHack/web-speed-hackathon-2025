@@ -2,11 +2,13 @@ import path from 'node:path';
 
 import webpack from 'webpack';
 
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 /** @type {import('webpack').Configuration} */
 const config = {
-  devtool: 'inline-source-map',
+  devtool: false,
   entry: './src/main.tsx',
-  mode: 'none',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -61,6 +63,11 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'server',    // 'static' にするとHTMLファイルで出力できる
+      openAnalyzer: true,        // build完了後ブラウザでレポートを自動表示
+      // reportFilename: 'report.html', // static Modeの場合の出力ファイル名
+    }),
   ],
   resolve: {
     alias: {
