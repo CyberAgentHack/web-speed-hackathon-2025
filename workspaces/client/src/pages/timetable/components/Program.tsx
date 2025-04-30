@@ -31,20 +31,20 @@ export const Program = ({ height, program }: Props): ReactElement => {
     DateTime.fromMillis(currentUnixtimeMs).toMillis() < DateTime.fromISO(program.endAt).toMillis();
   const isArchived = DateTime.fromISO(program.endAt).toMillis() <= DateTime.fromMillis(currentUnixtimeMs).toMillis();
 
-  const titleRef = useRef<HTMLDivElement | null>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  // const titleRef = useRef<HTMLDivElement | null>(null);
+  // const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const imageHeight = imageRef.current?.clientHeight ?? 0;
-      const titleHeight = titleRef.current?.clientHeight ?? 0;
-      setShouldImageBeVisible(imageHeight <= height - titleHeight);
-    }, 250);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [height]);
+  // const [shouldImageBeVisible, setShouldImageBeVisible] = useState<boolean>(false);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const imageHeight = imageRef.current?.clientHeight ?? 0;
+  //     const titleHeight = titleRef.current?.clientHeight ?? 0;
+  //     setShouldImageBeVisible(imageHeight <= height - titleHeight);
+  //   }, 250);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [height]);
 
   return (
     <>
@@ -56,7 +56,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
           onClick={onClick}
         >
           <div className="flex size-full flex-col overflow-hidden">
-            <div ref={titleRef} className="mb-[8px] flex flex-row items-start justify-start">
+            <div className="mb-[8px] flex flex-row items-start justify-start">
               <span
                 className={`mr-[8px] shrink-0 grow-0 text-[14px] font-bold text-[${isBroadcasting ? '#767676' : '#999999'}]`}
               >
@@ -68,9 +68,8 @@ export const Program = ({ height, program }: Props): ReactElement => {
                 <Ellipsis ellipsis reflowOnResize maxLine={3} text={program.title} visibleLine={3} />
               </div>
             </div>
-            <div className={`opacity-${shouldImageBeVisible ? 100 : 0} w-full`}>
+            <div className="w-full">
               <img
-                ref={imageRef}
                 alt=""
                 className="pointer-events-none w-full rounded-[8px] border-[2px] border-solid border-[#FFFFFF1F]"
                 src={program.thumbnailUrl}
@@ -79,7 +78,7 @@ export const Program = ({ height, program }: Props): ReactElement => {
           </div>
         </button>
       </Hoverable>
-      <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />
+      {shouldProgramDetailDialogOpen && <ProgramDetailDialog isOpen={shouldProgramDetailDialogOpen} program={program} />}
     </>
   );
 };

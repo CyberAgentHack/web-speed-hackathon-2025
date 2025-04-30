@@ -74,7 +74,6 @@ export function registerSsr(app: FastifyInstance): void {
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <meta name="robots" content="noindex" />
           <script src="/public/main.js"></script>
-          ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body></body>
       </html>
@@ -85,5 +84,6 @@ export function registerSsr(app: FastifyInstance): void {
         })};
       </script>
     `);
+    // ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
   });
 }
