@@ -1,5 +1,5 @@
 import '@videojs/http-streaming';
-import HlsJs from 'hls.js';
+import HlsJs from 'hls.js/dist/hls.light.min.js';
 import shaka from 'shaka-player';
 import videojs from 'video.js';
 
@@ -72,13 +72,16 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
     volume: 0.25,
   });
   private _player = new HlsJs({
-    enableWorker: false,
+    enableWorker: true,
     maxBufferLength: 50,
   });
   readonly playerType: PlayerType.HlsJS;
 
   constructor(playerType: PlayerType.HlsJS) {
     this.playerType = playerType;
+    this._player.on(HlsJs.Events.ERROR, (_, data) => {
+      console.error('HLS.js エラー:', data);
+    });
   }
 
   get currentTime(): number {
@@ -97,9 +100,18 @@ class HlsJSPlayerWrapper implements PlayerWrapper {
   }
 
   load(playlistUrl: string, options: { loop: boolean }): void {
-    this._player.attachMedia(this.videoElement);
-    this.videoElement.loop = options.loop;
-    this._player.loadSource(playlistUrl);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0] && entries[0].isIntersecting) {
+        // 動画が画面内に入ったらロードを開始
+        this._player.attachMedia(this.videoElement);
+        this.videoElement.loop = options.loop;
+        this._player.loadSource(playlistUrl);
+        observer.disconnect(); // 初期化後に監視を停止
+      }
+    });
+
+    // 動画要素を監視
+    observer.observe(this.videoElement);
   }
   play(): void {
     void this.videoElement.play();

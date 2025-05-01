@@ -100,7 +100,6 @@ async function main() {
     await reset(database, schema);
 
     // Create streams
-    console.log('Creating streams...');
     const streamList = await database
       .insert(schema.stream)
       .values([
@@ -112,7 +111,6 @@ async function main() {
       .returning();
 
     // Create channels
-    console.log('Creating channels...');
     const channelList: (typeof schema.channel.$inferSelect)[] = [];
     {
       const data: (typeof schema.channel.$inferInsert)[] = CHANNEL_NAME_LIST.map(({ id, name }) => ({
@@ -125,7 +123,6 @@ async function main() {
     }
 
     // Create series
-    console.log('Creating series...');
     const seriesList: (typeof schema.series.$inferSelect)[] = [];
     {
       const data: (typeof schema.series.$inferInsert)[] = Array.from({ length: 30 }, () => ({
@@ -139,7 +136,6 @@ async function main() {
     }
 
     // Create episodes
-    console.log('Creating episodes...');
     const episodeList: (typeof schema.episode.$inferSelect)[] = [];
     for (const series of seriesList) {
       const data: (typeof schema.episode.$inferInsert)[] = Array.from(
@@ -160,7 +156,6 @@ async function main() {
     }
 
     // Create programs
-    console.log('Creating programs...');
     const programList: (typeof schema.program.$inferInsert)[] = [];
     const episodeListGroupedByStreamId = Object.values(Object.groupBy(episodeList, (episode) => episode.streamId));
     for (const channel of channelList) {
@@ -195,7 +190,6 @@ async function main() {
     await database.insert(schema.program).values(programList);
 
     // Create recommended modules
-    console.log('Creating recommended modules...');
     for (const reference of [
       ...seriesList.map((s) => ({ id: s.id, type: 'series', series: s }) as const),
       ...episodeList.map((e) => ({ id: e.id, type: 'episode', episode: e }) as const),
@@ -293,7 +287,6 @@ async function main() {
     }
 
     // Create test users
-    console.log('Creating test users...');
     await database.insert(schema.user).values([
       {
         email: 'test@example.com',

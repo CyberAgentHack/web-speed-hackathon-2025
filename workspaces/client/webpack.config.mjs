@@ -1,6 +1,6 @@
 import path from 'node:path';
-
 import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 /** @type {import('webpack').Configuration} */
 const config = {
@@ -61,6 +61,11 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.EnvironmentPlugin({ API_BASE_URL: '/api', NODE_ENV: '' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static', // 'server' にするとローカルサーバーで可視化
+      openAnalyzer: true,    // レポートを自動的にブラウザで開く
+      reportFilename: 'bundle-report.html', // 出力されるレポートファイル名
+    }),
   ],
   resolve: {
     alias: {
