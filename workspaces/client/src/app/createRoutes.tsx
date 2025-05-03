@@ -32,8 +32,13 @@ export function createRoutes(store: ReturnType<typeof createStore>): RouteObject
             return {
               Component: EpisodePage,
               async loader({ params }) {
-                return await prefetch(store, params);
-              },
+                try {
+                  return await prefetch(store, params);
+                } catch (error) {
+                  console.error(`Error during prefetching: ${error}`);
+                  return {}; 
+                }
+              }
             };
           },
           path: '/episodes/:episodeId',
