@@ -18,12 +18,8 @@ async function getSeekThumbnail({ episode }: Params) {
   // FFmpeg の初期化
   const ffmpeg = new FFmpeg();
   await ffmpeg.load({
-    coreURL: await import('@ffmpeg/core?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'text/javascript' }));
-    }),
-    wasmURL: await import('@ffmpeg/core/wasm?arraybuffer').then(({ default: b }) => {
-      return URL.createObjectURL(new Blob([b], { type: 'application/wasm' }));
-    }),
+    coreURL: '/node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js',
+    wasmURL: '/node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm',
   });
 
   // 動画のセグメントファイルを取得
