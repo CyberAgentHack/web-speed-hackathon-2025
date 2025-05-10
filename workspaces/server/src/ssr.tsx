@@ -74,6 +74,9 @@ export function registerSsr(app: FastifyInstance): void {
           <meta content="width=device-width, initial-scale=1.0" name="viewport" />
           <meta name="robots" content="noindex" />
           <script src="/public/main.js"></script>
+          <script src="/public/vendors.js"></script>
+          <script src="/public/iconify.js"></script>
+          <script src="/public/ffmpeg.chunk.js"></script>
           ${imagePaths.map((imagePath) => `<link as="image" href="${imagePath}" rel="preload" />`).join('\n')}
         </head>
         <body></body>
