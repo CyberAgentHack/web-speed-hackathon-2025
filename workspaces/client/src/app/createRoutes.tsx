@@ -1,5 +1,5 @@
 import lazy from 'p-min-delay';
-import { RouteObject } from 'react-router';
+import { RouteObject } from 'react-router-dom';
 
 import { Document, prefetch } from '@wsh-2025/client/src/app/Document';
 import { createStore } from '@wsh-2025/client/src/app/createStore';
