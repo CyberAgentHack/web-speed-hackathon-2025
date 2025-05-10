@@ -27,7 +27,7 @@ export async function initializeDatabase(): Promise<void> {
 
   database = drizzle({
     client: createClient({
-      syncInterval: 1000,
+      syncInterval: 100,
       url: `file:${TEMP_PATH}`,
     }),
     schema,

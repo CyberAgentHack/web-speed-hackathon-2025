@@ -69,6 +69,13 @@ const config = {
     },
     extensions: ['.js', '.cjs', '.mjs', '.ts', '.cts', '.mts', '.tsx', '.jsx'],
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',         // すべてのチャンクを対象
+      minSize: 20000,        // 20KB以上のモジュールを分割対象に
+      maxSize: 70000,        // 70KB以上の場合はさらに分割する
+    },
+  },
 };
 
 export default config;
